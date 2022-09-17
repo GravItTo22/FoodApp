@@ -1,0 +1,354 @@
+{
+  "meta": {
+    "$_SESSION": [
+      {
+        "type": "text",
+        "name": "sessionLogin"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "identity",
+        "module": "auth",
+        "action": "identify",
+        "options": {
+          "provider": "security"
+        },
+        "output": false,
+        "meta": []
+      },
+      {
+        "name": "varLogin",
+        "module": "core",
+        "action": "setvalue",
+        "options": {
+          "value": "{{$_SESSION.sessionLogin}}"
+        },
+        "meta": [],
+        "outputType": "text",
+        "output": true
+      },
+      {
+        "name": "GetUserInfo",
+        "module": "dbconnector",
+        "action": "single",
+        "options": {
+          "connection": "ClientApp",
+          "sql": {
+            "type": "SELECT",
+            "columns": [
+              {
+                "table": "m_customer",
+                "column": "fname"
+              },
+              {
+                "table": "m_customer",
+                "column": "lname"
+              },
+              {
+                "table": "m_customer",
+                "column": "mobile"
+              },
+              {
+                "table": "m_customer",
+                "column": "address"
+              },
+              {
+                "table": "m_customer",
+                "column": "pin"
+              },
+              {
+                "table": "m_customer",
+                "column": "ps"
+              },
+              {
+                "table": "m_customer",
+                "column": "district"
+              },
+              {
+                "table": "m_customer",
+                "column": "state"
+              },
+              {
+                "table": "m_customer",
+                "column": "wallet_bal"
+              }
+            ],
+            "table": {
+              "name": "m_customer"
+            },
+            "primary": "id",
+            "joins": [],
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "m_customer.id",
+                  "field": "m_customer.id",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": "{{identity}}",
+                  "data": {
+                    "table": "m_customer",
+                    "column": "id",
+                    "type": "number",
+                    "columnObj": {
+                      "type": "increments",
+                      "default": "",
+                      "primary": true,
+                      "unique": true,
+                      "nullable": false,
+                      "name": "id"
+                    }
+                  },
+                  "operation": "="
+                },
+                {
+                  "id": "m_customer.user_type_id",
+                  "field": "m_customer.user_type_id",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": 6,
+                  "data": {
+                    "table": "m_customer",
+                    "column": "user_type_id",
+                    "type": "number",
+                    "columnObj": {
+                      "type": "reference",
+                      "primary": false,
+                      "unique": false,
+                      "nullable": true,
+                      "references": "id",
+                      "inTable": "m_user_type",
+                      "referenceType": "integer",
+                      "onUpdate": "NO ACTION",
+                      "onDelete": "NO ACTION",
+                      "name": "user_type_id"
+                    }
+                  },
+                  "operation": "="
+                },
+                {
+                  "id": "m_customer.status",
+                  "field": "m_customer.status",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": 1,
+                  "data": {
+                    "table": "m_customer",
+                    "column": "status",
+                    "type": "number",
+                    "columnObj": {
+                      "type": "integer",
+                      "primary": false,
+                      "unique": false,
+                      "nullable": true,
+                      "name": "status"
+                    }
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            },
+            "query": "SELECT fname, lname, mobile, address, pin, ps, district, state, wallet_bal\nFROM m_customer\nWHERE id = :P1 /* {{identity}} */ AND user_type_id = 6 AND status = 1",
+            "params": [
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{identity}}"
+              }
+            ]
+          }
+        },
+        "output": true,
+        "meta": [
+          {
+            "type": "text",
+            "name": "fname"
+          },
+          {
+            "type": "text",
+            "name": "lname"
+          },
+          {
+            "type": "text",
+            "name": "mobile"
+          },
+          {
+            "type": "text",
+            "name": "address"
+          },
+          {
+            "type": "text",
+            "name": "pin"
+          },
+          {
+            "type": "text",
+            "name": "ps"
+          },
+          {
+            "type": "text",
+            "name": "district"
+          },
+          {
+            "type": "text",
+            "name": "state"
+          },
+          {
+            "type": "text",
+            "name": "wallet_bal"
+          }
+        ],
+        "outputType": "object"
+      },
+      {
+        "name": "GetCartItems",
+        "module": "dbconnector",
+        "action": "single",
+        "options": {
+          "connection": "ClientApp",
+          "sql": {
+            "type": "SELECT",
+            "columns": [
+              {
+                "table": "r_cart",
+                "column": "id",
+                "alias": "Cart_Items",
+                "aggregate": "COUNT"
+              }
+            ],
+            "table": {
+              "name": "r_cart"
+            },
+            "primary": "id",
+            "joins": [],
+            "query": "SELECT COUNT(id) AS Cart_Items\nFROM r_cart\nWHERE user_id = :P1 /* {{identity}} */",
+            "params": [
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{identity}}"
+              }
+            ],
+            "groupBy": [],
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "r_cart.user_id",
+                  "field": "r_cart.user_id",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": "{{identity}}",
+                  "data": {
+                    "table": "r_cart",
+                    "column": "user_id",
+                    "type": "number",
+                    "columnObj": {
+                      "type": "reference",
+                      "primary": false,
+                      "unique": false,
+                      "nullable": true,
+                      "references": "id",
+                      "inTable": "m_customer",
+                      "referenceType": "integer",
+                      "onUpdate": "NO ACTION",
+                      "onDelete": "NO ACTION",
+                      "name": "user_id"
+                    }
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            }
+          }
+        },
+        "output": true,
+        "meta": [
+          {
+            "type": "number",
+            "name": "Cart_Items"
+          }
+        ],
+        "outputType": "object"
+      },
+      {
+        "name": "GetWishlist",
+        "module": "dbconnector",
+        "action": "single",
+        "options": {
+          "connection": "ClientApp",
+          "sql": {
+            "type": "SELECT",
+            "columns": [
+              {
+                "table": "r_wishlist",
+                "column": "id",
+                "alias": "WishlistItems",
+                "aggregate": "COUNT"
+              }
+            ],
+            "table": {
+              "name": "r_wishlist"
+            },
+            "primary": "id",
+            "joins": [],
+            "groupBy": [],
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "r_wishlist.user_id",
+                  "field": "r_wishlist.user_id",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": "{{identity}}",
+                  "data": {
+                    "table": "r_wishlist",
+                    "column": "user_id",
+                    "type": "number",
+                    "columnObj": {
+                      "type": "integer",
+                      "primary": false,
+                      "unique": false,
+                      "nullable": true,
+                      "name": "user_id"
+                    }
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            },
+            "query": "SELECT COUNT(id) AS WishlistItems\nFROM r_wishlist\nWHERE user_id = :P1 /* {{identity}} */",
+            "params": [
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{identity}}"
+              }
+            ]
+          }
+        },
+        "output": true,
+        "meta": [
+          {
+            "type": "number",
+            "name": "WishlistItems"
+          }
+        ],
+        "outputType": "object"
+      }
+    ]
+  }
+}

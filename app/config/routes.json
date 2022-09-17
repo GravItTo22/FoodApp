@@ -1,0 +1,45 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "page": "index",
+      "routeType": "page",
+      "layout": "main"
+    },
+    {
+      "path": "/shop-details",
+      "page": "shop-details",
+      "layout": "main"
+    },
+    {
+      "path": "/restaurants",
+      "page": "restaurants",
+      "layout": "main"
+    },
+    {
+      "path": "/product-details",
+      "page": "product-details",
+      "layout": "main"
+    },
+    {
+      "path": "/cart",
+      "page": "cart",
+      "layout": "main"
+    },
+    {
+      "path": "/checkout",
+      "page": "checkout",
+      "layout": "main"
+    },
+    {
+      "path": "/wish-list",
+      "page": "wish-list",
+      "layout": "main"
+    },
+    {
+      "path": "/contact",
+      "page": "contact",
+      "layout": "main"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      },
+      {
+        "type": "text",
+        "name": "market"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "GetLanguage",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "ClientApp",
+        "sql": {
+          "type": "SELECT",
+          "columns": [
+            {
+              "table": "app_language",
+              "column": "language_name"
+            },
+            {
+              "table": "app_language",
+              "column": "language_code"
+            }
+          ],
+          "table": {
+            "name": "app_language"
+          },
+          "joins": [],
+          "primary": "id",
+          "wheres": {
+            "condition": "AND",
+            "rules": [
+              {
+                "id": "app_language.status",
+                "field": "app_language.status",
+                "type": "double",
+                "operator": "equal",
+                "value": "{{1}}",
+                "data": {
+                  "table": "app_language",
+                  "column": "status",
+                  "type": "number",
+                  "columnObj": {
+                    "type": "integer",
+                    "primary": false,
+                    "unique": false,
+                    "nullable": true,
+                    "name": "status"
+                  }
+                },
+                "operation": "="
+              }
+            ],
+            "conditional": null,
+            "valid": true
+          },
+          "query": "SELECT language_name, language_code\nFROM app_language\nWHERE status = :P1 /* {{1}} */",
+          "params": [
+            {
+              "operator": "equal",
+              "type": "expression",
+              "name": ":P1",
+              "value": "{{1}}"
+            }
+          ]
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "text",
+          "name": "language_name"
+        },
+        {
+          "type": "text",
+          "name": "language_code"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

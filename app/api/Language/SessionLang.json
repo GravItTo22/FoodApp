@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "$_SESSION": [
+      {
+        "type": "text",
+        "name": "sessionLang"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "varSetLang",
+      "module": "core",
+      "action": "setvalue",
+      "options": {
+        "value": "{{$_SESSION.sessionLang}}"
+      },
+      "meta": [],
+      "outputType": "text",
+      "output": true
+    }
+  }
+}

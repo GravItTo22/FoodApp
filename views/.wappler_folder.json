@@ -1,0 +1,30 @@
+{
+  "shop-details.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "restaurants.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "product-details.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "cart.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "checkout.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "wish-list.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "contact.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  }
+}

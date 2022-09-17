@@ -1,0 +1,35 @@
+{
+  "name": "security",
+  "module": "auth",
+  "action": "provider",
+  "options": {
+    "secret": "Ign6H4HS6f5BFSV",
+    "provider": "Database",
+    "connection": "ClientApp",
+    "users": {
+      "table": "m_customer",
+      "identity": "id",
+      "username": "mobile",
+      "password": "user_password"
+    },
+    "permissions": {
+      "write": {
+        "table": "m_customer",
+        "identity": "id",
+        "conditions": [
+          {
+            "column": "status",
+            "operator": "=",
+            "value": "1"
+          }
+        ]
+      }
+    }
+  },
+  "meta": [
+    {
+      "name": "identity",
+      "type": "text"
+    }
+  ]
+}

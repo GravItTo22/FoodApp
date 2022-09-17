@@ -1,0 +1,49 @@
+<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="wishlist" appConnect="local" -->
+<meta name="ac:route" content="/wish-list">
+<dmx-serverconnect id="scWishList" url="/api/WishList/WishListItems"></dmx-serverconnect>
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>WishList</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/">Home</a> <span>Wishlist</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Featured Section Begin -->
+<section class="featured spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <h2>Wishlist Products</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row featured__filter" id="repeatProd" is="dmx-repeat" dmx-bind:repeat="scWishList.data.GetWishList.data" key="id">
+            <div class="col-lg-3 col-md-4 col-sm-6 mix">
+                <div class="featured__item">
+                    <div class="featured__item__pic set-bg">
+                        <img class="featured__item__pic set-bg" dmx-bind:src="'https://sucure.gravitto.com'+content.scWishList.data.GetWishList.data[$index].prod_img1" dmx-bind:alt="content.scWishList.data.GetWishList.data[$index].prod_img1">
+                        <ul class="featured__item__pic__hover">
+                            <li><a href="#"><i class="fa fa-circle" dmx-class:text-success="content.scWishList.data.GetWishList.data[$index].prod_mark_id==1" dmx-class:text-danger="content.scWishList.data.GetWishList.data[$index].prod_mark_id==2"></i></a></li>
+                            <li dmx-on:click="run({run:{action:`scAddtoCart.load({product_id: scWishList.data.GetWishList.data[$index].prod_id, price: scWishList.data.GetWishList.data[$index].price_id},true);scDashboardInfo.load(true);notifMain.success(((varLanguage.value==\'English\')?scWishList.data.GetWishList.data[$index].prod_name_en:(varLanguage.value==\'Bengali\')?scWishList.data.GetWishList.data[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scWishList.data.GetWishList.data[$index].prod_name_hin:scWishList.data.GetWishList.data[$index].prod_name_en)+\'  added to cart \')`,name:'Flow'}})"><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="featured__item__text">
+                        <h6><a href="#">{{varLanguage.value=='English'?scWishList.data.GetWishList.data[$index].prod_name_en:varLanguage.value=='Bengali'?content.scWishList.data.GetWishList.data[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scWishList.data.GetWishList.data[$index].prod_name_hin:''}}</a></h6>
+                        <h5><i class="fa fa-rupee"></i>{{content.scWishList.data.GetWishList.data[$index].price}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<!-- Featured Section End -->

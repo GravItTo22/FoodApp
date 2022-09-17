@@ -1,0 +1,1723 @@
+{
+  "type": "postgres",
+  "connection": {
+    "host": "db-postgresql-blr1-40136-do-user-10118978-0.b.db.ondigitalocean.com",
+    "port": 25060,
+    "user": "doadmin",
+    "password": "9hi1N6DClf1GAWlo",
+    "database": "foodappdb",
+    "ssl": {
+      "rejectUnauthorized": false
+    }
+  },
+  "direct": true,
+  "schema": {
+    "schemas": [
+      "public"
+    ],
+    "tables": {
+      "app_language": {
+        "db": {
+          "schema": "public"
+        },
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "default": "",
+              "primary": true,
+              "unique": true,
+              "nullable": false
+            }
+          },
+          "language_name": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "language_code": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "status": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "market_id": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          }
+        }
+      },
+      "m_brand": {
+        "db": {
+          "schema": "public"
+        },
+        "refs": {
+          "m_product": "brand_id"
+        }
+      },
+      "m_category": {
+        "db": {
+          "schema": "public"
+        },
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "default": "",
+              "primary": true,
+              "unique": true,
+              "nullable": false
+            }
+          },
+          "en_name": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "bn_name": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "hin_name": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "cat_type_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "m_category_type",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "market_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "m_market",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "image": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "status": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "remarks": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank1": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank2": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank3": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_by": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "updated_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "deleted_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          }
+        },
+        "refs": {
+          "m_product": "category_id",
+          "r_slab": "category_id"
+        }
+      },
+      "m_category_type": {
+        "db": {
+          "schema": "public"
+        },
+        "refs": {
+          "m_category": "cat_type_id",
+          "m_restaurant": "cat_type_id"
+        }
+      },
+      "m_contact_us": {
+        "db": {
+          "schema": "public"
+        }
+      },
+      "m_customer": {
+        "db": {
+          "schema": "public"
+        },
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "default": "",
+              "primary": true,
+              "unique": true,
+              "nullable": false
+            }
+          },
+          "user_type_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "m_user_type",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "fname": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "lname": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "mobile": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "is_watsapp": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "watsapp_no": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "customer_email": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "user_password": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "salt": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "user_dob": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "address": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "pin": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "ps": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "district": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "state": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "country": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "gst_in": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "wallet_bal": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "ip_address": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "signup_via": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "status": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "remarks": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank1": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank2": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank3": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_by": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "updated_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "deleted_by": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "deleted_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          }
+        },
+        "refs": {
+          "r_cart": "user_id",
+          "r_order": "user_id",
+          "r_order_details": "user_id",
+          "r_shipping_add": "c_id",
+          "t_user_log": "user_id"
+        }
+      },
+      "m_market": {
+        "db": {
+          "schema": "public"
+        },
+        "refs": {
+          "m_category": "market_id",
+          "m_product": "market_id",
+          "m_restaurant": "market_id"
+        }
+      },
+      "m_prod_mark": {
+        "db": {
+          "schema": "public"
+        },
+        "refs": {
+          "m_product": "prod_mark_id"
+        }
+      },
+      "m_prod_occurance": {
+        "db": {
+          "schema": "public"
+        },
+        "refs": {
+          "m_product": "prod_occurance_id"
+        }
+      },
+      "m_product": {
+        "db": {
+          "schema": "public"
+        },
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "default": "",
+              "primary": true,
+              "unique": true,
+              "nullable": false
+            }
+          },
+          "prod_id": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "market_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "m_market",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "rest_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "m_restaurant",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "category_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "m_category",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "brand_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "m_brand",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "slab_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "r_slab",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "prod_mark_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "m_prod_mark",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "prod_occurance_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "m_prod_occurance",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "prod_name_en": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "prod_name_bn": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "prod_name_hin": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "prod_desc_en": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "prod_desc_bn": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "prod_desc_hin": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "video": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "prod_img1": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "prod_img2": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "prod_img3": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "prod_img4": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "status": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "remarks": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank1": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank2": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank3": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_by": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "updated_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "deleted_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          }
+        },
+        "refs": {
+          "r_cart": "prod_id",
+          "r_order_details": "prod_id",
+          "r_price_table": "prod_id"
+        }
+      },
+      "m_restaurant": {
+        "db": {
+          "schema": "public"
+        },
+        "refs": {
+          "m_product": "rest_id",
+          "rest_kyc_doc": "rest_id",
+          "rest_sliding_img": "rest_id"
+        }
+      },
+      "m_user_type": {
+        "db": {
+          "schema": "public"
+        },
+        "refs": {
+          "m_customer": "user_type_id"
+        }
+      },
+      "r_cart": {
+        "db": {
+          "schema": "public"
+        },
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "default": "",
+              "primary": true,
+              "unique": true,
+              "nullable": false
+            }
+          },
+          "prod_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "m_product",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "price_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "r_price_table",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "user_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "m_customer",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "prod_unit_price": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "prod_qty": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "total_price": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank1": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank2": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank3": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_by": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "updated_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "deleted_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          }
+        },
+        "refs": {
+          "r_order_details": "cart_id"
+        }
+      },
+      "r_order": {
+        "db": {
+          "schema": "public"
+        },
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "default": "",
+              "primary": true,
+              "unique": true,
+              "nullable": false
+            }
+          },
+          "order_id": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "user_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "m_customer",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "total_amt": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "discount": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "ex_charge_amt": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "ex_comm_amt": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "delevery_amt": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "user_name": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "address": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "mobile": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "whatsapp": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "pin": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "ps": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "dist": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "state": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "country": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "wallet_bal": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank1": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank2": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank3": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_by": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "updated_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "deleted_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          }
+        },
+        "sub": {
+          "r_order_details": "order_table_id"
+        }
+      },
+      "r_order_details": {
+        "db": {
+          "schema": "public"
+        },
+        "parent": "r_order"
+      },
+      "r_price_table": {
+        "db": {
+          "schema": "public"
+        },
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "default": "",
+              "primary": true,
+              "unique": true,
+              "nullable": false
+            }
+          },
+          "prod_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "m_product",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "quantity": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "q_unit": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "mrp": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "purchase_price": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "selling_price": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "product_tax": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "comm_per": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "comm_val": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "charge_per": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "charge_val": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "status": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "remarks": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank1": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank2": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank3": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_by": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "updated_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "deleted_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          }
+        },
+        "refs": {
+          "r_cart": "price_id",
+          "r_order_details": "price_id"
+        }
+      },
+      "r_shipping_add": {
+        "db": {
+          "schema": "public"
+        }
+      },
+      "r_slab": {
+        "db": {
+          "schema": "public"
+        },
+        "refs": {
+          "m_product": "slab_id"
+        }
+      },
+      "r_wishlist": {
+        "db": {
+          "schema": "public"
+        },
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "default": "",
+              "primary": true,
+              "unique": true,
+              "nullable": false
+            }
+          },
+          "prod_id": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "price_id": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "user_id": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "prod_unit_price": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "prod_qty": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "total_price": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "ips": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank1": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank2": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "blank3": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_by": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "updated_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "deleted_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          }
+        }
+      },
+      "rest_kyc_doc": {
+        "db": {
+          "schema": "public"
+        }
+      },
+      "rest_sliding_img": {
+        "db": {
+          "schema": "public"
+        }
+      },
+      "t_user_log": {
+        "db": {
+          "schema": "public"
+        },
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "default": "",
+              "primary": true,
+              "unique": true,
+              "nullable": false
+            }
+          },
+          "user_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "unique": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "m_customer",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "ip_address": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "login_time": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "logout_time": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "login_from": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "remote_ip": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "login_server": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "login_token": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          }
+        }
+      }
+    },
+    "views": {}
+  }
+}

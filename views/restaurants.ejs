@@ -1,0 +1,45 @@
+<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="restaurants" appConnect="local" -->
+<meta name="ac:route" content="/restaurants">
+<dmx-serverconnect id="scActiveRest" url="/api/Restaurant/ActiveRestaurants"></dmx-serverconnect>
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Restaurants</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/">Home</a>
+                        <span>Restaurants</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Restarurant Section Begin -->
+<section class="categories featured spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-title">
+                    <h2>{{varLanguage.value=='English'?'All Restaurants':varLanguage.value=='Bengali'?'সব রেস্তোরাঁ':varLanguage.value=='Hindi'?'सभी रेस्टोरेंट':'All Restaurants'}}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row mx-0 w-100" id="repeat1" is="dmx-repeat" dmx-bind:repeat="scActiveRest.data.FetchRest" key="id">
+            <div class="col-3 my-3">
+                <div class="card col-auto px-0">
+                    <img dmx-bind:src="'https://sucure.gravitto.com'+content.scActiveRest.data.FetchRest[$index].shop_logo" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h6 class="card-text">{{varLanguage.value=='English'?content.scActiveRest.data.FetchRest[$index].shop_name_en:varLanguage.value=='Hindi'?content.scActiveRest.data.FetchRest[$index].shop_name_hin:varLanguage.value=='Bengali'?content.scActiveRest.data.FetchRest[$index].shop_name_bn:content.scActiveRest.data.FetchRest[$index].shop_name_en}}</h6>
+                        <div class="hero__text  my-3">
+                            <a href="#" class="primary-btn">{{varLanguage.value=='English'?'Select':varLanguage.value=='Bengali'?'নির্বাচন করুন':varLanguage.value=='Hindi'?'चयन करें':'Select'}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Restarrent Section End -->

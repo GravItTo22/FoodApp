@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "limit"
+      },
+      {
+        "type": "text",
+        "name": "market"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "condition",
+      "options": {
+        "if": "{{$_GET.limit}}",
+        "then": {
+          "steps": {
+            "name": "GetProd",
+            "module": "dbupdater",
+            "action": "custom",
+            "options": {
+              "connection": "ClientApp",
+              "sql": {
+                "query": "SELECT mp.id as p_id, mp.prod_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_img1, rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin\nFROM m_product mp \nleft join r_price_table rpt on (rpt.prod_id=mp.id)\nleft join m_restaurant mr on (mp.rest_id=mr.id)\nWHERE mp.status=1 AND mp.market_id=@market ORDER by random() limit @limit",
+                "params": [
+                  {
+                    "name": "@limit",
+                    "value": "{{$_GET.limit}}",
+                    "test": "10"
+                  },
+                  {
+                    "name": "@market",
+                    "value": "{{$_GET.market}}",
+                    "test": "1"
+                  }
+                ]
+              }
+            },
+            "output": true,
+            "meta": [
+              {
+                "name": "p_id",
+                "type": "number"
+              },
+              {
+                "name": "prod_id",
+                "type": "text"
+              },
+              {
+                "name": "prod_mark_id",
+                "type": "number"
+              },
+              {
+                "name": "prod_name_en",
+                "type": "text"
+              },
+              {
+                "name": "prod_name_bn",
+                "type": "text"
+              },
+              {
+                "name": "prod_name_hin",
+                "type": "text"
+              },
+              {
+                "name": "prod_img1",
+                "type": "text"
+              },
+              {
+                "name": "price_id",
+                "type": "number"
+              },
+              {
+                "name": "quantity",
+                "type": "text"
+              },
+              {
+                "name": "q_unit",
+                "type": "text"
+              },
+              {
+                "name": "mrp",
+                "type": "text"
+              },
+              {
+                "name": "price",
+                "type": "text"
+              },
+              {
+                "name": "product_tax",
+                "type": "text"
+              },
+              {
+                "name": "shop_name_en",
+                "type": "text"
+              },
+              {
+                "name": "shop_name_bn",
+                "type": "text"
+              },
+              {
+                "name": "shop_name_hin",
+                "type": "text"
+              }
+            ],
+            "outputType": "array"
+          }
+        },
+        "else": {
+          "steps": {
+            "name": "GetProdId",
+            "module": "dbupdater",
+            "action": "custom",
+            "options": {
+              "connection": "ClientApp",
+              "sql": {
+                "query": "SELECT mp.id as p_id, mp.prod_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_img1,  rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin\nFROM m_product mp \nleft join r_price_table rpt on (rpt.prod_id=mp.id)\nleft join m_restaurant mr on (mp.rest_id=mr.id)\nWHERE mp.status=1 AND mp.market_id=@market ORDER by mp.id desc",
+                "params": [
+                  {
+                    "name": "@market",
+                    "value": "{{$_GET.market}}",
+                    "test": "1"
+                  }
+                ]
+              }
+            },
+            "output": true,
+            "meta": [
+              {
+                "name": "p_id",
+                "type": "number"
+              }
+            ],
+            "outputType": "array"
+          }
+        }
+      },
+      "outputType": "boolean"
+    }
+  }
+}

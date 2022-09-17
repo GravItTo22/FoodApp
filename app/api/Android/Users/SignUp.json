@@ -1,0 +1,596 @@
+{
+  "meta": {
+    "options": {
+      "linkedFile": "/views/layouts/main.ejs",
+      "linkedForm": "scformSignup"
+    },
+    "$_POST": [
+      {
+        "type": "number",
+        "fieldName": "Mobile",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            },
+            "core:number": {}
+          }
+        },
+        "name": "Mobile"
+      },
+      {
+        "type": "text",
+        "fieldName": "FName",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "FName"
+      },
+      {
+        "type": "text",
+        "fieldName": "LName",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "LName"
+      },
+      {
+        "type": "text",
+        "fieldName": "EmailId",
+        "name": "EmailId"
+      },
+      {
+        "type": "number",
+        "fieldName": "PIN",
+        "options": {
+          "rules": {
+            "core:number": {}
+          }
+        },
+        "name": "PIN"
+      },
+      {
+        "type": "text",
+        "fieldName": "District",
+        "name": "District"
+      },
+      {
+        "type": "text",
+        "fieldName": "is_whatsapp",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "is_whatsapp"
+      },
+      {
+        "type": "text",
+        "fieldName": "Address",
+        "name": "Address"
+      }
+    ],
+    "$_SERVER": [
+      {
+        "type": "text",
+        "name": "REMOTE_ADDR"
+      },
+      {
+        "type": "text",
+        "name": "REMOTE_HOST"
+      },
+      {
+        "type": "text",
+        "name": "SERVER_NAME"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "Password",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "{{UUID.md5(123456).substr(1, 9)}}"
+              },
+              "meta": [],
+              "outputType": "text"
+            },
+            {
+              "name": "AddUsers",
+              "module": "dbupdater",
+              "action": "insert",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "insert",
+                  "values": [
+                    {
+                      "table": "m_customer",
+                      "column": "user_type_id",
+                      "type": "number",
+                      "value": "{{6}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "fname",
+                      "type": "text",
+                      "value": "{{$_POST.FName}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "lname",
+                      "type": "text",
+                      "value": "{{$_POST.LName}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "mobile",
+                      "type": "text",
+                      "value": "{{$_POST.Mobile}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "is_watsapp",
+                      "type": "text",
+                      "value": "{{$_POST.is_whatsapp}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "watsapp_no",
+                      "type": "text",
+                      "value": "{{($_POST.is_whatsapp=='Yes')?$_POST.Mobile:''}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "customer_email",
+                      "type": "text",
+                      "value": "{{$_POST.EmailId}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "user_password",
+                      "type": "text",
+                      "value": "{{Password.sha256(NOW)}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "salt",
+                      "type": "text",
+                      "value": "{{NOW}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "address",
+                      "type": "text",
+                      "value": "{{$_POST.Address}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "pin",
+                      "type": "text",
+                      "value": "{{$_POST.PIN}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "district",
+                      "type": "text",
+                      "value": "{{$_POST.District}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "state",
+                      "type": "text",
+                      "value": "{{'Assam'}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "country",
+                      "type": "text",
+                      "value": "{{'India'}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "wallet_bal",
+                      "type": "text",
+                      "value": "{{0}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "ip_address",
+                      "type": "text",
+                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "signup_via",
+                      "type": "text",
+                      "value": "{{'Android'}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "status",
+                      "type": "number",
+                      "value": "{{1}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "created_by",
+                      "type": "number",
+                      "value": "{{1}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "created_on",
+                      "type": "datetime",
+                      "value": "{{NOW}}"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "blank1",
+                      "type": "text",
+                      "value": "{{Password}}"
+                    }
+                  ],
+                  "table": "m_customer",
+                  "returning": "id",
+                  "query": "INSERT INTO m_customer\n(user_type_id, fname, lname, mobile, is_watsapp, watsapp_no, customer_email, user_password, salt, address, pin, district, state, country, wallet_bal, ip_address, signup_via, status, created_by, created_on, blank1) VALUES (:P1 /* {{6}} */, :P2 /* {{$_POST.FName}} */, :P3 /* {{$_POST.LName}} */, :P4 /* {{$_POST.Mobile}} */, :P5 /* {{$_POST.is_whatsapp}} */, :P6 /* {{($_POST.is_whatsapp=='Yes')?$_POST.Mobile:''}} */, :P7 /* {{$_POST.EmailId}} */, :P8 /* {{Password.sha256(NOW)}} */, :P9 /* {{NOW}} */, :P10 /* {{$_POST.Address}} */, :P11 /* {{$_POST.PIN}} */, :P12 /* {{$_POST.District}} */, :P13 /* {{'Assam'}} */, :P14 /* {{'India'}} */, :P15 /* {{0}} */, :P16 /* {{$_SERVER.REMOTE_ADDR}} */, :P17 /* {{'Android'}} */, :P18 /* {{1}} */, :P19 /* {{1}} */, :P20 /* {{NOW}} */, :P21 /* {{Password}} */)",
+                  "params": [
+                    {
+                      "name": ":P1",
+                      "type": "expression",
+                      "value": "{{6}}"
+                    },
+                    {
+                      "name": ":P2",
+                      "type": "expression",
+                      "value": "{{$_POST.FName}}"
+                    },
+                    {
+                      "name": ":P3",
+                      "type": "expression",
+                      "value": "{{$_POST.LName}}"
+                    },
+                    {
+                      "name": ":P4",
+                      "type": "expression",
+                      "value": "{{$_POST.Mobile}}"
+                    },
+                    {
+                      "name": ":P5",
+                      "type": "expression",
+                      "value": "{{$_POST.is_whatsapp}}"
+                    },
+                    {
+                      "name": ":P6",
+                      "type": "expression",
+                      "value": "{{($_POST.is_whatsapp=='Yes')?$_POST.Mobile:''}}"
+                    },
+                    {
+                      "name": ":P7",
+                      "type": "expression",
+                      "value": "{{$_POST.EmailId}}"
+                    },
+                    {
+                      "name": ":P8",
+                      "type": "expression",
+                      "value": "{{Password.sha256(NOW)}}"
+                    },
+                    {
+                      "name": ":P9",
+                      "type": "expression",
+                      "value": "{{NOW}}"
+                    },
+                    {
+                      "name": ":P10",
+                      "type": "expression",
+                      "value": "{{$_POST.Address}}"
+                    },
+                    {
+                      "name": ":P11",
+                      "type": "expression",
+                      "value": "{{$_POST.PIN}}"
+                    },
+                    {
+                      "name": ":P12",
+                      "type": "expression",
+                      "value": "{{$_POST.District}}"
+                    },
+                    {
+                      "name": ":P13",
+                      "type": "expression",
+                      "value": "{{'Assam'}}"
+                    },
+                    {
+                      "name": ":P14",
+                      "type": "expression",
+                      "value": "{{'India'}}"
+                    },
+                    {
+                      "name": ":P15",
+                      "type": "expression",
+                      "value": "{{0}}"
+                    },
+                    {
+                      "name": ":P16",
+                      "type": "expression",
+                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                    },
+                    {
+                      "name": ":P17",
+                      "type": "expression",
+                      "value": "{{'Android'}}"
+                    },
+                    {
+                      "name": ":P18",
+                      "type": "expression",
+                      "value": "{{1}}"
+                    },
+                    {
+                      "name": ":P19",
+                      "type": "expression",
+                      "value": "{{1}}"
+                    },
+                    {
+                      "name": ":P20",
+                      "type": "expression",
+                      "value": "{{NOW}}"
+                    },
+                    {
+                      "name": ":P21",
+                      "type": "expression",
+                      "value": "{{Password}}"
+                    }
+                  ]
+                }
+              },
+              "meta": [
+                {
+                  "name": "identity",
+                  "type": "text"
+                },
+                {
+                  "name": "affected",
+                  "type": "number"
+                }
+              ]
+            },
+            {
+              "name": "identity",
+              "module": "auth",
+              "action": "login",
+              "options": {
+                "provider": "security",
+                "username": "{{$_POST.Mobile}}",
+                "password": "{{Password.sha256(NOW)}}",
+                "remember": ""
+              },
+              "output": false,
+              "meta": []
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{identity}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "loginToken",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "{{UUID.md5(123456).substr(1, 15)}}"
+                      },
+                      "meta": [],
+                      "outputType": "text",
+                      "output": true
+                    },
+                    {
+                      "name": "loginHistory",
+                      "module": "dbupdater",
+                      "action": "insert",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "insert",
+                          "values": [
+                            {
+                              "table": "t_user_log",
+                              "column": "user_id",
+                              "type": "number",
+                              "value": "{{identity}}"
+                            },
+                            {
+                              "table": "t_user_log",
+                              "column": "ip_address",
+                              "type": "text",
+                              "value": "{{$_SERVER.REMOTE_ADDR}}"
+                            },
+                            {
+                              "table": "t_user_log",
+                              "column": "login_time",
+                              "type": "datetime",
+                              "value": "{{NOW}}"
+                            },
+                            {
+                              "table": "t_user_log",
+                              "column": "login_from",
+                              "type": "text",
+                              "value": "{{'Android'}}"
+                            },
+                            {
+                              "table": "t_user_log",
+                              "column": "remote_ip",
+                              "type": "text",
+                              "value": "{{$_SERVER.REMOTE_HOST}}"
+                            },
+                            {
+                              "table": "t_user_log",
+                              "column": "login_server",
+                              "type": "text",
+                              "value": "{{$_SERVER.SERVER_NAME}}"
+                            },
+                            {
+                              "table": "t_user_log",
+                              "column": "login_token",
+                              "type": "text",
+                              "value": "{{loginToken}}"
+                            }
+                          ],
+                          "table": "t_user_log",
+                          "returning": "id",
+                          "query": "INSERT INTO t_user_log\n(user_id, ip_address, login_time, login_from, remote_ip, login_server, login_token) VALUES (:P1 /* {{identity}} */, :P2 /* {{$_SERVER.REMOTE_ADDR}} */, :P3 /* {{NOW}} */, :P4 /* {{'Android'}} */, :P5 /* {{$_SERVER.REMOTE_HOST}} */, :P6 /* {{$_SERVER.SERVER_NAME}} */, :P7 /* {{loginToken}} */)",
+                          "params": [
+                            {
+                              "name": ":P1",
+                              "type": "expression",
+                              "value": "{{identity}}"
+                            },
+                            {
+                              "name": ":P2",
+                              "type": "expression",
+                              "value": "{{$_SERVER.REMOTE_ADDR}}"
+                            },
+                            {
+                              "name": ":P3",
+                              "type": "expression",
+                              "value": "{{NOW}}"
+                            },
+                            {
+                              "name": ":P4",
+                              "type": "expression",
+                              "value": "{{'Android'}}"
+                            },
+                            {
+                              "name": ":P5",
+                              "type": "expression",
+                              "value": "{{$_SERVER.REMOTE_HOST}}"
+                            },
+                            {
+                              "name": ":P6",
+                              "type": "expression",
+                              "value": "{{$_SERVER.SERVER_NAME}}"
+                            },
+                            {
+                              "name": ":P7",
+                              "type": "expression",
+                              "value": "{{loginToken}}"
+                            }
+                          ]
+                        }
+                      },
+                      "meta": [
+                        {
+                          "name": "identity",
+                          "type": "text"
+                        },
+                        {
+                          "name": "affected",
+                          "type": "number"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 200
+                      },
+                      "meta": [],
+                      "outputType": "text",
+                      "output": true
+                    },
+                    {
+                      "name": "Resp",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Signup and Login Success"
+                      },
+                      "meta": [],
+                      "outputType": "text",
+                      "output": true
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "Status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 403
+                      },
+                      "meta": [],
+                      "outputType": "text",
+                      "output": true
+                    },
+                    {
+                      "name": "Resp",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Signup and Login Failed"
+                      },
+                      "meta": [],
+                      "outputType": "text",
+                      "output": true
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "Status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 403
+              },
+              "meta": [],
+              "outputType": "text",
+              "output": true
+            },
+            {
+              "name": "Resp",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "outputType": "text",
+              "output": true
+            }
+          ]
+        }
+      }
+    }
+  }
+}

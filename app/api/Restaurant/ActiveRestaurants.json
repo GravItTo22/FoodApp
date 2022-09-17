@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      },
+      {
+        "type": "text",
+        "name": "limit"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "condition",
+      "options": {
+        "if": "{{$_GET.limit}}",
+        "then": {
+          "steps": {
+            "name": "FetchRest",
+            "module": "dbupdater",
+            "action": "custom",
+            "options": {
+              "connection": "ClientApp",
+              "sql": {
+                "query": "SELECT id, gen_shop_id, shop_name_en, shop_name_bn, shop_name_hin, shop_logo FROM m_restaurant mr ORDER BY random() LIMIT @limit",
+                "params": [
+                  {
+                    "name": "@limit",
+                    "value": "{{$_GET.limit}}"
+                  }
+                ]
+              }
+            },
+            "output": true,
+            "meta": [
+              {
+                "name": "id",
+                "type": "number"
+              },
+              {
+                "name": "gen_shop_id",
+                "type": "text"
+              },
+              {
+                "name": "shop_name_en",
+                "type": "text"
+              },
+              {
+                "name": "shop_name_bn",
+                "type": "text"
+              },
+              {
+                "name": "shop_name_hin",
+                "type": "text"
+              },
+              {
+                "name": "shop_logo",
+                "type": "text"
+              }
+            ],
+            "outputType": "array"
+          }
+        },
+        "else": {
+          "steps": {
+            "name": "FetchRest",
+            "module": "dbupdater",
+            "action": "custom",
+            "options": {
+              "connection": "ClientApp",
+              "sql": {
+                "query": "SELECT id, gen_shop_id, shop_name_en, shop_name_bn, shop_name_hin, shop_logo FROM m_restaurant mr ORDER BY random()",
+                "params": []
+              }
+            },
+            "output": true,
+            "meta": [
+              {
+                "name": "id",
+                "type": "number"
+              },
+              {
+                "name": "gen_shop_id",
+                "type": "text"
+              },
+              {
+                "name": "shop_name_en",
+                "type": "text"
+              },
+              {
+                "name": "shop_name_bn",
+                "type": "text"
+              },
+              {
+                "name": "shop_name_hin",
+                "type": "text"
+              },
+              {
+                "name": "shop_logo",
+                "type": "text"
+              }
+            ],
+            "outputType": "array"
+          }
+        }
+      },
+      "outputType": "boolean"
+    }
+  }
+}

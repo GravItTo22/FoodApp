@@ -1,0 +1,186 @@
+{
+  "meta": {
+    "options": {
+      "linkedFile": "/views/layouts/main.ejs",
+      "linkedForm": "scformSignin"
+    },
+    "$_POST": [
+      {
+        "type": "number",
+        "fieldName": "Mobile",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            },
+            "core:number": {}
+          }
+        },
+        "name": "Mobile"
+      },
+      {
+        "type": "text",
+        "fieldName": "Password",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "Password"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetSalt",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "m_customer",
+                      "column": "salt"
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "user_type_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "m_customer"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "m_customer.mobile",
+                        "field": "m_customer.mobile",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_POST.Mobile}}",
+                        "data": {
+                          "table": "m_customer",
+                          "column": "mobile",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "mobile"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "m_customer.status",
+                        "field": "m_customer.status",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": 1,
+                        "data": {
+                          "table": "m_customer",
+                          "column": "status",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "integer",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "status"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT salt, user_type_id\nFROM m_customer\nWHERE mobile = :P1 /* {{$_POST.Mobile}} */ AND status = 1",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_POST.Mobile}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "text",
+                  "name": "salt"
+                },
+                {
+                  "type": "number",
+                  "name": "user_type_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "identity",
+              "module": "auth",
+              "action": "login",
+              "options": {
+                "provider": "security",
+                "username": "{{$_POST.Mobile}}",
+                "password": "{{$_POST.Password.sha256(GetSalt.salt)}}",
+                "remember": ""
+              },
+              "output": false,
+              "meta": []
+            },
+            {
+              "name": "sessionLogin",
+              "module": "core",
+              "action": "setsession",
+              "options": {
+                "value": 1
+              },
+              "output": true
+            },
+            {
+              "name": "Resp",
+              "module": "core",
+              "action": "response",
+              "options": {
+                "status": 200,
+                "data": "Login Success"
+              },
+              "output": true
+            }
+          ]
+        },
+        "catch": {
+          "steps": {
+            "name": "Resp",
+            "module": "core",
+            "action": "response",
+            "options": {
+              "status": 403,
+              "data": "Suspicious Activity"
+            }
+          }
+        }
+      }
+    }
+  }
+}

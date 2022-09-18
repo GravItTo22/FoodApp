@@ -76,7 +76,7 @@
                     <li dmx-repeat:repeatlanguage="scLanguage.data.GetLanguage" dmx-on:click="varLanguage.setValue(scLanguage.data.GetLanguage[$index].language_name)"><a href="#">{{scLanguage.data.GetLanguage[$index].language_name}}</a></li>
                 </ul>
             </div>
-            <div class="header__top__right__auth">
+            <div class="header__top__right__auth" dmx-hide="scDashboardInfo.data.varLogin==1">
                 <a href="#"><i class="fa fa-user"></i> Login</a>
             </div>
             <div class="header__top__right__profile" dmx-show="scDashboardInfo.data.varLogin==1">

@@ -129,6 +129,22 @@
                     {
                       "table": "r_price",
                       "column": "product_tax"
+                    },
+                    {
+                      "table": "m_rest",
+                      "column": "shop_name_en"
+                    },
+                    {
+                      "table": "m_rest",
+                      "column": "shop_name_bn"
+                    },
+                    {
+                      "table": "m_rest",
+                      "column": "shop_name_hin"
+                    },
+                    {
+                      "table": "m_prod",
+                      "column": "rest_id"
                     }
                   ],
                   "table": {
@@ -173,6 +189,28 @@
                             "value": {
                               "table": "r_cart",
                               "column": "price_id"
+                            },
+                            "operation": "="
+                          }
+                        ]
+                      },
+                      "primary": "id"
+                    },
+                    {
+                      "table": "m_restaurant",
+                      "column": "*",
+                      "alias": "m_rest",
+                      "type": "LEFT",
+                      "clauses": {
+                        "condition": "AND",
+                        "rules": [
+                          {
+                            "table": "m_rest",
+                            "column": "id",
+                            "operator": "equal",
+                            "value": {
+                              "table": "m_prod",
+                              "column": "rest_id"
                             },
                             "operation": "="
                           }
@@ -234,7 +272,7 @@
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT r_cart.id, r_cart.prod_id, r_cart.price_id, r_cart.user_id, r_cart.prod_unit_price, r_cart.prod_qty, r_cart.total_price, m_prod.prod_name_en, m_prod.prod_name_bn, m_prod.prod_name_hin, m_prod.prod_desc_en, m_prod.prod_desc_bn, m_prod.prod_desc_hin, m_prod.prod_img1, r_price.quantity, r_price.q_unit, r_price.mrp, r_price.selling_price AS price, r_price.product_tax\nFROM r_cart\nLEFT JOIN m_product AS m_prod ON (m_prod.id = r_cart.prod_id) LEFT JOIN r_price_table AS r_price ON (r_price.id = r_cart.price_id)\nWHERE r_cart.user_id = :P1 /* {{identity}} */ OR r_cart.ip_address = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
+                  "query": "SELECT r_cart.id, r_cart.prod_id, r_cart.price_id, r_cart.user_id, r_cart.prod_unit_price, r_cart.prod_qty, r_cart.total_price, m_prod.prod_name_en, m_prod.prod_name_bn, m_prod.prod_name_hin, m_prod.prod_desc_en, m_prod.prod_desc_bn, m_prod.prod_desc_hin, m_prod.prod_img1, r_price.quantity, r_price.q_unit, r_price.mrp, r_price.selling_price AS price, r_price.product_tax, m_rest.shop_name_en, m_rest.shop_name_bn, m_rest.shop_name_hin, m_prod.rest_id\nFROM r_cart\nLEFT JOIN m_product AS m_prod ON (m_prod.id = r_cart.prod_id) LEFT JOIN r_price_table AS r_price ON (r_price.id = r_cart.price_id) LEFT JOIN m_restaurant AS m_rest ON (m_rest.id = m_prod.rest_id)\nWHERE r_cart.user_id = :P1 /* {{identity}} */ OR r_cart.ip_address = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
                   "params": [
                     {
                       "operator": "equal",
@@ -380,6 +418,22 @@
                     {
                       "type": "text",
                       "name": "product_tax"
+                    },
+                    {
+                      "type": "text",
+                      "name": "shop_name_en"
+                    },
+                    {
+                      "type": "text",
+                      "name": "shop_name_bn"
+                    },
+                    {
+                      "type": "text",
+                      "name": "shop_name_hin"
+                    },
+                    {
+                      "type": "number",
+                      "name": "rest_id"
                     }
                   ]
                 }
@@ -474,6 +528,22 @@
                   {
                     "table": "r_price",
                     "column": "product_tax"
+                  },
+                  {
+                    "table": "m_rest",
+                    "column": "shop_name_en"
+                  },
+                  {
+                    "table": "m_rest",
+                    "column": "shop_name_bn"
+                  },
+                  {
+                    "table": "m_rest",
+                    "column": "shop_name_hin"
+                  },
+                  {
+                    "table": "m_prod",
+                    "column": "rest_id"
                   }
                 ],
                 "table": {
@@ -524,6 +594,28 @@
                       ]
                     },
                     "primary": "id"
+                  },
+                  {
+                    "table": "m_restaurant",
+                    "column": "*",
+                    "alias": "m_rest",
+                    "type": "LEFT",
+                    "clauses": {
+                      "condition": "AND",
+                      "rules": [
+                        {
+                          "table": "m_rest",
+                          "column": "id",
+                          "operator": "equal",
+                          "value": {
+                            "table": "m_prod",
+                            "column": "rest_id"
+                          },
+                          "operation": "="
+                        }
+                      ]
+                    },
+                    "primary": "id"
                   }
                 ],
                 "wheres": {
@@ -554,7 +646,7 @@
                   "conditional": null,
                   "valid": true
                 },
-                "query": "SELECT r_cart.id, r_cart.prod_id, r_cart.price_id, r_cart.user_id, r_cart.prod_unit_price, r_cart.prod_qty, r_cart.total_price, m_prod.prod_name_en, m_prod.prod_name_bn, m_prod.prod_name_hin, m_prod.prod_desc_en, m_prod.prod_desc_bn, m_prod.prod_desc_hin, m_prod.prod_img1, r_price.quantity, r_price.q_unit, r_price.mrp, r_price.selling_price AS price, r_price.product_tax\nFROM r_cart\nLEFT JOIN m_product AS m_prod ON (m_prod.id = r_cart.prod_id) LEFT JOIN r_price_table AS r_price ON (r_price.id = r_cart.price_id)\nWHERE r_cart.ip_address = :P1 /* {{$_SERVER.REMOTE_ADDR}} */",
+                "query": "SELECT r_cart.id, r_cart.prod_id, r_cart.price_id, r_cart.user_id, r_cart.prod_unit_price, r_cart.prod_qty, r_cart.total_price, m_prod.prod_name_en, m_prod.prod_name_bn, m_prod.prod_name_hin, m_prod.prod_desc_en, m_prod.prod_desc_bn, m_prod.prod_desc_hin, m_prod.prod_img1, r_price.quantity, r_price.q_unit, r_price.mrp, r_price.selling_price AS price, r_price.product_tax, m_rest.shop_name_en, m_rest.shop_name_bn, m_rest.shop_name_hin, m_prod.rest_id\nFROM r_cart\nLEFT JOIN m_product AS m_prod ON (m_prod.id = r_cart.prod_id) LEFT JOIN r_price_table AS r_price ON (r_price.id = r_cart.price_id) LEFT JOIN m_restaurant AS m_rest ON (m_rest.id = m_prod.rest_id)\nWHERE r_cart.ip_address = :P1 /* {{$_SERVER.REMOTE_ADDR}} */",
                 "params": [
                   {
                     "operator": "equal",
@@ -694,6 +786,22 @@
                   {
                     "type": "text",
                     "name": "product_tax"
+                  },
+                  {
+                    "type": "text",
+                    "name": "shop_name_en"
+                  },
+                  {
+                    "type": "text",
+                    "name": "shop_name_bn"
+                  },
+                  {
+                    "type": "text",
+                    "name": "shop_name_hin"
+                  },
+                  {
+                    "type": "number",
+                    "name": "rest_id"
                   }
                 ]
               }

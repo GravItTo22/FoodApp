@@ -20,6 +20,12 @@
         "name": "price"
       }
     ],
+    "$_SESSION": [
+      {
+        "type": "text",
+        "name": "sessionLogin"
+      }
+    ],
     "$_SERVER": [
       {
         "type": "text",
@@ -29,16 +35,6 @@
   },
   "exec": {
     "steps": [
-      {
-        "name": "identity",
-        "module": "auth",
-        "action": "identify",
-        "options": {
-          "provider": "security"
-        },
-        "output": false,
-        "meta": []
-      },
       {
         "name": "GetProduct",
         "module": "dbconnector",
@@ -331,131 +327,533 @@
         "outputType": "object"
       },
       {
-        "name": "AddProduct",
-        "module": "dbupdater",
-        "action": "insert",
+        "name": "",
+        "module": "core",
+        "action": "condition",
         "options": {
-          "connection": "ClientApp",
-          "sql": {
-            "type": "insert",
-            "values": [
+          "if": "{{$_SESSION.sessionLogin}}",
+          "then": {
+            "steps": [
               {
-                "table": "r_wishlist",
-                "column": "prod_id",
-                "type": "number",
-                "value": "{{GetProduct.id}}"
+                "name": "identity",
+                "module": "auth",
+                "action": "identify",
+                "options": {
+                  "provider": "security"
+                },
+                "output": false,
+                "meta": []
               },
               {
-                "table": "r_wishlist",
-                "column": "price_id",
-                "type": "number",
-                "value": "{{GetProduct.price_id}}"
+                "name": "GetWishlistInfo",
+                "module": "dbconnector",
+                "action": "single",
+                "options": {
+                  "connection": "ClientApp",
+                  "sql": {
+                    "type": "SELECT",
+                    "columns": [
+                      {
+                        "table": "r_wishlist",
+                        "column": "id",
+                        "alias": "CountProd",
+                        "aggregate": "COUNT"
+                      }
+                    ],
+                    "table": {
+                      "name": "r_wishlist"
+                    },
+                    "primary": "id",
+                    "joins": [],
+                    "groupBy": [],
+                    "wheres": {
+                      "condition": "AND",
+                      "rules": [
+                        {
+                          "id": "r_wishlist.prod_id",
+                          "field": "r_wishlist.prod_id",
+                          "type": "double",
+                          "operator": "equal",
+                          "value": "{{GetProduct.id}}",
+                          "data": {
+                            "table": "r_wishlist",
+                            "column": "prod_id",
+                            "type": "number",
+                            "columnObj": {
+                              "type": "integer",
+                              "primary": false,
+                              "unique": false,
+                              "nullable": true,
+                              "name": "prod_id"
+                            }
+                          },
+                          "operation": "="
+                        },
+                        {
+                          "condition": "OR",
+                          "rules": [
+                            {
+                              "id": "r_wishlist.user_id",
+                              "field": "r_wishlist.user_id",
+                              "type": "double",
+                              "operator": "equal",
+                              "value": "{{identity}}",
+                              "data": {
+                                "table": "r_wishlist",
+                                "column": "user_id",
+                                "type": "number",
+                                "columnObj": {
+                                  "type": "integer",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "user_id"
+                                }
+                              },
+                              "operation": "="
+                            },
+                            {
+                              "id": "r_wishlist.ips",
+                              "field": "r_wishlist.ips",
+                              "type": "string",
+                              "operator": "equal",
+                              "value": "{{$_SERVER.REMOTE_ADDR}}",
+                              "data": {
+                                "table": "r_wishlist",
+                                "column": "ips",
+                                "type": "text",
+                                "columnObj": {
+                                  "type": "string",
+                                  "maxLength": -5,
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "ips"
+                                }
+                              },
+                              "operation": "="
+                            }
+                          ],
+                          "conditional": null
+                        }
+                      ],
+                      "conditional": null,
+                      "valid": true
+                    },
+                    "query": "SELECT COUNT(id) AS CountProd\nFROM r_wishlist\nWHERE prod_id = :P1 /* {{GetProduct.id}} */ AND (user_id = :P2 /* {{identity}} */ OR ips = :P3 /* {{$_SERVER.REMOTE_ADDR}} */)",
+                    "params": [
+                      {
+                        "operator": "equal",
+                        "type": "expression",
+                        "name": ":P1",
+                        "value": "{{GetProduct.id}}"
+                      },
+                      {
+                        "operator": "equal",
+                        "type": "expression",
+                        "name": ":P2",
+                        "value": "{{identity}}"
+                      },
+                      {
+                        "operator": "equal",
+                        "type": "expression",
+                        "name": ":P3",
+                        "value": "{{$_SERVER.REMOTE_ADDR}}"
+                      }
+                    ]
+                  }
+                },
+                "output": false,
+                "meta": [
+                  {
+                    "type": "number",
+                    "name": "CountProd"
+                  }
+                ],
+                "outputType": "object"
               },
               {
-                "table": "r_wishlist",
-                "column": "user_id",
-                "type": "number",
-                "value": "{{identity?identity:''}}"
-              },
-              {
-                "table": "r_wishlist",
-                "column": "prod_unit_price",
-                "type": "text",
-                "value": "{{GetProduct.price}}"
-              },
-              {
-                "table": "r_wishlist",
-                "column": "prod_qty",
-                "type": "text",
-                "value": "{{GetProduct.quantity}}"
-              },
-              {
-                "table": "r_wishlist",
-                "column": "total_price",
-                "type": "text",
-                "value": "{{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}}"
-              },
-              {
-                "table": "r_wishlist",
-                "column": "ips",
-                "type": "text",
-                "value": "{{$_SERVER.REMOTE_ADDR}}"
-              },
-              {
-                "table": "r_wishlist",
-                "column": "created_by",
-                "type": "number",
-                "value": "{{identity?identity:''}}"
-              },
-              {
-                "table": "r_wishlist",
-                "column": "created_on",
-                "type": "datetime",
-                "value": "{{NOW}}"
+                "name": "",
+                "module": "core",
+                "action": "condition",
+                "options": {
+                  "if": "{{GetWishlistInfo.CountProd<1}}",
+                  "then": {
+                    "steps": {
+                      "name": "AddProduct",
+                      "module": "dbupdater",
+                      "action": "insert",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "insert",
+                          "values": [
+                            {
+                              "table": "r_wishlist",
+                              "column": "prod_id",
+                              "type": "number",
+                              "value": "{{GetProduct.id}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "price_id",
+                              "type": "number",
+                              "value": "{{GetProduct.price_id}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "user_id",
+                              "type": "number",
+                              "value": "{{identity?identity:''}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "prod_unit_price",
+                              "type": "text",
+                              "value": "{{GetProduct.price}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "prod_qty",
+                              "type": "text",
+                              "value": "{{GetProduct.quantity}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "total_price",
+                              "type": "text",
+                              "value": "{{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "ips",
+                              "type": "text",
+                              "value": "{{$_SERVER.REMOTE_ADDR}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "created_by",
+                              "type": "number",
+                              "value": "{{identity?identity:''}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "created_on",
+                              "type": "datetime",
+                              "value": "{{NOW}}"
+                            }
+                          ],
+                          "table": "r_wishlist",
+                          "returning": "id",
+                          "query": "INSERT INTO r_wishlist\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, ips, created_by, created_on) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{identity?identity:''}} */, :P4 /* {{GetProduct.price}} */, :P5 /* {{GetProduct.quantity}} */, :P6 /* {{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{identity?identity:''}} */, :P9 /* {{NOW}} */)",
+                          "params": [
+                            {
+                              "name": ":P1",
+                              "type": "expression",
+                              "value": "{{GetProduct.id}}"
+                            },
+                            {
+                              "name": ":P2",
+                              "type": "expression",
+                              "value": "{{GetProduct.price_id}}"
+                            },
+                            {
+                              "name": ":P3",
+                              "type": "expression",
+                              "value": "{{identity?identity:''}}"
+                            },
+                            {
+                              "name": ":P4",
+                              "type": "expression",
+                              "value": "{{GetProduct.price}}"
+                            },
+                            {
+                              "name": ":P5",
+                              "type": "expression",
+                              "value": "{{GetProduct.quantity}}"
+                            },
+                            {
+                              "name": ":P6",
+                              "type": "expression",
+                              "value": "{{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}}"
+                            },
+                            {
+                              "name": ":P7",
+                              "type": "expression",
+                              "value": "{{$_SERVER.REMOTE_ADDR}}"
+                            },
+                            {
+                              "name": ":P8",
+                              "type": "expression",
+                              "value": "{{identity?identity:''}}"
+                            },
+                            {
+                              "name": ":P9",
+                              "type": "expression",
+                              "value": "{{NOW}}"
+                            }
+                          ]
+                        }
+                      },
+                      "meta": [
+                        {
+                          "name": "identity",
+                          "type": "text"
+                        },
+                        {
+                          "name": "affected",
+                          "type": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "else": {
+                    "steps": {
+                      "name": "Resp",
+                      "module": "core",
+                      "action": "response",
+                      "options": {
+                        "status": 403,
+                        "data": "Product already exists in Wish-List"
+                      },
+                      "output": true
+                    }
+                  }
+                },
+                "outputType": "boolean"
               }
-            ],
-            "table": "r_wishlist",
-            "returning": "id",
-            "query": "INSERT INTO r_wishlist\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, ips, created_by, created_on) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{identity?identity:''}} */, :P4 /* {{GetProduct.price}} */, :P5 /* {{GetProduct.quantity}} */, :P6 /* {{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{identity?identity:''}} */, :P9 /* {{NOW}} */)",
-            "params": [
+            ]
+          },
+          "else": {
+            "steps": [
               {
-                "name": ":P1",
-                "type": "expression",
-                "value": "{{GetProduct.id}}"
+                "name": "GetWishlistInfo",
+                "module": "dbconnector",
+                "action": "single",
+                "options": {
+                  "connection": "ClientApp",
+                  "sql": {
+                    "type": "SELECT",
+                    "columns": [
+                      {
+                        "table": "r_wishlist",
+                        "column": "id",
+                        "alias": "CountProd",
+                        "aggregate": "COUNT"
+                      }
+                    ],
+                    "table": {
+                      "name": "r_wishlist"
+                    },
+                    "primary": "id",
+                    "joins": [],
+                    "groupBy": [],
+                    "wheres": {
+                      "condition": "AND",
+                      "rules": [
+                        {
+                          "id": "r_wishlist.prod_id",
+                          "field": "r_wishlist.prod_id",
+                          "type": "double",
+                          "operator": "equal",
+                          "value": "{{GetProduct.id}}",
+                          "data": {
+                            "table": "r_wishlist",
+                            "column": "prod_id",
+                            "type": "number",
+                            "columnObj": {
+                              "type": "integer",
+                              "primary": false,
+                              "unique": false,
+                              "nullable": true,
+                              "name": "prod_id"
+                            }
+                          },
+                          "operation": "="
+                        },
+                        {
+                          "id": "r_wishlist.ips",
+                          "field": "r_wishlist.ips",
+                          "type": "string",
+                          "operator": "equal",
+                          "value": "{{$_SERVER.REMOTE_ADDR}}",
+                          "data": {
+                            "table": "r_wishlist",
+                            "column": "ips",
+                            "type": "text",
+                            "columnObj": {
+                              "type": "string",
+                              "maxLength": -5,
+                              "primary": false,
+                              "unique": false,
+                              "nullable": true,
+                              "name": "ips"
+                            }
+                          },
+                          "operation": "="
+                        }
+                      ],
+                      "conditional": null,
+                      "valid": true
+                    },
+                    "query": "SELECT COUNT(id) AS CountProd\nFROM r_wishlist\nWHERE prod_id = :P1 /* {{GetProduct.id}} */ AND ips = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
+                    "params": [
+                      {
+                        "operator": "equal",
+                        "type": "expression",
+                        "name": ":P1",
+                        "value": "{{GetProduct.id}}"
+                      },
+                      {
+                        "operator": "equal",
+                        "type": "expression",
+                        "name": ":P2",
+                        "value": "{{$_SERVER.REMOTE_ADDR}}"
+                      }
+                    ]
+                  }
+                },
+                "output": false,
+                "meta": [
+                  {
+                    "type": "number",
+                    "name": "CountProd"
+                  }
+                ],
+                "outputType": "object"
               },
               {
-                "name": ":P2",
-                "type": "expression",
-                "value": "{{GetProduct.price_id}}"
-              },
-              {
-                "name": ":P3",
-                "type": "expression",
-                "value": "{{identity?identity:''}}"
-              },
-              {
-                "name": ":P4",
-                "type": "expression",
-                "value": "{{GetProduct.price}}"
-              },
-              {
-                "name": ":P5",
-                "type": "expression",
-                "value": "{{GetProduct.quantity}}"
-              },
-              {
-                "name": ":P6",
-                "type": "expression",
-                "value": "{{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}}"
-              },
-              {
-                "name": ":P7",
-                "type": "expression",
-                "value": "{{$_SERVER.REMOTE_ADDR}}"
-              },
-              {
-                "name": ":P8",
-                "type": "expression",
-                "value": "{{identity?identity:''}}"
-              },
-              {
-                "name": ":P9",
-                "type": "expression",
-                "value": "{{NOW}}"
+                "name": "",
+                "module": "core",
+                "action": "condition",
+                "options": {
+                  "if": "{{GetWishlistInfo.CountProd<1}}",
+                  "then": {
+                    "steps": {
+                      "name": "AddProduct",
+                      "module": "dbupdater",
+                      "action": "insert",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "insert",
+                          "values": [
+                            {
+                              "table": "r_wishlist",
+                              "column": "prod_id",
+                              "type": "number",
+                              "value": "{{GetProduct.id}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "price_id",
+                              "type": "number",
+                              "value": "{{GetProduct.price_id}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "prod_unit_price",
+                              "type": "text",
+                              "value": "{{GetProduct.price}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "prod_qty",
+                              "type": "text",
+                              "value": "{{GetProduct.quantity}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "total_price",
+                              "type": "text",
+                              "value": "{{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "ips",
+                              "type": "text",
+                              "value": "{{$_SERVER.REMOTE_ADDR}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "created_on",
+                              "type": "datetime",
+                              "value": "{{NOW}}"
+                            }
+                          ],
+                          "table": "r_wishlist",
+                          "returning": "id",
+                          "query": "INSERT INTO r_wishlist\n(prod_id, price_id, prod_unit_price, prod_qty, total_price, ips, created_on) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetProduct.price}} */, :P4 /* {{GetProduct.quantity}} */, :P5 /* {{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}} */, :P6 /* {{$_SERVER.REMOTE_ADDR}} */, :P7 /* {{NOW}} */)",
+                          "params": [
+                            {
+                              "name": ":P1",
+                              "type": "expression",
+                              "value": "{{GetProduct.id}}"
+                            },
+                            {
+                              "name": ":P2",
+                              "type": "expression",
+                              "value": "{{GetProduct.price_id}}"
+                            },
+                            {
+                              "name": ":P3",
+                              "type": "expression",
+                              "value": "{{GetProduct.price}}"
+                            },
+                            {
+                              "name": ":P4",
+                              "type": "expression",
+                              "value": "{{GetProduct.quantity}}"
+                            },
+                            {
+                              "name": ":P5",
+                              "type": "expression",
+                              "value": "{{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}}"
+                            },
+                            {
+                              "name": ":P6",
+                              "type": "expression",
+                              "value": "{{$_SERVER.REMOTE_ADDR}}"
+                            },
+                            {
+                              "name": ":P7",
+                              "type": "expression",
+                              "value": "{{NOW}}"
+                            }
+                          ]
+                        }
+                      },
+                      "meta": [
+                        {
+                          "name": "identity",
+                          "type": "text"
+                        },
+                        {
+                          "name": "affected",
+                          "type": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "else": {
+                    "steps": {
+                      "name": "Resp",
+                      "module": "core",
+                      "action": "response",
+                      "options": {
+                        "status": 403,
+                        "data": "Product already exists in Wish-List"
+                      },
+                      "output": true
+                    }
+                  }
+                },
+                "outputType": "boolean"
               }
             ]
           }
         },
-        "meta": [
-          {
-            "name": "identity",
-            "type": "text"
-          },
-          {
-            "name": "affected",
-            "type": "number"
-          }
-        ]
+        "outputType": "boolean"
       }
     ]
   }

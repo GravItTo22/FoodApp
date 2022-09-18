@@ -1,6 +1,57 @@
 <!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="restaurants" appConnect="local" -->
 <meta name="ac:route" content="/restaurants">
 <dmx-serverconnect id="scActiveRest" url="/api/Restaurant/ActiveRestaurants"></dmx-serverconnect>
+<!-- Hero Section Begin -->
+<section class="hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="hero__categories">
+                    <div class="hero__categories__all">
+                        <i class="fa fa-bars"></i>
+                        <span>Menu</span>
+                    </div>
+                    <ul>
+                        <li><a href="categories">Categories</a></li>
+                        <li><a href="restaurants">Restaurant</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="hero__search">
+                    <div class="hero__search__form">
+                        <form action="#">
+                            <div class="hero__search__categories">
+                                All Categories
+                                <span class="arrow_carrot-down"></span>
+                            </div>
+                            <input type="text" placeholder="What do yo u need?">
+                            <button type="submit" class="site-btn">SEARCH</button>
+                        </form>
+                    </div>
+                    <div class="hero__search__phone">
+                        <div class="hero__search__phone__icon">
+                            <i class="fa fa-phone"></i>
+                        </div>
+                        <div class="hero__search__phone__text">
+                            <h5>+91 9287954127</h5>
+                            <span>support 24/7 time</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero__item set-bg" data-setbg="assets/img/hero/banner.jpg">
+                    <div class="hero__text">
+                        <span>FRESH FOOD</span>
+                        <h2>Food <br />100% pure</h2>
+                        <p>Free Pickup and Delivery Available</p>
+                        <a href="#" class="primary-btn">SHOP NOW</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Hero Section End -->
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
     <div class="container">
@@ -28,13 +79,13 @@
             </div>
         </div>
         <div class="row mx-0 w-100" id="repeat1" is="dmx-repeat" dmx-bind:repeat="scActiveRest.data.FetchRest" key="id">
-            <div class="col-3 my-3">
+            <div class="col-lg-3 col-md-4 col-6 my-3">
                 <div class="card col-auto px-0">
                     <img dmx-bind:src="'https://secure.gravitto.com'+content.scActiveRest.data.FetchRest[$index].shop_logo" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h6 class="card-text">{{varLanguage.value=='English'?content.scActiveRest.data.FetchRest[$index].shop_name_en:varLanguage.value=='Hindi'?content.scActiveRest.data.FetchRest[$index].shop_name_hin:varLanguage.value=='Bengali'?content.scActiveRest.data.FetchRest[$index].shop_name_bn:content.scActiveRest.data.FetchRest[$index].shop_name_en}}</h6>
-                        <div class="hero__text  my-3">
-                            <a href="#" class="primary-btn">{{varLanguage.value=='English'?'Select':varLanguage.value=='Bengali'?'নির্বাচন করুন':varLanguage.value=='Hindi'?'चयन करें':'Select'}}</a>
+                        <div class="hero__text text-center my-3">
+                            <a href="shop-details" class="primary-btn">{{varLanguage.value=='English'?'Select':varLanguage.value=='Bengali'?'নির্বাচন করুন':varLanguage.value=='Hindi'?'चयन करें':'Select'}}</a>
                         </div>
                     </div>
                 </div>

@@ -57,52 +57,53 @@
     <!-- Humberger Begin -->
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
-        <div class="humberger__menu__logo">
+        <div class="humberger__menu__logo text-center">
             <a href="#"><img src="assets/img/logo.png" alt=""></a>
         </div>
-        <div class="humberger__menu__cart">
+        <div class="humberger__menu__cart text-center">
             <ul>
-                <li><a href="#"><i class="fa fa-heart"></i> <span dmx-show="scDashboardInfo.data.GetWishlist.WishlistItems">{{scDashboardInfo.data.GetWishlist.WishlistItems}}</span></a></li>
-                <li><a href="#"><i class="fa fa-shopping-bag"></i> <span dmx-show="scDashboardInfo.data.GetCartItems.Cart_Items">{{scDashboardInfo.data.GetCartItems.Cart_Items}}</span></a></li>
+                <li><a href="#"><i class="fa fa-heart"></i> <span dmx-show="(scDashboardInfo.data.GetWishlist.WishlistItems.toNumber()>0)">{{scDashboardInfo.data.GetWishlist.WishlistItems}}</span></a></li>
+                <li><a href="#"><i class="fa fa-shopping-bag"></i> <span dmx-show="(scDashboardInfo.data.GetCartItems.Cart_Items.toNumber()>0)">{{scDashboardInfo.data.GetCartItems.Cart_Items}}</span></a></li>
             </ul>
             <div class="header__cart__price">Wallet: <span><i class="fa fa-rupee"></i>{{scDashboardInfo.data.GetUserInfo.wallet_bal}}</span></div>
         </div>
         <div class="humberger__menu__widget">
             <div class="header__top__right__language">
                 <img src="assets/img/language.png" alt="">
-                <div>English</div>
+                <div>{{varLanguage.value}}</div>
                 <span class="arrow_carrot-down"></span>
                 <ul>
-                    <li><a href="#">Spanis</a></li>
-                    <li><a href="#">English</a></li>
+                    <li dmx-repeat:repeatlanguage="scLanguage.data.GetLanguage" dmx-on:click="varLanguage.setValue(scLanguage.data.GetLanguage[$index].language_name)"><a href="#">{{scLanguage.data.GetLanguage[$index].language_name}}</a></li>
                 </ul>
             </div>
             <div class="header__top__right__auth">
                 <a href="#"><i class="fa fa-user"></i> Login</a>
             </div>
-            <div><i class="fa fa-user"></i> Ariful</div>
-            <span class="arrow_carrot-down"></span>
-            <ul>
-                <li><a href="#">My profile</a></li>
-                <li><a href="#">My Order</a></li>
-                <li><a href="#">Wishlist</a></li>
-                <li><a href="#">Logout</a></li>
-
-            </ul>
+            <div class="header__top__right__profile" dmx-show="scDashboardInfo.data.varLogin==1">
+                <div><i class="fa fa-user"></i> {{scDashboardInfo.data.GetUserInfo.fname}}</div>
+                <span class="arrow_carrot-down"></span>
+                <ul>
+                    <li><a href="#">My Profile</a></li>
+                    <li><a href="#">My Order</a></li>
+                    <li><a href="#">Notification</a></li>
+                    <li><a href="#">Wishlist</a></li>
+                    <li><a href="#">Logout</a></li>
+                </ul>
+            </div>
         </div>
         <nav class="humberger__menu__nav mobile-menu">
             <ul>
                 <li class="active"><a href="/">Home</a></li>
-                <li><a href="restaurants">Restaurant/ Shop</a></li>
-                <li><a href="#">Pages</a>
+                <li><a href="restaurants">Shops</a></li>
+                <li><a href="categories">Category</a></li>
+                <!-- <li><a href="#">Pages</a>
                     <ul class="header__menu__dropdown">
                         <li><a href="shop-details">Shop Details</a></li>
                         <li><a href="cart">Shoping Cart</a></li>
                         <li><a href="checkout">Check Out</a></li>
                         <li><a href="blog-details">Blog Details</a></li>
                     </ul>
-                </li>
-                <li><a href="blog">Blog</a></li>
+                </li> -->
                 <li><a href="contact">Contact</a></li>
             </ul>
         </nav>
@@ -256,18 +257,15 @@
                     <nav class="header__menu">
                         <ul>
                             <li class="active"><a href="/">Home</a></li>
-                            <li><a href="restaurants">Restaurant/ Shop</a></li>
-                            <li><a href="#">Pages</a>
+                            <li><a href="restaurants">Shops</a></li>
+                            <li><a href="categories">Category</a></li>
+                            <!-- <li><a href="#">Pages</a>
                                 <ul class="header__menu__dropdown">
                                     <li><a href="shop-details">product Details</a></li>
                                     <li><a href="cart">Shoping Cart</a></li>
                                     <li><a href="checkout">Check Out</a></li>
-                                    <!--  <li><a href="./blog">Blog</a></li>
-                                    <li><a href="./blog-details">Blog Details</a></li>
-                                    -->
                                 </ul>
-                            </li>
-                            <!--- <li><a href="./blog">Blog</a></li>-->
+                            </li> -->
                             <li><a href="contact">Contact</a></li>
                         </ul>
                     </nav>
@@ -275,8 +273,8 @@
                 <div class="col-lg-3">
                     <div class="header__cart">
                         <ul>
-                            <li><a href="wish-list"><i class="fa fa-heart"></i> <span dmx-show="scDashboardInfo.data.GetWishlist.WishlistItems">{{scDashboardInfo.data.GetWishlist.WishlistItems}}</span></a></li>
-                            <li><a href="cart"><i class="fa fa-shopping-bag"></i> <span dmx-show="scDashboardInfo.data.GetCartItems.Cart_Items">{{scDashboardInfo.data.GetCartItems.Cart_Items}}</span></a></li>
+                            <li><a href="wish-list"><i class="fa fa-heart"></i> <span dmx-show="(scDashboardInfo.data.GetWishlist.WishlistItems.toNumber()>0)">{{scDashboardInfo.data.GetWishlist.WishlistItems}}</span></a></li>
+                            <li><a href="cart"><i class="fa fa-shopping-bag"></i> <span dmx-show="(scDashboardInfo.data.GetCartItems.Cart_Items.toNumber()>0)">{{scDashboardInfo.data.GetCartItems.Cart_Items}}</span></a></li>
                         </ul>
                         <div class="header__cart__price">Wallet: <span><i class="fa fa-rupee"></i>{{scDashboardInfo.data.GetUserInfo.wallet_bal?scDashboardInfo.data.GetUserInfo.wallet_bal:0}}</span></div>
                     </div>
@@ -304,7 +302,7 @@
                         <ul>
                             <li>Address: Shyam Sundar Sarani, Sonai Road, Silchar-06</li>
                             <li>Phone: +91 9287954127</li>
-                            <li>Email: gravittofoods@gmail.com</li>
+                            <li>Email: gravittofood@gmail.com</li>
                         </ul>
                     </div>
                 </div>

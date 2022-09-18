@@ -14,7 +14,7 @@
                         <span>Menu</span>
                     </div>
                     <ul>
-                        <li><a href="#">Categories</a></li>
+                        <li><a href="categories">Categories</a></li>
                         <li><a href="restaurants">Restaurant</a></li>
                     </ul>
                 </div>
@@ -36,7 +36,7 @@
                             <i class="fa fa-phone"></i>
                         </div>
                         <div class="hero__search__phone__text">
-                            <h5>+91 9287954128</h5>
+                            <h5>+91 9287954127</h5>
                             <span>support 24/7 time</span>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                         <div class="card-body px-0">
                             <h6 class="card-text">{{varLanguage.value=='English'?content.scActiveRest.data.FetchRest[$index].shop_name_en:varLanguage.value=='Bengali'?content.scActiveRest.data.FetchRest[$index].shop_name_bn:varLanguage.value=='Hindi'?content.scActiveRest.data.FetchRest[$index].shop_name_hin:content.scActiveRest.data.FetchRest[$index].shop_name_en}}</h6>
                             <div class="hero__text text-center my-3">
-                                <a href="#" class="primary-btn">{{varLanguage.value=='English'?'Select':varLanguage.value=='Bengali'?'নির্বাচন করুন':varLanguage.value=='Hindi'?'चयन करें':'Select'}}</a>
+                                <a href="shop-details" class="primary-btn">{{varLanguage.value=='English'?'Select':varLanguage.value=='Bengali'?'নির্বাচন করুন':varLanguage.value=='Hindi'?'चयन करें':'Select'}}</a>
                             </div>
                         </div>
                     </div>
@@ -145,7 +145,7 @@
             </div>
             <div class="col-12">
                 <div class="hero__text float-right my-3">
-                    <a href="#" class="primary-btn">{{varLanguage.value=='English'?'View More':varLanguage.value=='Bengali'?'আরো দেখুন':varLanguage.value=='Hindi'?'और देखें':'View More'}}</a>
+                    <a href="categories" class="primary-btn">{{varLanguage.value=='English'?'View More':varLanguage.value=='Bengali'?'আরো দেখুন':varLanguage.value=='Hindi'?'और देखें':'View More'}}</a>
                 </div>
             </div>
         </div>
@@ -163,7 +163,7 @@
             </div>
         </div>
         <div class="row featured__filter" id="repeatProd" is="dmx-repeat" dmx-bind:repeat="scActiveProd.data.GetProd" key="p_id">
-            <div class="col-lg-3 col-md-4 col-sm-6 mix">
+            <div class="col-lg-3 col-md-4 col-6 mix">
                 <div class="featured__item">
                     <div class="featured__item__pic set-bg">
                         <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scActiveProd.data.GetProd[$index].prod_img1" dmx-bind:alt="content.scActiveProd.data.GetProd[$index].prod_img1">

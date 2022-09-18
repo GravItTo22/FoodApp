@@ -26,5 +26,9 @@
   "contact.ejs": {
     "layoutPage": "main",
     "description": ""
+  },
+  "categories.ejs": {
+    "layoutPage": "main",
+    "description": ""
   }
 }

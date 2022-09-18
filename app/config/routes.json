@@ -40,6 +40,11 @@
       "path": "/contact",
       "page": "contact",
       "layout": "main"
+    },
+    {
+      "path": "/categories",
+      "page": "categories",
+      "layout": "main"
     }
   ]
 }

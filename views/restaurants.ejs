@@ -30,7 +30,7 @@
         <div class="row mx-0 w-100" id="repeat1" is="dmx-repeat" dmx-bind:repeat="scActiveRest.data.FetchRest" key="id">
             <div class="col-3 my-3">
                 <div class="card col-auto px-0">
-                    <img dmx-bind:src="'https://sucure.gravitto.com'+content.scActiveRest.data.FetchRest[$index].shop_logo" class="card-img-top" alt="...">
+                    <img dmx-bind:src="'https://secure.gravitto.com'+content.scActiveRest.data.FetchRest[$index].shop_logo" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h6 class="card-text">{{varLanguage.value=='English'?content.scActiveRest.data.FetchRest[$index].shop_name_en:varLanguage.value=='Hindi'?content.scActiveRest.data.FetchRest[$index].shop_name_hin:varLanguage.value=='Bengali'?content.scActiveRest.data.FetchRest[$index].shop_name_bn:content.scActiveRest.data.FetchRest[$index].shop_name_en}}</h6>
                         <div class="hero__text  my-3">

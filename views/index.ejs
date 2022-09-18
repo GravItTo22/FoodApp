@@ -66,7 +66,7 @@
             <div class="row mx-0 w-100" id="repeatRest" is="dmx-repeat" dmx-bind:repeat="scActiveRest.data.FetchRest" key="id">
                 <div class="col-6 col-md-4 col-lg-3">
                     <div class="card col-auto px-0">
-                        <img dmx-bind:src="'https://sucure.gravitto.com'+content.scActiveRest.data.FetchRest[$index].shop_logo" class="card-img-top" alt="...">
+                        <img dmx-bind:src="'https://secure.gravitto.com'+content.scActiveRest.data.FetchRest[$index].shop_logo" class="card-img-top" alt="...">
                         <div class="card-body px-0">
                             <h6 class="card-text">{{varLanguage.value=='English'?content.scActiveRest.data.FetchRest[$index].shop_name_en:varLanguage.value=='Bengali'?content.scActiveRest.data.FetchRest[$index].shop_name_bn:varLanguage.value=='Hindi'?content.scActiveRest.data.FetchRest[$index].shop_name_hin:content.scActiveRest.data.FetchRest[$index].shop_name_en}}</h6>
                             <div class="hero__text text-center my-3">
@@ -118,7 +118,7 @@
 
                         <div class="col-6 col-md-4 col-lg-3 mb-3" style="float:left">
                             <div class="card mb-2">
-                                <img class="card-img-top" dmx-bind:src="'https://sucure.gravitto.com'+content.scCategory.data.GetCat.data[$index].image" class="card-img-top" dmx-bind:alt="content.scCategory.data.GetCat.data[$index].en_name">
+                                <img class="card-img-top" dmx-bind:src="'https://secure.gravitto.com'+content.scCategory.data.GetCat.data[$index].image" class="card-img-top" dmx-bind:alt="content.scCategory.data.GetCat.data[$index].en_name">
                                 <div class="card-body p-0">
                                     <h4 class="card-title">{{varLanguage.value=='English'?content.scCategory.data.GetCat.data[$index].en_name:varLanguage.value=='Bengali'?content.scCategory.data.GetCat.data[$index].bn_name:varLanguage.value=='Hindi'?content.scCategory.data.GetCat.data[$index].hin_name:content.scCategory.data.GetCat.data[$index].en_name}}</h4>
                                 </div>
@@ -131,7 +131,7 @@
 
                         <div class="col-6 col-md-4 col-lg-3 mb-3" style="float:left">
                             <div class="card mb-2">
-                                <img class="card-img-top" dmx-bind:src="'https://sucure.gravitto.com'+content.scCategory.data.GetCatDesc.data[$index].image" dmx-bind:alt="content.scCategory.data.GetCatDesc.data[$index].en_name">
+                                <img class="card-img-top" dmx-bind:src="'https://secure.gravitto.com'+content.scCategory.data.GetCatDesc.data[$index].image" dmx-bind:alt="content.scCategory.data.GetCatDesc.data[$index].en_name">
                                 <div class="card-body p-0">
                                     <h4 class="card-title">{{varLanguage.value=='English'?content.scCategory.data.GetCatDesc.data[$index].en_name:varLanguage.value=='Bengali'?content.scCategory.data.GetCatDesc.data[$index].bn_name:varLanguage.value=='Hindi'?content.scCategory.data.GetCatDesc.data[$index].hin_name:content.scCategory.data.GetCatDesc.data[$index].en_name}}</h4>
                                 </div>
@@ -166,7 +166,7 @@
             <div class="col-lg-3 col-md-4 col-sm-6 mix">
                 <div class="featured__item">
                     <div class="featured__item__pic set-bg">
-                        <img class="featured__item__pic set-bg" dmx-bind:src="'https://sucure.gravitto.com'+content.scActiveProd.data.GetProd[$index].prod_img1" dmx-bind:alt="content.scActiveProd.data.GetProd[$index].prod_img1">
+                        <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scActiveProd.data.GetProd[$index].prod_img1" dmx-bind:alt="content.scActiveProd.data.GetProd[$index].prod_img1">
                         <ul class="featured__item__pic__hover">
                             <li dmx-on:click="run({run:{action:`scAddtoWishlist.load({product_id: scActiveProd.data.GetProd[$index].prod_id, price: scActiveProd.data.GetProd[$index].price_id},true);scDashboardInfo.load();notifMain.info(((varLanguage.value==\'English\')?scActiveProd.data.GetProd[$index].prod_name_en:(varLanguage.value==\'Bengali\')?scActiveProd.data.GetProd[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scActiveProd.data.GetProd[$index].prod_name_hin:scActiveProd.data.GetProd[$index].prod_name_en)+\' added to wish-list\')`,name:'FlowWishlist'}})"><a href="#"><i class="fa fa-heart"></i></a></li>
                             <li><a href="#"><i class="fa fa-circle" dmx-class:text-success="content.scActiveProd.data.GetProd[$index].prod_mark_id==1" dmx-class:text-danger="content.scActiveProd.data.GetProd[$index].prod_mark_id==2"></i></a></li>

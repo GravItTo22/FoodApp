@@ -30,7 +30,7 @@
             <div class="col-lg-3 col-md-4 col-sm-6 mix">
                 <div class="featured__item">
                     <div class="featured__item__pic set-bg">
-                        <img class="featured__item__pic set-bg" dmx-bind:src="'https://sucure.gravitto.com'+content.scWishList.data.GetWishList.data[$index].prod_img1" dmx-bind:alt="content.scWishList.data.GetWishList.data[$index].prod_img1">
+                        <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scWishList.data.GetWishList.data[$index].prod_img1" dmx-bind:alt="content.scWishList.data.GetWishList.data[$index].prod_img1">
                         <ul class="featured__item__pic__hover">
                             <li><a href="#"><i class="fa fa-circle" dmx-class:text-success="content.scWishList.data.GetWishList.data[$index].prod_mark_id==1" dmx-class:text-danger="content.scWishList.data.GetWishList.data[$index].prod_mark_id==2"></i></a></li>
                             <li dmx-on:click="run({run:{action:`scAddtoCart.load({product_id: scWishList.data.GetWishList.data[$index].prod_id, price: scWishList.data.GetWishList.data[$index].price_id},true);scDashboardInfo.load(true);notifMain.success(((varLanguage.value==\'English\')?scWishList.data.GetWishList.data[$index].prod_name_en:(varLanguage.value==\'Bengali\')?scWishList.data.GetWishList.data[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scWishList.data.GetWishList.data[$index].prod_name_hin:scWishList.data.GetWishList.data[$index].prod_name_en)+\'  added to cart \')`,name:'Flow'}})"><a href="#"><i class="fa fa-shopping-cart"></i></a></li>

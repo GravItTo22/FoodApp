@@ -70,7 +70,7 @@
                         <div class="card-body px-0">
                             <h6 class="card-text">{{varLanguage.value=='English'?content.scActiveRest.data.FetchRest[$index].shop_name_en:varLanguage.value=='Bengali'?content.scActiveRest.data.FetchRest[$index].shop_name_bn:varLanguage.value=='Hindi'?content.scActiveRest.data.FetchRest[$index].shop_name_hin:content.scActiveRest.data.FetchRest[$index].shop_name_en}}</h6>
                             <div class="hero__text text-center my-3">
-                                <a class="primary-btn" dmx-bind:href="'/shop-details/'+scActiveRest.data.FetchRest[$index].id+'/'+scActiveRest.data.FetchRest.[$index].shop_name_en.slugify()">{{varLanguage.value=='English'?'Select':varLanguage.value=='Bengali'?'নির্বাচন করুন':varLanguage.value=='Hindi'?'चयन करें':'Select'}}</a>
+                                <a class="primary-btn" dmx-bind:href="'/shop-details/'+scActiveRest.data.FetchRest[$index].id+'/'+scActiveRest.data.FetchRest.[$index].shop_name_en">{{varLanguage.value=='English'?'Select':varLanguage.value=='Bengali'?'নির্বাচন করুন':varLanguage.value=='Hindi'?'चयन करें':'Select'}}</a>
                             </div>
                         </div>
                     </div>

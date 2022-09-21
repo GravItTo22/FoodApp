@@ -7,9 +7,10 @@
       "layout": "main"
     },
     {
-      "path": "/shop-details/:id/shop_name",
+      "path": "/shop-details/:id/:shop_name",
       "page": "shop-details",
-      "layout": "main"
+      "layout": "main",
+      "exec": "/api/Restaurant/ShopDetails"
     },
     {
       "path": "/restaurants",

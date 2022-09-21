@@ -7,7 +7,7 @@
       "layout": "main"
     },
     {
-      "path": "/shop-details",
+      "path": "/shop-details/:id/shop_name",
       "page": "shop-details",
       "layout": "main"
     },

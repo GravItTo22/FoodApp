@@ -35,7 +35,7 @@
           "steps": {
             "name": "GetShops",
             "module": "dbconnector",
-            "action": "paged",
+            "action": "single",
             "options": {
               "connection": "ClientApp",
               "sql": {
@@ -88,189 +88,136 @@
             "output": true,
             "meta": [
               {
-                "name": "offset",
-                "type": "number"
+                "type": "number",
+                "name": "id"
               },
               {
-                "name": "limit",
-                "type": "number"
+                "type": "number",
+                "name": "market_id"
               },
               {
-                "name": "total",
-                "type": "number"
+                "type": "number",
+                "name": "cat_type_id"
               },
               {
-                "name": "page",
-                "type": "object",
-                "sub": [
-                  {
-                    "name": "offset",
-                    "type": "object",
-                    "sub": [
-                      {
-                        "name": "first",
-                        "type": "number"
-                      },
-                      {
-                        "name": "prev",
-                        "type": "number"
-                      },
-                      {
-                        "name": "next",
-                        "type": "number"
-                      },
-                      {
-                        "name": "last",
-                        "type": "number"
-                      }
-                    ]
-                  },
-                  {
-                    "name": "current",
-                    "type": "number"
-                  },
-                  {
-                    "name": "total",
-                    "type": "number"
-                  }
-                ]
+                "type": "text",
+                "name": "gen_shop_id"
               },
               {
-                "name": "data",
-                "type": "array",
-                "sub": [
-                  {
-                    "type": "number",
-                    "name": "id"
-                  },
-                  {
-                    "type": "number",
-                    "name": "market_id"
-                  },
-                  {
-                    "type": "number",
-                    "name": "cat_type_id"
-                  },
-                  {
-                    "type": "text",
-                    "name": "gen_shop_id"
-                  },
-                  {
-                    "type": "text",
-                    "name": "shop_name_en"
-                  },
-                  {
-                    "type": "text",
-                    "name": "shop_name_bn"
-                  },
-                  {
-                    "type": "text",
-                    "name": "shop_name_hin"
-                  },
-                  {
-                    "type": "text",
-                    "name": "shop_logo"
-                  },
-                  {
-                    "type": "text",
-                    "name": "shop_mobile_no"
-                  },
-                  {
-                    "type": "text",
-                    "name": "is_watsapp"
-                  },
-                  {
-                    "type": "text",
-                    "name": "watsapp_no"
-                  },
-                  {
-                    "type": "text",
-                    "name": "email_id"
-                  },
-                  {
-                    "type": "text",
-                    "name": "owner_name"
-                  },
-                  {
-                    "type": "text",
-                    "name": "gst_in"
-                  },
-                  {
-                    "type": "text",
-                    "name": "is_rmc"
-                  },
-                  {
-                    "type": "text",
-                    "name": "rmc_no"
-                  },
-                  {
-                    "type": "text",
-                    "name": "is_fsc"
-                  },
-                  {
-                    "type": "text",
-                    "name": "balance_amount"
-                  },
-                  {
-                    "type": "text",
-                    "name": "is_sliding_img"
-                  },
-                  {
-                    "type": "text",
-                    "name": "pan_no"
-                  },
-                  {
-                    "type": "text",
-                    "name": "address"
-                  },
-                  {
-                    "type": "text",
-                    "name": "pin"
-                  },
-                  {
-                    "type": "text",
-                    "name": "kyc_status"
-                  },
-                  {
-                    "type": "number",
-                    "name": "status"
-                  },
-                  {
-                    "type": "text",
-                    "name": "remarks"
-                  },
-                  {
-                    "type": "text",
-                    "name": "blank1"
-                  },
-                  {
-                    "type": "text",
-                    "name": "blank2"
-                  },
-                  {
-                    "type": "text",
-                    "name": "blank3"
-                  },
-                  {
-                    "type": "number",
-                    "name": "created_by"
-                  },
-                  {
-                    "type": "datetime",
-                    "name": "created_on"
-                  },
-                  {
-                    "type": "datetime",
-                    "name": "updated_on"
-                  },
-                  {
-                    "type": "datetime",
-                    "name": "deleted_on"
-                  }
-                ]
+                "type": "text",
+                "name": "shop_name_en"
+              },
+              {
+                "type": "text",
+                "name": "shop_name_bn"
+              },
+              {
+                "type": "text",
+                "name": "shop_name_hin"
+              },
+              {
+                "type": "text",
+                "name": "shop_logo"
+              },
+              {
+                "type": "text",
+                "name": "shop_mobile_no"
+              },
+              {
+                "type": "text",
+                "name": "is_watsapp"
+              },
+              {
+                "type": "text",
+                "name": "watsapp_no"
+              },
+              {
+                "type": "text",
+                "name": "email_id"
+              },
+              {
+                "type": "text",
+                "name": "owner_name"
+              },
+              {
+                "type": "text",
+                "name": "gst_in"
+              },
+              {
+                "type": "text",
+                "name": "is_rmc"
+              },
+              {
+                "type": "text",
+                "name": "rmc_no"
+              },
+              {
+                "type": "text",
+                "name": "is_fsc"
+              },
+              {
+                "type": "text",
+                "name": "balance_amount"
+              },
+              {
+                "type": "text",
+                "name": "is_sliding_img"
+              },
+              {
+                "type": "text",
+                "name": "pan_no"
+              },
+              {
+                "type": "text",
+                "name": "address"
+              },
+              {
+                "type": "text",
+                "name": "pin"
+              },
+              {
+                "type": "text",
+                "name": "kyc_status"
+              },
+              {
+                "type": "number",
+                "name": "status"
+              },
+              {
+                "type": "text",
+                "name": "remarks"
+              },
+              {
+                "type": "text",
+                "name": "blank1"
+              },
+              {
+                "type": "text",
+                "name": "blank2"
+              },
+              {
+                "type": "text",
+                "name": "blank3"
+              },
+              {
+                "type": "number",
+                "name": "created_by"
+              },
+              {
+                "type": "datetime",
+                "name": "created_on"
+              },
+              {
+                "type": "datetime",
+                "name": "updated_on"
+              },
+              {
+                "type": "datetime",
+                "name": "deleted_on"
               }
             ],
-            "outputType": "object"
+            "outputType": "object",
+            "type": "dbconnector_single"
           }
         }
       }

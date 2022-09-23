@@ -12,9 +12,9 @@
                         <%= $_PARAM.prod_name %>
                     </h2>
                     <div class="breadcrumb__option">
-                        <a href="./index.html">Home</a>
+                        <a href="/">Home</a>
 
-                        <span>Restaurant Package</span>
+                        <span>{{varLanguage.value=='English'?content.scProdDetails.data.GetProdDetails.shop_name_en:varLanguage.value=='Bengali'?content.scProdDetails.data.GetProdDetails.shop_name_bn:varLanguage.value=='Hindi'?content.scProdDetails.data.GetProdDetails.shop_name_hin:content.scProdDetails.data.GetProdDetails.shop_name_en}}</span>
                     </div>
                 </div>
             </div>
@@ -59,8 +59,10 @@
                         <a href="#" dmx-on:click="run({run:{action:`scAddtoCart.load({product_id: scProdDetails.data.GetProdDetails.prod_id, price: scProdDetails.data.GetProdDetails.price_id},true);scDashboardInfo.load();notifMain.success(((varLanguage.value==\'English\')?scProdDetails.data.GetProdDetails.prod_name_en:(varLanguage.value==\'Bengali\')?scProdDetails.data.GetProdDetails.prod_name_bn:(varLanguage.value==\'Hindi\')?scProdDetails.data.GetProdDetails.prod_name_hin:scProdDetails.data.GetProdDetails.prod_name_en)+\' added to cart\')`,name:'Flow'}})" class="primary-btn">ADD TO CARD</a>
                         <a href="#" dmx-on:click="run({run:{action:`scAddtoWishlist.load({product_id: scProdDetails.data.GetProdDetails.prod_id, price: scProdDetails.data.GetProdDetails.price_id},true);scDashboardInfo.load(true);notifMain.info(((varLanguage.value==\'English\')?scProdDetails.data.GetProdDetails.prod_name_en:(varLanguage.value==\'Bengali\')?scProdDetails.data.GetProdDetails.prod_name_bn:(varLanguage.value==\'Hindi\')?scProdDetails.data.GetProdDetails.prod_name_hin:scProdDetails.data.GetProdDetails.prod_name_en)+\' added to wish-list\')`,name:'FlowWishlist'}})" class="heart-icon"><span class="icon_heart_alt"></span></a>
                         <ul>
-                            <li><b>Availability</b> <span>In Stock</span></li>
-                            <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>
+                            <li><b>Prod. Code</b> <span>{{content.scProdDetails.data.GetProdDetails.prod_id}}</span></li>
+                            <li><b>Prod. Mark</b> <span>{{content.scProdDetails.data.GetProdDetails.prod_mark_id==1?'Veg':'Non-Veg'}}
+                                    <!--<samp>Free pickup today</samp>-->
+                                </span></li>
                             <li><b>Share on</b>
                                 <div class="share">
                                     <a href="#"><i class="fa fa-facebook"></i></a>
@@ -91,46 +93,16 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="tabs-1" role="tabpanel">
                     <div class="product__details__tab__desc">
-                        <h6>Products Infomation</h6>
-                        <p>Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
-                            Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus. Vivamus
-                            suscipit tortor eget felis porttitor volutpat. Vestibulum ac diam sit amet quam
-                            vehicula elementum sed sit amet dui. Donec rutrum congue leo eget malesuada.
-                            Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat,
-                            accumsan id imperdiet et, porttitor at sem. Praesent sapien massa, convallis a
-                            pellentesque nec, egestas non nisi. Vestibulum ac diam sit amet quam vehicula
-                            elementum sed sit amet dui. Vestibulum ante ipsum primis in faucibus orci luctus
-                            et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam
-                            vel, ullamcorper sit amet ligula. Proin eget tortor risus.</p>
-                        <p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Lorem
-                            ipsum dolor sit amet, consectetur adipiscing elit. Mauris blandit aliquet
-                            elit, eget tincidunt nibh pulvinar a. Cras ultricies ligula sed magna dictum
-                            porta. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus
-                            nibh. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
-                            Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Sed
-                            porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula elementum
-                            sed sit amet dui. Proin eget tortor risus.</p>
+                        <h6>Products Description</h6>
+                        <p>{{varLanguage.value=='English'?content.scProdDetails.data.GetProdDetails.prod_desc_en:varLanguage.value=='Bengali'?content.scProdDetails.data.GetProdDetails.prod_desc_bn:varLanguage.value=='Hindi'?content.scProdDetails.data.GetProdDetails.prod_desc_hin:content.scProdDetails.data.GetProdDetails.prod_desc_en}}</p>
+                        <p></p>
                     </div>
                 </div>
                 <div class="tab-pane" id="tabs-2" role="tabpanel">
                     <div class="product__details__tab__desc">
                         <h6>Products Infomation</h6>
-                        <p>Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
-                            Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus.
-                            Vivamus suscipit tortor eget felis porttitor volutpat. Vestibulum ac diam
-                            sit amet quam vehicula elementum sed sit amet dui. Donec rutrum congue leo
-                            eget malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.
-                            Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Praesent
-                            sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ac
-                            diam sit amet quam vehicula elementum sed sit amet dui. Vestibulum ante
-                            ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
-                            Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.
-                            Proin eget tortor risus.</p>
-                        <p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Lorem
-                            ipsum dolor sit amet, consectetur adipiscing elit. Mauris blandit aliquet
-                            elit, eget tincidunt nibh pulvinar a. Cras ultricies ligula sed magna dictum
-                            porta. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus
-                            nibh. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.</p>
+                        <p></p>
+                        <p></p>
                     </div>
                 </div>
                 <div class="tab-pane" id="tabs-3" role="tabpanel">
@@ -212,72 +184,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="testimonial-box-container">
-                        <div class="testimonial-box">
-                            <!--top------------------------->
-                            <div class="box-top">
-                                <!--profile----->
-                                <div class="profile">
-                                    <!--img---->
-                                    <div class="profile-img">
-                                        <img src="https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png" />
-                                    </div>
-                                    <!--name-and-username-->
-                                    <div class="name-user">
-                                        <strong>username</strong>
-                                        <span>@email</span>
-                                    </div>
-                                </div>
-                                <!--reviews------>
-                                <div class="reviews">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <!--Empty star-->
-                                </div>
-                            </div>
-
-                            <!--Comments---------------------------------------->
-                            <div class="client-comment">
-                                <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem, quaerat quis? Provident temporibus architecto asperiores nobis maiores nisi a. Quae doloribus ipsum aliquam tenetur voluptates incidunt blanditiis sed atque cumque.</p>
-                            </div>
-                        </div>
-                        <!--BOX-3-------------->
-                        <div class="testimonial-box">
-                            <!--top------------------------->
-                            <div class="box-top">
-                                <!--profile----->
-                                <div class="profile">
-                                    <!--img---->
-                                    <div class="profile-img">
-                                        <img src="https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png" />
-                                    </div>
-                                    <!--name-and-username-->
-                                    <div class="name-user">
-                                        <strong>username</strong>
-                                        <span>@email</span>
-                                    </div>
-                                </div>
-                                <!--reviews------>
-                                <div class="reviews">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <!--Empty star-->
-                                </div>
-                            </div>
-                            <!--Comments---------------------------------------->
-                            <div class="client-comment">
-                                <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem, quaerat quis? Provident temporibus architecto asperiores nobis maiores nisi a. Quae doloribus ipsum aliquam tenetur voluptates incidunt blanditiis sed atque cumque.</p>
-                            </div>
-                        </div>
-                        <!--BOX-4-------------->
-
-                    </div>
                 </div>
             </div>
         </div>
@@ -298,7 +204,8 @@
         <div class="row" is="dmx-repeat" dmx-bind:repeat="scRelatedProd.data.GetRelatedProd.data" key="id" id="RelatedProd">
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-1.jpg">
+                    <div class="product__item__pic set-bg">
+                        <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scRelatedProd.data.GetRelatedProd.data[$index].prod_img1" dmx-bind:alt="content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en">
                         <ul class="product__item__pic__hover">
                             <li><a href="#"><i class="fa fa-heart"></i></a></li>
                             <li><a href="#"><i class="fa fa-retweet"></i></a></li>
@@ -306,7 +213,7 @@
                         </ul>
                     </div>
                     <div class="product__item__text">
-                        <h6><a href="#">{{varLanguage.value=='English'?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en:varLanguage.value=='Bengali'?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_hin:content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en}}</a></h6>
+                        <h6><a dmx-bind:href="'/product-details/'+content.scRelatedProd.data.GetRelatedProd.data[$index].id+'/'+content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en">{{varLanguage.value=='English'?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en:varLanguage.value=='Bengali'?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_hin:content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en}}</a></h6>
                         <h5><i class="fa fa-rupee"></i>{{content.scRelatedProd.data.GetRelatedProd.data[$index].price}} <span class="text-muted ab text-monospace text-line-through"><i class="fa fa-rupee"></i>{{content.scRelatedProd.data.GetRelatedProd.data[$index].mrp}}</span></h5>
                     </div>
                 </div>

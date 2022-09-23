@@ -81,11 +81,11 @@
         <div class="row mx-0 w-100" id="repeat1" is="dmx-repeat" dmx-bind:repeat="scActiveRest.data.FetchRest" key="id">
             <div class="col-lg-3 col-md-4 col-6 my-3">
                 <div class="card col-auto px-0">
-                    <img dmx-bind:src="'https://secure.gravitto.com'+content.scActiveRest.data.FetchRest[$index].shop_logo" class="card-img-top" alt="...">
+                    <img dmx-bind:src="'https://secure.gravitto.com'+content.scActiveRest.data.FetchRest[$index].shop_logo" class="card-img-top" dmx-bind:alt="content.scActiveRest.data.FetchRest[$index].shop_name_en">
                     <div class="card-body">
                         <h6 class="card-text">{{varLanguage.value=='English'?content.scActiveRest.data.FetchRest[$index].shop_name_en:varLanguage.value=='Hindi'?content.scActiveRest.data.FetchRest[$index].shop_name_hin:varLanguage.value=='Bengali'?content.scActiveRest.data.FetchRest[$index].shop_name_bn:content.scActiveRest.data.FetchRest[$index].shop_name_en}}</h6>
                         <div class="hero__text text-center my-3">
-                            <a href="shop-details" class="primary-btn">{{varLanguage.value=='English'?'Select':varLanguage.value=='Bengali'?'নির্বাচন করুন':varLanguage.value=='Hindi'?'चयन करें':'Select'}}</a>
+                            <a class="primary-btn" dmx-bind:href="'/shop-details/'+scActiveRest.data.FetchRest[$index].id+'/'+scActiveRest.data.FetchRest[$index].shop_name_en">{{varLanguage.value=='English'?'Select':varLanguage.value=='Bengali'?'নির্বাচন করুন':varLanguage.value=='Hindi'?'चयन करें':'Select'}}</a>
                         </div>
                     </div>
                 </div>

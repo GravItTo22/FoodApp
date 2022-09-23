@@ -329,7 +329,7 @@
                                 </ul>
                             </div>
                             <div class="product__item__text">
-                                <h6><a href="#">{{varLanguage.value=='English'?content.scRestProd.data.GetProd.data[$index].prod_name_en:varLanguage.value=='Bengali'?content.scRestProd.data.GetProd.data[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scRestProd.data.GetProd.data[$index].prod_name_hin:scRestProd.data.GetProd.data[$index].prod_name_en}}</a></h6>
+                                <h6><a dmx-bind:href="'/product-details/'+content.scRestProd.data.GetProd.data[$index].id+'/'+content.scRestProd.data.GetProd.data[$index].prod_name_en">{{varLanguage.value=='English'?content.scRestProd.data.GetProd.data[$index].prod_name_en:varLanguage.value=='Bengali'?content.scRestProd.data.GetProd.data[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scRestProd.data.GetProd.data[$index].prod_name_hin:scRestProd.data.GetProd.data[$index].prod_name_en}}</a></h6>
                                 <h5><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd.data[$index].price}} <span class="text-muted ab text-monospace text-line-through"><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd.data[$index].mrp}}</span></h5>
                                 <!-- <div class="product__item__price"><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd.data[$index].price}} <span><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd.data[$index].mrp}}</span></div> -->
                             </div>

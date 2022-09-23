@@ -112,6 +112,18 @@
                     "table": "rpt",
                     "column": "id",
                     "alias": "price_id"
+                  },
+                  {
+                    "table": "mr",
+                    "column": "shop_name_en"
+                  },
+                  {
+                    "table": "mr",
+                    "column": "shop_name_bn"
+                  },
+                  {
+                    "table": "mr",
+                    "column": "shop_name_hin"
                   }
                 ],
                 "table": {
@@ -140,9 +152,31 @@
                       ]
                     },
                     "primary": "id"
+                  },
+                  {
+                    "table": "m_restaurant",
+                    "column": "*",
+                    "alias": "mr",
+                    "type": "LEFT",
+                    "clauses": {
+                      "condition": "AND",
+                      "rules": [
+                        {
+                          "table": "mr",
+                          "column": "id",
+                          "operator": "equal",
+                          "value": {
+                            "table": "m_product",
+                            "column": "rest_id"
+                          },
+                          "operation": "="
+                        }
+                      ]
+                    },
+                    "primary": "id"
                   }
                 ],
-                "query": "SELECT m_product.id, m_product.prod_id, m_product.rest_id, m_product.category_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_desc_en, m_product.prod_desc_bn, m_product.prod_desc_hin, m_product.prod_img1, m_product.prod_img2, m_product.prod_img3, m_product.prod_img4, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price AS price, rpt.product_tax, rpt.id AS price_id\nFROM m_product\nLEFT JOIN r_price_table AS rpt ON (rpt.prod_id = m_product.id)\nWHERE m_product.status = 1 AND m_product.id = :P1 /* {{$_GET.p_id}} */",
+                "query": "SELECT m_product.id, m_product.prod_id, m_product.rest_id, m_product.category_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_desc_en, m_product.prod_desc_bn, m_product.prod_desc_hin, m_product.prod_img1, m_product.prod_img2, m_product.prod_img3, m_product.prod_img4, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price AS price, rpt.product_tax, rpt.id AS price_id, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin\nFROM m_product\nLEFT JOIN r_price_table AS rpt ON (rpt.prod_id = m_product.id) LEFT JOIN m_restaurant AS mr ON (mr.id = m_product.rest_id)\nWHERE m_product.status = 1 AND m_product.id = :P1 /* {{$_GET.p_id}} */",
                 "params": [
                   {
                     "operator": "equal",
@@ -290,6 +324,18 @@
               {
                 "type": "number",
                 "name": "price_id"
+              },
+              {
+                "type": "text",
+                "name": "shop_name_en"
+              },
+              {
+                "type": "text",
+                "name": "shop_name_bn"
+              },
+              {
+                "type": "text",
+                "name": "shop_name_hin"
               }
             ],
             "outputType": "object"

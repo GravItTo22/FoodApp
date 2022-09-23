@@ -166,7 +166,7 @@
             <div class="col-lg-3 col-md-4 col-6 mix">
                 <div class="featured__item">
                     <div class="featured__item__pic set-bg">
-                        <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scActiveProd.data.GetProd[$index].prod_img1" dmx-bind:alt="content.scActiveProd.data.GetProd[$index].prod_img1">
+                        <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scActiveProd.data.GetProd[$index].prod_img1" dmx-bind:alt="content.scActiveProd.data.GetProd[$index].prod_name_en">
                         <ul class="featured__item__pic__hover">
                             <li dmx-on:click="run({run:{action:`scAddtoWishlist.load({product_id: scActiveProd.data.GetProd[$index].prod_id, price: scActiveProd.data.GetProd[$index].price_id},true);scDashboardInfo.load();notifMain.info(((varLanguage.value==\'English\')?scActiveProd.data.GetProd[$index].prod_name_en:(varLanguage.value==\'Bengali\')?scActiveProd.data.GetProd[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scActiveProd.data.GetProd[$index].prod_name_hin:scActiveProd.data.GetProd[$index].prod_name_en)+\' added to wish-list\')`,name:'FlowWishlist'}})"><a href="#"><i class="fa fa-heart"></i></a></li>
                             <li><a href="#"><i class="fa fa-circle" dmx-class:text-success="content.scActiveProd.data.GetProd[$index].prod_mark_id==1" dmx-class:text-danger="content.scActiveProd.data.GetProd[$index].prod_mark_id==2"></i></a></li>
@@ -174,7 +174,7 @@
                         </ul>
                     </div>
                     <div class="featured__item__text">
-                        <h6><a href="#">{{varLanguage.value=='English'?content.scActiveProd.data.GetProd[$index].prod_name_en:varLanguage.value=='Bengali'?content.scActiveProd.data.GetProd[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scActiveProd.data.GetProd[$index].prod_name_hin:content.scActiveProd.data.GetProd[$index].prod_name_en}}</a></h6>
+                        <h6><a dmx-bind:href="'/product-details/'+scActiveProd.data.GetProd[$index].p_id+'/'+scActiveProd.data.GetProd[$index].prod_name_en">{{varLanguage.value=='English'?content.scActiveProd.data.GetProd[$index].prod_name_en:varLanguage.value=='Bengali'?content.scActiveProd.data.GetProd[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scActiveProd.data.GetProd[$index].prod_name_hin:content.scActiveProd.data.GetProd[$index].prod_name_en}}</a></h6>
                         <h5><i class="fa fa-rupee"></i>{{content.scActiveProd.data.GetProd[$index].price}}</h5>
                     </div>
                 </div>

@@ -436,5 +436,127 @@ dmx.config({
       ],
       "outputType": "array"
     }
+  },
+  "shopdetails": {
+    "repeatRestProd": {
+      "meta": [
+        {
+          "type": "number",
+          "name": "id"
+        },
+        {
+          "type": "text",
+          "name": "prod_id"
+        },
+        {
+          "type": "number",
+          "name": "prod_mark_id"
+        },
+        {
+          "type": "number",
+          "name": "prod_occurance_id"
+        },
+        {
+          "type": "text",
+          "name": "prod_name_en"
+        },
+        {
+          "type": "text",
+          "name": "prod_name_bn"
+        },
+        {
+          "type": "text",
+          "name": "prod_name_hin"
+        },
+        {
+          "type": "text",
+          "name": "video"
+        },
+        {
+          "type": "text",
+          "name": "prod_img1"
+        },
+        {
+          "type": "text",
+          "name": "quantity"
+        },
+        {
+          "type": "text",
+          "name": "q_unit"
+        },
+        {
+          "type": "text",
+          "name": "mrp"
+        },
+        {
+          "type": "text",
+          "name": "price"
+        },
+        {
+          "type": "text",
+          "name": "product_tax"
+        }
+      ],
+      "outputType": "array"
+    }
+  },
+  "productdetails": {
+    "RelatedProd": {
+      "meta": [
+        {
+          "type": "number",
+          "name": "id"
+        },
+        {
+          "type": "text",
+          "name": "prod_id"
+        },
+        {
+          "type": "number",
+          "name": "prod_occurance_id"
+        },
+        {
+          "type": "text",
+          "name": "prod_name_en"
+        },
+        {
+          "type": "text",
+          "name": "prod_name_bn"
+        },
+        {
+          "type": "text",
+          "name": "prod_name_hin"
+        },
+        {
+          "type": "text",
+          "name": "prod_img1"
+        },
+        {
+          "type": "number",
+          "name": "price_id"
+        },
+        {
+          "type": "text",
+          "name": "quantity"
+        },
+        {
+          "type": "text",
+          "name": "q_unit"
+        },
+        {
+          "type": "text",
+          "name": "mrp"
+        },
+        {
+          "type": "text",
+          "name": "purchase_price"
+        },
+        {
+          "type": "text",
+          "name": "price"
+        }
+      ],
+      "outputType": "array"
+    }
   }
 });

@@ -3,19 +3,7 @@
     "$_GET": [
       {
         "type": "text",
-        "name": "offset"
-      },
-      {
-        "type": "text",
-        "name": "limit"
-      },
-      {
-        "type": "text",
-        "name": "sort"
-      },
-      {
-        "type": "text",
-        "name": "dir"
+        "name": "id"
       }
     ],
     "$_PARAM": [
@@ -47,7 +35,7 @@
                 "primary": "id",
                 "joins": [],
                 "wheres": {
-                  "condition": "AND",
+                  "condition": "OR",
                   "rules": [
                     {
                       "id": "m_restaurant.id",
@@ -69,18 +57,45 @@
                         }
                       },
                       "operation": "="
+                    },
+                    {
+                      "id": "m_restaurant.id",
+                      "field": "m_restaurant.id",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": "{{$_GET.id}}",
+                      "data": {
+                        "table": "m_restaurant",
+                        "column": "id",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "increments",
+                          "default": "",
+                          "primary": true,
+                          "unique": true,
+                          "nullable": false,
+                          "name": "id"
+                        }
+                      },
+                      "operation": "="
                     }
                   ],
                   "conditional": null,
                   "valid": true
                 },
-                "query": "SELECT *\nFROM m_restaurant\nWHERE id = :P1 /* {{$_PARAM.id}} */",
+                "query": "SELECT *\nFROM m_restaurant\nWHERE id = :P1 /* {{$_PARAM.id}} */ OR id = :P2 /* {{$_GET.id}} */",
                 "params": [
                   {
                     "operator": "equal",
                     "type": "expression",
                     "name": ":P1",
                     "value": "{{$_PARAM.id}}"
+                  },
+                  {
+                    "operator": "equal",
+                    "type": "expression",
+                    "name": ":P2",
+                    "value": "{{$_GET.id}}"
                   }
                 ]
               }

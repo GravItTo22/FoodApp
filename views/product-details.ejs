@@ -1,12 +1,16 @@
-<!-- Wappler include head-page="layouts/main" -->
-<meta name="ac:route" content="/product-details">
+<!-- Wappler include head-page="layouts/main" is="dmx-app" id="productdetails" appConnect="local" -->
+<meta name="ac:route" content="/product-details/:id/:prod_name">
+<dmx-serverconnect id="scProdDetails" url="/api/Products/ProdDetails" dmx-param:p_id="<%= $_PARAM.id %>"></dmx-serverconnect>
+<dmx-serverconnect id="scRelatedProd" url="/api/Products/RelatedProducts" dmx-param:rest_id="content.scProdDetails.data.GetProdDetails.rest_id" dmx-param:cat_id="content.scProdDetails.data.GetProdDetails.category_id" dmx-param:prod_mark_id="content.scProdDetails.data.GetProdDetails.prod_mark_id"></dmx-serverconnect>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="breadcrumb__text">
-                    <h2>Product Details</h2>
+                    <h2>
+                        <%= $_PARAM.prod_name %>
+                    </h2>
                     <div class="breadcrumb__option">
                         <a href="./index.html">Home</a>
 
@@ -22,19 +26,19 @@
         <div class="row">
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__pic">
-                    <img class="drift-demo-trigger" data-zoom="assets/img/product/details/product-details-2.jpg?w=1200&amp;ch=DPR&amp;dpr=2" src="assets/img/product/details/product-details-2.jpg?w=400&amp;ch=DPR&amp;dpr=2" />
+                    <img class="drift-demo-trigger" data-zoom="assets/img/product/details/product-details-2.jpg?w=1200&amp;ch=DPR&amp;dpr=2" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img1+'?w=400&amp;ch=DPR&amp;dpr=2'" />
                 </div>
                 <div class="product__details__pic__slider owl-carousel mt-3">
-                    <img data-imgbigurl="assets/img/product/details/product-details-2.jpg" src="assets/img/product/details/thumb-1.jpg" alt="">
-                    <img data-imgbigurl="assets/img/product/details/product-details-3.jpg" src="assets/img/product/details/thumb-2.jpg" alt="">
-                    <img data-imgbigurl="assets/img/product/details/product-details-5.jpg" src="assets/img/product/details/thumb-3.jpg" alt="">
-                    <img data-imgbigurl="assets/img/product/details/product-details-4.jpg" src="assets/img/product/details/thumb-4.jpg" alt="">
+                    <img data-imgbigurl="assets/img/product/details/product-details-2.jpg" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img1" alt="">
+                    <img data-imgbigurl="assets/img/product/details/product-details-3.jpg" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img2" alt="">
+                    <img data-imgbigurl="assets/img/product/details/product-details-5.jpg" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img3" alt="">
+                    <img data-imgbigurl="assets/img/product/details/product-details-4.jpg" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img4" alt="">
                 </div>
             </div>
             <div class="col-lg-6 col-md-6">
                 <div class="detail">
                     <div class="product__details__text">
-                        <h3>Noodles</h3>
+                        <h3>{{varLanguage.value=='English'?content.scProdDetails.data.GetProdDetails.prod_name_en:varLanguage.value=='Bengali'?content.scProdDetails.data.GetProdDetails.prod_name_bn:varLanguage.value=='Hindi'?content.scProdDetails.data.GetProdDetails.prod_name_hin:content.scProdDetails.data.GetProdDetails.prod_name_en}}</h3>
                         <div class="product__details__rating">
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
@@ -43,17 +47,17 @@
                             <i class="fa fa-star-half-o"></i>
                             <span>(18 reviews)</span>
                         </div>
-                        <div class="product__details__price"><i class="fa fa-rupee"></i>50.00</div>
-                        <p>Made of wheat flour, salt, and water, the long and curly noodles are made from wheat and egg. The noodles are dried in the form of a brick. Ensure that you keep the ramen noodles refrigerated until you cook them. The ease of preparing ramen noodles within minutes by just boiling makes it an ideal on-the-go meal. These noodles can either be relished in soups or eaten raw with salads.</p>
+                        <div class="product__details__price"><i class="fa fa-rupee"></i>{{content.scProdDetails.data.GetProdDetails.price}} <span class="text-muted ab text-monospace text-line-through"><i class="fa fa-rupee"></i>{{content.scProdDetails.data.GetProdDetails.mrp}}</span></div>
+                        <p>{{varLanguage.value=='English'?content.scProdDetails.data.GetProdDetails.prod_desc_en:varLanguage.value=='Bengali'?content.scProdDetails.data.GetProdDetails.prod_desc_bn:varLanguage.value=='Hindi'?content.scProdDetails.data.GetProdDetails.prod_desc_hin:content.scProdDetails.data.GetProdDetails.prod_desc_en}}</p>
                         <div class="product__details__quantity">
                             <div class="quantity">
                                 <div class="pro-qty">
-                                    <input type="text" value="1">
+                                    <input type="text" value="1" id="quantity">
                                 </div>
                             </div>
                         </div>
-                        <a href="#" class="primary-btn">ADD TO CARD</a>
-                        <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
+                        <a href="#" dmx-on:click="run({run:{action:`scAddtoCart.load({product_id: scProdDetails.data.GetProdDetails.prod_id, price: scProdDetails.data.GetProdDetails.price_id},true);scDashboardInfo.load();notifMain.success(((varLanguage.value==\'English\')?scProdDetails.data.GetProdDetails.prod_name_en:(varLanguage.value==\'Bengali\')?scProdDetails.data.GetProdDetails.prod_name_bn:(varLanguage.value==\'Hindi\')?scProdDetails.data.GetProdDetails.prod_name_hin:scProdDetails.data.GetProdDetails.prod_name_en)+\' added to cart\')`,name:'Flow'}})" class="primary-btn">ADD TO CARD</a>
+                        <a href="#" dmx-on:click="run({run:{action:`scAddtoWishlist.load({product_id: scProdDetails.data.GetProdDetails.prod_id, price: scProdDetails.data.GetProdDetails.price_id},true);scDashboardInfo.load(true);notifMain.info(((varLanguage.value==\'English\')?scProdDetails.data.GetProdDetails.prod_name_en:(varLanguage.value==\'Bengali\')?scProdDetails.data.GetProdDetails.prod_name_bn:(varLanguage.value==\'Hindi\')?scProdDetails.data.GetProdDetails.prod_name_hin:scProdDetails.data.GetProdDetails.prod_name_en)+\' added to wish-list\')`,name:'FlowWishlist'}})" class="heart-icon"><span class="icon_heart_alt"></span></a>
                         <ul>
                             <li><b>Availability</b> <span>In Stock</span></li>
                             <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>
@@ -291,7 +295,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" is="dmx-repeat" dmx-bind:repeat="scRelatedProd.data.GetRelatedProd.data" key="id" id="RelatedProd">
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="product__item">
                     <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-1.jpg">
@@ -302,53 +306,8 @@
                         </ul>
                     </div>
                     <div class="product__item__text">
-                        <h6><a href="#">Rice Biryani </a></h6>
-                        <h5><i class="fa fa-rupee"></i>30.00</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-2.jpg">
-                        <ul class="product__item__pic__hover">
-                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Tamarind Rice</a></h6>
-                        <h5><i class="fa fa-rupee"></i>30.00</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-3.jpg">
-                        <ul class="product__item__pic__hover">
-                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Tomato Rice</a></h6>
-                        <h5><i class="fa fa-rupee"></i>30.00</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-7.jpg">
-                        <ul class="product__item__pic__hover">
-                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Vegetable Biryani</a></h6>
-                        <h5><i class="fa fa-rupee"></i>30.00</h5>
+                        <h6><a href="#">{{varLanguage.value=='English'?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en:varLanguage.value=='Bengali'?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_hin:content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en}}</a></h6>
+                        <h5><i class="fa fa-rupee"></i>{{content.scRelatedProd.data.GetRelatedProd.data[$index].price}} <span class="text-muted ab text-monospace text-line-through"><i class="fa fa-rupee"></i>{{content.scRelatedProd.data.GetRelatedProd.data[$index].mrp}}</span></h5>
                     </div>
                 </div>
             </div>

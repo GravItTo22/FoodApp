@@ -1,16 +1,17 @@
-<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="shopdetails" appConnect="local" -->
+<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="shopdetails" appConnect="local" components="{dmxFormatter:{}}" -->
 <meta name="ac:route" content="/shop-details/:id/:shop_name">
-<dmx-serverconnect id="scShopDetails" url="/api/Restaurant/ShopDetails"></dmx-serverconnect>
+<dmx-serverconnect id="scShopDetails" url="/api/Restaurant/ShopDetails" dmx-param:id="<%= $_PARAM.id %>"></dmx-serverconnect>
+<dmx-serverconnect id="scRestProd" url="/api/Products/RestProducts" dmx-param:rest_id="<%= $_PARAM.id %>"></dmx-serverconnect>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="breadcrumb__text">
-                    <h2>Restaurant</h2>
+                    <h2>{{content.scShopDetails.data.GetShops.shop_name_en}}</h2>
                     <div class="breadcrumb__option">
                         <a href="index">Home</a>
-                        <span>{{:shop_name}}</span>
+                        <span>Restaurant Details</span>
                     </div>
                 </div>
             </div>
@@ -298,13 +299,14 @@
                                 <span>Sort By</span>
                                 <select>
                                     <option value="0">Default</option>
-                                    <option value="0">Default</option>
+                                    <option value="0">Name</option>
+                                    <option value="0">Price</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4">
                             <div class="filter__found">
-                                <h6><span>16</span> Products found</h6>
+                                <h6><span>{{content.scRestProd.data.GetProd.data.length}}</span> Products found</h6>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-3">
@@ -315,184 +317,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" id="repeatRestProd" is="dmx-repeat" dmx-bind:repeat="scRestProd.data.GetProd.data" key="id">
                     <div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-1.jpg">
+                            <div class="product__item__pic set-bg">
+                                <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scRestProd.data.GetProd.data[$index].prod_img1" dmx-bind:alt="content.scRestProd.data.GetProd.data[$index].prod_name_en">
                                 <ul class="product__item__pic__hover">
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                    <li dmx-on:click="run({run:{action:`scAddtoWishlist.load({product_id: scRestProd.data.GetProd.data[$index].prod_id, price: scRestProd.data.GetProd.data[$index].price_id},true);scDashboardInfo.load();notifMain.info(((varLanguage.value==\'English\')?scRestProd.data.GetProd.data[$index].prod_name_en:(varLanguage.value==\'Bengali\')?scRestProd.data.GetProd.data[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scRestProd.data.GetProd.data[$index].prod_name_hin:scRestProd.data.GetProd.data[$index].prod_name_en)+\' added to wish-list\')`,name:'FlowWishlist'}})"><a href="#"><i class="fa fa-heart"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-circle" dmx-class:text-success="content.scRestProd.data.GetProd.data[$index].prod_mark_id==1" dmx-class:text-danger="content.scRestProd.data.GetProd.data[$index].prod_mark_id==2"></i></a></li>
+                                    <li dmx-on:click="run({run:{action:`scAddtoCart.load({product_id: scRestProd.data.GetProd.data[$index].prod_id, price: scRestProd.data.GetProd.data[$index].price_id},true);scDashboardInfo.load(true);notifMain.success(((varLanguage.value==\'English\')?scRestProd.data.GetProd.data[$index].prod_name_en:(varLanguage.value==\'Bengali\')?scRestProd.data.GetProd.data[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scRestProd.data.GetProd.data[$index].prod_name_hin:scRestProd.data.GetProd.data[$index].prod_name_en)+\'  added to cart \')`,name:'Flow'}})"><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
                                 </ul>
                             </div>
                             <div class="product__item__text">
-                                <h6><a href="#">Veg Chowmein</a></h6>
-                                <h5><i class="fa fa-rupee"></i>30.00</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-2.jpg">
-                                <ul class="product__item__pic__hover">
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product__item__text">
-                                <h6><a href="#">Stuffed Kulcha</a></h6>
-                                <h5><i class="fa fa-rupee"></i>30.00</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-3.jpg">
-                                <ul class="product__item__pic__hover">
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product__item__text">
-                                <h6><a href="#">Rasam Rice Meal</a></h6>
-                                <h5><i class="fa fa-rupee"></i>30.00</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-4.jpg">
-                                <ul class="product__item__pic__hover">
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product__item__text">
-                                <h6><a href="#">Veg Wonton Soup</a></h6>
-                                <h5><i class="fa fa-rupee"></i>30.00</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-5.jpg">
-                                <ul class="product__item__pic__hover">
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product__item__text">
-                                <h6><a href="#">Lachha Parantha</a></h6>
-                                <h5><i class="fa fa-rupee"></i>30.00</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-6.jpg">
-                                <ul class="product__item__pic__hover">
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product__item__text">
-                                <h6><a href="#">Pindi Chana</a></h6>
-                                <h5><i class="fa fa-rupee"></i>30.00</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-7.jpg">
-                                <ul class="product__item__pic__hover">
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product__item__text">
-                                <h6><a href="#">Onion Salad</a></h6>
-                                <h5><i class="fa fa-rupee"></i>30.00</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-8.jpg">
-                                <ul class="product__item__pic__hover">
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product__item__text">
-                                <h6><a href="#">Veg Spring Roll</a></h6>
-                                <h5><i class="fa fa-rupee"></i>30.00</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-9.jpg">
-                                <ul class="product__item__pic__hover">
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product__item__text">
-                                <h6><a href="#">Garlic Naan</a></h6>
-                                <h5><i class="fa fa-rupee"></i>30.00</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-10.jpg">
-                                <ul class="product__item__pic__hover">
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product__item__text">
-                                <h6><a href="#">Upma</a></h6>
-                                <h5><i class="fa fa-rupee"></i>30.00</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-11.jpg">
-                                <ul class="product__item__pic__hover">
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product__item__text">
-                                <h6><a href="#">Veg Sweet Corn Soup</a></h6>
-                                <h5><i class="fa fa-rupee"></i>30.00</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-12.jpg">
-                                <ul class="product__item__pic__hover">
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product__item__text">
-                                <h6><a href="#">Tom Yum Soup</a></h6>
-                                <h5><i class="fa fa-rupee"></i>30.00</h5>
+                                <h6><a href="#">{{varLanguage.value=='English'?content.scRestProd.data.GetProd.data[$index].prod_name_en:varLanguage.value=='Bengali'?content.scRestProd.data.GetProd.data[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scRestProd.data.GetProd.data[$index].prod_name_hin:scRestProd.data.GetProd.data[$index].prod_name_en}}</a></h6>
+                                <h5><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd.data[$index].price}} <span class="text-muted ab text-monospace text-line-through"><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd.data[$index].mrp}}</span></h5>
+                                <!-- <div class="product__item__price"><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd.data[$index].price}} <span><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd.data[$index].mrp}}</span></div> -->
                             </div>
                         </div>
                     </div>

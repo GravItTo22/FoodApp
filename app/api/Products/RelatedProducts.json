@@ -1,0 +1,403 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      },
+      {
+        "type": "text",
+        "name": "rest_id"
+      },
+      {
+        "type": "text",
+        "name": "cat_id"
+      },
+      {
+        "type": "text",
+        "name": "prod_mark_id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": {
+            "name": "GetRelatedProd",
+            "module": "dbconnector",
+            "action": "paged",
+            "options": {
+              "connection": "ClientApp",
+              "sql": {
+                "type": "SELECT",
+                "columns": [
+                  {
+                    "table": "m_product",
+                    "column": "id"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_id"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_occurance_id"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_name_en"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_name_bn"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_name_hin"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_img1"
+                  },
+                  {
+                    "table": "rpt",
+                    "column": "id",
+                    "alias": "price_id"
+                  },
+                  {
+                    "table": "rpt",
+                    "column": "quantity"
+                  },
+                  {
+                    "table": "rpt",
+                    "column": "q_unit"
+                  },
+                  {
+                    "table": "rpt",
+                    "column": "mrp"
+                  },
+                  {
+                    "table": "rpt",
+                    "column": "purchase_price"
+                  },
+                  {
+                    "table": "rpt",
+                    "column": "selling_price",
+                    "alias": "price"
+                  }
+                ],
+                "table": {
+                  "name": "m_product"
+                },
+                "primary": "id",
+                "joins": [
+                  {
+                    "table": "r_price_table",
+                    "column": "*",
+                    "alias": "rpt",
+                    "type": "LEFT",
+                    "clauses": {
+                      "condition": "AND",
+                      "rules": [
+                        {
+                          "table": "rpt",
+                          "column": "prod_id",
+                          "operator": "equal",
+                          "value": {
+                            "table": "m_product",
+                            "column": "id"
+                          },
+                          "operation": "="
+                        }
+                      ]
+                    },
+                    "primary": "id"
+                  }
+                ],
+                "wheres": {
+                  "condition": "AND",
+                  "rules": [
+                    {
+                      "id": "m_product.status",
+                      "field": "m_product.status",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": 1,
+                      "data": {
+                        "table": "m_product",
+                        "column": "status",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "integer",
+                          "primary": false,
+                          "unique": false,
+                          "nullable": true,
+                          "name": "status"
+                        }
+                      },
+                      "operation": "="
+                    },
+                    {
+                      "id": "m_product.rest_id",
+                      "field": "m_product.rest_id",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": "{{$_GET.rest_id}}",
+                      "data": {
+                        "table": "m_product",
+                        "column": "rest_id",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "reference",
+                          "primary": false,
+                          "unique": false,
+                          "nullable": true,
+                          "references": "id",
+                          "inTable": "m_restaurant",
+                          "referenceType": "integer",
+                          "onUpdate": "NO ACTION",
+                          "onDelete": "NO ACTION",
+                          "name": "rest_id"
+                        }
+                      },
+                      "operation": "="
+                    },
+                    {
+                      "id": "m_product.market_id",
+                      "field": "m_product.market_id",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": 1,
+                      "data": {
+                        "table": "m_product",
+                        "column": "market_id",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "reference",
+                          "primary": false,
+                          "unique": false,
+                          "nullable": true,
+                          "references": "id",
+                          "inTable": "m_market",
+                          "referenceType": "integer",
+                          "onUpdate": "NO ACTION",
+                          "onDelete": "NO ACTION",
+                          "name": "market_id"
+                        }
+                      },
+                      "operation": "="
+                    },
+                    {
+                      "id": "m_product.category_id",
+                      "field": "m_product.category_id",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": "{{$_GET.cat_id}}",
+                      "data": {
+                        "table": "m_product",
+                        "column": "category_id",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "reference",
+                          "primary": false,
+                          "unique": false,
+                          "nullable": true,
+                          "references": "id",
+                          "inTable": "m_category",
+                          "referenceType": "integer",
+                          "onUpdate": "NO ACTION",
+                          "onDelete": "NO ACTION",
+                          "name": "category_id"
+                        }
+                      },
+                      "operation": "="
+                    },
+                    {
+                      "id": "m_product.prod_mark_id",
+                      "field": "m_product.prod_mark_id",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": "{{$_GET.prod_mark_id}}",
+                      "data": {
+                        "table": "m_product",
+                        "column": "prod_mark_id",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "reference",
+                          "primary": false,
+                          "unique": false,
+                          "nullable": true,
+                          "references": "id",
+                          "inTable": "m_prod_mark",
+                          "referenceType": "integer",
+                          "onUpdate": "NO ACTION",
+                          "onDelete": "NO ACTION",
+                          "name": "prod_mark_id"
+                        }
+                      },
+                      "operation": "="
+                    }
+                  ],
+                  "conditional": null,
+                  "valid": true
+                },
+                "query": "SELECT m_product.id, m_product.prod_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_img1, rpt.id AS price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.purchase_price, rpt.selling_price AS price\nFROM m_product\nLEFT JOIN r_price_table AS rpt ON (rpt.prod_id = m_product.id)\nWHERE m_product.status = 1 AND m_product.rest_id = :P1 /* {{$_GET.rest_id}} */ AND m_product.market_id = 1 AND m_product.category_id = :P2 /* {{$_GET.cat_id}} */ AND m_product.prod_mark_id = :P3 /* {{$_GET.prod_mark_id}} */",
+                "params": [
+                  {
+                    "operator": "equal",
+                    "type": "expression",
+                    "name": ":P1",
+                    "value": "{{$_GET.rest_id}}"
+                  },
+                  {
+                    "operator": "equal",
+                    "type": "expression",
+                    "name": ":P2",
+                    "value": "{{$_GET.cat_id}}"
+                  },
+                  {
+                    "operator": "equal",
+                    "type": "expression",
+                    "name": ":P3",
+                    "value": "{{$_GET.prod_mark_id}}"
+                  }
+                ]
+              }
+            },
+            "output": true,
+            "meta": [
+              {
+                "name": "offset",
+                "type": "number"
+              },
+              {
+                "name": "limit",
+                "type": "number"
+              },
+              {
+                "name": "total",
+                "type": "number"
+              },
+              {
+                "name": "page",
+                "type": "object",
+                "sub": [
+                  {
+                    "name": "offset",
+                    "type": "object",
+                    "sub": [
+                      {
+                        "name": "first",
+                        "type": "number"
+                      },
+                      {
+                        "name": "prev",
+                        "type": "number"
+                      },
+                      {
+                        "name": "next",
+                        "type": "number"
+                      },
+                      {
+                        "name": "last",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "current",
+                    "type": "number"
+                  },
+                  {
+                    "name": "total",
+                    "type": "number"
+                  }
+                ]
+              },
+              {
+                "name": "data",
+                "type": "array",
+                "sub": [
+                  {
+                    "type": "number",
+                    "name": "id"
+                  },
+                  {
+                    "type": "text",
+                    "name": "prod_id"
+                  },
+                  {
+                    "type": "number",
+                    "name": "prod_occurance_id"
+                  },
+                  {
+                    "type": "text",
+                    "name": "prod_name_en"
+                  },
+                  {
+                    "type": "text",
+                    "name": "prod_name_bn"
+                  },
+                  {
+                    "type": "text",
+                    "name": "prod_name_hin"
+                  },
+                  {
+                    "type": "text",
+                    "name": "prod_img1"
+                  },
+                  {
+                    "type": "number",
+                    "name": "price_id"
+                  },
+                  {
+                    "type": "text",
+                    "name": "quantity"
+                  },
+                  {
+                    "type": "text",
+                    "name": "q_unit"
+                  },
+                  {
+                    "type": "text",
+                    "name": "mrp"
+                  },
+                  {
+                    "type": "text",
+                    "name": "purchase_price"
+                  },
+                  {
+                    "type": "text",
+                    "name": "price"
+                  }
+                ]
+              }
+            ],
+            "type": "dbconnector_paged_select",
+            "outputType": "object"
+          }
+        },
+        "catch": {
+          "steps": {
+            "name": "Resp",
+            "module": "core",
+            "action": "response",
+            "options": {
+              "status": 403,
+              "data": "Suspicious Activity"
+            },
+            "output": true
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,396 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "p_id"
+      },
+      {
+        "type": "text",
+        "name": "market"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": {
+            "name": "GetProdDetails",
+            "module": "dbconnector",
+            "action": "single",
+            "options": {
+              "connection": "ClientApp",
+              "sql": {
+                "type": "SELECT",
+                "columns": [
+                  {
+                    "table": "m_product",
+                    "column": "id",
+                    "alias": "p_id"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_id"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "rest_id"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "category_id"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_mark_id"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_occurance_id"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_name_en"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_name_bn"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_name_hin"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_desc_en"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_desc_bn"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_desc_hin"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_img1"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_img2"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_img3"
+                  },
+                  {
+                    "table": "m_product",
+                    "column": "prod_img4"
+                  },
+                  {
+                    "table": "rpt",
+                    "column": "quantity"
+                  },
+                  {
+                    "table": "rpt",
+                    "column": "q_unit"
+                  },
+                  {
+                    "table": "rpt",
+                    "column": "mrp"
+                  },
+                  {
+                    "table": "rpt",
+                    "column": "selling_price",
+                    "alias": "price"
+                  },
+                  {
+                    "table": "rpt",
+                    "column": "product_tax"
+                  },
+                  {
+                    "table": "rpt",
+                    "column": "id",
+                    "alias": "price_id"
+                  },
+                  {
+                    "table": "mr",
+                    "column": "shop_name_en"
+                  },
+                  {
+                    "table": "mr",
+                    "column": "shop_name_bn"
+                  },
+                  {
+                    "table": "mr",
+                    "column": "shop_name_hin"
+                  }
+                ],
+                "table": {
+                  "name": "m_product"
+                },
+                "primary": "id",
+                "joins": [
+                  {
+                    "table": "r_price_table",
+                    "column": "*",
+                    "alias": "rpt",
+                    "type": "LEFT",
+                    "clauses": {
+                      "condition": "AND",
+                      "rules": [
+                        {
+                          "table": "rpt",
+                          "column": "prod_id",
+                          "operator": "equal",
+                          "value": {
+                            "table": "m_product",
+                            "column": "id"
+                          },
+                          "operation": "="
+                        }
+                      ]
+                    },
+                    "primary": "id"
+                  },
+                  {
+                    "table": "m_restaurant",
+                    "column": "*",
+                    "alias": "mr",
+                    "type": "LEFT",
+                    "clauses": {
+                      "condition": "AND",
+                      "rules": [
+                        {
+                          "table": "mr",
+                          "column": "id",
+                          "operator": "equal",
+                          "value": {
+                            "table": "m_product",
+                            "column": "rest_id"
+                          },
+                          "operation": "="
+                        }
+                      ]
+                    },
+                    "primary": "id"
+                  }
+                ],
+                "query": "SELECT m_product.id AS p_id, m_product.prod_id, m_product.rest_id, m_product.category_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_desc_en, m_product.prod_desc_bn, m_product.prod_desc_hin, m_product.prod_img1, m_product.prod_img2, m_product.prod_img3, m_product.prod_img4, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price AS price, rpt.product_tax, rpt.id AS price_id, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin\nFROM m_product\nLEFT JOIN r_price_table AS rpt ON (rpt.prod_id = m_product.id) LEFT JOIN m_restaurant AS mr ON (mr.id = m_product.rest_id)\nWHERE m_product.status = 1 AND m_product.id = :P1 /* {{$_GET.p_id}} */ AND m_product.market_id = :P2 /* {{$_GET.market}} */",
+                "params": [
+                  {
+                    "operator": "equal",
+                    "type": "expression",
+                    "name": ":P1",
+                    "value": "{{$_GET.p_id}}"
+                  },
+                  {
+                    "operator": "equal",
+                    "type": "expression",
+                    "name": ":P2",
+                    "value": "{{$_GET.market}}"
+                  }
+                ],
+                "wheres": {
+                  "condition": "AND",
+                  "rules": [
+                    {
+                      "id": "m_product.status",
+                      "field": "m_product.status",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": 1,
+                      "data": {
+                        "table": "m_product",
+                        "column": "status",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "integer",
+                          "primary": false,
+                          "unique": false,
+                          "nullable": true,
+                          "name": "status"
+                        }
+                      },
+                      "operation": "="
+                    },
+                    {
+                      "id": "m_product.id",
+                      "field": "m_product.id",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": "{{$_GET.p_id}}",
+                      "data": {
+                        "table": "m_product",
+                        "column": "id",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "increments",
+                          "default": "",
+                          "primary": true,
+                          "unique": true,
+                          "nullable": false,
+                          "name": "id"
+                        }
+                      },
+                      "operation": "="
+                    },
+                    {
+                      "id": "m_product.market_id",
+                      "field": "m_product.market_id",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": "{{$_GET.market}}",
+                      "data": {
+                        "table": "m_product",
+                        "column": "market_id",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "reference",
+                          "primary": false,
+                          "unique": false,
+                          "nullable": true,
+                          "references": "id",
+                          "inTable": "m_market",
+                          "referenceType": "integer",
+                          "onUpdate": "NO ACTION",
+                          "onDelete": "NO ACTION",
+                          "name": "market_id"
+                        }
+                      },
+                      "operation": "="
+                    }
+                  ],
+                  "conditional": null,
+                  "valid": true
+                }
+              }
+            },
+            "output": true,
+            "meta": [
+              {
+                "type": "number",
+                "name": "p_id"
+              },
+              {
+                "type": "text",
+                "name": "prod_id"
+              },
+              {
+                "type": "number",
+                "name": "rest_id"
+              },
+              {
+                "type": "number",
+                "name": "category_id"
+              },
+              {
+                "type": "number",
+                "name": "prod_mark_id"
+              },
+              {
+                "type": "number",
+                "name": "prod_occurance_id"
+              },
+              {
+                "type": "text",
+                "name": "prod_name_en"
+              },
+              {
+                "type": "text",
+                "name": "prod_name_bn"
+              },
+              {
+                "type": "text",
+                "name": "prod_name_hin"
+              },
+              {
+                "type": "text",
+                "name": "prod_desc_en"
+              },
+              {
+                "type": "text",
+                "name": "prod_desc_bn"
+              },
+              {
+                "type": "text",
+                "name": "prod_desc_hin"
+              },
+              {
+                "type": "text",
+                "name": "prod_img1"
+              },
+              {
+                "type": "text",
+                "name": "prod_img2"
+              },
+              {
+                "type": "text",
+                "name": "prod_img3"
+              },
+              {
+                "type": "text",
+                "name": "prod_img4"
+              },
+              {
+                "type": "text",
+                "name": "quantity"
+              },
+              {
+                "type": "text",
+                "name": "q_unit"
+              },
+              {
+                "type": "text",
+                "name": "mrp"
+              },
+              {
+                "type": "text",
+                "name": "price"
+              },
+              {
+                "type": "text",
+                "name": "product_tax"
+              },
+              {
+                "type": "number",
+                "name": "price_id"
+              },
+              {
+                "type": "text",
+                "name": "shop_name_en"
+              },
+              {
+                "type": "text",
+                "name": "shop_name_bn"
+              },
+              {
+                "type": "text",
+                "name": "shop_name_hin"
+              }
+            ],
+            "outputType": "object"
+          }
+        },
+        "catch": {
+          "steps": {
+            "name": "Resp",
+            "module": "core",
+            "action": "setvalue",
+            "options": {
+              "value": "Suspicious Activity"
+            },
+            "meta": [],
+            "output": true,
+            "outputType": "text"
+          }
+        }
+      }
+    }
+  }
+}

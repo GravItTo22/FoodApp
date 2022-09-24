@@ -234,18 +234,24 @@
                   },
                   "primary": "id",
                   "joins": [],
-                  "query": "SELECT COUNT(id) AS Cart_Items\nFROM r_cart\nWHERE user_id = :P1 /* {{identity}} */",
+                  "query": "SELECT COUNT(id) AS Cart_Items\nFROM r_cart\nWHERE user_id = :P1 /* {{identity}} */ OR ip_address = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
                   "params": [
                     {
                       "operator": "equal",
                       "type": "expression",
                       "name": ":P1",
                       "value": "{{identity}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{$_SERVER.REMOTE_ADDR}}"
                     }
                   ],
                   "groupBy": [],
                   "wheres": {
-                    "condition": "AND",
+                    "condition": "OR",
                     "rules": [
                       {
                         "id": "r_cart.user_id",
@@ -268,6 +274,27 @@
                             "onUpdate": "NO ACTION",
                             "onDelete": "NO ACTION",
                             "name": "user_id"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "r_cart.ip_address",
+                        "field": "r_cart.ip_address",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_SERVER.REMOTE_ADDR}}",
+                        "data": {
+                          "table": "r_cart",
+                          "column": "ip_address",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "ip_address"
                           }
                         },
                         "operation": "="
@@ -331,18 +358,45 @@
                           }
                         },
                         "operation": "="
+                      },
+                      {
+                        "id": "r_wishlist.ips",
+                        "field": "r_wishlist.ips",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_SERVER.REMOTE_ADDR}}",
+                        "data": {
+                          "table": "r_wishlist",
+                          "column": "ips",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "ips"
+                          }
+                        },
+                        "operation": "="
                       }
                     ],
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT COUNT(id) AS WishlistItems\nFROM r_wishlist\nWHERE user_id = :P1 /* {{identity}} */",
+                  "query": "SELECT COUNT(id) AS WishlistItems\nFROM r_wishlist\nWHERE user_id = :P1 /* {{identity}} */ AND ips = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
                   "params": [
                     {
                       "operator": "equal",
                       "type": "expression",
                       "name": ":P1",
                       "value": "{{identity}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{$_SERVER.REMOTE_ADDR}}"
                     }
                   ]
                 }

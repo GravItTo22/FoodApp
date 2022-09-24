@@ -1,0 +1,893 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "offset"
+      },
+      {
+        "type": "text",
+        "name": "limit"
+      },
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      },
+      {
+        "type": "text",
+        "name": "logintoken"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetVerify",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "t_user_log",
+                      "column": "user_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "t_user_log"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "t_user_log.login_token",
+                        "field": "t_user_log.login_token",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_GET.logintoken}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_token",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_token"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_GET.logintoken}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.logintoken}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "user_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetVerify.user_id}}",
+                "then": {
+                  "steps": {
+                    "name": "GetCartItems",
+                    "module": "dbconnector",
+                    "action": "paged",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "type": "SELECT",
+                        "columns": [
+                          {
+                            "table": "r_cart",
+                            "column": "id"
+                          },
+                          {
+                            "table": "r_cart",
+                            "column": "prod_id"
+                          },
+                          {
+                            "table": "r_cart",
+                            "column": "price_id"
+                          },
+                          {
+                            "table": "r_cart",
+                            "column": "user_id"
+                          },
+                          {
+                            "table": "r_cart",
+                            "column": "prod_unit_price"
+                          },
+                          {
+                            "table": "r_cart",
+                            "column": "prod_qty"
+                          },
+                          {
+                            "table": "r_cart",
+                            "column": "total_price"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "prod_name_en"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "prod_name_bn"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "prod_name_hin"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "prod_desc_en"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "prod_desc_bn"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "prod_desc_hin"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "prod_img1"
+                          },
+                          {
+                            "table": "r_price",
+                            "column": "quantity"
+                          },
+                          {
+                            "table": "r_price",
+                            "column": "q_unit"
+                          },
+                          {
+                            "table": "r_price",
+                            "column": "mrp"
+                          },
+                          {
+                            "table": "r_price",
+                            "column": "selling_price",
+                            "alias": "price"
+                          },
+                          {
+                            "table": "r_price",
+                            "column": "product_tax"
+                          },
+                          {
+                            "table": "m_rest",
+                            "column": "shop_name_en"
+                          },
+                          {
+                            "table": "m_rest",
+                            "column": "shop_name_bn"
+                          },
+                          {
+                            "table": "m_rest",
+                            "column": "shop_name_hin"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "rest_id"
+                          }
+                        ],
+                        "table": {
+                          "name": "r_cart"
+                        },
+                        "primary": "id",
+                        "joins": [
+                          {
+                            "table": "m_product",
+                            "column": "*",
+                            "alias": "m_prod",
+                            "type": "LEFT",
+                            "clauses": {
+                              "condition": "AND",
+                              "rules": [
+                                {
+                                  "table": "m_prod",
+                                  "column": "id",
+                                  "operator": "equal",
+                                  "value": {
+                                    "table": "r_cart",
+                                    "column": "prod_id"
+                                  },
+                                  "operation": "="
+                                }
+                              ]
+                            },
+                            "primary": "id"
+                          },
+                          {
+                            "table": "r_price_table",
+                            "column": "*",
+                            "alias": "r_price",
+                            "type": "LEFT",
+                            "clauses": {
+                              "condition": "AND",
+                              "rules": [
+                                {
+                                  "table": "r_price",
+                                  "column": "id",
+                                  "operator": "equal",
+                                  "value": {
+                                    "table": "r_cart",
+                                    "column": "price_id"
+                                  },
+                                  "operation": "="
+                                }
+                              ]
+                            },
+                            "primary": "id"
+                          },
+                          {
+                            "table": "m_restaurant",
+                            "column": "*",
+                            "alias": "m_rest",
+                            "type": "LEFT",
+                            "clauses": {
+                              "condition": "AND",
+                              "rules": [
+                                {
+                                  "table": "m_rest",
+                                  "column": "id",
+                                  "operator": "equal",
+                                  "value": {
+                                    "table": "m_prod",
+                                    "column": "rest_id"
+                                  },
+                                  "operation": "="
+                                }
+                              ]
+                            },
+                            "primary": "id"
+                          }
+                        ],
+                        "wheres": {
+                          "condition": "OR",
+                          "rules": [
+                            {
+                              "id": "r_cart.user_id",
+                              "field": "r_cart.user_id",
+                              "type": "double",
+                              "operator": "equal",
+                              "value": "{{GetVerify.user_id}}",
+                              "data": {
+                                "table": "r_cart",
+                                "column": "user_id",
+                                "type": "number",
+                                "columnObj": {
+                                  "type": "reference",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "references": "id",
+                                  "inTable": "m_customer",
+                                  "referenceType": "integer",
+                                  "onUpdate": "NO ACTION",
+                                  "onDelete": "NO ACTION",
+                                  "name": "user_id"
+                                }
+                              },
+                              "operation": "="
+                            },
+                            {
+                              "id": "r_cart.ip_address",
+                              "field": "r_cart.ip_address",
+                              "type": "string",
+                              "operator": "equal",
+                              "value": "{{$_SERVER.REMOTE_ADDR}}",
+                              "data": {
+                                "table": "r_cart",
+                                "column": "ip_address",
+                                "type": "text",
+                                "columnObj": {
+                                  "type": "string",
+                                  "maxLength": -5,
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "ip_address"
+                                }
+                              },
+                              "operation": "="
+                            }
+                          ],
+                          "conditional": null,
+                          "valid": true
+                        },
+                        "query": "SELECT r_cart.id, r_cart.prod_id, r_cart.price_id, r_cart.user_id, r_cart.prod_unit_price, r_cart.prod_qty, r_cart.total_price, m_prod.prod_name_en, m_prod.prod_name_bn, m_prod.prod_name_hin, m_prod.prod_desc_en, m_prod.prod_desc_bn, m_prod.prod_desc_hin, m_prod.prod_img1, r_price.quantity, r_price.q_unit, r_price.mrp, r_price.selling_price AS price, r_price.product_tax, m_rest.shop_name_en, m_rest.shop_name_bn, m_rest.shop_name_hin, m_prod.rest_id\nFROM r_cart\nLEFT JOIN m_product AS m_prod ON (m_prod.id = r_cart.prod_id) LEFT JOIN r_price_table AS r_price ON (r_price.id = r_cart.price_id) LEFT JOIN m_restaurant AS m_rest ON (m_rest.id = m_prod.rest_id)\nWHERE r_cart.user_id = :P1 /* {{GetVerify.user_id}} */ OR r_cart.ip_address = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
+                        "params": [
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P1",
+                            "value": "{{GetVerify.user_id}}"
+                          },
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P2",
+                            "value": "{{$_SERVER.REMOTE_ADDR}}"
+                          }
+                        ]
+                      }
+                    },
+                    "output": true,
+                    "meta": [
+                      {
+                        "name": "offset",
+                        "type": "number"
+                      },
+                      {
+                        "name": "limit",
+                        "type": "number"
+                      },
+                      {
+                        "name": "total",
+                        "type": "number"
+                      },
+                      {
+                        "name": "page",
+                        "type": "object",
+                        "sub": [
+                          {
+                            "name": "offset",
+                            "type": "object",
+                            "sub": [
+                              {
+                                "name": "first",
+                                "type": "number"
+                              },
+                              {
+                                "name": "prev",
+                                "type": "number"
+                              },
+                              {
+                                "name": "next",
+                                "type": "number"
+                              },
+                              {
+                                "name": "last",
+                                "type": "number"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "current",
+                            "type": "number"
+                          },
+                          {
+                            "name": "total",
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "data",
+                        "type": "array",
+                        "sub": [
+                          {
+                            "type": "number",
+                            "name": "id"
+                          },
+                          {
+                            "type": "number",
+                            "name": "prod_id"
+                          },
+                          {
+                            "type": "number",
+                            "name": "price_id"
+                          },
+                          {
+                            "type": "number",
+                            "name": "user_id"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_unit_price"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_qty"
+                          },
+                          {
+                            "type": "text",
+                            "name": "total_price"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_name_en"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_name_bn"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_name_hin"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_desc_en"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_desc_bn"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_desc_hin"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_img1"
+                          },
+                          {
+                            "type": "text",
+                            "name": "quantity"
+                          },
+                          {
+                            "type": "text",
+                            "name": "q_unit"
+                          },
+                          {
+                            "type": "text",
+                            "name": "mrp"
+                          },
+                          {
+                            "type": "text",
+                            "name": "price"
+                          },
+                          {
+                            "type": "text",
+                            "name": "product_tax"
+                          },
+                          {
+                            "type": "text",
+                            "name": "shop_name_en"
+                          },
+                          {
+                            "type": "text",
+                            "name": "shop_name_bn"
+                          },
+                          {
+                            "type": "text",
+                            "name": "shop_name_hin"
+                          },
+                          {
+                            "type": "number",
+                            "name": "rest_id"
+                          }
+                        ]
+                      }
+                    ],
+                    "outputType": "object"
+                  }
+                },
+                "else": {
+                  "steps": {
+                    "name": "GetCartItems",
+                    "module": "dbconnector",
+                    "action": "paged",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "type": "SELECT",
+                        "columns": [
+                          {
+                            "table": "r_cart",
+                            "column": "id"
+                          },
+                          {
+                            "table": "r_cart",
+                            "column": "prod_id"
+                          },
+                          {
+                            "table": "r_cart",
+                            "column": "price_id"
+                          },
+                          {
+                            "table": "r_cart",
+                            "column": "user_id"
+                          },
+                          {
+                            "table": "r_cart",
+                            "column": "prod_unit_price"
+                          },
+                          {
+                            "table": "r_cart",
+                            "column": "prod_qty"
+                          },
+                          {
+                            "table": "r_cart",
+                            "column": "total_price"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "prod_name_en"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "prod_name_bn"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "prod_name_hin"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "prod_desc_en"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "prod_desc_bn"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "prod_desc_hin"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "prod_img1"
+                          },
+                          {
+                            "table": "r_price",
+                            "column": "quantity"
+                          },
+                          {
+                            "table": "r_price",
+                            "column": "q_unit"
+                          },
+                          {
+                            "table": "r_price",
+                            "column": "mrp"
+                          },
+                          {
+                            "table": "r_price",
+                            "column": "selling_price",
+                            "alias": "price"
+                          },
+                          {
+                            "table": "r_price",
+                            "column": "product_tax"
+                          },
+                          {
+                            "table": "m_rest",
+                            "column": "shop_name_en"
+                          },
+                          {
+                            "table": "m_rest",
+                            "column": "shop_name_bn"
+                          },
+                          {
+                            "table": "m_rest",
+                            "column": "shop_name_hin"
+                          },
+                          {
+                            "table": "m_prod",
+                            "column": "rest_id"
+                          }
+                        ],
+                        "table": {
+                          "name": "r_cart"
+                        },
+                        "primary": "id",
+                        "joins": [
+                          {
+                            "table": "m_product",
+                            "column": "*",
+                            "alias": "m_prod",
+                            "type": "LEFT",
+                            "clauses": {
+                              "condition": "AND",
+                              "rules": [
+                                {
+                                  "table": "m_prod",
+                                  "column": "id",
+                                  "operator": "equal",
+                                  "value": {
+                                    "table": "r_cart",
+                                    "column": "prod_id"
+                                  },
+                                  "operation": "="
+                                }
+                              ]
+                            },
+                            "primary": "id"
+                          },
+                          {
+                            "table": "r_price_table",
+                            "column": "*",
+                            "alias": "r_price",
+                            "type": "LEFT",
+                            "clauses": {
+                              "condition": "AND",
+                              "rules": [
+                                {
+                                  "table": "r_price",
+                                  "column": "id",
+                                  "operator": "equal",
+                                  "value": {
+                                    "table": "r_cart",
+                                    "column": "price_id"
+                                  },
+                                  "operation": "="
+                                }
+                              ]
+                            },
+                            "primary": "id"
+                          },
+                          {
+                            "table": "m_restaurant",
+                            "column": "*",
+                            "alias": "m_rest",
+                            "type": "LEFT",
+                            "clauses": {
+                              "condition": "AND",
+                              "rules": [
+                                {
+                                  "table": "m_rest",
+                                  "column": "id",
+                                  "operator": "equal",
+                                  "value": {
+                                    "table": "m_prod",
+                                    "column": "rest_id"
+                                  },
+                                  "operation": "="
+                                }
+                              ]
+                            },
+                            "primary": "id"
+                          }
+                        ],
+                        "wheres": {
+                          "condition": "OR",
+                          "rules": [
+                            {
+                              "id": "r_cart.ip_address",
+                              "field": "r_cart.ip_address",
+                              "type": "string",
+                              "operator": "equal",
+                              "value": "{{$_SERVER.REMOTE_ADDR}}",
+                              "data": {
+                                "table": "r_cart",
+                                "column": "ip_address",
+                                "type": "text",
+                                "columnObj": {
+                                  "type": "string",
+                                  "maxLength": -5,
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "ip_address"
+                                }
+                              },
+                              "operation": "="
+                            }
+                          ],
+                          "conditional": null,
+                          "valid": true
+                        },
+                        "query": "SELECT r_cart.id, r_cart.prod_id, r_cart.price_id, r_cart.user_id, r_cart.prod_unit_price, r_cart.prod_qty, r_cart.total_price, m_prod.prod_name_en, m_prod.prod_name_bn, m_prod.prod_name_hin, m_prod.prod_desc_en, m_prod.prod_desc_bn, m_prod.prod_desc_hin, m_prod.prod_img1, r_price.quantity, r_price.q_unit, r_price.mrp, r_price.selling_price AS price, r_price.product_tax, m_rest.shop_name_en, m_rest.shop_name_bn, m_rest.shop_name_hin, m_prod.rest_id\nFROM r_cart\nLEFT JOIN m_product AS m_prod ON (m_prod.id = r_cart.prod_id) LEFT JOIN r_price_table AS r_price ON (r_price.id = r_cart.price_id) LEFT JOIN m_restaurant AS m_rest ON (m_rest.id = m_prod.rest_id)\nWHERE r_cart.ip_address = :P1 /* {{$_SERVER.REMOTE_ADDR}} */",
+                        "params": [
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P1",
+                            "value": "{{$_SERVER.REMOTE_ADDR}}"
+                          }
+                        ]
+                      }
+                    },
+                    "output": true,
+                    "meta": [
+                      {
+                        "name": "offset",
+                        "type": "number"
+                      },
+                      {
+                        "name": "limit",
+                        "type": "number"
+                      },
+                      {
+                        "name": "total",
+                        "type": "number"
+                      },
+                      {
+                        "name": "page",
+                        "type": "object",
+                        "sub": [
+                          {
+                            "name": "offset",
+                            "type": "object",
+                            "sub": [
+                              {
+                                "name": "first",
+                                "type": "number"
+                              },
+                              {
+                                "name": "prev",
+                                "type": "number"
+                              },
+                              {
+                                "name": "next",
+                                "type": "number"
+                              },
+                              {
+                                "name": "last",
+                                "type": "number"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "current",
+                            "type": "number"
+                          },
+                          {
+                            "name": "total",
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "data",
+                        "type": "array",
+                        "sub": [
+                          {
+                            "type": "number",
+                            "name": "id"
+                          },
+                          {
+                            "type": "number",
+                            "name": "prod_id"
+                          },
+                          {
+                            "type": "number",
+                            "name": "price_id"
+                          },
+                          {
+                            "type": "number",
+                            "name": "user_id"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_unit_price"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_qty"
+                          },
+                          {
+                            "type": "text",
+                            "name": "total_price"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_name_en"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_name_bn"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_name_hin"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_desc_en"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_desc_bn"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_desc_hin"
+                          },
+                          {
+                            "type": "text",
+                            "name": "prod_img1"
+                          },
+                          {
+                            "type": "text",
+                            "name": "quantity"
+                          },
+                          {
+                            "type": "text",
+                            "name": "q_unit"
+                          },
+                          {
+                            "type": "text",
+                            "name": "mrp"
+                          },
+                          {
+                            "type": "text",
+                            "name": "price"
+                          },
+                          {
+                            "type": "text",
+                            "name": "product_tax"
+                          },
+                          {
+                            "type": "text",
+                            "name": "shop_name_en"
+                          },
+                          {
+                            "type": "text",
+                            "name": "shop_name_bn"
+                          },
+                          {
+                            "type": "text",
+                            "name": "shop_name_hin"
+                          },
+                          {
+                            "type": "number",
+                            "name": "rest_id"
+                          }
+                        ]
+                      }
+                    ],
+                    "outputType": "object"
+                  }
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": {
+            "name": "Resp",
+            "module": "core",
+            "action": "setvalue",
+            "options": {
+              "value": "Suspicious Activity"
+            },
+            "meta": [],
+            "output": true,
+            "outputType": "text"
+          }
+        }
+      }
+    }
+  }
+}

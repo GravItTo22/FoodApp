@@ -1,0 +1,180 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "rest_id"
+      },
+      {
+        "type": "text",
+        "name": "market"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": {
+            "name": "GetShops",
+            "module": "dbconnector",
+            "action": "single",
+            "options": {
+              "connection": "ClientApp",
+              "sql": {
+                "type": "SELECT",
+                "columns": [
+                  {
+                    "table": "m_restaurant",
+                    "column": "id"
+                  },
+                  {
+                    "table": "m_restaurant",
+                    "column": "cat_type_id"
+                  },
+                  {
+                    "table": "m_restaurant",
+                    "column": "gen_shop_id"
+                  },
+                  {
+                    "table": "m_restaurant",
+                    "column": "shop_name_en"
+                  },
+                  {
+                    "table": "m_restaurant",
+                    "column": "shop_name_bn"
+                  },
+                  {
+                    "table": "m_restaurant",
+                    "column": "shop_name_hin"
+                  },
+                  {
+                    "table": "m_restaurant",
+                    "column": "shop_logo"
+                  },
+                  {
+                    "table": "m_restaurant",
+                    "column": "address"
+                  }
+                ],
+                "table": {
+                  "name": "m_restaurant"
+                },
+                "primary": "id",
+                "joins": [],
+                "wheres": {
+                  "condition": "OR",
+                  "rules": [
+                    {
+                      "id": "m_restaurant.id",
+                      "field": "m_restaurant.id",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": "{{$_GET.rest_id}}",
+                      "data": {
+                        "table": "m_restaurant",
+                        "column": "id",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "increments",
+                          "default": "",
+                          "primary": true,
+                          "unique": true,
+                          "nullable": false,
+                          "name": "id"
+                        }
+                      },
+                      "operation": "="
+                    },
+                    {
+                      "id": "m_restaurant.market_id",
+                      "field": "m_restaurant.market_id",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": "{{$_GET.market}}",
+                      "data": {
+                        "table": "m_restaurant",
+                        "column": "market_id",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "reference",
+                          "primary": false,
+                          "unique": false,
+                          "nullable": true,
+                          "references": "id",
+                          "inTable": "m_market",
+                          "referenceType": "integer",
+                          "onUpdate": "NO ACTION",
+                          "onDelete": "NO ACTION",
+                          "name": "market_id"
+                        }
+                      },
+                      "operation": "="
+                    }
+                  ],
+                  "conditional": null,
+                  "valid": true
+                },
+                "query": "SELECT id, cat_type_id, gen_shop_id, shop_name_en, shop_name_bn, shop_name_hin, shop_logo, address\nFROM m_restaurant\nWHERE id = :P1 /* {{$_GET.rest_id}} */ OR market_id = :P2 /* {{$_GET.market}} */",
+                "params": [
+                  {
+                    "operator": "equal",
+                    "type": "expression",
+                    "name": ":P1",
+                    "value": "{{$_GET.rest_id}}"
+                  },
+                  {
+                    "operator": "equal",
+                    "type": "expression",
+                    "name": ":P2",
+                    "value": "{{$_GET.market}}"
+                  }
+                ]
+              }
+            },
+            "output": true,
+            "meta": [
+              {
+                "type": "number",
+                "name": "id"
+              },
+              {
+                "type": "number",
+                "name": "cat_type_id"
+              },
+              {
+                "type": "text",
+                "name": "gen_shop_id"
+              },
+              {
+                "type": "text",
+                "name": "shop_name_en"
+              },
+              {
+                "type": "text",
+                "name": "shop_name_bn"
+              },
+              {
+                "type": "text",
+                "name": "shop_name_hin"
+              },
+              {
+                "type": "text",
+                "name": "shop_logo"
+              },
+              {
+                "type": "text",
+                "name": "address"
+              }
+            ],
+            "outputType": "object",
+            "type": "dbconnector_single"
+          }
+        }
+      }
+    }
+  }
+}

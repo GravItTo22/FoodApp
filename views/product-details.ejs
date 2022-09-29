@@ -2,6 +2,7 @@
 <meta name="ac:route" content="/product-details/:id/:prod_name">
 <dmx-serverconnect id="scProdDetails" url="/api/Products/ProdDetails" dmx-param:p_id="<%= $_PARAM.id %>"></dmx-serverconnect>
 <dmx-serverconnect id="scRelatedProd" url="/api/Products/RelatedProducts" dmx-param:rest_id="content.scProdDetails.data.GetProdDetails.rest_id" dmx-param:cat_id="content.scProdDetails.data.GetProdDetails.category_id" dmx-param:prod_mark_id="content.scProdDetails.data.GetProdDetails.prod_mark_id"></dmx-serverconnect>
+<dmx-value id="varZoomImg" dmx-bind:value="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img1+'?w=1200&amp;ch=DPR&amp;dpr=2'"></dmx-value>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
     <div class="container">
@@ -26,13 +27,13 @@
         <div class="row">
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__pic">
-                    <img class="drift-demo-trigger" data-zoom="assets/img/product/details/product-details-2.jpg?w=1200&amp;ch=DPR&amp;dpr=2" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img1+'?w=400&amp;ch=DPR&amp;dpr=2'" />
+                    <img class="drift-demo-trigger" data-zoom="assets/img/product/details/product-details-2.jpg?w=1200&amp;ch=DPR&amp;dpr=2" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img1+'?w=400&amp;ch=DPR&amp;dpr=2'" dmx-bind:data-zoom="varZoomImg.value" />
                 </div>
                 <div class="product__details__pic__slider owl-carousel mt-3">
-                    <img data-imgbigurl="assets/img/product/details/product-details-2.jpg" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img1" alt="">
-                    <img data-imgbigurl="assets/img/product/details/product-details-3.jpg" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img2" alt="">
-                    <img data-imgbigurl="assets/img/product/details/product-details-5.jpg" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img3" alt="">
-                    <img data-imgbigurl="assets/img/product/details/product-details-4.jpg" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img4" alt="">
+                    <img data-imgbigurl="assets/img/product/details/product-details-2.jpg" dmx-bind:data-imgbigurl="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img1" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img1" alt="" dmx-on:click="varZoomImg.setValue('https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img1+'?w=1200&amp;ch=DPR&amp;dpr=2')">
+                    <img data-imgbigurl="assets/img/product/details/product-details-3.jpg" dmx-bind:data-imgbigurl="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img2" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img2" alt="" dmx-on:click="varZoomImg.setValue('https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img2+'?w=1200&amp;ch=DPR&amp;dpr=2')">
+                    <img data-imgbigurl="assets/img/product/details/product-details-5.jpg" dmx-bind:data-imgbigurl="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img3" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img3" alt="" dmx-on:click="varZoomImg.setValue('https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img3+'?w=1200&amp;ch=DPR&amp;dpr=2')">
+                    <img data-imgbigurl="assets/img/product/details/product-details-4.jpg" dmx-bind:data-imgbigurl="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img4" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img4" alt="" dmx-on:click="varZoomImg.setValue('https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img4+'?w=1200&amp;ch=DPR&amp;dpr=2')">
                 </div>
             </div>
             <div class="col-lg-6 col-md-6">

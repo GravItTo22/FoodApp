@@ -94,7 +94,13 @@ ol {
 	font-weight: 700;
 	position: relative;
 }
-
+.go-items p{
+    font-size: 12px !important;
+}
+.go-items p:hover{
+    color:#ef5006;
+    cursor: pointer;
+}
 .section-title h2:after {
 	position: absolute;
 	left: 0;
@@ -4865,7 +4871,7 @@ display: flex;
   }
   @media (min-width: 768px) {
 	.card img {
-	  height: 11em;
+	  height: 9em;
 	}
   }
 

@@ -1,0 +1,123 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "cart_id"
+      },
+      {
+        "type": "text",
+        "name": "user_id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": {
+            "name": "DelCartItems",
+            "module": "dbupdater",
+            "action": "delete",
+            "options": {
+              "connection": "ClientApp",
+              "sql": {
+                "type": "delete",
+                "table": "r_cart",
+                "wheres": {
+                  "condition": "AND",
+                  "rules": [
+                    {
+                      "id": "id",
+                      "field": "id",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": "{{$_GET.cart_id}}",
+                      "data": {
+                        "column": "id"
+                      },
+                      "operation": "="
+                    },
+                    {
+                      "condition": "OR",
+                      "rules": [
+                        {
+                          "id": "user_id",
+                          "field": "user_id",
+                          "type": "double",
+                          "operator": "equal",
+                          "value": "{{$_GET.user_id}}",
+                          "data": {
+                            "column": "user_id"
+                          },
+                          "operation": "="
+                        },
+                        {
+                          "id": "ip_address",
+                          "field": "ip_address",
+                          "type": "string",
+                          "operator": "equal",
+                          "value": "{{$_SERVER.REMOTE_ADDR}}",
+                          "data": {
+                            "column": "ip_address"
+                          },
+                          "operation": "="
+                        }
+                      ],
+                      "conditional": null
+                    }
+                  ],
+                  "conditional": null,
+                  "valid": true
+                },
+                "returning": "id",
+                "query": "DELETE\nFROM r_cart\nWHERE id = :P1 /* {{$_GET.cart_id}} */ AND (user_id = :P2 /* {{$_GET.user_id}} */ OR ip_address = :P3 /* {{$_SERVER.REMOTE_ADDR}} */)",
+                "params": [
+                  {
+                    "operator": "equal",
+                    "type": "expression",
+                    "name": ":P1",
+                    "value": "{{$_GET.cart_id}}"
+                  },
+                  {
+                    "operator": "equal",
+                    "type": "expression",
+                    "name": ":P2",
+                    "value": "{{$_GET.user_id}}"
+                  },
+                  {
+                    "operator": "equal",
+                    "type": "expression",
+                    "name": ":P3",
+                    "value": "{{$_SERVER.REMOTE_ADDR}}"
+                  }
+                ]
+              }
+            },
+            "meta": [
+              {
+                "name": "affected",
+                "type": "number"
+              }
+            ]
+          }
+        },
+        "catch": {
+          "steps": {
+            "name": "Resp",
+            "module": "core",
+            "action": "response",
+            "options": {
+              "status": 403,
+              "data": "Suspicious Activity"
+            },
+            "output": true
+          }
+        }
+      }
+    }
+  }
+}

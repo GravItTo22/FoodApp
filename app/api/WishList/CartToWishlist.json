@@ -1,0 +1,327 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "cart_id"
+      }
+    ],
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "ips"
+      }
+    ],
+    "$_SERVER": [
+      {
+        "type": "text",
+        "name": "REMOTE_ADDR"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetCartItems",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "r_cart",
+                      "column": "prod_id"
+                    },
+                    {
+                      "table": "r_cart",
+                      "column": "price_id"
+                    },
+                    {
+                      "table": "r_cart",
+                      "column": "user_id"
+                    },
+                    {
+                      "table": "r_cart",
+                      "column": "prod_unit_price"
+                    },
+                    {
+                      "table": "r_cart",
+                      "column": "prod_qty"
+                    },
+                    {
+                      "table": "r_cart",
+                      "column": "total_price"
+                    }
+                  ],
+                  "table": {
+                    "name": "r_cart"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "r_cart.id",
+                        "field": "r_cart.id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{$_GET.cart_id}}",
+                        "data": {
+                          "table": "r_cart",
+                          "column": "id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "increments",
+                            "default": "",
+                            "primary": true,
+                            "unique": true,
+                            "nullable": false,
+                            "name": "id"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price\nFROM r_cart\nWHERE id = :P1 /* {{$_GET.cart_id}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.cart_id}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "prod_id"
+                },
+                {
+                  "type": "number",
+                  "name": "price_id"
+                },
+                {
+                  "type": "number",
+                  "name": "user_id"
+                },
+                {
+                  "type": "text",
+                  "name": "prod_unit_price"
+                },
+                {
+                  "type": "text",
+                  "name": "prod_qty"
+                },
+                {
+                  "type": "text",
+                  "name": "total_price"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "AddToWishlist",
+              "module": "dbupdater",
+              "action": "insert",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "insert",
+                  "values": [
+                    {
+                      "table": "r_wishlist",
+                      "column": "prod_id",
+                      "type": "number",
+                      "value": "{{GetCartItems.prod_id}}"
+                    },
+                    {
+                      "table": "r_wishlist",
+                      "column": "price_id",
+                      "type": "number",
+                      "value": "{{GetCartItems.price_id}}"
+                    },
+                    {
+                      "table": "r_wishlist",
+                      "column": "user_id",
+                      "type": "number",
+                      "value": "{{GetCartItems.user_id}}"
+                    },
+                    {
+                      "table": "r_wishlist",
+                      "column": "prod_unit_price",
+                      "type": "text",
+                      "value": "{{GetCartItems.prod_unit_price}}"
+                    },
+                    {
+                      "table": "r_wishlist",
+                      "column": "prod_qty",
+                      "type": "text",
+                      "value": "{{GetCartItems.prod_qty}}"
+                    },
+                    {
+                      "table": "r_wishlist",
+                      "column": "total_price",
+                      "type": "text",
+                      "value": "{{GetCartItems.total_price}}"
+                    },
+                    {
+                      "table": "r_wishlist",
+                      "column": "ips",
+                      "type": "text",
+                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                    },
+                    {
+                      "table": "r_wishlist",
+                      "column": "created_by",
+                      "type": "number",
+                      "value": "{{GetCartItems.user_id}}"
+                    },
+                    {
+                      "table": "r_wishlist",
+                      "column": "created_on",
+                      "type": "datetime",
+                      "value": "{{NOW}}"
+                    }
+                  ],
+                  "table": "r_wishlist",
+                  "returning": "id",
+                  "query": "INSERT INTO r_wishlist\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, ips, created_by, created_on) VALUES (:P1 /* {{GetCartItems.prod_id}} */, :P2 /* {{GetCartItems.price_id}} */, :P3 /* {{GetCartItems.user_id}} */, :P4 /* {{GetCartItems.prod_unit_price}} */, :P5 /* {{GetCartItems.prod_qty}} */, :P6 /* {{GetCartItems.total_price}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetCartItems.user_id}} */, :P9 /* {{NOW}} */)",
+                  "params": [
+                    {
+                      "name": ":P1",
+                      "type": "expression",
+                      "value": "{{GetCartItems.prod_id}}"
+                    },
+                    {
+                      "name": ":P2",
+                      "type": "expression",
+                      "value": "{{GetCartItems.price_id}}"
+                    },
+                    {
+                      "name": ":P3",
+                      "type": "expression",
+                      "value": "{{GetCartItems.user_id}}"
+                    },
+                    {
+                      "name": ":P4",
+                      "type": "expression",
+                      "value": "{{GetCartItems.prod_unit_price}}"
+                    },
+                    {
+                      "name": ":P5",
+                      "type": "expression",
+                      "value": "{{GetCartItems.prod_qty}}"
+                    },
+                    {
+                      "name": ":P6",
+                      "type": "expression",
+                      "value": "{{GetCartItems.total_price}}"
+                    },
+                    {
+                      "name": ":P7",
+                      "type": "expression",
+                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                    },
+                    {
+                      "name": ":P8",
+                      "type": "expression",
+                      "value": "{{GetCartItems.user_id}}"
+                    },
+                    {
+                      "name": ":P9",
+                      "type": "expression",
+                      "value": "{{NOW}}"
+                    }
+                  ]
+                }
+              },
+              "meta": [
+                {
+                  "name": "identity",
+                  "type": "text"
+                },
+                {
+                  "name": "affected",
+                  "type": "number"
+                }
+              ]
+            },
+            {
+              "name": "RemoveFromCart",
+              "module": "dbupdater",
+              "action": "delete",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "delete",
+                  "table": "r_cart",
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "id",
+                        "field": "id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{$_GET.cart_id}}",
+                        "data": {
+                          "column": "id"
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "returning": "id",
+                  "query": "DELETE\nFROM r_cart\nWHERE id = :P1 /* {{$_GET.cart_id}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.cart_id}}"
+                    }
+                  ]
+                }
+              },
+              "meta": [
+                {
+                  "name": "affected",
+                  "type": "number"
+                }
+              ]
+            }
+          ]
+        },
+        "catch": {
+          "steps": {
+            "name": "Resp",
+            "module": "core",
+            "action": "response",
+            "options": {
+              "status": 403,
+              "data": "Suspicious Activity"
+            },
+            "output": true
+          }
+        }
+      }
+    }
+  }
+}

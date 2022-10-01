@@ -2,6 +2,7 @@
 <meta name="ac:route" content="/cart">
 <dmx-value id="varCartId" dmx-bind:value="0"></dmx-value>
 <dmx-value id="varUserId" dmx-bind:value="0"></dmx-value>
+<dmx-serverconnect id="scCartUpdate" url="/api/Cart/UpdateCartItems" noload></dmx-serverconnect>
 <dmx-serverconnect id="scCartItems" url="/api/Cart/CartItems"></dmx-serverconnect>
 <dmx-serverconnect id="scRemoveCartItems" url="/api/Cart/RemoveCartItems" noload></dmx-serverconnect>
 <dmx-serverconnect id="scRemoveCartAddWish" url="/api/WishList/CartToWishlist" noload></dmx-serverconnect>
@@ -30,33 +31,33 @@
         <!-- left side div -->
         <div class="col-md-8 col-12 shadow">
             <h2 class="py-4 font-weight-bold">Cart ({{scDashboardInfo.data.GetCartItems.Cart_Items}} items)</h2>
-            <div class="card p-2 mb-3" dmx-repeat:repeatcart="content.scCartItems.data.GetCartItems.data">
+            <div class="card p-2 mb-3" dmx-repeat:repeatcart="content.scCartItems.data.GetCartItems">
                 <div class="row">
                     <!-- cart images div -->
                     <div class="col-md-3 col-12">
-                        <img dmx-bind:src="'https://secure.gravitto.com'+content.scCartItems.data.GetCartItems.data[$index].prod_img1" class="img-fluid" dmx-bind:alt="content.scCartItems.data.GetCartItems.data[$index].prod_name_en">
+                        <img dmx-bind:src="'https://secure.gravitto.com'+content.scCartItems.data.GetCartItems[$index].prod_img1" class="img-fluid" dmx-bind:alt="content.scCartItems.data.GetCartItems[$index].prod_name_en">
 
                     </div>
                     <div class="col-md-5 col-12">
                         <!-- product name  -->
-                        <h4 class="product_name text-monospace">{{varLanguage.value=='English'?content.scCartItems.data.GetCartItems.data[$index].prod_name_en:varLanguage.value=='Bengali'?content.scCartItems.data.GetCartItems.data[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scCartItems.data.GetCartItems.data[$index].prod_name_hin:content.scCartItems.data.GetCartItems.data[$index].prod_name_en}}</h4>
-                        <p class="mb-0 text-monospace text-primary">Seller: <a href="#">{{varLanguage.value=='English'?content.scCartItems.data.GetCartItems.data[$index].shop_name_en:varLanguage.value=='Bengali'?content.scCartItems.data.GetCartItems.data[$index].shop_name_bn:varLanguage.value=='Hindi'?content.scCartItems.data.GetCartItems.data[$index].shop_name_hin:content.scCartItems.data.GetCartItems.data[$index].shop_name_en}}</a></p>
-                        <p class="mb-0">Prod. Mark: {{content.scCartItems.data.GetCartItems.data[$index].prod_mark_id==1?'Veg':'Non-Veg'}}</p>
+                        <h4 class="product_name text-monospace">{{varLanguage.value=='English'?content.scCartItems.data.GetCartItems[$index].prod_name_en:varLanguage.value=='Bengali'?content.scCartItems.data.GetCartItems[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scCartItems.data.GetCartItems[$index].prod_name_hin:content.scCartItems.data.GetCartItems[$index].prod_name_en}}</h4>
+                        <p class="mb-0 text-monospace text-primary">Seller: <a href="#">{{varLanguage.value=='English'?content.scCartItems.data.GetCartItems[$index].shop_name_en:varLanguage.value=='Bengali'?content.scCartItems.data.GetCartItems[$index].shop_name_bn:varLanguage.value=='Hindi'?content.scCartItems.data.GetCartItems[$index].shop_name_hin:content.scCartItems.data.GetCartItems[$index].shop_name_en}}</a></p>
+                        <p class="mb-0">Prod. Mark: {{content.scCartItems.data.GetCartItems[$index].prod_mark_id==1?'Veg':'Non-Veg'}}</p>
                         <p class="my-2">
-                            <span class="px-2 price_money text-info alert-link text-monospace" id="itemval">{{content.scCartItems.data.GetCartItems.data[$index].price}}</span>
-                            <span class="text-muted text-monospace" style="text-decoration: line-through;">{{content.scCartItems.data.GetCartItems.data[$index].mrp}}</span>
-                            <span class="px-2 text-danger text-monospace" dmx-show="content.scCartItems.data.GetCartItems.data[$index].mrp>content.scCartItems.data.GetCartItems.data[$index].price">{{(100-((content.scCartItems.data.GetCartItems.data[$index].price * 100) / content.scCartItems.data.GetCartItems.data[$index].mrp)).toFixed(2)}} % off</span>
-                            <!-- 100-((content.scCartItems.data.GetCartItems.data.[$index].price * 100) / content.scCartItems.data.GetCartItems.data.[$index].mrp) -->
+                            <span class="px-2 price_money text-info alert-link text-monospace" id="itemval">{{content.scCartItems.data.GetCartItems[$index].prod_unit_price}}</span>
+                            <span class="text-muted text-monospace" style="text-decoration: line-through;">{{content.scCartItems.data.GetCartItems[$index].cart_mrp}}</span>
+                            <span class="px-2 text-danger text-monospace" dmx-show="content.scCartItems.data.GetCartItems[$index].mrp>content.scCartItems.data.GetCartItems[$index].price">{{(100-((content.scCartItems.data.GetCartItems[$index].prod_unit_price * 100) / content.scCartItems.data.GetCartItems[$index].cart_mrp)).toFixed(2)}} % off</span>
+                            <!-- 100-((content.scCartItems.data.GetCartItems[$index].price * 100) / content.scCartItems.data.GetCartItems[$index].mrp) -->
                         </p>
                         <!-- //remover move and price -->
                         <div class="row">
                             <div class="col-6 go-items">
-                                <p dmx-on:click="run({run:{action:`notifMain.success(((varLanguage.value==\'English\')?content.scCartItems.data.GetCartItems.data[$index].prod_name_en:(varLanguage.value==\'Bengali\')?content.scCartItems.data.GetCartItems.data[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scCartItems.data.GetCartItems.data[$index].prod_name_hin:scCartItems.data.GetCartItems.data[$index].prod_name_en)+\' removed from cart\');scRemoveCartItems.load({cart_id: scCartItems.data.GetCartItems.data[$index].id, user_id: scCartItems.data.GetCartItems.data[$index].user_id},true);scCartItems.load({},true);scDashboardInfo.load(true)`,name:'RemoveFlow'}})">
+                                <p dmx-on:click="run({run:{action:`notifMain.success(((varLanguage.value==\'English\')?content.scCartItems.data.GetCartItems[$index].prod_name_en:(varLanguage.value==\'Bengali\')?content.scCartItems.data.GetCartItems[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scCartItems.data.GetCartItems[$index].prod_name_hin:scCartItems.data.GetCartItems[$index].prod_name_en)+\' removed from cart\');scRemoveCartItems.load({cart_id: scCartItems.data.GetCartItems[$index].id, user_id: scCartItems.data.GetCartItems[$index].user_id},true);scCartItems.load({},true);scDashboardInfo.load()`,name:'RemoveFlow'}})">
                                     <i class="fa fa-trash mr-2"></i>Remove Item
                                 </p>
                             </div>
                             <div class="col-6 go-items px-0">
-                                <p dmx-on:click="run({run:{action:`notifMain.success(((varLanguage.value==\'English\')?content.scCartItems.data.GetCartItems.data[$index].prod_name_en:(varLanguage.value==\'Bengali\')?content.scCartItems.data.GetCartItems.data[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scCartItems.data.GetCartItems.data[$index].prod_name_hin:scCartItems.data.GetCartItems.data[$index].prod_name_en)+\' moved to wishlist\');scRemoveCartAddWish.load({cart_id: scCartItems.data.GetCartItems.data[$index].id},true);scCartItems.load({},true);scDashboardInfo.load(true)`,name:'RemoveCartAddWish'}})">
+                                <p dmx-on:click="run({run:{action:`notifMain.success(((varLanguage.value==\'English\')?content.scCartItems.data.GetCartItems[$index].prod_name_en:(varLanguage.value==\'Bengali\')?content.scCartItems.data.GetCartItems[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scCartItems.data.GetCartItems.data[$index].prod_name_hin:scCartItems.data.GetCartItems.data[$index].prod_name_en)+\' moved to wishlist\');scRemoveCartAddWish.load({cart_id: scCartItems.data.GetCartItems.data[$index].id},true);scCartItems.load({},true);scDashboardInfo.load(true)`,name:'RemoveCartAddWish'}})">
                                     <i class="fa fa-heart mr-2"></i>Move to Wish List
                                 </p>
                             </div>
@@ -64,6 +65,8 @@
 
                     </div>
                     <div class="col-md-4 col-12">
+                        <select id="selectProdPrice" dmx-bind:id="'selectProdPrice'+$index" class="form-select form-control d-block w-100 text-monospace font-weight-bold" style="font-size:12px" dmx-bind:options="scCartItems.data.GetCartItems[$index].price" optiontext="quantity+' '+q_unit+' :: '+price.toNumber().formatCurrency('₹', '.', ',', 2)+' MRP:'+.mrp.toNumber().formatCurrency('₹', '.', ',', 2)" optionvalue="price_ids" dmx-bind:value="content.scCartItems.data.GetCartItems[$index].price_id" dmx-on:change="run({run:{action:`scCartUpdate.load({p_id: scCartItems.data.GetCartItems[$index].prod_id, price_id: repeatcart[$index].selectProdPrice.value, items_no: repeatcart[$index].AddToCart.value},true);scCartItems.load({},true)`,name:'FlowPriceChange'}})">
+                        </select>
                         <!-- quantity inc dec -->
                         <ul class="pagination set_quantity mt-3 px-2">
                             <li class="page-item">
@@ -71,14 +74,14 @@
                                     <i class="fa fa-minus"></i> </button>
                             </li>
                             <li class="page-item">
-                                <input type="text" name="" class="page-link" value="1" id="textbox">
+                                <input type="text" id="AddToCart" dmx-bind:id="'AddToCart'+$index" name="" class="page-link" value="1" dmx-bind:value="content.scCartItems.data.GetCartItems[$index].prod_qty" id="textbox">
                             </li>
                             <li class="page-item">
                                 <button class="page-link" onclick="increaseNumber('textbox','itemval')">
                                     <i class="fa fa-plus"></i></button>
                             </li>
                         </ul>
-                        <span>Total:</span>
+                        <span>Total:{{content.scCartItems.data.GetCartItems[$index].total_price}}</span>
                     </div>
                 </div>
             </div>
@@ -92,16 +95,16 @@
                 <h2 class="product_name mb-5">The Total Amount Of</h2>
                 <div class="price_indiv d-flex justify-content-between">
                     <p>Amount</p>
-                    <p><i class=" fa fa-rupee"></i><span id="product_total_amt">0.00</span></p>
+                    <p><i class=" fa fa-rupee"></i><span id="product_total_amt">{{content.scCartItems.data.CartSumAmt[0].total_amt}}</span></p>
                 </div>
                 <div class="price_indiv d-flex justify-content-between mx-0">
                     <p>Shipping Charge</p>
-                    <p><i class=" fa fa-rupee"></i><span id="shipping_charge">50.0</span></p>
+                    <p><i class=" fa fa-rupee"></i><span id="shipping_charge">0.00</span></p>
                 </div>
                 <hr />
                 <div class="total-amt d-flex justify-content-between font-weight-bold">
-                    <p>The total amount of (including VAT)</p>
-                    <p><i class=" fa fa-rupee"></i><span id="total_cart_amt">0.00</span></p>
+                    <p>Grand Total Amount</p>
+                    <p><i class=" fa fa-rupee"></i><span id="total_cart_amt">{{scCartItems.data.CartSumAmt[0].total_amt}}</span></p>
                 </div>
                 <a href="checkout"><button class="btn1 text-uppercase">Checkout</button></a>
             </div>

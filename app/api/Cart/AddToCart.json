@@ -526,13 +526,13 @@
                               "table": "r_cart",
                               "column": "prod_qty",
                               "type": "text",
-                              "value": "{{GetProduct.quantity}}"
+                              "value": "{{1}}"
                             },
                             {
                               "table": "r_cart",
                               "column": "total_price",
                               "type": "text",
-                              "value": "{{GetProduct.quantity.toNumber()*GetProduct.selling_price.toNumber()}}"
+                              "value": "{{GetProduct.selling_price.toNumber()}}"
                             },
                             {
                               "table": "r_cart",
@@ -551,11 +551,17 @@
                               "column": "ip_address",
                               "type": "text",
                               "value": "{{$_SERVER.REMOTE_ADDR}}"
+                            },
+                            {
+                              "table": "r_cart",
+                              "column": "cart_mrp",
+                              "type": "text",
+                              "value": "{{GetProduct.mrp}}"
                             }
                           ],
                           "table": "r_cart",
                           "returning": "id",
-                          "query": "INSERT INTO r_cart\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, created_by, created_on, ip_address) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{identity}} */, :P4 /* {{GetProduct.selling_price}} */, :P5 /* {{GetProduct.quantity}} */, :P6 /* {{GetProduct.quantity.toNumber()*GetProduct.selling_price.toNumber()}} */, :P7 /* {{identity?identity:''}} */, :P8 /* {{NOW}} */, :P9 /* {{$_SERVER.REMOTE_ADDR}} */)",
+                          "query": "INSERT INTO r_cart\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, created_by, created_on, ip_address, cart_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{identity}} */, :P4 /* {{GetProduct.selling_price}} */, :P5 /* {{1}} */, :P6 /* {{GetProduct.selling_price.toNumber()}} */, :P7 /* {{identity?identity:''}} */, :P8 /* {{NOW}} */, :P9 /* {{$_SERVER.REMOTE_ADDR}} */, :P10 /* {{GetProduct.mrp}} */)",
                           "params": [
                             {
                               "name": ":P1",
@@ -580,12 +586,12 @@
                             {
                               "name": ":P5",
                               "type": "expression",
-                              "value": "{{GetProduct.quantity}}"
+                              "value": "{{1}}"
                             },
                             {
                               "name": ":P6",
                               "type": "expression",
-                              "value": "{{GetProduct.quantity.toNumber()*GetProduct.selling_price.toNumber()}}"
+                              "value": "{{GetProduct.selling_price.toNumber()}}"
                             },
                             {
                               "name": ":P7",
@@ -601,6 +607,11 @@
                               "name": ":P9",
                               "type": "expression",
                               "value": "{{$_SERVER.REMOTE_ADDR}}"
+                            },
+                            {
+                              "name": ":P10",
+                              "type": "expression",
+                              "value": "{{GetProduct.mrp}}"
                             }
                           ]
                         }
@@ -775,13 +786,13 @@
                               "table": "r_cart",
                               "column": "prod_qty",
                               "type": "text",
-                              "value": "{{GetProduct.quantity}}"
+                              "value": "{{1}}"
                             },
                             {
                               "table": "r_cart",
                               "column": "total_price",
                               "type": "text",
-                              "value": "{{GetProduct.quantity.toNumber()*GetProduct.selling_price.toNumber()}}"
+                              "value": "{{GetProduct.selling_price.toNumber()}}"
                             },
                             {
                               "table": "r_cart",
@@ -794,11 +805,17 @@
                               "column": "ip_address",
                               "type": "text",
                               "value": "{{$_SERVER.REMOTE_ADDR}}"
+                            },
+                            {
+                              "table": "r_cart",
+                              "column": "cart_mrp",
+                              "type": "text",
+                              "value": "{{GetProduct.mrp}}"
                             }
                           ],
                           "table": "r_cart",
                           "returning": "id",
-                          "query": "INSERT INTO r_cart\n(prod_id, price_id, prod_unit_price, prod_qty, total_price, created_on, ip_address) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetProduct.selling_price}} */, :P4 /* {{GetProduct.quantity}} */, :P5 /* {{GetProduct.quantity.toNumber()*GetProduct.selling_price.toNumber()}} */, :P6 /* {{NOW}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */)",
+                          "query": "INSERT INTO r_cart\n(prod_id, price_id, prod_unit_price, prod_qty, total_price, created_on, ip_address, cart_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetProduct.selling_price}} */, :P4 /* {{1}} */, :P5 /* {{GetProduct.selling_price.toNumber()}} */, :P6 /* {{NOW}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetProduct.mrp}} */)",
                           "params": [
                             {
                               "name": ":P1",
@@ -818,12 +835,12 @@
                             {
                               "name": ":P4",
                               "type": "expression",
-                              "value": "{{GetProduct.quantity}}"
+                              "value": "{{1}}"
                             },
                             {
                               "name": ":P5",
                               "type": "expression",
-                              "value": "{{GetProduct.quantity.toNumber()*GetProduct.selling_price.toNumber()}}"
+                              "value": "{{GetProduct.selling_price.toNumber()}}"
                             },
                             {
                               "name": ":P6",
@@ -834,6 +851,11 @@
                               "name": ":P7",
                               "type": "expression",
                               "value": "{{$_SERVER.REMOTE_ADDR}}"
+                            },
+                            {
+                              "name": ":P8",
+                              "type": "expression",
+                              "value": "{{GetProduct.mrp}}"
                             }
                           ]
                         }

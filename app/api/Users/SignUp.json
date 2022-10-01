@@ -406,7 +406,7 @@
                       "module": "core",
                       "action": "setsession",
                       "options": {
-                        "value": 1
+                        "value": "{{identity}}"
                       }
                     },
                     {

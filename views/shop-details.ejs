@@ -1,7 +1,7 @@
 <!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="shopdetails" appConnect="local" components="{dmxFormatter:{}}" -->
 <meta name="ac:route" content="/shop-details/:id/:shop_name">
 <dmx-serverconnect id="scShopDetails" url="/api/Restaurant/ShopDetails" dmx-param:id="<%= $_PARAM.id %>"></dmx-serverconnect>
-<dmx-serverconnect id="scRestProd" url="/api/Products/RestProducts" dmx-param:rest_id="<%= $_PARAM.id %>"></dmx-serverconnect>
+<dmx-serverconnect id="scRestProd" url="/api/Products/RestProducts" dmx-param:rest_id="<%= $_PARAM.id %>" dmx-param:market="1"></dmx-serverconnect>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
     <div class="container">
@@ -306,7 +306,7 @@
                         </div>
                         <div class="col-lg-4 col-md-4">
                             <div class="filter__found">
-                                <h6><span>{{content.scRestProd.data.GetProd.data.length}}</span> Products found</h6>
+                                <h6><span>{{content.scRestProd.data.GetProd.length}}</span> Products found</h6>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-3">
@@ -317,21 +317,23 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" id="repeatRestProd" is="dmx-repeat" dmx-bind:repeat="scRestProd.data.GetProd.data" key="id">
+                <div class="row" id="repeatRestProd" is="dmx-repeat" dmx-bind:repeat="scRestProd.data.GetProd" key="id">
                     <div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="product__item">
                             <div class="product__item__pic set-bg">
-                                <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scRestProd.data.GetProd.data[$index].prod_img1" dmx-bind:alt="content.scRestProd.data.GetProd.data[$index].prod_name_en">
+                                <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scRestProd.data.GetProd[$index].prod_img1" dmx-bind:alt="content.scRestProd.data.GetProd[$index].prod_name_en">
                                 <ul class="product__item__pic__hover">
-                                    <li dmx-on:click="run({run:{action:`scAddtoWishlist.load({product_id: scRestProd.data.GetProd.data[$index].prod_id, price: scRestProd.data.GetProd.data[$index].price_id},true);scDashboardInfo.load();notifMain.info(((varLanguage.value==\'English\')?scRestProd.data.GetProd.data[$index].prod_name_en:(varLanguage.value==\'Bengali\')?scRestProd.data.GetProd.data[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scRestProd.data.GetProd.data[$index].prod_name_hin:scRestProd.data.GetProd.data[$index].prod_name_en)+\' added to wish-list\')`,name:'FlowWishlist'}})"><a href="#"><i class="fa fa-heart"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-circle" dmx-class:text-success="content.scRestProd.data.GetProd.data[$index].prod_mark_id==1" dmx-class:text-danger="content.scRestProd.data.GetProd.data[$index].prod_mark_id==2"></i></a></li>
-                                    <li dmx-on:click="run({run:{action:`scAddtoCart.load({product_id: scRestProd.data.GetProd.data[$index].prod_id, price: scRestProd.data.GetProd.data[$index].price_id},true);scDashboardInfo.load(true);notifMain.success(((varLanguage.value==\'English\')?scRestProd.data.GetProd.data[$index].prod_name_en:(varLanguage.value==\'Bengali\')?scRestProd.data.GetProd.data[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scRestProd.data.GetProd.data[$index].prod_name_hin:scRestProd.data.GetProd.data[$index].prod_name_en)+\'  added to cart \')`,name:'Flow'}})"><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                    <li dmx-on:click="run({run:{action:`scAddtoWishlist.load({product_id: scRestProd.data.GetProd[$index].prod_id, price: content.repeatRestProd.items[$index].select.value},true);scDashboardInfo.load();notifMain.info(((varLanguage.value==\'English\')?scRestProd.data.GetProd[$index].prod_name_en:(varLanguage.value==\'Bengali\')?scRestProd.data.GetProd[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scRestProd.data.GetProd[$index].prod_name_hin:scRestProd.data.GetProd[$index].prod_name_en)+\' added to wish-list\')`,name:'FlowWishlist'}})"><a href="#"><i class="fa fa-heart"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-circle" dmx-class:text-success="content.scRestProd.data.GetProd[$index].prod_mark_id==1" dmx-class:text-danger="content.scRestProd.data.GetProd[$index].prod_mark_id==2"></i></a></li>
+                                    <li dmx-on:click="run({run:{action:`scAddtoCart.load({product_id: scRestProd.data.GetProd[$index].prod_id, price: content.repeatRestProd.items[$index].select.value},true);notifMain.success(((varLanguage.value==\'English\')?scRestProd.data.GetProd[$index].prod_name_en:(varLanguage.value==\'Bengali\')?scRestProd.data.GetProd[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scRestProd.data.GetProd[$index].prod_name_hin:scRestProd.data.GetProd[$index].prod_name_en)+\'  added to cart \');scDashboardInfo.load()`,name:'Flow'}})"><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
                                 </ul>
                             </div>
                             <div class="product__item__text">
-                                <h6><a dmx-bind:href="'/product-details/'+content.scRestProd.data.GetProd.data[$index].id+'/'+content.scRestProd.data.GetProd.data[$index].prod_name_en">{{varLanguage.value=='English'?content.scRestProd.data.GetProd.data[$index].prod_name_en:varLanguage.value=='Bengali'?content.scRestProd.data.GetProd.data[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scRestProd.data.GetProd.data[$index].prod_name_hin:scRestProd.data.GetProd.data[$index].prod_name_en}}</a></h6>
-                                <h5><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd.data[$index].price}} <span class="text-muted ab text-monospace text-line-through"><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd.data[$index].mrp}}</span></h5>
-                                <!-- <div class="product__item__price"><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd.data[$index].price}} <span><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd.data[$index].mrp}}</span></div> -->
+                                <h5 class="mb-3"><a dmx-bind:href="'/product-details/'+content.scRestProd.data.GetProd[$index].id+'/'+content.scRestProd.data.GetProd[$index].prod_name_en">{{varLanguage.value=='English'?content.scRestProd.data.GetProd[$index].prod_name_en:varLanguage.value=='Bengali'?content.scRestProd.data.GetProd[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scRestProd.data.GetProd[$index].prod_name_hin:scRestProd.data.GetProd[$index].prod_name_en}}</a></h5>
+                                <select id="select" dmx-bind:id="'select'+$index" class="form-select form-control d-block w-100 text-monospace font-weight-bold" style="font-size:12px" dmx-bind:options="scRestProd.data.GetProd[$index].price" optiontext="quantity+' '+q_unit+' :: '+price.toNumber().formatCurrency('₹', '.', ',', 2)+' MRP:'+.mrp.toNumber().formatCurrency('₹', '.', ',', 2)" optionvalue="price_id">
+                                </select>
+                                <!-- <h5><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd[$index].price}} <span class="text-muted ab text-monospace text-line-through"><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd[$index].mrp}}</span></h5> -->
+                                <!-- <div class="product__item__price"><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd[$index].price}} <span><i class="fa fa-rupee"></i>{{content.scRestProd.data.GetProd[$index].mrp}}</span></div> -->
                             </div>
                         </div>
                     </div>

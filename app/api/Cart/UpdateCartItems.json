@@ -1,0 +1,359 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "p_id"
+      },
+      {
+        "type": "text",
+        "name": "price_id"
+      },
+      {
+        "type": "text",
+        "name": "items_no"
+      }
+    ],
+    "$_SESSION": [
+      {
+        "type": "text",
+        "name": "sessionLogin"
+      }
+    ],
+    "$_SERVER": [
+      {
+        "type": "text",
+        "name": "REMOTE_ADDR"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetProdPrice",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "r_price_table",
+                      "column": "selling_price",
+                      "alias": "price"
+                    },
+                    {
+                      "table": "r_price_table",
+                      "column": "mrp"
+                    }
+                  ],
+                  "table": {
+                    "name": "r_price_table"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "r_price_table.id",
+                        "field": "r_price_table.id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{$_GET.price_id}}",
+                        "data": {
+                          "table": "r_price_table",
+                          "column": "id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "increments",
+                            "default": "",
+                            "primary": true,
+                            "unique": true,
+                            "nullable": false,
+                            "name": "id"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "r_price_table.prod_id",
+                        "field": "r_price_table.prod_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{$_GET.p_id}}",
+                        "data": {
+                          "table": "r_price_table",
+                          "column": "prod_id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "reference",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "references": "id",
+                            "inTable": "m_product",
+                            "referenceType": "integer",
+                            "onUpdate": "NO ACTION",
+                            "onDelete": "NO ACTION",
+                            "name": "prod_id"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "r_price_table.status",
+                        "field": "r_price_table.status",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": 1,
+                        "data": {
+                          "table": "r_price_table",
+                          "column": "status",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "integer",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "status"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT selling_price AS price, mrp\nFROM r_price_table\nWHERE id = :P1 /* {{$_GET.price_id}} */ AND prod_id = :P2 /* {{$_GET.p_id}} */ AND status = 1",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.price_id}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{$_GET.p_id}}"
+                    }
+                  ]
+                }
+              },
+              "output": true,
+              "meta": [
+                {
+                  "type": "text",
+                  "name": "price"
+                },
+                {
+                  "type": "text",
+                  "name": "mrp"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "Total",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "{{GetProdPrice.price.toNumber()*$_GET.items_no.toNumber()}}"
+              },
+              "meta": [],
+              "outputType": "text",
+              "output": true
+            },
+            {
+              "name": "UpProdPrice",
+              "module": "dbupdater",
+              "action": "update",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "update",
+                  "values": [
+                    {
+                      "table": "r_cart",
+                      "column": "price_id",
+                      "type": "number",
+                      "value": "{{$_GET.price_id}}"
+                    },
+                    {
+                      "table": "r_cart",
+                      "column": "prod_unit_price",
+                      "type": "text",
+                      "value": "{{GetProdPrice.price}}"
+                    },
+                    {
+                      "table": "r_cart",
+                      "column": "prod_qty",
+                      "type": "text",
+                      "value": "{{$_GET.items_no}}"
+                    },
+                    {
+                      "table": "r_cart",
+                      "column": "total_price",
+                      "type": "text",
+                      "value": "{{Total}}"
+                    },
+                    {
+                      "table": "r_cart",
+                      "column": "updated_on",
+                      "type": "datetime",
+                      "value": "{{NOW}}"
+                    },
+                    {
+                      "table": "r_cart",
+                      "column": "ip_address",
+                      "type": "text",
+                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                    },
+                    {
+                      "table": "r_cart",
+                      "column": "cart_mrp",
+                      "type": "text",
+                      "value": "{{GetProdPrice.mrp}}"
+                    }
+                  ],
+                  "table": "r_cart",
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "prod_id",
+                        "field": "prod_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{$_GET.p_id}}",
+                        "data": {
+                          "column": "prod_id"
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "condition": "OR",
+                        "rules": [
+                          {
+                            "id": "user_id",
+                            "field": "user_id",
+                            "type": "double",
+                            "operator": "equal",
+                            "value": "{{$_SESSION.sessionLogin}}",
+                            "data": {
+                              "column": "user_id"
+                            },
+                            "operation": "="
+                          },
+                          {
+                            "id": "ip_address",
+                            "field": "ip_address",
+                            "type": "string",
+                            "operator": "equal",
+                            "value": "{{$_SERVER.REMOTE_ADDR}}",
+                            "data": {
+                              "column": "ip_address"
+                            },
+                            "operation": "="
+                          }
+                        ],
+                        "conditional": null
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "returning": "id",
+                  "query": "UPDATE r_cart\nSET price_id = :P1 /* {{$_GET.price_id}} */, prod_unit_price = :P2 /* {{GetProdPrice.price}} */, prod_qty = :P3 /* {{$_GET.items_no}} */, total_price = :P4 /* {{Total}} */, updated_on = :P5 /* {{NOW}} */, ip_address = :P6 /* {{$_SERVER.REMOTE_ADDR}} */, cart_mrp = :P7 /* {{GetProdPrice.mrp}} */\nWHERE prod_id = :P8 /* {{$_GET.p_id}} */ AND (user_id = :P9 /* {{$_SESSION.sessionLogin}} */ OR ip_address = :P10 /* {{$_SERVER.REMOTE_ADDR}} */)",
+                  "params": [
+                    {
+                      "name": ":P1",
+                      "type": "expression",
+                      "value": "{{$_GET.price_id}}"
+                    },
+                    {
+                      "name": ":P2",
+                      "type": "expression",
+                      "value": "{{GetProdPrice.price}}"
+                    },
+                    {
+                      "name": ":P3",
+                      "type": "expression",
+                      "value": "{{$_GET.items_no}}"
+                    },
+                    {
+                      "name": ":P4",
+                      "type": "expression",
+                      "value": "{{Total}}"
+                    },
+                    {
+                      "name": ":P5",
+                      "type": "expression",
+                      "value": "{{NOW}}"
+                    },
+                    {
+                      "name": ":P6",
+                      "type": "expression",
+                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                    },
+                    {
+                      "name": ":P7",
+                      "type": "expression",
+                      "value": "{{GetProdPrice.mrp}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P8",
+                      "value": "{{$_GET.p_id}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P9",
+                      "value": "{{$_SESSION.sessionLogin}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P10",
+                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                    }
+                  ]
+                }
+              },
+              "meta": [
+                {
+                  "name": "affected",
+                  "type": "number"
+                }
+              ],
+              "output": true
+            }
+          ]
+        },
+        "catch": {
+          "steps": {
+            "name": "Resp",
+            "module": "core",
+            "action": "response",
+            "options": {
+              "status": 403,
+              "data": "Suspicious Activity"
+            },
+            "output": true
+          }
+        }
+      }
+    }
+  }
+}

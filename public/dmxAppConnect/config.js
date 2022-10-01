@@ -441,60 +441,66 @@ dmx.config({
     "repeatRestProd": {
       "meta": [
         {
-          "type": "number",
-          "name": "id"
+          "name": "id",
+          "type": "number"
         },
         {
-          "type": "text",
-          "name": "prod_id"
+          "name": "prod_id",
+          "type": "text"
         },
         {
-          "type": "number",
-          "name": "prod_mark_id"
+          "name": "rest_id",
+          "type": "number"
         },
         {
-          "type": "number",
-          "name": "prod_occurance_id"
+          "name": "prod_mark_id",
+          "type": "number"
         },
         {
-          "type": "text",
-          "name": "prod_name_en"
+          "name": "prod_name_en",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "prod_name_bn"
+          "name": "prod_name_bn",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "prod_name_hin"
+          "name": "prod_name_hin",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "video"
+          "name": "prod_img1",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "prod_img1"
-        },
-        {
-          "type": "text",
-          "name": "quantity"
-        },
-        {
-          "type": "text",
-          "name": "q_unit"
-        },
-        {
-          "type": "text",
-          "name": "mrp"
-        },
-        {
-          "type": "text",
-          "name": "price"
-        },
-        {
-          "type": "text",
-          "name": "product_tax"
+          "name": "price",
+          "type": "array",
+          "sub": [
+            {
+              "name": "price_id",
+              "type": "number"
+            },
+            {
+              "name": "quantity",
+              "type": "text"
+            },
+            {
+              "name": "q_unit",
+              "type": "text"
+            },
+            {
+              "name": "mrp",
+              "type": "text"
+            },
+            {
+              "name": "price",
+              "type": "text"
+            },
+            {
+              "name": "product_tax",
+              "type": "text"
+            }
+          ]
         }
       ],
       "outputType": "array"

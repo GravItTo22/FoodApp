@@ -1,8 +1,8 @@
 <!-- Wappler include head-page="layouts/main" is="dmx-app" id="productdetails" appConnect="local" -->
 <meta name="ac:route" content="/product-details/:id/:prod_name">
 <dmx-serverconnect id="scProdDetails" url="/api/Products/ProdDetails" dmx-param:p_id="<%= $_PARAM.id %>"></dmx-serverconnect>
-<dmx-serverconnect id="scRelatedProd" url="/api/Products/RelatedProducts" dmx-param:rest_id="content.scProdDetails.data.GetProdDetails.rest_id" dmx-param:cat_id="content.scProdDetails.data.GetProdDetails.category_id" dmx-param:prod_mark_id="content.scProdDetails.data.GetProdDetails.prod_mark_id"></dmx-serverconnect>
-<dmx-value id="varZoomImg" dmx-bind:value="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img1+'?w=1200&amp;ch=DPR&amp;dpr=2'"></dmx-value>
+<dmx-serverconnect id="scRelatedProd" url="/api/Products/RelatedProducts" dmx-param:p_id="<%= $_PARAM.id %>"></dmx-serverconnect>
+<dmx-value id="varZoomImg" dmx-bind:value="'https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img1+'?w=1200&amp;ch=DPR&amp;dpr=2'"></dmx-value>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
     <div class="container">
@@ -15,7 +15,7 @@
                     <div class="breadcrumb__option">
                         <a href="/">Home</a>
 
-                        <span>{{varLanguage.value=='English'?content.scProdDetails.data.GetProdDetails.shop_name_en:varLanguage.value=='Bengali'?content.scProdDetails.data.GetProdDetails.shop_name_bn:varLanguage.value=='Hindi'?content.scProdDetails.data.GetProdDetails.shop_name_hin:content.scProdDetails.data.GetProdDetails.shop_name_en}}</span>
+                        <span>{{varLanguage.value=='English'?content.scProdDetails.data.GetProdDetails[0].shop_name_en:varLanguage.value=='Bengali'?content.scProdDetails.data.GetProdDetails[0].shop_name_bn:varLanguage.value=='Hindi'?content.scProdDetails.data.GetProdDetails[0].shop_name_hin:content.scProdDetails.data.GetProdDetails[0].shop_name_en}}</span>
                     </div>
                 </div>
             </div>
@@ -23,23 +23,25 @@
     </div>
 </section>
 <section class="product-details spad">
+    <dmx-value id="varPrice" dmx-bind:value="content.scProdDetails.data.GetProdDetails[0].price[0].price"></dmx-value>
+    <dmx-value id="varMRP" dmx-bind:value="content.scProdDetails.data.GetProdDetails[0].price[0].mrp"></dmx-value>
     <div class="container">
         <div class="row">
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__pic">
-                    <img class="drift-demo-trigger" data-zoom="assets/img/product/details/product-details-2.jpg?w=1200&amp;ch=DPR&amp;dpr=2" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img1+'?w=400&amp;ch=DPR&amp;dpr=2'" dmx-bind:data-zoom="varZoomImg.value" />
+                    <img class="drift-demo-trigger" data-zoom="assets/img/product/details/product-details-2.jpg?w=1200&amp;ch=DPR&amp;dpr=2" dmx-bind:src="'https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img1+'?w=400&amp;ch=DPR&amp;dpr=2'" dmx-bind:data-zoom="varZoomImg.value" />
                 </div>
                 <div class="product__details__pic__slider owl-carousel mt-3">
-                    <img data-imgbigurl="assets/img/product/details/product-details-2.jpg" dmx-bind:data-imgbigurl="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img1" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img1" alt="" dmx-on:click="varZoomImg.setValue('https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img1+'?w=1200&amp;ch=DPR&amp;dpr=2')">
-                    <img data-imgbigurl="assets/img/product/details/product-details-3.jpg" dmx-bind:data-imgbigurl="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img2" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img2" alt="" dmx-on:click="varZoomImg.setValue('https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img2+'?w=1200&amp;ch=DPR&amp;dpr=2')">
-                    <img data-imgbigurl="assets/img/product/details/product-details-5.jpg" dmx-bind:data-imgbigurl="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img3" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img3" alt="" dmx-on:click="varZoomImg.setValue('https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img3+'?w=1200&amp;ch=DPR&amp;dpr=2')">
-                    <img data-imgbigurl="assets/img/product/details/product-details-4.jpg" dmx-bind:data-imgbigurl="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img4" dmx-bind:src="'https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img4" alt="" dmx-on:click="varZoomImg.setValue('https://secure.gravitto.com'+scProdDetails.data.GetProdDetails.prod_img4+'?w=1200&amp;ch=DPR&amp;dpr=2')">
+                    <img data-imgbigurl="assets/img/product/details/product-details-2.jpg" dmx-bind:data-imgbigurl="'https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img1" dmx-bind:src="'https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img1" alt="" dmx-on:click="varZoomImg.setValue('https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img1+'?w=1200&amp;ch=DPR&amp;dpr=2')">
+                    <img data-imgbigurl="assets/img/product/details/product-details-3.jpg" dmx-bind:data-imgbigurl="'https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img2" dmx-bind:src="'https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img2" alt="" dmx-on:click="varZoomImg.setValue('https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img2+'?w=1200&amp;ch=DPR&amp;dpr=2')">
+                    <img data-imgbigurl="assets/img/product/details/product-details-5.jpg" dmx-bind:data-imgbigurl="'https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img3" dmx-bind:src="'https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img3" alt="" dmx-on:click="varZoomImg.setValue('https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img3+'?w=1200&amp;ch=DPR&amp;dpr=2')">
+                    <img data-imgbigurl="assets/img/product/details/product-details-4.jpg" dmx-bind:data-imgbigurl="'https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img4" dmx-bind:src="'https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img4" alt="" dmx-on:click="varZoomImg.setValue('https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img4+'?w=1200&amp;ch=DPR&amp;dpr=2')">
                 </div>
             </div>
             <div class="col-lg-6 col-md-6">
                 <div class="detail">
                     <div class="product__details__text">
-                        <h3>{{varLanguage.value=='English'?content.scProdDetails.data.GetProdDetails.prod_name_en:varLanguage.value=='Bengali'?content.scProdDetails.data.GetProdDetails.prod_name_bn:varLanguage.value=='Hindi'?content.scProdDetails.data.GetProdDetails.prod_name_hin:content.scProdDetails.data.GetProdDetails.prod_name_en}}</h3>
+                        <h3>{{varLanguage.value=='English'?content.scProdDetails.data.GetProdDetails[0].prod_name_en:varLanguage.value=='Bengali'?content.scProdDetails.data.GetProdDetails[0].prod_name_bn:varLanguage.value=='Hindi'?content.scProdDetails.data.GetProdDetails[0].prod_name_hin:content.scProdDetails.data.GetProdDetails[0].prod_name_en}}</h3>
                         <div class="product__details__rating">
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
@@ -48,8 +50,10 @@
                             <i class="fa fa-star-half-o"></i>
                             <span>(18 reviews)</span>
                         </div>
-                        <div class="product__details__price"><i class="fa fa-rupee"></i>{{content.scProdDetails.data.GetProdDetails.price}} <span class="text-muted ab text-monospace text-line-through"><i class="fa fa-rupee"></i>{{content.scProdDetails.data.GetProdDetails.mrp}}</span></div>
-                        <p>{{varLanguage.value=='English'?content.scProdDetails.data.GetProdDetails.prod_desc_en:varLanguage.value=='Bengali'?content.scProdDetails.data.GetProdDetails.prod_desc_bn:varLanguage.value=='Hindi'?content.scProdDetails.data.GetProdDetails.prod_desc_hin:content.scProdDetails.data.GetProdDetails.prod_desc_en}}</p>
+                        <div class="product__details__price"><i class="fa fa-rupee"></i>{{varPrice.value}} <span class="text-muted ab text-monospace text-line-through"><i class="fa fa-rupee"></i>{{varMRP.value}}</span></div>
+                        <select id="selectProdPrice" dmx-bind:id="'select'+$index" class="form-select form-control d-block w-auto text-monospace font-weight-bold" style="font-size:14px" dmx-bind:options="scProdDetails.data.GetProdDetails[0].price" optiontext="quantity+' '+q_unit+' :: '+price.toNumber().formatCurrency('₹', '.', ',', 2)+' MRP:'+.mrp.toNumber().formatCurrency('₹', '.', ',', 2)" optionvalue="price_id">
+                        </select>
+                        <p>{{varLanguage.value=='English'?content.scProdDetails.data.GetProdDetails[0].prod_desc_en:varLanguage.value=='Bengali'?content.scProdDetails.data.GetProdDetails[0].prod_desc_bn:varLanguage.value=='Hindi'?content.scProdDetails.data.GetProdDetails[0].prod_desc_hin:content.scProdDetails.data.GetProdDetails[0].prod_desc_en}}</p>
                         <div class="product__details__quantity">
                             <div class="quantity">
                                 <div class="pro-qty">
@@ -57,11 +61,11 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="#" dmx-on:click="run({run:{action:`scAddtoCart.load({product_id: scProdDetails.data.GetProdDetails.prod_id, price: scProdDetails.data.GetProdDetails.price_id},true);scDashboardInfo.load();notifMain.success(((varLanguage.value==\'English\')?scProdDetails.data.GetProdDetails.prod_name_en:(varLanguage.value==\'Bengali\')?scProdDetails.data.GetProdDetails.prod_name_bn:(varLanguage.value==\'Hindi\')?scProdDetails.data.GetProdDetails.prod_name_hin:scProdDetails.data.GetProdDetails.prod_name_en)+\' added to cart\')`,name:'Flow'}})" class="primary-btn">ADD TO CARD</a>
-                        <a href="#" dmx-on:click="run({run:{action:`scAddtoWishlist.load({product_id: scProdDetails.data.GetProdDetails.prod_id, price: scProdDetails.data.GetProdDetails.price_id},true);scDashboardInfo.load(true);notifMain.info(((varLanguage.value==\'English\')?scProdDetails.data.GetProdDetails.prod_name_en:(varLanguage.value==\'Bengali\')?scProdDetails.data.GetProdDetails.prod_name_bn:(varLanguage.value==\'Hindi\')?scProdDetails.data.GetProdDetails.prod_name_hin:scProdDetails.data.GetProdDetails.prod_name_en)+\' added to wish-list\')`,name:'FlowWishlist'}})" class="heart-icon"><span class="icon_heart_alt"></span></a>
+                        <a href="#" dmx-on:click="run({run:{action:`scAddtoCart.load({product_id: content.scProdDetails.data.GetProdDetails[0].prod_id, price: selectProdPrice.value},true);notifMain.success(((varLanguage.value==\'English\')?content.scProdDetails.data.GetProdDetails[0].prod_name_en:(varLanguage.value==\'Bengali\')?content.scProdDetails.data.GetProdDetails[0].prod_name_bn:(varLanguage.value==\'Hindi\')?content.scProdDetails.data.GetProdDetails[0].prod_name_hin:content.scProdDetails.data.GetProdDetails[0].prod_name_en)+\' added to cart\');scDashboardInfo.load()`,name:'Flow'}})" class="primary-btn">ADD TO CARD</a>
+                        <a href="#" dmx-on:click="run({run:{action:`scAddtoWishlist.load({product_id: content.scProdDetails.data.GetProdDetails[0].prod_id, price:  selectProdPrice.value},true);scDashboardInfo.load(true);notifMain.info(((varLanguage.value==\'English\')?content.scProdDetails.data.GetProdDetails[0].prod_name_en:(varLanguage.value==\'Bengali\')?content.scProdDetails.data.GetProdDetails[0].prod_name_bn:(varLanguage.value==\'Hindi\')?content.scProdDetails.data.GetProdDetails[0].prod_name_hin:content.scProdDetails.data.GetProdDetails[0].prod_name_en)+\' added to wish-list\')`,name:'FlowWishlist'}})" class="heart-icon"><span class="icon_heart_alt"></span></a>
                         <ul>
-                            <li><b>Prod. Code</b> <span>{{content.scProdDetails.data.GetProdDetails.prod_id}}</span></li>
-                            <li><b>Prod. Mark</b> <span>{{content.scProdDetails.data.GetProdDetails.prod_mark_id==1?'Veg':'Non-Veg'}}
+                            <li><b>Prod. Code</b> <span>{{content.scProdDetails.data.GetProdDetails[0].prod_id}}</span></li>
+                            <li><b>Prod. Mark</b> <span>{{content.scProdDetails.data.GetProdDetails[0].prod_mark_id==1?'Veg':'Non-Veg'}}
                                     <!--<samp>Free pickup today</samp>-->
                                 </span></li>
                             <li><b>Share on</b>
@@ -95,7 +99,7 @@
                 <div class="tab-pane active" id="tabs-1" role="tabpanel">
                     <div class="product__details__tab__desc">
                         <h6>Products Description</h6>
-                        <p>{{varLanguage.value=='English'?content.scProdDetails.data.GetProdDetails.prod_desc_en:varLanguage.value=='Bengali'?content.scProdDetails.data.GetProdDetails.prod_desc_bn:varLanguage.value=='Hindi'?content.scProdDetails.data.GetProdDetails.prod_desc_hin:content.scProdDetails.data.GetProdDetails.prod_desc_en}}</p>
+                        <p>{{varLanguage.value=='English'?content.scProdDetails.data.GetProdDetails[0].prod_desc_en:varLanguage.value=='Bengali'?content.scProdDetails.data.GetProdDetails[0].prod_desc_bn:varLanguage.value=='Hindi'?content.scProdDetails.data.GetProdDetails[0].prod_desc_hin:content.scProdDetails.data.GetProdDetails[0].prod_desc_en}}</p>
                         <p></p>
                     </div>
                 </div>
@@ -202,24 +206,30 @@
                 </div>
             </div>
         </div>
-        <div class="row" is="dmx-repeat" dmx-bind:repeat="scRelatedProd.data.GetRelatedProd.data" key="id" id="RelatedProd">
+        <div class="row" id="repeatRelatedProd" is="dmx-repeat" dmx-bind:repeat="scRelatedProd.data.GetRelatedProd" key="id" id="RelatedProd">
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="product__item">
                     <div class="product__item__pic set-bg">
-                        <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scRelatedProd.data.GetRelatedProd.data[$index].prod_img1" dmx-bind:alt="content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en">
+                        <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scRelatedProd.data.GetRelatedProd[$index].prod_img1" dmx-bind:alt="content.scRelatedProd.data.GetRelatedProd[$index].prod_name_en">
                         <ul class="product__item__pic__hover">
-                            <li dmx-on:click="run({run:{action:`scAddtoWishlist.load({product_id: content.scRelatedProd.data.GetRelatedProd.data[$index].prod_id, price: content.scRelatedProd.data.GetRelatedProd.data[$index].price_id},true);scDashboardInfo.load();notifMain.info(((varLanguage.value==\'English\')?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en:(varLanguage.value==\'Bengali\')?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_hin:content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en)+\' added to wish-list\')`,name:'FlowWishlist'}})"><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-circle" dmx-class:text-success="content.scRelatedProd.data.GetRelatedProd.data[$index].prod_mark_id==1" dmx-class:text-danger="content.scRelatedProd.data.GetRelatedProd.data[$index].prod_mark_id==2"></i></a></li>
-                            <li dmx-on:click="run({run:{action:`scAddtoCart.load({product_id: content.scRelatedProd.data.GetRelatedProd.data[$index].prod_id, price: content.scRelatedProd.data.GetRelatedProd.data[$index].price_id},true);scDashboardInfo.load(true);notifMain.success(((varLanguage.value==\'English\')?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en:(varLanguage.value==\'Bengali\')?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_hin:content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en)+\'  added to cart \')`,name:'Flow'}})"><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            <li dmx-on:click="run({run:{action:`scAddtoWishlist.load({product_id: content.scRelatedProd.data.GetRelatedProd[$index].prod_id, price: repeatRelatedProd.items[$index].select.value},true);notifMain.info(((varLanguage.value==\'English\')?content.scRelatedProd.data.GetRelatedProd[$index].prod_name_en:(varLanguage.value==\'Bengali\')?content.scRelatedProd.data.GetRelatedProd[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?content.scRelatedProd.data.GetRelatedProd[$index].prod_name_hin:content.scRelatedProd.data.GetRelatedProd[$index].prod_name_en)+\' added to wish-list\');scDashboardInfo.load()`,name:'FlowWishlist'}})"><a href="#"><i class="fa fa-heart"></i></a></li>
+                            <li><a href="#"><i class="fa fa-circle" dmx-class:text-success="content.scRelatedProd.data.GetRelatedProd[$index].prod_mark_id==1" dmx-class:text-danger="content.scRelatedProd.data.GetRelatedProd[$index].prod_mark_id==2"></i></a></li>
+                            <li dmx-on:click="run({run:{action:`scAddtoCart.load({product_id: content.scRelatedProd.data.GetRelatedProd[$index].prod_id, price: repeatRelatedProd.items[$index].select.value},true);notifMain.success(((varLanguage.value==\'English\')?content.scRelatedProd.data.GetRelatedProd[$index].prod_name_en:(varLanguage.value==\'Bengali\')?content.scRelatedProd.data.GetRelatedProd[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?content.scRelatedProd.data.GetRelatedProd[$index].prod_name_hin:content.scRelatedProd.data.GetRelatedProd[$index].prod_name_en)+\'  added to cart \');scDashboardInfo.load()`,name:'Flow'}})"><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
                         </ul>
                     </div>
                     <div class="product__item__text">
-                        <h6><a dmx-bind:href="'/product-details/'+content.scRelatedProd.data.GetRelatedProd.data[$index].id+'/'+content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en">{{varLanguage.value=='English'?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en:varLanguage.value=='Bengali'?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_hin:content.scRelatedProd.data.GetRelatedProd.data[$index].prod_name_en}}</a></h6>
-                        <h5><i class="fa fa-rupee"></i>{{content.scRelatedProd.data.GetRelatedProd.data[$index].price}} <span class="text-muted ab text-monospace text-line-through"><i class="fa fa-rupee"></i>{{content.scRelatedProd.data.GetRelatedProd.data[$index].mrp}}</span></h5>
+                        <h5><a dmx-bind:href="'/product-details/'+content.scRelatedProd.data.GetRelatedProd[$index].id+'/'+content.scRelatedProd.data.GetRelatedProd[$index].prod_name_en">{{varLanguage.value=='English'?content.scRelatedProd.data.GetRelatedProd[$index].prod_name_en:varLanguage.value=='Bengali'?content.scRelatedProd.data.GetRelatedProd[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scRelatedProd.data.GetRelatedProd[$index].prod_name_hin:content.scRelatedProd.data.GetRelatedProd[$index].prod_name_en}}</a></h5>
+                        <p><a dmx-bind:href="'/shop-details/'+content.scRelatedProd.data.GetRelatedProd[$index].rest_id+'/'+content.scRelatedProd.data.GetRelatedProd[$index].shop_name_en">{{varLanguage.value=='English'?content.scRelatedProd.data.GetRelatedProd[$index].shop_name_en:varLanguage.value=='Bengali'?content.scRelatedProd.data.GetRelatedProd[$index].shop_name_bn:varLanguage.value=='Hindi'?content.scRelatedProd.data.GetRelatedProd[$index].shop_name_hin:content.scRelatedProd.data.GetRelatedProd[$index].shop_name_en}}</a></p>
+                        <select id="select" dmx-bind:id="'select'+$index" class="form-select form-control d-block w-100 text-monospace font-weight-bold" style="font-size:13px" dmx-bind:options="scRelatedProd.data.GetRelatedProd[$index].price" optiontext="quantity+' '+q_unit+' :: '+price.toNumber().formatCurrency('₹', '.', ',', 2)+' MRP:'+.mrp.toNumber().formatCurrency('₹', '.', ',', 2)" optionvalue="price_id">
+                        </select>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row mx-0" dmx-show="content.scRelatedProd.data.GetRelatedProd.length<=0">
+            <h5>Related Products Empty!</h5>
+        </div>
+
     </div>
 
 </section>

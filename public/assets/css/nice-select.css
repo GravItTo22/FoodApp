@@ -1,12 +1,13 @@
 .nice-select {
+    display: none !important;
   -webkit-tap-highlight-color: transparent;
   background-color: #fff;
   border-radius: 5px;
   border: solid 1px #e8e8e8;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   clear: both;
   cursor: pointer;
-  display: block;
   float: left;
   font-family: inherit;
   font-size: 14px;
@@ -89,8 +90,10 @@
   .nice-select .list {
     background-color: #fff;
     border-radius: 5px;
-    box-shadow: 0 0 0 1px rgba(68, 68, 68, 0.11);
-    box-sizing: border-box;
+    -webkit-box-shadow: 0 0 0 1px rgba(68, 68, 68, 0.11);
+            box-shadow: 0 0 0 1px rgba(68, 68, 68, 0.11);
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     margin-top: 4px;
     opacity: 0;
     overflow: hidden;

@@ -1325,6 +1325,15 @@
               "unique": false,
               "nullable": true
             }
+          },
+          "cart_mrp": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
           }
         },
         "refs": {

@@ -42,6 +42,7 @@
 </head>
 
 <body id="main" is="dmx-app">
+    <dmx-serverconnect id="scLogOut" url="/api/Users/LogOut" noload dmx-on:success="browserMain.goto('/login')"></dmx-serverconnect>
     <dmx-serverconnect id="scAddtoCart" url="/api/Cart/AddToCart" noload></dmx-serverconnect>
     <dmx-serverconnect id="scAddtoWishlist" url="/api/WishList/AddToWishlist" noload></dmx-serverconnect>
     <dmx-serverconnect id="scDashboardInfo" url="/api/Dashboard/DashboardInfo"></dmx-serverconnect>
@@ -86,9 +87,7 @@
                 <ul>
                     <li><a href="#">My Profile</a></li>
                     <li><a href="#">My Order</a></li>
-                    <li><a href="#">Notification</a></li>
-                    <li><a href="#">Wishlist</a></li>
-                    <li><a href="#">Logout</a></li>
+                    <li><a href="#" dmx-on:click="scLogOut.load()">Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -159,9 +158,7 @@
                                 <ul>
                                     <li><a href="#">My Profile</a></li>
                                     <li><a href="#">My Order</a></li>
-                                    <li><a href="#">Notification</a></li>
-                                    <li><a href="#">Wishlist</a></li>
-                                    <li><a href="#">Logout</a></li>
+                                    <li><a href="#" dmx-on:click="scLogOut.load()">Logout</a></li>
                                 </ul>
                             </div>
                             <div class="header__top__right__auth">

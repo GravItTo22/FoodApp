@@ -120,18 +120,45 @@
                           }
                         },
                         "operation": "="
+                      },
+                      {
+                        "id": "m_customer.blank1",
+                        "field": "m_customer.blank1",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_POST.Password}}",
+                        "data": {
+                          "table": "m_customer",
+                          "column": "blank1",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "blank1"
+                          }
+                        },
+                        "operation": "="
                       }
                     ],
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT salt, user_type_id\nFROM m_customer\nWHERE mobile = :P1 /* {{$_POST.Mobile}} */ AND status = 1",
+                  "query": "SELECT salt, user_type_id\nFROM m_customer\nWHERE mobile = :P1 /* {{$_POST.Mobile}} */ AND status = 1 AND blank1 = :P2 /* {{$_POST.Password}} */",
                   "params": [
                     {
                       "operator": "equal",
                       "type": "expression",
                       "name": ":P1",
                       "value": "{{$_POST.Mobile}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{$_POST.Password}}"
                     }
                   ]
                 }
@@ -150,26 +177,26 @@
               "outputType": "object"
             },
             {
-              "name": "identity",
-              "module": "auth",
-              "action": "login",
-              "options": {
-                "provider": "security",
-                "username": "{{$_POST.Mobile}}",
-                "password": "{{$_POST.Password.sha256(GetSalt.salt)}}",
-                "remember": ""
-              },
-              "output": false,
-              "meta": []
-            },
-            {
               "name": "",
               "module": "core",
               "action": "condition",
               "options": {
-                "if": "{{identity}}",
+                "if": "{{GetSalt.salt}}",
                 "then": {
                   "steps": [
+                    {
+                      "name": "identity",
+                      "module": "auth",
+                      "action": "login",
+                      "options": {
+                        "provider": "security",
+                        "username": "{{$_POST.Mobile}}",
+                        "password": "{{$_POST.Password.sha256(GetSalt.salt)}}",
+                        "remember": ""
+                      },
+                      "output": false,
+                      "meta": []
+                    },
                     {
                       "name": "loginToken",
                       "module": "core",
@@ -326,7 +353,7 @@
                       "module": "core",
                       "action": "setvalue",
                       "options": {
-                        "value": "Unauthorized Access!"
+                        "value": "Invalid Mobile No. or Password"
                       },
                       "meta": [],
                       "output": true,

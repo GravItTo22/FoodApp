@@ -383,26 +383,26 @@
               ]
             },
             {
-              "name": "identity",
-              "module": "auth",
-              "action": "login",
-              "options": {
-                "provider": "security",
-                "username": "{{$_POST.Mobile}}",
-                "password": "{{Password.sha256(NOW)}}",
-                "remember": ""
-              },
-              "output": false,
-              "meta": []
-            },
-            {
               "name": "",
               "module": "core",
               "action": "condition",
               "options": {
-                "if": "{{identity}}",
+                "if": "{{AddUsers.identity}}",
                 "then": {
                   "steps": [
+                    {
+                      "name": "identity",
+                      "module": "auth",
+                      "action": "login",
+                      "options": {
+                        "provider": "security",
+                        "username": "{{$_POST.Mobile}}",
+                        "password": "{{Password.sha256(NOW)}}",
+                        "remember": ""
+                      },
+                      "output": false,
+                      "meta": []
+                    },
                     {
                       "name": "loginToken",
                       "module": "core",
@@ -581,7 +581,7 @@
               "module": "core",
               "action": "setvalue",
               "options": {
-                "value": 403
+                "value": 400
               },
               "meta": [],
               "outputType": "text",

@@ -46,6 +46,10 @@
       "path": "/categories",
       "page": "categories",
       "layout": "main"
+    },
+    {
+      "path": "/login",
+      "page": "login"
     }
   ]
 }

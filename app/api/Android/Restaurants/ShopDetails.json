@@ -192,7 +192,7 @@
                                 "primary": "id",
                                 "joins": [],
                                 "wheres": {
-                                  "condition": "OR",
+                                  "condition": "AND",
                                   "rules": [
                                     {
                                       "id": "m_restaurant.id",
@@ -244,7 +244,7 @@
                                   "conditional": null,
                                   "valid": true
                                 },
-                                "query": "SELECT id AS rest_id, cat_type_id, gen_shop_id, shop_name_hin AS shop_name, shop_logo, address\nFROM m_restaurant\nWHERE id = :P1 /* {{$_GET.rest_id}} */ OR market_id = :P2 /* {{$_GET.market}} */",
+                                "query": "SELECT id AS rest_id, cat_type_id, gen_shop_id, shop_name_hin AS shop_name, shop_logo, address\nFROM m_restaurant\nWHERE id = :P1 /* {{$_GET.rest_id}} */ AND market_id = :P2 /* {{$_GET.market}} */",
                                 "params": [
                                   {
                                     "operator": "equal",
@@ -344,7 +344,7 @@
                                 "primary": "id",
                                 "joins": [],
                                 "wheres": {
-                                  "condition": "OR",
+                                  "condition": "AND",
                                   "rules": [
                                     {
                                       "id": "m_restaurant.id",
@@ -396,7 +396,7 @@
                                   "conditional": null,
                                   "valid": true
                                 },
-                                "query": "SELECT id AS rest_id, cat_type_id, gen_shop_id, shop_name_bn AS shop_name, shop_logo, address\nFROM m_restaurant\nWHERE id = :P1 /* {{$_GET.rest_id}} */ OR market_id = :P2 /* {{$_GET.market}} */",
+                                "query": "SELECT id AS rest_id, cat_type_id, gen_shop_id, shop_name_bn AS shop_name, shop_logo, address\nFROM m_restaurant\nWHERE id = :P1 /* {{$_GET.rest_id}} */ AND market_id = :P2 /* {{$_GET.market}} */",
                                 "params": [
                                   {
                                     "operator": "equal",
@@ -496,7 +496,7 @@
                                 "primary": "id",
                                 "joins": [],
                                 "wheres": {
-                                  "condition": "OR",
+                                  "condition": "AND",
                                   "rules": [
                                     {
                                       "id": "m_restaurant.id",
@@ -548,7 +548,7 @@
                                   "conditional": null,
                                   "valid": true
                                 },
-                                "query": "SELECT id AS rest_id, cat_type_id, gen_shop_id, shop_name_en AS shop_name, shop_logo, address\nFROM m_restaurant\nWHERE id = :P1 /* {{$_GET.rest_id}} */ OR market_id = :P2 /* {{$_GET.market}} */",
+                                "query": "SELECT id AS rest_id, cat_type_id, gen_shop_id, shop_name_en AS shop_name, shop_logo, address\nFROM m_restaurant\nWHERE id = :P1 /* {{$_GET.rest_id}} */ AND market_id = :P2 /* {{$_GET.market}} */",
                                 "params": [
                                   {
                                     "operator": "equal",

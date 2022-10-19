@@ -18,12 +18,10 @@
           }
         },
         "name": "price"
-      }
-    ],
-    "$_SESSION": [
+      },
       {
         "type": "text",
-        "name": "sessionLogin"
+        "name": "logintoken"
       }
     ],
     "$_SERVER": [
@@ -41,6 +39,73 @@
       "options": {
         "try": {
           "steps": [
+            {
+              "name": "GetVerify",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "t_user_log",
+                      "column": "user_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "t_user_log"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "t_user_log.login_token",
+                        "field": "t_user_log.login_token",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_GET.logintoken}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_token",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_token"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_GET.logintoken}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.logintoken}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "user_id"
+                }
+              ],
+              "outputType": "object"
+            },
             {
               "name": "GetProduct",
               "module": "dbconnector",
@@ -337,19 +402,9 @@
               "module": "core",
               "action": "condition",
               "options": {
-                "if": "{{$_SESSION.sessionLogin}}",
+                "if": "{{GetVerify.user_id}}",
                 "then": {
                   "steps": [
-                    {
-                      "name": "identity",
-                      "module": "auth",
-                      "action": "identify",
-                      "options": {
-                        "provider": "security"
-                      },
-                      "output": false,
-                      "meta": []
-                    },
                     {
                       "name": "GetWishlistInfo",
                       "module": "dbconnector",
@@ -403,7 +458,7 @@
                                     "field": "r_wishlist.user_id",
                                     "type": "double",
                                     "operator": "equal",
-                                    "value": "{{identity}}",
+                                    "value": "{{GetVerify.user_id}}",
                                     "data": {
                                       "table": "r_wishlist",
                                       "column": "user_id",
@@ -446,7 +501,7 @@
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT COUNT(id) AS CountProd\nFROM r_wishlist\nWHERE prod_id = :P1 /* {{GetProduct.id}} */ AND (user_id = :P2 /* {{identity}} */ OR ips = :P3 /* {{$_SERVER.REMOTE_ADDR}} */)",
+                          "query": "SELECT COUNT(id) AS CountProd\nFROM r_wishlist\nWHERE prod_id = :P1 /* {{GetProduct.id}} */ AND (user_id = :P2 /* {{GetVerify.user_id}} */ OR ips = :P3 /* {{$_SERVER.REMOTE_ADDR}} */)",
                           "params": [
                             {
                               "operator": "equal",
@@ -458,7 +513,7 @@
                               "operator": "equal",
                               "type": "expression",
                               "name": ":P2",
-                              "value": "{{identity}}"
+                              "value": "{{GetVerify.user_id}}"
                             },
                             {
                               "operator": "equal",
@@ -510,7 +565,7 @@
                                     "table": "r_wishlist",
                                     "column": "user_id",
                                     "type": "number",
-                                    "value": "{{identity?identity:''}}"
+                                    "value": "{{GetVerify.user_id?GetVerify.user_id:''}}"
                                   },
                                   {
                                     "table": "r_wishlist",
@@ -540,7 +595,7 @@
                                     "table": "r_wishlist",
                                     "column": "created_by",
                                     "type": "number",
-                                    "value": "{{identity?identity:''}}"
+                                    "value": "{{GetVerify.user_id?GetVerify.user_id:''}}"
                                   },
                                   {
                                     "table": "r_wishlist",
@@ -557,7 +612,7 @@
                                 ],
                                 "table": "r_wishlist",
                                 "returning": "id",
-                                "query": "INSERT INTO r_wishlist\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, ips, created_by, created_on, wishlist_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{identity?identity:''}} */, :P4 /* {{GetProduct.price}} */, :P5 /* {{GetProduct.quantity}} */, :P6 /* {{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{identity?identity:''}} */, :P9 /* {{NOW}} */, :P10 /* {{GetProduct.mrp}} */)",
+                                "query": "INSERT INTO r_wishlist\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, ips, created_by, created_on, wishlist_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetVerify.user_id?GetVerify.user_id:''}} */, :P4 /* {{GetProduct.price}} */, :P5 /* {{GetProduct.quantity}} */, :P6 /* {{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetVerify.user_id?GetVerify.user_id:''}} */, :P9 /* {{NOW}} */, :P10 /* {{GetProduct.mrp}} */)",
                                 "params": [
                                   {
                                     "name": ":P1",
@@ -572,7 +627,7 @@
                                   {
                                     "name": ":P3",
                                     "type": "expression",
-                                    "value": "{{identity?identity:''}}"
+                                    "value": "{{GetVerify.user_id?GetVerify.user_id:''}}"
                                   },
                                   {
                                     "name": ":P4",
@@ -597,7 +652,7 @@
                                   {
                                     "name": ":P8",
                                     "type": "expression",
-                                    "value": "{{identity?identity:''}}"
+                                    "value": "{{GetVerify.user_id?GetVerify.user_id:''}}"
                                   },
                                   {
                                     "name": ":P9",
@@ -628,12 +683,13 @@
                           "steps": {
                             "name": "Resp",
                             "module": "core",
-                            "action": "response",
+                            "action": "setvalue",
                             "options": {
-                              "status": 403,
-                              "data": "Product already exists in Wish-List"
+                              "value": "Suspicious Activity"
                             },
-                            "output": true
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
                           }
                         }
                       },
@@ -867,12 +923,13 @@
                           "steps": {
                             "name": "Resp",
                             "module": "core",
-                            "action": "response",
+                            "action": "setvalue",
                             "options": {
-                              "status": 403,
-                              "data": "Product already exists in Wish-List"
+                              "value": "Product already exists in Wish-List"
                             },
-                            "output": true
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
                           }
                         }
                       },
@@ -889,12 +946,13 @@
           "steps": {
             "name": "Resp",
             "module": "core",
-            "action": "response",
+            "action": "setvalue",
             "options": {
-              "status": 403,
-              "data": "Suspicious Activity"
+              "value": "Suspicious Activity"
             },
-            "output": true
+            "meta": [],
+            "output": true,
+            "outputType": "text"
           }
         }
       }

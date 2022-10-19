@@ -15,10 +15,6 @@
     "layoutPage": "main",
     "description": ""
   },
-  "checkout.ejs": {
-    "layoutPage": "main",
-    "description": ""
-  },
   "wish-list.ejs": {
     "layoutPage": "main",
     "description": ""
@@ -33,6 +29,34 @@
   },
   "login.ejs": {
     "layoutPage": "",
+    "description": ""
+  },
+  "privacy-policy.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "terms-and-conditions.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "return-and-cancellation-policy.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "about-us.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "checkout1.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "checkout.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  },
+  "place-order.ejs": {
+    "layoutPage": "main",
     "description": ""
   }
 }

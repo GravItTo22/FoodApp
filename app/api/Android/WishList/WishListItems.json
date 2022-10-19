@@ -1,0 +1,298 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "offset"
+      },
+      {
+        "type": "text",
+        "name": "limit"
+      },
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      },
+      {
+        "type": "text",
+        "name": "logintoken"
+      }
+    ],
+    "$_SESSION": [
+      {
+        "type": "text",
+        "name": "sessionLogin"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetVerify",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "t_user_log",
+                      "column": "user_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "t_user_log"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "t_user_log.login_token",
+                        "field": "t_user_log.login_token",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_GET.logintoken}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_token",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_token"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_GET.logintoken}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.logintoken}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "user_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetVerify.user_id}}",
+                "then": {
+                  "steps": {
+                    "name": "GetWishList",
+                    "module": "dbupdater",
+                    "action": "custom",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "query": "SELECT rw.id, rw.prod_id as p_id, rw.price_id, rw.user_id, rw.prod_unit_price, rw.wishlist_mrp, rw.prod_qty, rw.total_price, mp.prod_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_mark_id, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, mp.rest_id, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_wishlist rw \nLEFT JOIN m_product AS mp ON (mp.id = rc.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rc.user_id = @user OR rc.ip_address = @ip",
+                        "params": [
+                          {
+                            "name": "@user",
+                            "value": "{{GetVerify.user_id}}"
+                          },
+                          {
+                            "name": "@ip",
+                            "value": "{{$_SERVER.REMOTE_ADDR}}"
+                          }
+                        ]
+                      }
+                    },
+                    "output": true,
+                    "meta": [],
+                    "outputType": "array"
+                  }
+                },
+                "else": {
+                  "steps": {
+                    "name": "GetWishList",
+                    "module": "dbupdater",
+                    "action": "custom",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "query": "SELECT rw.id, rw.prod_id as p_id, rw.price_id, rw.user_id, rw.prod_unit_price, rw.wishlist_mrp, rw.prod_qty, rw.total_price, mp.prod_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_mark_id, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, mp.rest_id, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_wishlist rw \nLEFT JOIN m_product AS mp ON (mp.id = rw.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rw.ips = @ip",
+                        "params": [
+                          {
+                            "name": "@ip",
+                            "value": "{{$_SERVER.REMOTE_ADDR}}",
+                            "test": "::1"
+                          }
+                        ]
+                      }
+                    },
+                    "output": true,
+                    "meta": [
+                      {
+                        "name": "id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "p_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "price_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "user_id",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_unit_price",
+                        "type": "text"
+                      },
+                      {
+                        "name": "wishlist_mrp",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_qty",
+                        "type": "text"
+                      },
+                      {
+                        "name": "total_price",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_id",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_name_en",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_name_bn",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_name_hin",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_desc_en",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_desc_bn",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_desc_hin",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_img1",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_mark_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "shop_name_en",
+                        "type": "text"
+                      },
+                      {
+                        "name": "shop_name_bn",
+                        "type": "text"
+                      },
+                      {
+                        "name": "shop_name_hin",
+                        "type": "text"
+                      },
+                      {
+                        "name": "rest_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "price",
+                        "type": "array",
+                        "sub": [
+                          {
+                            "name": "price_ids",
+                            "type": "number"
+                          },
+                          {
+                            "name": "quantity",
+                            "type": "text"
+                          },
+                          {
+                            "name": "q_unit",
+                            "type": "text"
+                          },
+                          {
+                            "name": "mrp",
+                            "type": "text"
+                          },
+                          {
+                            "name": "price",
+                            "type": "text"
+                          },
+                          {
+                            "name": "product_tax",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ],
+                    "outputType": "array"
+                  }
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": {
+            "name": "Resp",
+            "module": "core",
+            "action": "setvalue",
+            "options": {
+              "value": "Suspicious Activity"
+            },
+            "meta": [],
+            "output": true,
+            "outputType": "text"
+          }
+        }
+      }
+    }
+  }
+}

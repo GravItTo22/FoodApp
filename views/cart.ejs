@@ -2,12 +2,25 @@
 <meta name="ac:route" content="/cart">
 <dmx-value id="varCartId" dmx-bind:value="0"></dmx-value>
 <dmx-value id="varUserId" dmx-bind:value="0"></dmx-value>
+<dmx-serverconnect id="scPromoCode" url="/api/Cart/PromoCodeApply" dmx-param:promo_code="discount_code.value" noload></dmx-serverconnect>
 <dmx-serverconnect id="scCartUpdate" url="/api/Cart/UpdateCartItems" noload></dmx-serverconnect>
 <dmx-serverconnect id="scCartItems" url="/api/Cart/CartItems"></dmx-serverconnect>
 <dmx-serverconnect id="scRemoveCartItems" url="/api/Cart/RemoveCartItems" noload></dmx-serverconnect>
 <dmx-serverconnect id="scRemoveCartAddWish" url="/api/WishList/CartToWishlist" noload></dmx-serverconnect>
 <dmx-serverconnect id="scIncreaseQty" url="/api/Cart/IncreaseQty" noload></dmx-serverconnect>
 <dmx-serverconnect id="scDecreaseQty" url="/api/Cart/DecreaseQty" noload></dmx-serverconnect>
+<script is="dmx-flow" id="flowPromoCode" type="text/dmx-flow">{
+  condition: {
+    if: "{{content.discount_code.value}}",
+    then: {
+      steps: {
+        run: {
+          action: "{{scPromoCode.load({promo_code: content.discount_code.value})}}"
+        }
+      }
+    }
+  }
+}</script>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
     <div class="container">
@@ -101,34 +114,44 @@
                     <p>Amount</p>
                     <p><i class=" fa fa-rupee"></i><span id="product_total_amt">{{content.scCartItems.data.CartSumAmt[0].total_amt}}</span></p>
                 </div>
+                <input type="hidden" id="inp_product_total_amt" dmx-bind:value="content.scCartItems.data.CartSumAmt[0].total_amt">
+                <input type="hidden" id="inp_shipping_charge" dmx-bind:value="50">
+                <input type="hidden" id="inp_PromoCodeAmt" dmx-bind:value="(content.scPromoCode.data.GetPromoCode.amt_or_percent=='PER')?(scCartItems.data.CartSumAmt[0].total_amt*content.scPromoCode.data.GetPromoCode.promo_per)/100:(content.scPromoCode.data.GetPromoCode.amt_or_percent=='AMT')?content.scPromoCode.data.GetPromoCode.promo_amt:0">
                 <div class="price_indiv d-flex justify-content-between mx-0">
                     <p>Shipping Charge</p>
-                    <p><i class=" fa fa-rupee"></i><span id="shipping_charge">0.00</span></p>
+                    <p><i class=" fa fa-rupee"></i><span id="shipping_charge">50</span></p>
                 </div>
                 <hr />
+                <div class="price_indiv d-flex justify-content-between mx-0" dmx-show="content.scPromoCode.data.Resp==200" dmx-hide="content.scPromoCode.data.Resp==403">
+                    <p>Promo Code <br><small>{{content.scPromoCode.data.GetPromoCode.promo_name}}: ({{content.scPromoCode.data.GetPromoCode.promo_code}})</small></p>
+                    <p><i class=" fa fa-rupee"></i><span id="PromoCodeAmt">{{(content.scPromoCode.data.GetPromoCode.amt_or_percent=='PER')?(scCartItems.data.CartSumAmt[0].total_amt*content.scPromoCode.data.GetPromoCode.promo_per)/100:(content.scPromoCode.data.GetPromoCode.amt_or_percent=='AMT')?content.scPromoCode.data.GetPromoCode.promo_amt:0}}</span></p>
+                </div>
+                <hr dmx-show="content.scPromoCode.data.Resp==200" dmx-hide="content.scPromoCode.data.Resp==403" />
                 <div class="total-amt d-flex justify-content-between font-weight-bold">
                     <p>Grand Total Amount</p>
-                    <p><i class=" fa fa-rupee"></i><span id="total_cart_amt">{{scCartItems.data.CartSumAmt[0].total_amt}}</span></p>
+                    <p><i class=" fa fa-rupee"></i><span id="total_cart_amt">{{(inp_product_total_amt.value.toNumber()+inp_shipping_charge.value.toNumber())-inp_PromoCodeAmt.value.toNumber()}}</span></p>
                 </div>
                 <div class="d-flex justify-content-between font-weight-bold" dmx-show="scDashboardInfo.data.varLogin">
-                    <p>Wallet Cashback (Discount)<br><span class="gio-font-11">(Auto Apply Promo Code: <b>{{content.scCartItems.data.GetPromoCode.promo_code}}</b>)</span></p>
-                    <p><i class=" fa fa-rupee"></i><span id="total_promo_amt">{{(content.scCartItems.data.GetPromoCode.amt_or_percent=='PER')?(scCartItems.data.CartSumAmt[0].total_amt*content.scCartItems.data.GetPromoCode.promo_per)/100:(content.scCartItems.data.GetPromoCode.amt_or_percent=='AMT')?content.scCartItems.data.GetPromoCode.promo_amt:0}}</span></p>
+                    <p>Wallet Cashback (Discount)<br><span class="gio-font-11">(Auto Apply Promo Code: <b>{{content.scCartItems.data.NewUserCode.promo_code}}</b>)</span></p>
+                    <p><i class=" fa fa-rupee"></i><span id="total_promo_amt">{{(content.scCartItems.data.NewUserCode.amt_or_percent=='PER')?(scCartItems.data.CartSumAmt[0].total_amt*content.scCartItems.data.NewUserCode.promo_per)/100:(content.scCartItems.data.NewUserCode.amt_or_percent=='AMT')?content.scCartItems.data.NewUserCode.promo_amt:0}}</span></p>
                 </div>
                 <div class="d-flex justify-content-between font-weight-bold" dmx-hide="scDashboardInfo.data.varLogin">
                     <p>Please Login to get Wallet Cashback (Discount Amount)</p>
                 </div>
-                <a href="checkout"><button class="btn1 text-uppercase">Checkout</button></a>
+                <a href="" dmx-bind:href="scDashboardInfo.data.varLogin ? 'place-order' : 'login'"><button class="btn1 text-uppercase">Checkout</button></a>
             </div>
             <!-- discount code part -->
             <div class="discount_code mt-3 shadow">
                 <div class="card">
                     <div class="card-body">
+                        <h5 class="text-danger" dmx-show="content.scPromoCode.data.Resp==403" dmx-hide="content.scPromoCode.data.Resp==200">Invalid Promo Code</h5>
+                        <h6 class="text-info" dmx-show="content.scPromoCode.data.Resp==200" dmx-hide="content.scPromoCode.data.Resp==403">Promo Code Applied Successfully</h6>
                         Add a discount code (optional)
                         <div class="mt-3">
-                            <input type="text" name="" id="discount_code1" class="form-control font-weight-bold" placeholder="Enter the discount code">
+                            <input type="text" name="" id="discount_code" class="form-control font-weight-bold" placeholder="Enter the discount code" required="">
                             <small id="error_trw" class="text-dark mt-3"></small>
                         </div>
-                        <button class="btn1 btn-sm mt-3" onclick="discount_code()">Apply</button>
+                        <button class="btn1 btn-sm mt-3" dmx-on:click="flowPromoCode.run();">Apply</button>
                     </div>
                 </div>
             </div>

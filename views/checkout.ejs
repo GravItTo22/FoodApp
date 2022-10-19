@@ -1,5 +1,6 @@
-<!-- Wappler include head-page="layouts/main" -->
+<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="checkout" appConnect="local" -->
 <meta name="ac:route" content="/checkout">
+<dmx-serverconnect id="scCartItems" url="/api/Cart/CartItems"></dmx-serverconnect>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
     <div class="container">
@@ -133,7 +134,7 @@
                             <div class="checkout__order">
                                 <h4>Your Order</h4>
                                 <div class="checkout__order__products">Products <span>Total</span></div>
-                                <ul>
+                                <ul id="repeat1" is="dmx-repeat" dmx-bind:repeat="content.scCartItems.data.GetCartItems" key="id">
                                     <li>Vegetable’s Package <span><i class="fa fa-rupee"></i>75.99</span></li>
                                     <li>Fresh Vegetable <span><i class="fa fa-rupee"></i>7151.99</span></li>
                                     <li>Organic Bananas <span><i class="fa fa-rupee"></i>753.99</span></li>

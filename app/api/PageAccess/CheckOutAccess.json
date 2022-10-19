@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "$_SESSION": [
+      {
+        "type": "text",
+        "name": "sessionLogin"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "GetUser",
+        "module": "dbconnector",
+        "action": "single",
+        "options": {
+          "connection": "ClientApp",
+          "sql": {
+            "type": "SELECT",
+            "columns": [
+              {
+                "table": "m_customer",
+                "column": "id",
+                "alias": "CountUser",
+                "aggregate": "COUNT"
+              }
+            ],
+            "table": {
+              "name": "m_customer"
+            },
+            "primary": "id",
+            "joins": [],
+            "groupBy": [],
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "m_customer.id",
+                  "field": "m_customer.id",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": "{{$_SESSION.sessionLogin}}",
+                  "data": {
+                    "table": "m_customer",
+                    "column": "id",
+                    "type": "number",
+                    "columnObj": {
+                      "type": "increments",
+                      "default": "",
+                      "primary": true,
+                      "unique": true,
+                      "nullable": false,
+                      "name": "id"
+                    }
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            },
+            "query": "SELECT COUNT(id) AS CountUser\nFROM m_customer\nWHERE id = :P1 /* {{$_SESSION.sessionLogin}} */",
+            "params": [
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{$_SESSION.sessionLogin}}"
+              }
+            ]
+          }
+        },
+        "output": true,
+        "meta": [
+          {
+            "type": "number",
+            "name": "CountUser"
+          }
+        ],
+        "outputType": "object"
+      },
+      {
+        "name": "",
+        "module": "core",
+        "action": "condition",
+        "options": {
+          "if": "{{GetUser.CountUser}}",
+          "then": {
+            "steps": {
+              "name": "CheckOut",
+              "module": "core",
+              "action": "redirect",
+              "options": {
+                "url": "/place-order",
+                "status": 301
+              }
+            }
+          },
+          "else": {
+            "steps": {
+              "name": "Login",
+              "module": "core",
+              "action": "redirect",
+              "options": {
+                "url": "/login"
+              }
+            }
+          }
+        },
+        "outputType": "boolean"
+      }
+    ]
+  }
+}

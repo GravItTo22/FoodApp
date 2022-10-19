@@ -4,14 +4,14 @@
 <head>
     <base href="/">
     <meta charset="UTF-8">
-    <meta name="description" content="Food App by Ariful">
+    <meta name="description" content="Gravitto food delivery app of silchar, assam">
     <meta name="keywords" content="Food Delivery App, Gravitto, Silchar">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- favicon
         		============================================ -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
-    <title>GravItTo.Com</title>
+    <title>Gravitto.com</title>
 
     <script src="/dmxAppConnect/dmxAppConnect.js"></script>
     <script src="assets/js/jquery-3.3.1.min.js"></script>
@@ -77,8 +77,8 @@
                     <li dmx-repeat:repeatlanguage="scLanguage.data.GetLanguage" dmx-on:click="varLanguage.setValue(scLanguage.data.GetLanguage[$index].language_name)"><a href="#">{{scLanguage.data.GetLanguage[$index].language_name}}</a></li>
                 </ul>
             </div>
-            <div id="myBtnMobile" class="header__top__right__auth" dmx-hide="scDashboardInfo.data.varLogin">
-                <a href="#"><i class="fa fa-user"></i> Login</a>
+            <div id="loginBtnMobile" class="header__top__right__auth" dmx-hide="scDashboardInfo.data.varLogin">
+                <a href="/login"><i class="fa fa-user"></i> Login</a>
             </div>
             <div class="header__top__right__profile" dmx-show="scDashboardInfo.data.varLogin">
                 <div><i class="fa fa-user"></i> {{scDashboardInfo.data.GetUserInfo.fname}}</div>
@@ -166,10 +166,9 @@
                             </div>
                             <div class="header__top__right__auth">
 
-                                <a id="myBtn" href="#" class="btn btn-big" dmx-hide="scDashboardInfo.data.varLogin"><i class="fa fa-user"></i>login</a>
+                                <a id="loginBtn" href="/login" class="btn btn-big" dmx-hide="scDashboardInfo.data.varLogin"><i class="fa fa-user"></i>login</a>
                                 <!-- The Modal -->
-                                <div id="myModal" class="modal">
-                                    <!-- Modal content -->
+                                <!-- <div id="myModal" class="modal">
                                     <span class="close">&times;</span>
                                     <div class="wrapper">
                                         <div class="title-text">
@@ -240,7 +239,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -311,18 +310,16 @@
                     <div class="footer__widget">
                         <h6>Useful Links</h6>
                         <ul>
-                            <li><a href="/assets/Files/About%20Us.pdf">About Us</a></li>
-                            <li><a href="#">About Our Shop</a></li>
-                            <li><a href="#">Secure Shopping</a></li>
-                            <li><a href="/assets/Files/Gravitto%20return%20or%20cancellation.pdf" target="_blank">Return and Cancellation</a></li>
-                            <li><a href="/assets/Files/Gravitto%20Privacy%20Policy.pdf" target="_blank">Privacy Policy</a></li>
-                            <li><a href="/assets/Files/Gravitto%20Terms%20n%20Conditions.pdf" target="_blank">Terms and Condition</a></li>
+                            <li><a href="/contact">Contact Us</a></li>
+                            <li><a href="/about-us">About Us</a></li>
+                            <li><a href="/return-and-cancellation-policy">Return and Cancellation</a></li>
+                            <li><a href="/privacy-policy">Privacy Policy</a></li>
+                            <li><a href="/terms-and-conditions">Terms and Condition</a></li>
                         </ul>
                         <ul>
                             <li><a href="#">Who We Are</a></li>
                             <li><a href="#">Our Services</a></li>
                             <li><a href="#">Projects</a></li>
-                            <li><a href="#">Contact</a></li>
                             <li><a href="#">Innovation</a></li>
                             <li><a href="#">Testimonials</a></li>
                         </ul>

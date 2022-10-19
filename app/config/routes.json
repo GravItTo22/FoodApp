@@ -28,11 +28,6 @@
       "layout": "main"
     },
     {
-      "path": "/checkout",
-      "page": "checkout",
-      "layout": "main"
-    },
-    {
       "path": "/wish-list",
       "page": "wish-list",
       "layout": "main"
@@ -50,6 +45,37 @@
     {
       "path": "/login",
       "page": "login"
+    },
+    {
+      "path": "/privacy-policy",
+      "page": "privacy-policy",
+      "layout": "main"
+    },
+    {
+      "path": "/terms-and-conditions",
+      "page": "terms-and-conditions",
+      "layout": "main"
+    },
+    {
+      "path": "/return-and-cancellation-policy",
+      "page": "return-and-cancellation-policy",
+      "layout": "main"
+    },
+    {
+      "path": "/about-us",
+      "page": "about-us",
+      "layout": "main"
+    },
+    {
+      "path": "/checkout",
+      "page": "checkout",
+      "layout": "main"
+    },
+    {
+      "path": "/place-order",
+      "page": "place-order",
+      "layout": "main",
+      "exec": ""
     }
   ]
 }

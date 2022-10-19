@@ -594,5 +594,130 @@ dmx.config({
       ],
       "outputType": "array"
     }
+  },
+  "login": {
+    "sessionStorage": [
+      {
+        "type": "text",
+        "name": "sessionLogin"
+      }
+    ]
+  },
+  "checkout": {
+    "repeat1": {
+      "meta": [
+        {
+          "name": "id",
+          "type": "number"
+        },
+        {
+          "name": "prod_id",
+          "type": "number"
+        },
+        {
+          "name": "price_id",
+          "type": "number"
+        },
+        {
+          "name": "user_id",
+          "type": "text"
+        },
+        {
+          "name": "prod_unit_price",
+          "type": "text"
+        },
+        {
+          "name": "cart_mrp",
+          "type": "text"
+        },
+        {
+          "name": "prod_qty",
+          "type": "text"
+        },
+        {
+          "name": "total_price",
+          "type": "text"
+        },
+        {
+          "name": "prod_name_en",
+          "type": "text"
+        },
+        {
+          "name": "prod_name_bn",
+          "type": "text"
+        },
+        {
+          "name": "prod_name_hin",
+          "type": "text"
+        },
+        {
+          "name": "prod_desc_en",
+          "type": "text"
+        },
+        {
+          "name": "prod_desc_bn",
+          "type": "text"
+        },
+        {
+          "name": "prod_desc_hin",
+          "type": "text"
+        },
+        {
+          "name": "prod_img1",
+          "type": "text"
+        },
+        {
+          "name": "prod_mark_id",
+          "type": "number"
+        },
+        {
+          "name": "shop_name_en",
+          "type": "text"
+        },
+        {
+          "name": "shop_name_bn",
+          "type": "text"
+        },
+        {
+          "name": "shop_name_hin",
+          "type": "text"
+        },
+        {
+          "name": "rest_id",
+          "type": "number"
+        },
+        {
+          "name": "price",
+          "type": "array",
+          "sub": [
+            {
+              "name": "price_ids",
+              "type": "number"
+            },
+            {
+              "name": "quantity",
+              "type": "text"
+            },
+            {
+              "name": "q_unit",
+              "type": "text"
+            },
+            {
+              "name": "mrp",
+              "type": "text"
+            },
+            {
+              "name": "price",
+              "type": "text"
+            },
+            {
+              "name": "product_tax",
+              "type": "text"
+            }
+          ]
+        }
+      ],
+      "outputType": "array"
+    }
   }
 });

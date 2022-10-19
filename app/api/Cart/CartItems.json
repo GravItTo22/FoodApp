@@ -294,7 +294,7 @@
                 "if": "{{GetNewUser.CountNewCust<1}}",
                 "then": {
                   "steps": {
-                    "name": "GetPromoCode",
+                    "name": "NewUserCode",
                     "module": "dbconnector",
                     "action": "single",
                     "options": {
@@ -508,7 +508,7 @@
                 },
                 "else": {
                   "steps": {
-                    "name": "GetPromoCode",
+                    "name": "NewUserCode",
                     "module": "dbconnector",
                     "action": "single",
                     "options": {

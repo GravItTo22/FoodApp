@@ -1,0 +1,241 @@
+<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="placeorder" appConnect="local" -->
+<meta name="ac:route" content="/place-order">
+<dmx-serverconnect id="scCartItems" url="/api/Cart/CartItems"></dmx-serverconnect>
+<dmx-serverconnect id="scAppliedCode" url="/api/Cart/FetchPromoCode"></dmx-serverconnect>
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Checkout</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/">Home</a>
+                        <span>Checkout</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="checkout spad">
+    <div class="container">
+        <div class="row">
+            <div class="checkout__form mt-3">
+                <h4>Billing Details</h4>
+                <div class="col-lg-12">
+                    <h6> Delivery to:<b> {{scDashboardInfo.data.GetUserInfo.fname}} {{scDashboardInfo.data.GetUserInfo.lname}}, {{scDashboardInfo.data.GetUserInfo.pin}}</b><br>
+                        {{scDashboardInfo.data.GetUserInfo.address}} <i>{{scDashboardInfo.data.GetUserInfo.district}}, {{scDashboardInfo.data.GetUserInfo.state}}</i>
+                    </h6>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-light border-dark float-right mb-3" data-toggle="modal" data-target="#exampleModalLong">
+                        Change
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                        <div class="modal-dialog1" role="document">
+                            <div class="modal-content1 ml-2">
+                                <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                                <div class="modal-header1">
+                                    <p class="font-weight-bold">Select Delivery Address</p>
+
+                                    <label class="container1">
+                                        <label class="form-check-label">{{scDashboardInfo.data.GetUserInfo.fname}} {{scDashboardInfo.data.GetUserInfo.lname}}, {{scDashboardInfo.data.GetUserInfo.pin}}
+                                            <a href="index">Home</a>
+                                            <br> {{scDashboardInfo.data.GetUserInfo.address}} <i>{{scDashboardInfo.data.GetUserInfo.district}}, {{scDashboardInfo.data.GetUserInfo.state}}</i></label>
+                                        <input type="radio" checked="checked" name="radio">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+
+                                    </div>
+                                    <p>use pincode to check delivery info</p>
+                                    <label>Enter Your Pin Code<span>*</span></label>
+                                    <input type="text" name="pin code" class="form-control">
+                                    <label>Name<span>*</span></label>
+                                    <input type="text" name="name" class="form-control">
+                                    <label>Email<span>*</span></label>
+                                    <input type="text" name="Email" class="form-control">
+                                    <label>Address<span>*</span></label>
+                                    <input type="text" name="address" class="form-control">
+                                    <label>Mobile Number<span>*</span></label>
+                                    <input type="text" name="mobile" class="form-control">
+                                    <input type="submit" value="Submit" class="btns">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form id="place-order" is="dmx-serverconnect-form" method="post" action="/api/Cart/PlaceOrder" dmx-on:success="browser1.goto('/place-order')" dmx-on:unauthorized="varInvalidLogin.setValue(1);formLogin.reset;" dmx-on:forbidden="notifMain.danger('This user doesnot exists, please try again!')">
+                    <div class="row mt-5">
+                        <div class="col-lg-7 col-md-6" style="background: #f5f5f5;
+                            padding: 40px;">
+                            <h4><b>Select Payment Method</b></h4>
+
+                        </div>
+                        <div class="col-lg-5 col-md-6">
+                            <div class="checkout__order">
+                                <h4>Your Order</h4>
+                                <div class="checkout__order__products">Products <span>Total</span></div>
+                                <ul id="repeat1" is="dmx-repeat" dmx-bind:repeat="content.scCartItems.data.GetCartItems" key="id">
+                                    <li>{{content.scCartItems.data.GetCartItems[$index].prod_name_en}} <span><i class="fa fa-rupee"></i>{{content.scCartItems.data.GetCartItems[$index].total_price}}</span></li>
+                                </ul>
+                                <div class="checkout__order__subtotal">Subtotal <span><i class="fa fa-rupee"></i>{{scCartItems.data.CartSumAmt[0].total_amt}}</span></div>
+                                <div class="price_indiv d-flex justify-content-between mx-0">
+                                    <p>Shipping Charge</p>
+                                    <p><i class=" fa fa-rupee"></i><span id="shipping_charge">50</span></p>
+                                </div>
+                                <hr />
+                                <div class="price_indiv d-flex justify-content-between mx-0" dmx-show="content.scAppliedCode.data.GetCode.id">
+                                    <p>Promo Code <br><small>{{content.scAppliedCode.data.GetCode.promo_name}}: ({{content.scAppliedCode.data.GetCode.promo_code}})</small></p>
+                                    <p class="text-info"><i class=" fa fa-rupee"></i><span id="PromoCodeAmt">{{(content.scAppliedCode.data.GetCode.amt_or_percent=='PER')?(scCartItems.data.CartSumAmt[0].total_amt*content.scAppliedCode.data.GetCode.promo_per)/100:(content.scAppliedCode.data.GetCode.amt_or_percent=='AMT')?content.scAppliedCode.data.GetCode.promo_amt:0}}</span></p>
+                                </div>
+                                <input type="hidden" id="inp_product_total_amt" dmx-bind:value="content.scCartItems.data.CartSumAmt[0].total_amt" name="inp_product_total_amt">
+                                <input type="hidden" id="inp_shipping_charge" dmx-bind:value="50" name="inp_shipping_charge">
+                                <input type="hidden" id="inp_PromoCodeAmt" dmx-bind:value="(content.scAppliedCode.data.GetCode.amt_or_percent=='PER')?(scCartItems.data.CartSumAmt[0].total_amt*content.scAppliedCode.data.GetCode.promo_per)/100:(content.scAppliedCode.data.GetCode.amt_or_percent=='AMT')?content.scAppliedCode.data.GetCode.promo_amt:0" name="inp_PromoCodeAmt"><input type="hidden" id="inp_wallet_amt" dmx-bind:value="(content.scCartItems.data.NewUserCode.amt_or_percent=='PER')?(scCartItems.data.CartSumAmt[0].total_amt*content.scCartItems.data.NewUserCode.promo_per)/100:(content.scCartItems.data.NewUserCode.amt_or_percent=='AMT')?content.scCartItems.data.NewUserCode.promo_amt:0" name="inp_wallet_amt">
+                                <div class="checkout__order__total">Total <span><i class="fa fa-rupee"></i>{{(inp_product_total_amt.value.toNumber()+inp_shipping_charge.value.toNumber())-inp_PromoCodeAmt.value.toNumber()}}</span></div>
+                                <div class="d-flex justify-content-between font-weight-bold" dmx-show="scDashboardInfo.data.varLogin">
+                                    <p>Wallet Cashback (Discount)<br><span class="gio-font-11">(Auto Apply Promo Code: <b>{{content.scCartItems.data.NewUserCode.promo_code}}</b>)</span></p>
+                                    <p><i class=" fa fa-rupee"></i><span id="total_promo_amt">{{(content.scCartItems.data.NewUserCode.amt_or_percent=='PER')?(scCartItems.data.CartSumAmt[0].total_amt*content.scCartItems.data.NewUserCode.promo_per)/100:(content.scCartItems.data.NewUserCode.amt_or_percent=='AMT')?content.scCartItems.data.NewUserCode.promo_amt:0}}</span></p>
+                                </div>
+                                <div class="d-flex justify-content-between font-weight-bold" dmx-hide="scDashboardInfo.data.varLogin">
+                                    <p>Please Login to get Wallet Cashback (Discount Amount) <a href="/login" class="text-primary font-weight-bold">Login</a></p>
+                                </div>
+
+                                <p>I have read out the cancellation and return policy and I agree with the terms and condition of Gravitto.</p>
+                                <button type="submit" class="site-btn">PLACE ORDER</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="featured spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <h2>Wishlist</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row featured__filter">
+            <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+                <div class="featured__item">
+                    <div class="featured__item__pic set-bg" data-setbg="assets/img/featured/feature-1.jpg">
+                        <ul class="featured__item__pic__hover">
+                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="featured__item__text">
+                        <h6><a href="#">Rajma with Jeera Rice Pulao Meal</a></h6>
+                        <h5><i class="fa fa-rupee"></i>30.00</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fastfood">
+                <div class="featured__item">
+                    <div class="featured__item__pic set-bg" data-setbg="assets/img/featured/feature-2.jpg">
+                        <ul class="featured__item__pic__hover">
+                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="featured__item__text">
+                        <h6><a href="#">Chilli Paneer Dry</a></h6>
+                        <h5><i class="fa fa-rupee"></i>30.00</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fresh-meat">
+                <div class="featured__item">
+                    <div class="featured__item__pic set-bg" data-setbg="assets/img/featured/feature-3.jpg">
+                        <ul class="featured__item__pic__hover">
+                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="featured__item__text">
+                        <h6><a href="shop-details.html">Idli Sambar</a></h6>
+                        <h5><i class="fa fa-rupee"></i>30.00</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mix fastfood oranges">
+                <div class="featured__item">
+                    <div class="featured__item__pic set-bg" data-setbg="assets/img/featured/feature-4.jpg">
+                        <ul class="featured__item__pic__hover">
+                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="featured__item__text">
+                        <h6><a href="shop-details.html">Noodles</a></h6>
+                        <h5><i class="fa fa-rupee"></i>30.00</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mix fresh-meat vegetables">
+                <div class="featured__item">
+                    <div class="featured__item__pic set-bg" data-setbg="assets/img/featured/feature-5.jpg">
+                        <ul class="featured__item__pic__hover">
+                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="featured__item__text">
+                        <h6><a href="shop-details.html">Veg Spring Roll</a></h6>
+                        <h5><i class="fa fa-rupee"></i>30.00</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fastfood">
+                <div class="featured__item">
+                    <div class="featured__item__pic set-bg" data-setbg="assets/img/featured/feature-6.jpg">
+                        <ul class="featured__item__pic__hover">
+                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="featured__item__text">
+                        <h6><a href="shop-details.html">Green Salad</a></h6>
+                        <h5><i class="fa fa-rupee"></i>30.00</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mix fresh-meat vegetables">
+                <div class="featured__item">
+                    <div class="featured__item__pic set-bg" data-setbg="assets/img/featured/feature-7.jpg">
+                        <ul class="featured__item__pic__hover">
+                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="featured__item__text">
+                        <h6><a href="shop-details.html">Momos</a></h6>
+                        <h5><i class="fa fa-rupee"></i>30.00</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mix fastfood vegetables">
+                <div class="featured__item">
+                    <div class="featured__item__pic set-bg" data-setbg="assets/img/featured/feature-8.jpg">
+                        <ul class="featured__item__pic__hover">
+                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="featured__item__text">
+                        <h6><a href="shop-details.html">French Fries</a></h6>
+                        <h5><i class="fa fa-rupee"></i>30.00</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Checkout Section End -->

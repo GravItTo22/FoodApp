@@ -1,0 +1,277 @@
+{
+  "name": "",
+  "module": "core",
+  "action": "trycatch",
+  "options": {
+    "try": {
+      "steps": [
+        {
+          "name": "identity",
+          "module": "auth",
+          "action": "identify",
+          "options": {
+            "provider": "security"
+          },
+          "output": false,
+          "meta": []
+        },
+        {
+          "name": "GetCode",
+          "module": "dbconnector",
+          "action": "single",
+          "options": {
+            "connection": "ClientApp",
+            "sql": {
+              "type": "SELECT",
+              "columns": [
+                {
+                  "table": "applied_promo_code",
+                  "column": "id"
+                },
+                {
+                  "table": "applied_promo_code",
+                  "column": "promo_id"
+                },
+                {
+                  "table": "applied_promo_code",
+                  "column": "promo_code"
+                },
+                {
+                  "table": "applied_promo_code",
+                  "column": "applied_date"
+                },
+                {
+                  "table": "pc",
+                  "column": "promo_name"
+                },
+                {
+                  "table": "pc",
+                  "column": "amt_or_percent"
+                },
+                {
+                  "table": "pc",
+                  "column": "promo_amt"
+                },
+                {
+                  "table": "pc",
+                  "column": "promo_per"
+                }
+              ],
+              "table": {
+                "name": "applied_promo_code"
+              },
+              "primary": "id",
+              "joins": [
+                {
+                  "table": "promo_code",
+                  "column": "*",
+                  "alias": "pc",
+                  "type": "LEFT",
+                  "clauses": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "table": "pc",
+                        "column": "id",
+                        "operator": "equal",
+                        "value": {
+                          "table": "applied_promo_code",
+                          "column": "promo_id"
+                        },
+                        "operation": "="
+                      }
+                    ]
+                  },
+                  "primary": "id"
+                }
+              ],
+              "wheres": {
+                "condition": "AND",
+                "rules": [
+                  {
+                    "id": "pc.start_date",
+                    "field": "pc.start_date",
+                    "type": "datetime",
+                    "operator": "less",
+                    "value": "{{NOW}}",
+                    "data": {
+                      "table": "pc",
+                      "column": "start_date",
+                      "type": "datetime",
+                      "columnObj": {
+                        "type": "timestamp",
+                        "primary": false,
+                        "unique": false,
+                        "nullable": true,
+                        "name": "start_date"
+                      }
+                    },
+                    "operation": "<"
+                  },
+                  {
+                    "id": "pc.end_date",
+                    "field": "pc.end_date",
+                    "type": "datetime",
+                    "operator": "greater_or_equal",
+                    "value": "{{NOW}}",
+                    "data": {
+                      "table": "pc",
+                      "column": "end_date",
+                      "type": "datetime",
+                      "columnObj": {
+                        "type": "timestamp",
+                        "primary": false,
+                        "unique": false,
+                        "nullable": true,
+                        "name": "end_date"
+                      }
+                    },
+                    "operation": ">="
+                  },
+                  {
+                    "id": "pc.status",
+                    "field": "pc.status",
+                    "type": "double",
+                    "operator": "equal",
+                    "value": "{{1}}",
+                    "data": {
+                      "table": "pc",
+                      "column": "status",
+                      "type": "number",
+                      "columnObj": {
+                        "type": "integer",
+                        "primary": false,
+                        "unique": false,
+                        "nullable": true,
+                        "name": "status"
+                      }
+                    },
+                    "operation": "="
+                  },
+                  {
+                    "condition": "OR",
+                    "rules": [
+                      {
+                        "id": "applied_promo_code.user_id",
+                        "field": "applied_promo_code.user_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{identity}}",
+                        "data": {
+                          "table": "applied_promo_code",
+                          "column": "user_id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "integer",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "user_id"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "applied_promo_code.ip",
+                        "field": "applied_promo_code.ip",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_SERVER.REMOTE_ADDR}}",
+                        "data": {
+                          "table": "applied_promo_code",
+                          "column": "ip",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "ip"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null
+                  }
+                ],
+                "conditional": null,
+                "valid": true
+              },
+              "query": "SELECT applied_promo_code.id, applied_promo_code.promo_id, applied_promo_code.promo_code, applied_promo_code.applied_date, pc.promo_name, pc.amt_or_percent, pc.promo_amt, pc.promo_per\nFROM applied_promo_code\nLEFT JOIN promo_code AS pc ON (pc.id = applied_promo_code.promo_id)\nWHERE pc.start_date < :P1 /* {{NOW}} */ AND pc.end_date >= :P2 /* {{NOW}} */ AND pc.status = :P3 /* {{1}} */ AND (applied_promo_code.user_id = :P4 /* {{identity}} */ OR applied_promo_code.ip = :P5 /* {{$_SERVER.REMOTE_ADDR}} */)",
+              "params": [
+                {
+                  "operator": "less",
+                  "type": "expression",
+                  "name": ":P1",
+                  "value": "{{NOW}}"
+                },
+                {
+                  "operator": "greater_or_equal",
+                  "type": "expression",
+                  "name": ":P2",
+                  "value": "{{NOW}}"
+                },
+                {
+                  "operator": "equal",
+                  "type": "expression",
+                  "name": ":P3",
+                  "value": "{{1}}"
+                },
+                {
+                  "operator": "equal",
+                  "type": "expression",
+                  "name": ":P4",
+                  "value": "{{identity}}"
+                },
+                {
+                  "operator": "equal",
+                  "type": "expression",
+                  "name": ":P5",
+                  "value": "{{$_SERVER.REMOTE_ADDR}}"
+                }
+              ]
+            }
+          },
+          "output": true,
+          "meta": [
+            {
+              "type": "number",
+              "name": "id"
+            },
+            {
+              "type": "text",
+              "name": "promo_id"
+            },
+            {
+              "type": "text",
+              "name": "promo_code"
+            },
+            {
+              "type": "datetime",
+              "name": "applied_date"
+            },
+            {
+              "type": "text",
+              "name": "promo_name"
+            },
+            {
+              "type": "text",
+              "name": "amt_or_percent"
+            },
+            {
+              "type": "text",
+              "name": "promo_amt"
+            },
+            {
+              "type": "text",
+              "name": "promo_per"
+            }
+          ],
+          "outputType": "object"
+        }
+      ]
+    }
+  }
+}

@@ -550,7 +550,8 @@
                         "status": 200,
                         "data": "Login Success"
                       },
-                      "output": true
+                      "output": true,
+                      "disabled": true
                     }
                   ]
                 },
@@ -560,7 +561,7 @@
                     "module": "core",
                     "action": "response",
                     "options": {
-                      "status": 200,
+                      "status": 403,
                       "data": "Login Failed"
                     },
                     "output": true

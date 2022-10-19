@@ -147,7 +147,7 @@
               "module": "core",
               "action": "condition",
               "options": {
-                "if": "{{CheckUser.CountId}}",
+                "if": "{{CheckUser.CountId>0}}",
                 "then": {
                   "steps": [
                     {

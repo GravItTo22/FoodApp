@@ -5,12 +5,6 @@
         "type": "text",
         "name": "logintoken"
       }
-    ],
-    "$_SESSION": [
-      {
-        "type": "text",
-        "name": "sessionLogin"
-      }
     ]
   },
   "exec": {
@@ -97,6 +91,17 @@
                 "if": "{{GetVerify.id}}",
                 "then": {
                   "steps": [
+                    {
+                      "name": "Status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 200
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
                     {
                       "name": "GetUserInfo",
                       "module": "dbconnector",
@@ -475,6 +480,17 @@
                 "else": {
                   "steps": [
                     {
+                      "name": "Status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 200
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
                       "name": "GetCartItems",
                       "module": "dbconnector",
                       "action": "single",
@@ -622,17 +638,30 @@
           ]
         },
         "catch": {
-          "steps": {
-            "name": "Resp",
-            "module": "core",
-            "action": "setvalue",
-            "options": {
-              "value": "Suspicious Activity"
+          "steps": [
+            {
+              "name": "Status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
             },
-            "meta": [],
-            "output": true,
-            "outputType": "text"
-          }
+            {
+              "name": "Resp",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
         }
       }
     }

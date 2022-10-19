@@ -34,6 +34,32 @@
         "type": "text",
         "fieldName": "inp_wallet_amt",
         "name": "inp_wallet_amt"
+      },
+      {
+        "type": "array",
+        "name": "record",
+        "sub": [
+          {
+            "type": "number",
+            "name": "AddOrder"
+          },
+          {
+            "type": "number",
+            "name": "GetCartItems[$index]"
+          },
+          {
+            "type": "number",
+            "name": "identity"
+          },
+          {
+            "type": "number",
+            "name": "1"
+          },
+          {
+            "type": "datetime",
+            "name": "NOW"
+          }
+        ]
       }
     ]
   },
@@ -878,7 +904,8 @@
                     "name": "affected",
                     "type": "number"
                   }
-                ]
+                ],
+                "output": false
               },
               {
                 "name": "delete",
@@ -946,7 +973,7 @@
             ]
           }
         },
-        "output": true,
+        "output": false,
         "meta": [
           {
             "name": "$index",

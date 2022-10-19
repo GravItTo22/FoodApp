@@ -1,0 +1,202 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "market"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "CheckBanner",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "m_sliding_image",
+                      "column": "id",
+                      "alias": "CountId",
+                      "aggregate": "COUNT"
+                    }
+                  ],
+                  "table": {
+                    "name": "m_sliding_image"
+                  },
+                  "joins": [],
+                  "query": "SELECT COUNT(id) AS CountId\nFROM m_sliding_image\nWHERE market_id = :P1 /* {{$_GET.market}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.market}}"
+                    }
+                  ],
+                  "primary": "id",
+                  "groupBy": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "m_sliding_image.market_id",
+                        "field": "m_sliding_image.market_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{$_GET.market}}",
+                        "data": {
+                          "table": "m_sliding_image",
+                          "column": "market_id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "integer",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "market_id"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  }
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "CountId"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{(CheckBanner.CountId>=1)}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 200
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "HomePageBanner",
+                      "module": "dbupdater",
+                      "action": "custom",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "query": "select msi.heading,  msi.description, msi.image from m_sliding_image msi where msi.market_id = @market and msi.status =1",
+                          "params": [
+                            {
+                              "name": "@market",
+                              "value": "{{$_GET.market}}",
+                              "test": "1"
+                            }
+                          ]
+                        }
+                      },
+                      "output": true,
+                      "meta": [
+                        {
+                          "name": "heading",
+                          "type": "text"
+                        },
+                        {
+                          "name": "description",
+                          "type": "text"
+                        },
+                        {
+                          "name": "image",
+                          "type": "text"
+                        }
+                      ],
+                      "outputType": "array"
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "No Record Found!"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

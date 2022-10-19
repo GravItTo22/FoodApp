@@ -1,0 +1,171 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "market"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": {
+            "name": "GetHelpDesk",
+            "module": "dbconnector",
+            "action": "single",
+            "options": {
+              "connection": "ClientApp",
+              "sql": {
+                "type": "SELECT",
+                "columns": [
+                  {
+                    "table": "m_help_desk",
+                    "column": "tech_support_mobile"
+                  },
+                  {
+                    "table": "m_help_desk",
+                    "column": "tech_support_email"
+                  },
+                  {
+                    "table": "m_help_desk",
+                    "column": "customer_care_mobile"
+                  },
+                  {
+                    "table": "m_help_desk",
+                    "column": "customer_care_email"
+                  },
+                  {
+                    "table": "m_help_desk",
+                    "column": "office_address"
+                  }
+                ],
+                "table": {
+                  "name": "m_help_desk"
+                },
+                "joins": [],
+                "primary": "id",
+                "wheres": {
+                  "condition": "AND",
+                  "rules": [
+                    {
+                      "id": "m_help_desk.market_id",
+                      "field": "m_help_desk.market_id",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": "{{$_GET.market}}",
+                      "data": {
+                        "table": "m_help_desk",
+                        "column": "market_id",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "integer",
+                          "primary": false,
+                          "unique": false,
+                          "nullable": true,
+                          "name": "market_id"
+                        }
+                      },
+                      "operation": "="
+                    },
+                    {
+                      "id": "m_help_desk.status",
+                      "field": "m_help_desk.status",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": "{{1}}",
+                      "data": {
+                        "table": "m_help_desk",
+                        "column": "status",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "integer",
+                          "primary": false,
+                          "unique": false,
+                          "nullable": true,
+                          "name": "status"
+                        }
+                      },
+                      "operation": "="
+                    }
+                  ],
+                  "conditional": null,
+                  "valid": true
+                },
+                "query": "SELECT tech_support_mobile, tech_support_email, customer_care_mobile, customer_care_email, office_address\nFROM m_help_desk\nWHERE market_id = :P1 /* {{$_GET.market}} */ AND status = :P2 /* {{1}} */",
+                "params": [
+                  {
+                    "operator": "equal",
+                    "type": "expression",
+                    "name": ":P1",
+                    "value": "{{$_GET.market}}"
+                  },
+                  {
+                    "operator": "equal",
+                    "type": "expression",
+                    "name": ":P2",
+                    "value": "{{1}}"
+                  }
+                ]
+              }
+            },
+            "output": true,
+            "meta": [
+              {
+                "type": "text",
+                "name": "tech_support_mobile"
+              },
+              {
+                "type": "text",
+                "name": "tech_support_email"
+              },
+              {
+                "type": "text",
+                "name": "customer_care_mobile"
+              },
+              {
+                "type": "text",
+                "name": "customer_care_email"
+              },
+              {
+                "type": "text",
+                "name": "office_address"
+              }
+            ],
+            "outputType": "object"
+          }
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

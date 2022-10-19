@@ -1,3 +1,64 @@
-{
-  "exec": {}
-}
+[
+  {
+    "name": "",
+    "module": "auth",
+    "action": "restrict",
+    "options": {
+      "provider": "security",
+      "permissions": [
+        "write"
+      ],
+      "loginUrl": "/login",
+      "forbiddenUrl": "/403-forbidden"
+    }
+  },
+  {
+    "name": "identity",
+    "module": "auth",
+    "action": "identify",
+    "options": {
+      "provider": "security"
+    },
+    "output": false,
+    "meta": []
+  },
+  {
+    "name": "UpdateLogout",
+    "module": "dbupdater",
+    "action": "custom",
+    "options": {
+      "connection": "ClientApp",
+      "sql": {
+        "query": "update t_user_log  set logout_time = @logout_time where user_id = @identity and id = (select max(id) from t_user_log) and login_from=@from",
+        "params": [
+          {
+            "name": "@logout_time",
+            "value": "{{NOW}}",
+            "test": "2022-11-10 13:20:30"
+          },
+          {
+            "name": "@identity",
+            "value": "{{identity}}",
+            "test": "77"
+          },
+          {
+            "name": "@from",
+            "value": "{{'Web'}}",
+            "test": "Web"
+          }
+        ]
+      }
+    },
+    "output": true,
+    "meta": [],
+    "outputType": "array"
+  },
+  {
+    "name": "",
+    "module": "auth",
+    "action": "logout",
+    "options": {
+      "provider": "security"
+    }
+  }
+]

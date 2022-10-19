@@ -553,7 +553,7 @@
                       "module": "core",
                       "action": "setvalue",
                       "options": {
-                        "value": "Invalid Mobile No. or Password"
+                        "value": "Mobile No. or Password is incorrect"
                       },
                       "meta": [],
                       "output": true,

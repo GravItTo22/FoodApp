@@ -9,12 +9,7 @@
         "type": "number",
         "fieldName": "Mobile",
         "options": {
-          "rules": {
-            "core:required": {
-              "param": ""
-            },
-            "core:number": {}
-          }
+          "rules": {}
         },
         "name": "Mobile"
       },
@@ -22,11 +17,7 @@
         "type": "text",
         "fieldName": "Password",
         "options": {
-          "rules": {
-            "core:required": {
-              "param": ""
-            }
-          }
+          "rules": {}
         },
         "name": "Password"
       }

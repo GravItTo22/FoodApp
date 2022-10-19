@@ -9,12 +9,7 @@
         "type": "number",
         "fieldName": "Mobile",
         "options": {
-          "rules": {
-            "core:required": {
-              "param": ""
-            },
-            "core:number": {}
-          }
+          "rules": {}
         },
         "name": "Mobile"
       },
@@ -22,11 +17,7 @@
         "type": "text",
         "fieldName": "FName",
         "options": {
-          "rules": {
-            "core:required": {
-              "param": ""
-            }
-          }
+          "rules": {}
         },
         "name": "FName"
       },
@@ -34,11 +25,7 @@
         "type": "text",
         "fieldName": "LName",
         "options": {
-          "rules": {
-            "core:required": {
-              "param": ""
-            }
-          }
+          "rules": {}
         },
         "name": "LName"
       },
@@ -51,9 +38,7 @@
         "type": "number",
         "fieldName": "PIN",
         "options": {
-          "rules": {
-            "core:number": {}
-          }
+          "rules": {}
         },
         "name": "PIN"
       },
@@ -61,9 +46,7 @@
         "type": "text",
         "fieldName": "District",
         "options": {
-          "rules": {
-            "core:required": {}
-          }
+          "rules": {}
         },
         "name": "District"
       },
@@ -71,11 +54,7 @@
         "type": "text",
         "fieldName": "is_whatsapp",
         "options": {
-          "rules": {
-            "core:required": {
-              "param": ""
-            }
-          }
+          "rules": {}
         },
         "name": "is_whatsapp"
       },
@@ -83,9 +62,7 @@
         "type": "text",
         "fieldName": "Address",
         "options": {
-          "rules": {
-            "core:required": {}
-          }
+          "rules": {}
         },
         "name": "Address"
       }
@@ -391,135 +368,6 @@
                 "then": {
                   "steps": [
                     {
-                      "name": "identity",
-                      "module": "auth",
-                      "action": "login",
-                      "options": {
-                        "provider": "security",
-                        "username": "{{$_POST.Mobile}}",
-                        "password": "{{Password.sha256(NOW)}}",
-                        "remember": ""
-                      },
-                      "output": false,
-                      "meta": []
-                    },
-                    {
-                      "name": "loginToken",
-                      "module": "core",
-                      "action": "setvalue",
-                      "options": {
-                        "value": "{{UUID.md5(123456).substr(1, 15)}}"
-                      },
-                      "meta": [],
-                      "outputType": "text",
-                      "output": true
-                    },
-                    {
-                      "name": "loginHistory",
-                      "module": "dbupdater",
-                      "action": "insert",
-                      "options": {
-                        "connection": "ClientApp",
-                        "sql": {
-                          "type": "insert",
-                          "values": [
-                            {
-                              "table": "t_user_log",
-                              "column": "user_id",
-                              "type": "number",
-                              "value": "{{identity}}"
-                            },
-                            {
-                              "table": "t_user_log",
-                              "column": "ip_address",
-                              "type": "text",
-                              "value": "{{$_SERVER.REMOTE_ADDR}}"
-                            },
-                            {
-                              "table": "t_user_log",
-                              "column": "login_time",
-                              "type": "datetime",
-                              "value": "{{NOW}}"
-                            },
-                            {
-                              "table": "t_user_log",
-                              "column": "login_from",
-                              "type": "text",
-                              "value": "{{'Android'}}"
-                            },
-                            {
-                              "table": "t_user_log",
-                              "column": "remote_ip",
-                              "type": "text",
-                              "value": "{{$_SERVER.REMOTE_HOST}}"
-                            },
-                            {
-                              "table": "t_user_log",
-                              "column": "login_server",
-                              "type": "text",
-                              "value": "{{$_SERVER.SERVER_NAME}}"
-                            },
-                            {
-                              "table": "t_user_log",
-                              "column": "login_token",
-                              "type": "text",
-                              "value": "{{loginToken}}"
-                            }
-                          ],
-                          "table": "t_user_log",
-                          "returning": "id",
-                          "query": "INSERT INTO t_user_log\n(user_id, ip_address, login_time, login_from, remote_ip, login_server, login_token) VALUES (:P1 /* {{identity}} */, :P2 /* {{$_SERVER.REMOTE_ADDR}} */, :P3 /* {{NOW}} */, :P4 /* {{'Android'}} */, :P5 /* {{$_SERVER.REMOTE_HOST}} */, :P6 /* {{$_SERVER.SERVER_NAME}} */, :P7 /* {{loginToken}} */)",
-                          "params": [
-                            {
-                              "name": ":P1",
-                              "type": "expression",
-                              "value": "{{identity}}"
-                            },
-                            {
-                              "name": ":P2",
-                              "type": "expression",
-                              "value": "{{$_SERVER.REMOTE_ADDR}}"
-                            },
-                            {
-                              "name": ":P3",
-                              "type": "expression",
-                              "value": "{{NOW}}"
-                            },
-                            {
-                              "name": ":P4",
-                              "type": "expression",
-                              "value": "{{'Android'}}"
-                            },
-                            {
-                              "name": ":P5",
-                              "type": "expression",
-                              "value": "{{$_SERVER.REMOTE_HOST}}"
-                            },
-                            {
-                              "name": ":P6",
-                              "type": "expression",
-                              "value": "{{$_SERVER.SERVER_NAME}}"
-                            },
-                            {
-                              "name": ":P7",
-                              "type": "expression",
-                              "value": "{{loginToken}}"
-                            }
-                          ]
-                        }
-                      },
-                      "meta": [
-                        {
-                          "name": "identity",
-                          "type": "text"
-                        },
-                        {
-                          "name": "affected",
-                          "type": "number"
-                        }
-                      ]
-                    },
-                    {
                       "name": "Status",
                       "module": "core",
                       "action": "setvalue",
@@ -535,7 +383,7 @@
                       "module": "core",
                       "action": "setvalue",
                       "options": {
-                        "value": "Signup and Login Success"
+                        "value": "Signup Success"
                       },
                       "meta": [],
                       "outputType": "text",
@@ -561,7 +409,7 @@
                       "module": "core",
                       "action": "setvalue",
                       "options": {
-                        "value": "Signup and Login Failed"
+                        "value": "Signup Failed"
                       },
                       "meta": [],
                       "outputType": "text",

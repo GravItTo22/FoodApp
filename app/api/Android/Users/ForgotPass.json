@@ -1,0 +1,247 @@
+{
+  "meta": {
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "Mobile"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "CheckUser",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "m_customer",
+                      "column": "id",
+                      "alias": "CountId",
+                      "aggregate": "COUNT"
+                    }
+                  ],
+                  "table": {
+                    "name": "m_customer"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "groupBy": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "m_customer.mobile",
+                        "field": "m_customer.mobile",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_POST.Mobile}}",
+                        "data": {
+                          "table": "m_customer",
+                          "column": "mobile",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "mobile"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "m_customer.status",
+                        "field": "m_customer.status",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{1}}",
+                        "data": {
+                          "table": "m_customer",
+                          "column": "status",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "integer",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "status"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "m_customer.user_type_id",
+                        "field": "m_customer.user_type_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{6}}",
+                        "data": {
+                          "table": "m_customer",
+                          "column": "user_type_id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "reference",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "references": "id",
+                            "inTable": "m_user_type",
+                            "referenceType": "integer",
+                            "onUpdate": "NO ACTION",
+                            "onDelete": "NO ACTION",
+                            "name": "user_type_id"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT COUNT(id) AS CountId\nFROM m_customer\nWHERE mobile = :P1 /* {{$_POST.Mobile}} */ AND status = :P2 /* {{1}} */ AND user_type_id = :P3 /* {{6}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_POST.Mobile}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{1}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P3",
+                      "value": "{{6}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "CountId"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{CheckUser.CountId}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "OTP",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "{{UUID.md5(123456).substr(1, 6).uppercase()}}"
+                      },
+                      "meta": [],
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "Status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 200
+                      },
+                      "meta": [],
+                      "outputType": "text",
+                      "output": true
+                    },
+                    {
+                      "name": "Resp",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "OTP sent to the registered Mobile No."
+                      },
+                      "meta": [],
+                      "outputType": "text",
+                      "output": true
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "Status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "outputType": "text",
+                      "output": true
+                    },
+                    {
+                      "name": "Resp",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Invalid Mobile No."
+                      },
+                      "meta": [],
+                      "outputType": "text",
+                      "output": true
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "Status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "outputType": "text",
+              "output": true
+            },
+            {
+              "name": "Resp",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "outputType": "text",
+              "output": true
+            }
+          ]
+        }
+      }
+    }
+  }
+}

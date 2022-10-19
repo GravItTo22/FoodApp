@@ -3,7 +3,11 @@
     "$_GET": [
       {
         "type": "text",
-        "name": "offset"
+        "name": "rest_id"
+      },
+      {
+        "type": "text",
+        "name": "market"
       },
       {
         "type": "text",
@@ -11,19 +15,7 @@
       },
       {
         "type": "text",
-        "name": "sort"
-      },
-      {
-        "type": "text",
-        "name": "dir"
-      },
-      {
-        "type": "text",
-        "name": "rest_id"
-      },
-      {
-        "type": "text",
-        "name": "market"
+        "name": "lang"
       }
     ]
   },
@@ -34,113 +26,336 @@
       "action": "trycatch",
       "options": {
         "try": {
-          "steps": {
-            "name": "GetProd",
-            "module": "dbupdater",
-            "action": "custom",
-            "options": {
-              "connection": "ClientApp",
-              "sql": {
-                "query": "SELECT mp.id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_img1, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) WHERE mp.status=1 AND mp.market_id=@market AND mp.rest_id=@rest_id ORDER by mp.id desc LIMIT @limit",
-                "params": [
-                  {
-                    "name": "@market",
-                    "value": "{{$_GET.market}}",
-                    "test": "1"
-                  },
-                  {
-                    "name": "@rest_id",
-                    "value": "{{$_GET.rest_id}}",
-                    "test": "3"
-                  },
-                  {
-                    "name": "@limit",
-                    "value": "{{$_GET.limit}}",
-                    "test": "2"
-                  }
-                ]
-              }
+          "steps": [
+            {
+              "name": "Status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 200
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
             },
-            "output": true,
-            "meta": [
-              {
-                "name": "id",
-                "type": "number"
-              },
-              {
-                "name": "prod_id",
-                "type": "text"
-              },
-              {
-                "name": "rest_id",
-                "type": "number"
-              },
-              {
-                "name": "prod_mark_id",
-                "type": "number"
-              },
-              {
-                "name": "prod_name_en",
-                "type": "text"
-              },
-              {
-                "name": "prod_name_bn",
-                "type": "text"
-              },
-              {
-                "name": "prod_name_hin",
-                "type": "text"
-              },
-              {
-                "name": "prod_img1",
-                "type": "text"
-              },
-              {
-                "name": "price",
-                "type": "array",
-                "sub": [
-                  {
-                    "name": "price_id",
-                    "type": "number"
-                  },
-                  {
-                    "name": "quantity",
-                    "type": "text"
-                  },
-                  {
-                    "name": "q_unit",
-                    "type": "text"
-                  },
-                  {
-                    "name": "mrp",
-                    "type": "text"
-                  },
-                  {
-                    "name": "price",
-                    "type": "text"
-                  },
-                  {
-                    "name": "product_tax",
-                    "type": "text"
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{($_GET.lang=='EN')}}",
+                "then": {
+                  "steps": {
+                    "name": "GetProd",
+                    "module": "dbupdater",
+                    "action": "custom",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, mp.prod_img1, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) WHERE mp.status=1 AND mp.market_id=@market AND mp.rest_id=@rest_id ORDER by mp.id desc LIMIT @limit",
+                        "params": [
+                          {
+                            "name": "@market",
+                            "value": "{{$_GET.market}}",
+                            "test": "1"
+                          },
+                          {
+                            "name": "@rest_id",
+                            "value": "{{$_GET.rest_id}}",
+                            "test": "3"
+                          },
+                          {
+                            "name": "@limit",
+                            "value": "{{$_GET.limit}}",
+                            "test": "2"
+                          }
+                        ]
+                      }
+                    },
+                    "output": true,
+                    "meta": [
+                      {
+                        "name": "p_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "prod_id",
+                        "type": "text"
+                      },
+                      {
+                        "name": "rest_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "prod_mark_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "prod_name",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_img1",
+                        "type": "text"
+                      },
+                      {
+                        "name": "price",
+                        "type": "array",
+                        "sub": [
+                          {
+                            "name": "price_id",
+                            "type": "number"
+                          },
+                          {
+                            "name": "quantity",
+                            "type": "text"
+                          },
+                          {
+                            "name": "q_unit",
+                            "type": "text"
+                          },
+                          {
+                            "name": "mrp",
+                            "type": "text"
+                          },
+                          {
+                            "name": "price",
+                            "type": "text"
+                          },
+                          {
+                            "name": "product_tax",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ],
+                    "outputType": "array"
                   }
-                ]
-              }
-            ],
-            "outputType": "array"
-          }
+                }
+              },
+              "outputType": "boolean"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{($_GET.lang=='BN')}}",
+                "then": {
+                  "steps": {
+                    "name": "GetProd",
+                    "module": "dbupdater",
+                    "action": "custom",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, mp.prod_img1, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) WHERE mp.status=1 AND mp.market_id=@market AND mp.rest_id=@rest_id ORDER by mp.id desc LIMIT @limit",
+                        "params": [
+                          {
+                            "name": "@market",
+                            "value": "{{$_GET.market}}",
+                            "test": "1"
+                          },
+                          {
+                            "name": "@rest_id",
+                            "value": "{{$_GET.rest_id}}",
+                            "test": "3"
+                          },
+                          {
+                            "name": "@limit",
+                            "value": "{{$_GET.limit}}",
+                            "test": "2"
+                          }
+                        ]
+                      }
+                    },
+                    "output": true,
+                    "meta": [
+                      {
+                        "name": "p_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "prod_id",
+                        "type": "text"
+                      },
+                      {
+                        "name": "rest_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "prod_mark_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "prod_name",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_img1",
+                        "type": "text"
+                      },
+                      {
+                        "name": "price",
+                        "type": "array",
+                        "sub": [
+                          {
+                            "name": "price_id",
+                            "type": "number"
+                          },
+                          {
+                            "name": "quantity",
+                            "type": "text"
+                          },
+                          {
+                            "name": "q_unit",
+                            "type": "text"
+                          },
+                          {
+                            "name": "mrp",
+                            "type": "text"
+                          },
+                          {
+                            "name": "price",
+                            "type": "text"
+                          },
+                          {
+                            "name": "product_tax",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ],
+                    "outputType": "array"
+                  }
+                }
+              },
+              "outputType": "boolean"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{($_GET.lang=='HIN')}}",
+                "then": {
+                  "steps": {
+                    "name": "GetProd",
+                    "module": "dbupdater",
+                    "action": "custom",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, mp.prod_img1, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) WHERE mp.status=1 AND mp.market_id=@market AND mp.rest_id=@rest_id ORDER by mp.id desc LIMIT @limit",
+                        "params": [
+                          {
+                            "name": "@market",
+                            "value": "{{$_GET.market}}",
+                            "test": "1"
+                          },
+                          {
+                            "name": "@rest_id",
+                            "value": "{{$_GET.rest_id}}",
+                            "test": "3"
+                          },
+                          {
+                            "name": "@limit",
+                            "value": "{{$_GET.limit}}",
+                            "test": "2"
+                          }
+                        ]
+                      }
+                    },
+                    "output": true,
+                    "meta": [
+                      {
+                        "name": "p_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "prod_id",
+                        "type": "text"
+                      },
+                      {
+                        "name": "rest_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "prod_mark_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "prod_name",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_img1",
+                        "type": "text"
+                      },
+                      {
+                        "name": "price",
+                        "type": "array",
+                        "sub": [
+                          {
+                            "name": "price_id",
+                            "type": "number"
+                          },
+                          {
+                            "name": "quantity",
+                            "type": "text"
+                          },
+                          {
+                            "name": "q_unit",
+                            "type": "text"
+                          },
+                          {
+                            "name": "mrp",
+                            "type": "text"
+                          },
+                          {
+                            "name": "price",
+                            "type": "text"
+                          },
+                          {
+                            "name": "product_tax",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ],
+                    "outputType": "array"
+                  }
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
         },
         "catch": {
-          "steps": {
-            "name": "Resp",
-            "module": "core",
-            "action": "setvalue",
-            "options": {
-              "value": "Suspicious Activity"
+          "steps": [
+            {
+              "name": "Status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
             },
-            "meta": [],
-            "output": true,
-            "outputType": "text"
-          }
+            {
+              "name": "Resp",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
         }
       }
     }

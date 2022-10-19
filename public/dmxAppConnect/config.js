@@ -593,6 +593,35 @@ dmx.config({
         }
       ],
       "outputType": "array"
+    },
+    "repeatReviewList": {
+      "meta": [
+        {
+          "name": "review_value",
+          "type": "number"
+        },
+        {
+          "name": "review_comment",
+          "type": "text"
+        },
+        {
+          "name": "created_on",
+          "type": "text"
+        },
+        {
+          "name": "updated_on",
+          "type": "text"
+        },
+        {
+          "name": "fname",
+          "type": "text"
+        },
+        {
+          "name": "lname",
+          "type": "text"
+        }
+      ],
+      "outputType": "array"
     }
   },
   "login": {

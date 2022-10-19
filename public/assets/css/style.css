@@ -4303,9 +4303,7 @@ content: "Excellent";
 #star-5:checked ~ .footer1 .numb::before{
 
 }
-input[type="radio"]{
-display: none;
-}
+
 .testimonial-box-container{
   -webkit-box-pack: center;
       -ms-flex-pack: center;
@@ -4316,17 +4314,9 @@ display: none;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
   width:100%;
-  margin-left: 20px;
-  margin-right: 20px;
-margin-top: 30px;
 }
 .testimonial-box{
-  width:1130px;
- border: 1px solid #ccc;
-  background-color: #ffffff;
-  padding: 20px;
-  margin: 15px;
-  cursor: pointer;
+  background-color: #ccc;
 }
 .profile-img{
   width:50px;
@@ -4370,7 +4360,7 @@ margin-top: 30px;
   font-size: 0.8rem;
 }
 .reviews{
-  color: #f9d71c;
+  color: #ff5722;
 }
 .box-top{
   display: -webkit-box;
@@ -4382,7 +4372,7 @@ margin-top: 30px;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .client-comment p{
   font-size: 0.9rem;
@@ -4452,7 +4442,7 @@ width:782px;
 height: 70px;
 outline: none;
 border: none;
-background-color: #f5f5f5; 
+background-color: #ccc; 
 resize: none;
 padding: 10px 5px 10px 10px;
 font-family: 'Sulphur Point', sans-serif;

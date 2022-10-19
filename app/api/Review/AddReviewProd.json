@@ -1,0 +1,665 @@
+{
+  "meta": {
+    "options": {
+      "linkedForm": "ReviewForm"
+    },
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "p_id"
+      },
+      {
+        "type": "text",
+        "name": "slider"
+      },
+      {
+        "type": "text",
+        "name": "review"
+      }
+    ],
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "previous_comment"
+      },
+      {
+        "type": "number",
+        "name": "id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "",
+        "module": "auth",
+        "action": "restrict",
+        "options": {
+          "provider": "security",
+          "permissions": [
+            "write"
+          ],
+          "loginUrl": "/login",
+          "forbiddenUrl": "/403-forbidden"
+        }
+      },
+      {
+        "name": "identity",
+        "module": "auth",
+        "action": "identify",
+        "options": {
+          "provider": "security"
+        },
+        "output": false,
+        "meta": []
+      },
+      {
+        "name": "",
+        "module": "core",
+        "action": "trycatch",
+        "options": {
+          "try": {
+            "steps": {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{$_GET.p_id&&$_GET.slider}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "VerifyProd",
+                      "module": "dbconnector",
+                      "action": "single",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [
+                            {
+                              "table": "r_order_details",
+                              "column": "id",
+                              "alias": "CountId",
+                              "aggregate": "COUNT"
+                            }
+                          ],
+                          "table": {
+                            "name": "r_order_details"
+                          },
+                          "primary": "id",
+                          "joins": [],
+                          "query": "SELECT COUNT(id) AS CountId\nFROM r_order_details\nWHERE prod_id = :P1 /* {{$_GET.p_id}} */ AND user_id = :P2 /* {{identity}} */ AND order_status BETWEEN 5 AND 6",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{$_GET.p_id}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P2",
+                              "value": "{{identity}}"
+                            }
+                          ],
+                          "groupBy": [],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "r_order_details.prod_id",
+                                "field": "r_order_details.prod_id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{$_GET.p_id}}",
+                                "data": {
+                                  "table": "r_order_details",
+                                  "column": "prod_id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "reference",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "references": "id",
+                                    "inTable": "m_product",
+                                    "referenceType": "integer",
+                                    "onUpdate": "NO ACTION",
+                                    "onDelete": "NO ACTION",
+                                    "name": "prod_id"
+                                  }
+                                },
+                                "operation": "="
+                              },
+                              {
+                                "id": "r_order_details.user_id",
+                                "field": "r_order_details.user_id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{identity}}",
+                                "data": {
+                                  "table": "r_order_details",
+                                  "column": "user_id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "reference",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "references": "id",
+                                    "inTable": "m_customer",
+                                    "referenceType": "integer",
+                                    "onUpdate": "NO ACTION",
+                                    "onDelete": "NO ACTION",
+                                    "name": "user_id"
+                                  }
+                                },
+                                "operation": "="
+                              },
+                              {
+                                "id": "r_order_details.order_status",
+                                "field": "r_order_details.order_status",
+                                "type": "double",
+                                "operator": "between",
+                                "value": [
+                                  5,
+                                  6
+                                ],
+                                "data": {
+                                  "table": "r_order_details",
+                                  "column": "order_status",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "integer",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "order_status"
+                                  }
+                                },
+                                "operation": "BETWEEN"
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          }
+                        }
+                      },
+                      "output": false,
+                      "meta": [
+                        {
+                          "type": "number",
+                          "name": "CountId"
+                        }
+                      ],
+                      "outputType": "object"
+                    },
+                    {
+                      "name": "",
+                      "module": "core",
+                      "action": "condition",
+                      "options": {
+                        "if": "{{(VerifyProd.CountId>=1)}}",
+                        "then": {
+                          "steps": [
+                            {
+                              "name": "ReviewCheck",
+                              "module": "dbconnector",
+                              "action": "single",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "SELECT",
+                                  "columns": [
+                                    {
+                                      "table": "r_prod_review",
+                                      "column": "id"
+                                    },
+                                    {
+                                      "table": "r_prod_review",
+                                      "column": "review_comment"
+                                    },
+                                    {
+                                      "table": "r_prod_review",
+                                      "column": "previous_comment"
+                                    }
+                                  ],
+                                  "table": {
+                                    "name": "r_prod_review"
+                                  },
+                                  "primary": "id",
+                                  "joins": [],
+                                  "query": "SELECT id, review_comment, previous_comment\nFROM r_prod_review\nWHERE user_id = :P1 /* {{identity}} */ AND prod_id = :P2 /* {{$_GET.p_id}} */",
+                                  "params": [
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P1",
+                                      "value": "{{identity}}"
+                                    },
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P2",
+                                      "value": "{{$_GET.p_id}}"
+                                    }
+                                  ],
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "r_prod_review.user_id",
+                                        "field": "r_prod_review.user_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{identity}}",
+                                        "data": {
+                                          "table": "r_prod_review",
+                                          "column": "user_id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "integer",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "user_id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      },
+                                      {
+                                        "id": "r_prod_review.prod_id",
+                                        "field": "r_prod_review.prod_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{$_GET.p_id}}",
+                                        "data": {
+                                          "table": "r_prod_review",
+                                          "column": "prod_id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "integer",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "prod_id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  }
+                                }
+                              },
+                              "output": false,
+                              "meta": [
+                                {
+                                  "type": "number",
+                                  "name": "id"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "review_comment"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "previous_comment"
+                                }
+                              ],
+                              "outputType": "object"
+                            },
+                            {
+                              "name": "",
+                              "module": "core",
+                              "action": "condition",
+                              "options": {
+                                "if": "{{ReviewCheck.id}}",
+                                "then": {
+                                  "steps": [
+                                    {
+                                      "name": "status",
+                                      "module": "core",
+                                      "action": "setvalue",
+                                      "options": {
+                                        "value": 200
+                                      },
+                                      "meta": [],
+                                      "output": true,
+                                      "outputType": "text"
+                                    },
+                                    {
+                                      "name": "message",
+                                      "module": "core",
+                                      "action": "setvalue",
+                                      "options": {
+                                        "value": "Your review for this product is updated, soon it would be live."
+                                      },
+                                      "meta": [],
+                                      "output": true,
+                                      "outputType": "text"
+                                    },
+                                    {
+                                      "name": "ProdReviewUp",
+                                      "module": "dbupdater",
+                                      "action": "update",
+                                      "options": {
+                                        "connection": "ClientApp",
+                                        "sql": {
+                                          "type": "update",
+                                          "values": [
+                                            {
+                                              "table": "r_prod_review",
+                                              "column": "review_value",
+                                              "type": "number",
+                                              "value": "{{$_GET.slider}}"
+                                            },
+                                            {
+                                              "table": "r_prod_review",
+                                              "column": "review_comment",
+                                              "type": "text",
+                                              "value": "{{$_GET.review}}"
+                                            },
+                                            {
+                                              "table": "r_prod_review",
+                                              "column": "previous_comment",
+                                              "type": "text",
+                                              "value": "{{ReviewCheck.review_comment+' / '+ReviewCheck.previous_comment}}"
+                                            },
+                                            {
+                                              "table": "r_prod_review",
+                                              "column": "status",
+                                              "type": "number",
+                                              "value": "{{0}}"
+                                            },
+                                            {
+                                              "table": "r_prod_review",
+                                              "column": "updated_on",
+                                              "type": "datetime",
+                                              "value": "{{NOW}}"
+                                            }
+                                          ],
+                                          "table": "r_prod_review",
+                                          "wheres": {
+                                            "condition": "AND",
+                                            "rules": [
+                                              {
+                                                "id": "id",
+                                                "field": "id",
+                                                "type": "double",
+                                                "operator": "equal",
+                                                "value": "{{ReviewCheck.id}}",
+                                                "data": {
+                                                  "column": "id"
+                                                },
+                                                "operation": "="
+                                              }
+                                            ],
+                                            "conditional": null,
+                                            "valid": true
+                                          },
+                                          "returning": "id",
+                                          "query": "UPDATE r_prod_review\nSET review_value = :P1 /* {{$_GET.slider}} */, review_comment = :P2 /* {{$_GET.review}} */, previous_comment = :P3 /* {{ReviewCheck.review_comment+' / '+ReviewCheck.previous_comment}} */, status = :P4 /* {{0}} */, updated_on = :P5 /* {{NOW}} */\nWHERE id = :P6 /* {{ReviewCheck.id}} */",
+                                          "params": [
+                                            {
+                                              "name": ":P1",
+                                              "type": "expression",
+                                              "value": "{{$_GET.slider}}"
+                                            },
+                                            {
+                                              "name": ":P2",
+                                              "type": "expression",
+                                              "value": "{{$_GET.review}}"
+                                            },
+                                            {
+                                              "name": ":P3",
+                                              "type": "expression",
+                                              "value": "{{ReviewCheck.review_comment+' / '+ReviewCheck.previous_comment}}"
+                                            },
+                                            {
+                                              "name": ":P4",
+                                              "type": "expression",
+                                              "value": "{{0}}"
+                                            },
+                                            {
+                                              "name": ":P5",
+                                              "type": "expression",
+                                              "value": "{{NOW}}"
+                                            },
+                                            {
+                                              "operator": "equal",
+                                              "type": "expression",
+                                              "name": ":P6",
+                                              "value": "{{ReviewCheck.id}}"
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "meta": [
+                                        {
+                                          "name": "affected",
+                                          "type": "number"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "else": {
+                                  "steps": [
+                                    {
+                                      "name": "status",
+                                      "module": "core",
+                                      "action": "setvalue",
+                                      "options": {
+                                        "value": 200
+                                      },
+                                      "meta": [],
+                                      "output": true,
+                                      "outputType": "text"
+                                    },
+                                    {
+                                      "name": "message",
+                                      "module": "core",
+                                      "action": "setvalue",
+                                      "options": {
+                                        "value": "Your review for this product is submitted, soon it would be live."
+                                      },
+                                      "meta": [],
+                                      "output": true,
+                                      "outputType": "text"
+                                    },
+                                    {
+                                      "name": "ProdReviewAdd",
+                                      "module": "dbupdater",
+                                      "action": "insert",
+                                      "options": {
+                                        "connection": "ClientApp",
+                                        "sql": {
+                                          "type": "insert",
+                                          "values": [
+                                            {
+                                              "table": "r_prod_review",
+                                              "column": "user_id",
+                                              "type": "number",
+                                              "value": "{{identity}}"
+                                            },
+                                            {
+                                              "table": "r_prod_review",
+                                              "column": "prod_id",
+                                              "type": "number",
+                                              "value": "{{$_GET.p_id}}"
+                                            },
+                                            {
+                                              "table": "r_prod_review",
+                                              "column": "review_value",
+                                              "type": "number",
+                                              "value": "{{$_GET.slider}}"
+                                            },
+                                            {
+                                              "table": "r_prod_review",
+                                              "column": "review_comment",
+                                              "type": "text",
+                                              "value": "{{$_GET.review}}"
+                                            },
+                                            {
+                                              "table": "r_prod_review",
+                                              "column": "status",
+                                              "type": "number",
+                                              "value": "{{0}}"
+                                            },
+                                            {
+                                              "table": "r_prod_review",
+                                              "column": "created_on",
+                                              "type": "datetime",
+                                              "value": "{{NOW}}"
+                                            }
+                                          ],
+                                          "table": "r_prod_review",
+                                          "returning": "id",
+                                          "query": "INSERT INTO r_prod_review\n(user_id, prod_id, review_value, review_comment, status, created_on) VALUES (:P1 /* {{identity}} */, :P2 /* {{$_GET.p_id}} */, :P3 /* {{$_GET.slider}} */, :P4 /* {{$_GET.review}} */, :P5 /* {{0}} */, :P6 /* {{NOW}} */)",
+                                          "params": [
+                                            {
+                                              "name": ":P1",
+                                              "type": "expression",
+                                              "value": "{{identity}}"
+                                            },
+                                            {
+                                              "name": ":P2",
+                                              "type": "expression",
+                                              "value": "{{$_GET.p_id}}"
+                                            },
+                                            {
+                                              "name": ":P3",
+                                              "type": "expression",
+                                              "value": "{{$_GET.slider}}"
+                                            },
+                                            {
+                                              "name": ":P4",
+                                              "type": "expression",
+                                              "value": "{{$_GET.review}}"
+                                            },
+                                            {
+                                              "name": ":P5",
+                                              "type": "expression",
+                                              "value": "{{0}}"
+                                            },
+                                            {
+                                              "name": ":P6",
+                                              "type": "expression",
+                                              "value": "{{NOW}}"
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "meta": [
+                                        {
+                                          "name": "identity",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "affected",
+                                          "type": "number"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "outputType": "boolean"
+                            }
+                          ]
+                        },
+                        "else": {
+                          "steps": [
+                            {
+                              "name": "status",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": 400
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "message",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "Not eligible to review the product"
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            }
+                          ]
+                        }
+                      },
+                      "outputType": "boolean"
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "All fields are mandatary"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          },
+          "catch": {
+            "steps": [
+              {
+                "name": "status",
+                "module": "core",
+                "action": "setvalue",
+                "options": {
+                  "value": 400
+                },
+                "meta": [],
+                "output": true,
+                "outputType": "text"
+              },
+              {
+                "name": "message",
+                "module": "core",
+                "action": "setvalue",
+                "options": {
+                  "value": "Suspicious Activity"
+                },
+                "meta": [],
+                "output": true,
+                "outputType": "text"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

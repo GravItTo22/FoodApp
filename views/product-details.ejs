@@ -1,7 +1,9 @@
-<!-- Wappler include head-page="layouts/main" is="dmx-app" id="productdetails" appConnect="local" -->
+<!-- Wappler include head-page="layouts/main" id="productdetails" is="dmx-app" appConnect="local" -->
 <meta name="ac:route" content="/product-details/:id/:prod_name">
 <dmx-serverconnect id="scProdDetails" url="/api/Products/ProdDetails" dmx-param:p_id="<%= $_PARAM.id %>"></dmx-serverconnect>
 <dmx-serverconnect id="scRelatedProd" url="/api/Products/RelatedProducts" dmx-param:p_id="<%= $_PARAM.id %>"></dmx-serverconnect>
+<dmx-serverconnect id="scProdReviewList" url="/api/Review/GetAProdReviews" dmx-param:p_id="<%= $_PARAM.id %>"></dmx-serverconnect>
+<dmx-serverconnect id="scProdReviewAdd" url="/api/Review/AddReviewProd" dmx-param:p_id="<%= $_PARAM.id %>" dmx-param:slider="slider.value" dmx-param:review="reviewtext.value" noload dmx-on:success="notifMain.success(content.scProdReviewAdd.data.message)"></dmx-serverconnect>
 <dmx-value id="varZoomImg" dmx-bind:value="'https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img1+'?w=1200&amp;ch=DPR&amp;dpr=2'"></dmx-value>
 <style>
     .smileySlider {
@@ -26,7 +28,7 @@
     }
 
     #emoji {
-        font-size: 8rem;
+        font-size: 5rem;
         text-align: center;
     }
 </style>
@@ -139,46 +141,25 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="tabs-3" role="tabpanel">
-                    <h6 class="ab">Products Infomation</h6>
-                    <div class="product__details__tab__desc row">
-
-                        <! ## End Inline CSS>
-                            <form id="filterForm1" method="post" action="api/action" is="dmx-serverconnect-form">
-                                <! ## Begin Inline HTML>
-                                    <div class="smileySlider my-5 py-5">
-                                        <div id="emoji">😊</div>
-                                        <input id="slider" type="range" min="1" max="5" name="slider">
-
-                                        <div class="sliderValue-wrapper" hidden>
-                                            <span id="sliderValue">3</span>/5
-                                        </div>
-                                        <h4>{{(slider.value==1)?'Very Poor':(slider.value==2)?'Poor':(slider.value==3)?'Good':(slider.value==4)?'Very Good':(slider.value==5)?'Excellent':''}}</h4>
-                                    </div>
-                                    <! ## End Inline HTML>
-                                        <button type="submit">Submit</button>
-                            </form>
-
-
-
-
-
-
-
-
-                    </div>
-                    <div class="card-body tab-content border-0">
-                        <div class="input">
-                            <div class="inputbox">
-                                <textarea type="text" class="reviewinp" placeholder="Write a review"></textarea>
-
-                                <div class="submitbtn">
-                                    <button class="submit">Submit Review</button>
+                    <h6 class="ab mb-3">Product Review</h6>
+                    <div class="card-body tab-content border-0" dmx-show="scDashboardInfo.data.varLogin">
+                        <div class="names">
+                            <div class="smileySlider">
+                                <div id="emoji">😊</div>
+                                <input id="slider" type="range" min="1" max="5" name="slider" dmx-bind:value="content.scProdDetails.data.GetProdDetails[0].review_value">
+                                <div class="sliderValue-wrapper" hidden>
+                                    <span id="sliderValue">3</span>/5
                                 </div>
+                                <h4>{{(slider.value==1)?'Very Poor':(slider.value==2)?'Poor':(slider.value==3)?'Good':(slider.value==4)?'Very Good':(slider.value==5)?'Excellent':''}}</h4>
                             </div>
+                            <input type="text" class="reviewinp mx-3" name="reviewtext" placeholder="Write a review" dmx-bind:value="content.scProdDetails.data.GetProdDetails[0].review_comment">
+                        </div>
+                        <div class="submitbtn text-center">
+                            <button class="submit" type="button" dmx-on:click="scProdReviewAdd.load({p_id: content.scProdDetails.data.GetProdDetails[0].p_id, slider: slider.value, review: reviewtext.value})">{{content.scProdDetails.data.GetProdDetails[0].review_value?'Update':'Submit'}} Review</button>
                         </div>
                     </div>
-                    <div class="testimonial-box-container">
-                        <div class="testimonial-box pb-0">
+                    <div class="testimonial-box-container" id="repeatReviewList" is="dmx-repeat" dmx-bind:repeat="scProdReviewList.data.GetReviews" key="prod_review_id">
+                        <div class="testimonial-box px-3 pt-3 pb-1">
                             <!--top------------------------->
                             <div class="box-top">
                                 <!--profile----->
@@ -189,23 +170,23 @@
                                     </div>
                                     <!--name-and-username-->
                                     <div class="name-user">
-                                        <strong>username</strong>
-                                        <span>@email</span>
+                                        <strong>{{content.scProdReviewList.data.GetReviews[$index].fname}} {{content.scProdReviewList.data.GetReviews[$index].lname}}</strong>
+                                        <span>{{content.scProdReviewList.data.GetReviews[$index].created_on}}</span>
                                     </div>
                                 </div>
                                 <!--reviews------>
                                 <div class="reviews">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
+                                    <i class="fa" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value>=1)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<1)"></i>
+                                    <i class="fa fa-star-o" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value>=2)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<2)"></i>
+                                    <i class="fa fa-star-o" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value>=3)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<3)"></i>
+                                    <i class="fa fa-star-o" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value>=4)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<4)"></i>
+                                    <i class="fa fa-star-o" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value==5)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<5)"></i>
                                     <!--Empty star-->
                                 </div>
                             </div>
                             <!--Comments---------------------------------------->
                             <div class="client-comment">
-                                <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem, quaerat quis? Provident temporibus architecto asperiores nobis maiores nisi a. Quae doloribus ipsum aliquam tenetur voluptates incidunt blanditiis sed atque cumque.</p>
+                                <p class="">{{content.scProdReviewList.data.GetReviews[$index].review_comment}}</p>
                             </div>
                         </div>
                     </div>
@@ -217,7 +198,7 @@
 <!-- Product Details Section End -->
 
 <!-- Related Product Section Begin -->
-<section class="related-product">
+<section class="related-product mt-5">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">

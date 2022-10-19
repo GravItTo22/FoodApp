@@ -2560,6 +2560,96 @@
           }
         }
       },
+      "r_prod_review": {
+        "db": {
+          "schema": "public"
+        },
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "default": "",
+              "primary": true,
+              "unique": true,
+              "nullable": false
+            }
+          },
+          "user_id": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "prod_id": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "review_value": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "review_comment": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "previous_comment": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "status": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "updated_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "deleted_on": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          }
+        }
+      },
       "r_shipping_add": {
         "db": {
           "schema": "public"

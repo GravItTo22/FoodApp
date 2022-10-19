@@ -5,6 +5,12 @@
         "type": "text",
         "name": "p_id"
       }
+    ],
+    "$_SESSION": [
+      {
+        "type": "text",
+        "name": "sessionLogin"
+      }
     ]
   },
   "exec": {
@@ -15,109 +21,300 @@
       "options": {
         "try": {
           "steps": {
-            "name": "GetProdDetails",
-            "module": "dbupdater",
-            "action": "custom",
+            "name": "",
+            "module": "core",
+            "action": "condition",
             "options": {
-              "connection": "ClientApp",
-              "sql": {
-                "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
-                "params": [
+              "if": "{{$_SESSION.sessionLogin}}",
+              "then": {
+                "steps": [
                   {
-                    "name": "@market",
-                    "value": "1",
-                    "test": "1"
+                    "name": "identity",
+                    "module": "auth",
+                    "action": "identify",
+                    "options": {
+                      "provider": "security"
+                    },
+                    "output": false,
+                    "meta": []
                   },
                   {
-                    "name": "@p_id",
-                    "value": "{{$_GET.p_id}}",
-                    "test": "4"
+                    "name": "GetProdDetails",
+                    "module": "dbupdater",
+                    "action": "custom",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, \nmp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_en, mr.shop_name_bn, \nmr.shop_name_hin, rpr.review_value, rpr.review_comment, (select array_to_json(array_agg(row_to_json(q))) \n\t\t\tfrom (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt \n\t\t\twhere rpt.prod_id=mp.id) q) as price \nFROM m_product mp \nleft join m_restaurant mr on (mr.id=mp.rest_id) \nleft join r_prod_review rpr on (rpr.prod_id =mp.id and rpr.user_id=@user_id) \nWHERE mp.status=1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc;",
+                        "params": [
+                          {
+                            "name": "@market",
+                            "value": "1",
+                            "test": "1"
+                          },
+                          {
+                            "name": "@p_id",
+                            "value": "{{$_GET.p_id}}",
+                            "test": "22"
+                          },
+                          {
+                            "name": "@user_id",
+                            "value": "{{identity}}",
+                            "test": "82"
+                          }
+                        ]
+                      }
+                    },
+                    "output": true,
+                    "meta": [
+                      {
+                        "name": "p_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "category_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "prod_id",
+                        "type": "text"
+                      },
+                      {
+                        "name": "rest_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "prod_mark_id",
+                        "type": "number"
+                      },
+                      {
+                        "name": "prod_name_en",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_name_bn",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_name_hin",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_desc_en",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_desc_bn",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_desc_hin",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_img1",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_img2",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_img3",
+                        "type": "text"
+                      },
+                      {
+                        "name": "prod_img4",
+                        "type": "text"
+                      },
+                      {
+                        "name": "shop_name_en",
+                        "type": "text"
+                      },
+                      {
+                        "name": "shop_name_bn",
+                        "type": "text"
+                      },
+                      {
+                        "name": "shop_name_hin",
+                        "type": "text"
+                      },
+                      {
+                        "name": "review_value",
+                        "type": "number"
+                      },
+                      {
+                        "name": "review_comment",
+                        "type": "text"
+                      },
+                      {
+                        "name": "price",
+                        "type": "array",
+                        "sub": [
+                          {
+                            "name": "price_id",
+                            "type": "number"
+                          },
+                          {
+                            "name": "quantity",
+                            "type": "text"
+                          },
+                          {
+                            "name": "q_unit",
+                            "type": "text"
+                          },
+                          {
+                            "name": "mrp",
+                            "type": "text"
+                          },
+                          {
+                            "name": "price",
+                            "type": "text"
+                          },
+                          {
+                            "name": "product_tax",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ],
+                    "outputType": "array"
                   }
                 ]
+              },
+              "else": {
+                "steps": {
+                  "name": "GetProdDetails",
+                  "module": "dbupdater",
+                  "action": "custom",
+                  "options": {
+                    "connection": "ClientApp",
+                    "sql": {
+                      "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
+                      "params": [
+                        {
+                          "name": "@market",
+                          "value": "1",
+                          "test": "1"
+                        },
+                        {
+                          "name": "@p_id",
+                          "value": "{{$_GET.p_id}}",
+                          "test": "22"
+                        }
+                      ]
+                    }
+                  },
+                  "output": true,
+                  "meta": [
+                    {
+                      "name": "p_id",
+                      "type": "number"
+                    },
+                    {
+                      "name": "category_id",
+                      "type": "number"
+                    },
+                    {
+                      "name": "prod_id",
+                      "type": "text"
+                    },
+                    {
+                      "name": "rest_id",
+                      "type": "number"
+                    },
+                    {
+                      "name": "prod_mark_id",
+                      "type": "number"
+                    },
+                    {
+                      "name": "prod_name_en",
+                      "type": "text"
+                    },
+                    {
+                      "name": "prod_name_bn",
+                      "type": "text"
+                    },
+                    {
+                      "name": "prod_name_hin",
+                      "type": "text"
+                    },
+                    {
+                      "name": "prod_desc_en",
+                      "type": "text"
+                    },
+                    {
+                      "name": "prod_desc_bn",
+                      "type": "text"
+                    },
+                    {
+                      "name": "prod_desc_hin",
+                      "type": "text"
+                    },
+                    {
+                      "name": "prod_img1",
+                      "type": "text"
+                    },
+                    {
+                      "name": "prod_img2",
+                      "type": "text"
+                    },
+                    {
+                      "name": "prod_img3",
+                      "type": "text"
+                    },
+                    {
+                      "name": "prod_img4",
+                      "type": "text"
+                    },
+                    {
+                      "name": "shop_name_en",
+                      "type": "text"
+                    },
+                    {
+                      "name": "shop_name_bn",
+                      "type": "text"
+                    },
+                    {
+                      "name": "shop_name_hin",
+                      "type": "text"
+                    },
+                    {
+                      "name": "price",
+                      "type": "array",
+                      "sub": [
+                        {
+                          "name": "price_id",
+                          "type": "number"
+                        },
+                        {
+                          "name": "quantity",
+                          "type": "text"
+                        },
+                        {
+                          "name": "q_unit",
+                          "type": "text"
+                        },
+                        {
+                          "name": "mrp",
+                          "type": "text"
+                        },
+                        {
+                          "name": "price",
+                          "type": "text"
+                        },
+                        {
+                          "name": "product_tax",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ],
+                  "outputType": "array"
+                }
               }
             },
-            "output": true,
-            "meta": [
-              {
-                "name": "p_id",
-                "type": "number"
-              },
-              {
-                "name": "category_id",
-                "type": "number"
-              },
-              {
-                "name": "prod_id",
-                "type": "text"
-              },
-              {
-                "name": "rest_id",
-                "type": "number"
-              },
-              {
-                "name": "prod_mark_id",
-                "type": "number"
-              },
-              {
-                "name": "prod_name_en",
-                "type": "text"
-              },
-              {
-                "name": "prod_name_bn",
-                "type": "text"
-              },
-              {
-                "name": "prod_name_hin",
-                "type": "text"
-              },
-              {
-                "name": "prod_img1",
-                "type": "text"
-              },
-              {
-                "name": "shop_name_en",
-                "type": "text"
-              },
-              {
-                "name": "shop_name_bn",
-                "type": "text"
-              },
-              {
-                "name": "shop_name_hin",
-                "type": "text"
-              },
-              {
-                "name": "price",
-                "type": "array",
-                "sub": [
-                  {
-                    "name": "price_id",
-                    "type": "number"
-                  },
-                  {
-                    "name": "quantity",
-                    "type": "text"
-                  },
-                  {
-                    "name": "q_unit",
-                    "type": "text"
-                  },
-                  {
-                    "name": "mrp",
-                    "type": "text"
-                  },
-                  {
-                    "name": "price",
-                    "type": "text"
-                  },
-                  {
-                    "name": "product_tax",
-                    "type": "text"
-                  }
-                ]
-              }
-            ],
-            "outputType": "array"
+            "outputType": "boolean"
           }
         },
         "catch": {

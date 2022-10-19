@@ -14,307 +14,344 @@
       "action": "trycatch",
       "options": {
         "try": {
-          "steps": [
-            {
-              "name": "CheckUser",
-              "module": "dbconnector",
-              "action": "single",
-              "options": {
-                "connection": "ClientApp",
-                "sql": {
-                  "type": "SELECT",
-                  "columns": [
-                    {
-                      "table": "m_customer",
-                      "column": "id",
-                      "aggregate": ""
-                    },
-                    {
-                      "table": "m_customer",
-                      "column": "mobile"
-                    }
-                  ],
-                  "table": {
-                    "name": "m_customer"
-                  },
-                  "primary": "id",
-                  "joins": [],
-                  "wheres": {
-                    "condition": "AND",
-                    "rules": [
-                      {
-                        "id": "m_customer.mobile",
-                        "field": "m_customer.mobile",
-                        "type": "string",
-                        "operator": "equal",
-                        "value": "{{$_POST.Mobile}}",
-                        "data": {
-                          "table": "m_customer",
-                          "column": "mobile",
-                          "type": "text",
-                          "columnObj": {
-                            "type": "string",
-                            "maxLength": -5,
-                            "primary": false,
-                            "unique": false,
-                            "nullable": true,
-                            "name": "mobile"
+          "steps": {
+            "name": "",
+            "module": "core",
+            "action": "condition",
+            "options": {
+              "if": "{{$_POST.Mobile}}",
+              "then": {
+                "steps": [
+                  {
+                    "name": "CheckUser",
+                    "module": "dbconnector",
+                    "action": "single",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "type": "SELECT",
+                        "columns": [
+                          {
+                            "table": "m_customer",
+                            "column": "id",
+                            "aggregate": ""
+                          },
+                          {
+                            "table": "m_customer",
+                            "column": "mobile"
                           }
+                        ],
+                        "table": {
+                          "name": "m_customer"
                         },
-                        "operation": "="
-                      },
-                      {
-                        "id": "m_customer.status",
-                        "field": "m_customer.status",
-                        "type": "double",
-                        "operator": "equal",
-                        "value": "{{1}}",
-                        "data": {
-                          "table": "m_customer",
-                          "column": "status",
-                          "type": "number",
-                          "columnObj": {
-                            "type": "integer",
-                            "primary": false,
-                            "unique": false,
-                            "nullable": true,
-                            "name": "status"
-                          }
-                        },
-                        "operation": "="
-                      },
-                      {
-                        "id": "m_customer.user_type_id",
-                        "field": "m_customer.user_type_id",
-                        "type": "double",
-                        "operator": "equal",
-                        "value": "{{6}}",
-                        "data": {
-                          "table": "m_customer",
-                          "column": "user_type_id",
-                          "type": "number",
-                          "columnObj": {
-                            "type": "reference",
-                            "primary": false,
-                            "unique": false,
-                            "nullable": true,
-                            "references": "id",
-                            "inTable": "m_user_type",
-                            "referenceType": "integer",
-                            "onUpdate": "NO ACTION",
-                            "onDelete": "NO ACTION",
-                            "name": "user_type_id"
-                          }
-                        },
-                        "operation": "="
-                      }
-                    ],
-                    "conditional": null,
-                    "valid": true
-                  },
-                  "query": "SELECT id, mobile\nFROM m_customer\nWHERE mobile = :P1 /* {{$_POST.Mobile}} */ AND status = :P2 /* {{1}} */ AND user_type_id = :P3 /* {{6}} */",
-                  "params": [
-                    {
-                      "operator": "equal",
-                      "type": "expression",
-                      "name": ":P1",
-                      "value": "{{$_POST.Mobile}}"
-                    },
-                    {
-                      "operator": "equal",
-                      "type": "expression",
-                      "name": ":P2",
-                      "value": "{{1}}"
-                    },
-                    {
-                      "operator": "equal",
-                      "type": "expression",
-                      "name": ":P3",
-                      "value": "{{6}}"
-                    }
-                  ]
-                }
-              },
-              "output": false,
-              "meta": [
-                {
-                  "type": "number",
-                  "name": "id"
-                },
-                {
-                  "type": "text",
-                  "name": "mobile"
-                }
-              ],
-              "outputType": "object"
-            },
-            {
-              "name": "",
-              "module": "core",
-              "action": "condition",
-              "options": {
-                "if": "{{CheckUser.id}}",
-                "then": {
-                  "steps": [
-                    {
-                      "name": "OTP",
-                      "module": "core",
-                      "action": "setvalue",
-                      "options": {
-                        "value": "{{UUID.md5(123456).substr(1, 6).uppercase()}}"
-                      },
-                      "meta": [],
-                      "outputType": "text",
-                      "output": true
-                    },
-                    {
-                      "name": "ValidUpto",
-                      "module": "core",
-                      "action": "setvalue",
-                      "options": {
-                        "value": 150
-                      },
-                      "meta": [],
-                      "outputType": "text",
-                      "output": true
-                    },
-                    {
-                      "name": "AddOTP",
-                      "module": "dbupdater",
-                      "action": "insert",
-                      "options": {
-                        "connection": "ClientApp",
-                        "sql": {
-                          "type": "insert",
-                          "values": [
+                        "primary": "id",
+                        "joins": [],
+                        "wheres": {
+                          "condition": "AND",
+                          "rules": [
                             {
-                              "table": "temp_otp_code",
-                              "column": "otp",
-                              "type": "text",
-                              "value": "{{OTP}}"
+                              "id": "m_customer.mobile",
+                              "field": "m_customer.mobile",
+                              "type": "string",
+                              "operator": "equal",
+                              "value": "{{$_POST.Mobile}}",
+                              "data": {
+                                "table": "m_customer",
+                                "column": "mobile",
+                                "type": "text",
+                                "columnObj": {
+                                  "type": "string",
+                                  "maxLength": -5,
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "mobile"
+                                }
+                              },
+                              "operation": "="
                             },
                             {
-                              "table": "temp_otp_code",
-                              "column": "user_id",
-                              "type": "number",
-                              "value": "{{CheckUser.id}}"
+                              "id": "m_customer.status",
+                              "field": "m_customer.status",
+                              "type": "double",
+                              "operator": "equal",
+                              "value": "{{1}}",
+                              "data": {
+                                "table": "m_customer",
+                                "column": "status",
+                                "type": "number",
+                                "columnObj": {
+                                  "type": "integer",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "status"
+                                }
+                              },
+                              "operation": "="
                             },
                             {
-                              "table": "temp_otp_code",
-                              "column": "status",
-                              "type": "number",
-                              "value": "{{1}}"
-                            },
-                            {
-                              "table": "temp_otp_code",
-                              "column": "created_on",
-                              "type": "datetime",
-                              "value": "{{NOW}}"
-                            },
-                            {
-                              "table": "temp_otp_code",
-                              "column": "created_by",
-                              "type": "number",
-                              "value": "{{CheckUser.id}}"
+                              "id": "m_customer.user_type_id",
+                              "field": "m_customer.user_type_id",
+                              "type": "double",
+                              "operator": "equal",
+                              "value": "{{6}}",
+                              "data": {
+                                "table": "m_customer",
+                                "column": "user_type_id",
+                                "type": "number",
+                                "columnObj": {
+                                  "type": "reference",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "references": "id",
+                                  "inTable": "m_user_type",
+                                  "referenceType": "integer",
+                                  "onUpdate": "NO ACTION",
+                                  "onDelete": "NO ACTION",
+                                  "name": "user_type_id"
+                                }
+                              },
+                              "operation": "="
                             }
                           ],
-                          "table": "temp_otp_code",
-                          "returning": "id",
-                          "query": "INSERT INTO temp_otp_code\n(otp, user_id, status, created_on, created_by) VALUES (:P1 /* {{OTP}} */, :P2 /* {{CheckUser.id}} */, :P3 /* {{1}} */, :P4 /* {{NOW}} */, :P5 /* {{CheckUser.id}} */)",
-                          "params": [
-                            {
-                              "name": ":P1",
-                              "type": "expression",
-                              "value": "{{OTP}}"
-                            },
-                            {
-                              "name": ":P2",
-                              "type": "expression",
-                              "value": "{{CheckUser.id}}"
-                            },
-                            {
-                              "name": ":P3",
-                              "type": "expression",
-                              "value": "{{1}}"
-                            },
-                            {
-                              "name": ":P4",
-                              "type": "expression",
-                              "value": "{{NOW}}"
-                            },
-                            {
-                              "name": ":P5",
-                              "type": "expression",
-                              "value": "{{CheckUser.id}}"
-                            }
-                          ]
-                        }
-                      },
-                      "meta": [
-                        {
-                          "name": "identity",
-                          "type": "text"
+                          "conditional": null,
+                          "valid": true
                         },
-                        {
-                          "name": "affected",
-                          "type": "number"
-                        }
-                      ]
+                        "query": "SELECT id, mobile\nFROM m_customer\nWHERE mobile = :P1 /* {{$_POST.Mobile}} */ AND status = :P2 /* {{1}} */ AND user_type_id = :P3 /* {{6}} */",
+                        "params": [
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P1",
+                            "value": "{{$_POST.Mobile}}"
+                          },
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P2",
+                            "value": "{{1}}"
+                          },
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P3",
+                            "value": "{{6}}"
+                          }
+                        ]
+                      }
                     },
-                    {
-                      "name": "status",
-                      "module": "core",
-                      "action": "setvalue",
-                      "options": {
-                        "value": 200
+                    "output": false,
+                    "meta": [
+                      {
+                        "type": "number",
+                        "name": "id"
                       },
-                      "meta": [],
-                      "outputType": "text",
-                      "output": true
+                      {
+                        "type": "text",
+                        "name": "mobile"
+                      }
+                    ],
+                    "outputType": "object"
+                  },
+                  {
+                    "name": "",
+                    "module": "core",
+                    "action": "condition",
+                    "options": {
+                      "if": "{{CheckUser.id}}",
+                      "then": {
+                        "steps": [
+                          {
+                            "name": "OTP",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": "{{UUID.md5(123456).substr(1, 6).uppercase()}}"
+                            },
+                            "meta": [],
+                            "outputType": "text",
+                            "output": true
+                          },
+                          {
+                            "name": "ValidUpto",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": 150
+                            },
+                            "meta": [],
+                            "outputType": "text",
+                            "output": true
+                          },
+                          {
+                            "name": "AddOTP",
+                            "module": "dbupdater",
+                            "action": "insert",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "insert",
+                                "values": [
+                                  {
+                                    "table": "temp_otp_code",
+                                    "column": "otp",
+                                    "type": "text",
+                                    "value": "{{OTP}}"
+                                  },
+                                  {
+                                    "table": "temp_otp_code",
+                                    "column": "user_id",
+                                    "type": "number",
+                                    "value": "{{CheckUser.id}}"
+                                  },
+                                  {
+                                    "table": "temp_otp_code",
+                                    "column": "status",
+                                    "type": "number",
+                                    "value": "{{1}}"
+                                  },
+                                  {
+                                    "table": "temp_otp_code",
+                                    "column": "created_on",
+                                    "type": "datetime",
+                                    "value": "{{NOW}}"
+                                  },
+                                  {
+                                    "table": "temp_otp_code",
+                                    "column": "created_by",
+                                    "type": "number",
+                                    "value": "{{CheckUser.id}}"
+                                  }
+                                ],
+                                "table": "temp_otp_code",
+                                "returning": "id",
+                                "query": "INSERT INTO temp_otp_code\n(otp, user_id, status, created_on, created_by) VALUES (:P1 /* {{OTP}} */, :P2 /* {{CheckUser.id}} */, :P3 /* {{1}} */, :P4 /* {{NOW}} */, :P5 /* {{CheckUser.id}} */)",
+                                "params": [
+                                  {
+                                    "name": ":P1",
+                                    "type": "expression",
+                                    "value": "{{OTP}}"
+                                  },
+                                  {
+                                    "name": ":P2",
+                                    "type": "expression",
+                                    "value": "{{CheckUser.id}}"
+                                  },
+                                  {
+                                    "name": ":P3",
+                                    "type": "expression",
+                                    "value": "{{1}}"
+                                  },
+                                  {
+                                    "name": ":P4",
+                                    "type": "expression",
+                                    "value": "{{NOW}}"
+                                  },
+                                  {
+                                    "name": ":P5",
+                                    "type": "expression",
+                                    "value": "{{CheckUser.id}}"
+                                  }
+                                ]
+                              }
+                            },
+                            "meta": [
+                              {
+                                "name": "identity",
+                                "type": "text"
+                              },
+                              {
+                                "name": "affected",
+                                "type": "number"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "status",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": 200
+                            },
+                            "meta": [],
+                            "outputType": "text",
+                            "output": true
+                          },
+                          {
+                            "name": "message",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": "OTP sent to the registered Mobile No."
+                            },
+                            "meta": [],
+                            "outputType": "text",
+                            "output": true
+                          }
+                        ]
+                      },
+                      "else": {
+                        "steps": [
+                          {
+                            "name": "status",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": 400
+                            },
+                            "meta": [],
+                            "outputType": "text",
+                            "output": true
+                          },
+                          {
+                            "name": "message",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": "Mobile No. Mismatched"
+                            },
+                            "meta": [],
+                            "outputType": "text",
+                            "output": true
+                          }
+                        ]
+                      }
                     },
-                    {
-                      "name": "message",
-                      "module": "core",
-                      "action": "setvalue",
-                      "options": {
-                        "value": "OTP sent to the registered Mobile No."
-                      },
-                      "meta": [],
-                      "outputType": "text",
-                      "output": true
-                    }
-                  ]
-                },
-                "else": {
-                  "steps": [
-                    {
-                      "name": "status",
-                      "module": "core",
-                      "action": "setvalue",
-                      "options": {
-                        "value": 400
-                      },
-                      "meta": [],
-                      "outputType": "text",
-                      "output": true
-                    },
-                    {
-                      "name": "message",
-                      "module": "core",
-                      "action": "setvalue",
-                      "options": {
-                        "value": "Mobile No. Mismatched"
-                      },
-                      "meta": [],
-                      "outputType": "text",
-                      "output": true
-                    }
-                  ]
-                }
+                    "outputType": "boolean"
+                  }
+                ]
               },
-              "outputType": "boolean"
-            }
-          ]
+              "else": {
+                "steps": [
+                  {
+                    "name": "status",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": 400
+                    },
+                    "meta": [],
+                    "outputType": "text",
+                    "output": true
+                  },
+                  {
+                    "name": "message",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": "Mobile No. Required"
+                    },
+                    "meta": [],
+                    "outputType": "text",
+                    "output": true
+                  }
+                ]
+              }
+            },
+            "outputType": "boolean"
+          }
         },
         "catch": {
           "steps": [

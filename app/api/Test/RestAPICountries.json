@@ -1,0 +1,86 @@
+[
+  {
+    "name": "api",
+    "module": "api",
+    "action": "send",
+    "options": {
+      "url": "https://forge.expertsdirect.com/oauth/token",
+      "method": "POST",
+      "params": {
+        "client_id": "{{3}}",
+        "client_secret": "{{'WNodutEoP6Y97BSUgwP3qhcUcul5ZOYGoIP5dv3h'}}",
+        "username": "{{'wappler@expertsdirect.com'}}",
+        "password": "{{'masamune'}}",
+        "grant_type": "{{'password'}}"
+      },
+      "data": {
+        "client_id": "{{3}}",
+        "client_secret": "{{'WNodutEoP6Y97BSUgwP3qhcUcul5ZOYGoIP5dv3h'}}",
+        "username": "{{'wappler@expertsdirect.com'}}",
+        "password": "{{'masamune'}}",
+        "grant_type": "{{'password'}}"
+      }
+    },
+    "output": false
+  },
+  {
+    "name": "token",
+    "module": "core",
+    "action": "setvalue",
+    "options": {
+      "value": "{{api.data.access_token}}"
+    },
+    "meta": [],
+    "outputType": "text",
+    "output": true
+  },
+  {
+    "name": "",
+    "module": "core",
+    "action": "condition",
+    "options": {
+      "if": "{{token}}",
+      "then": {
+        "steps": {
+          "name": "CountryList",
+          "module": "api",
+          "action": "send",
+          "options": {
+            "url": "https://forge.expertsdirect.com/api/countries",
+            "headers": {
+              "Authorization": "{{'Bearer '+token}}"
+            }
+          },
+          "output": true
+        }
+      },
+      "else": {
+        "steps": [
+          {
+            "name": "Status",
+            "module": "core",
+            "action": "setvalue",
+            "options": {
+              "value": 400
+            },
+            "meta": [],
+            "output": true,
+            "outputType": "text"
+          },
+          {
+            "name": "message",
+            "module": "core",
+            "action": "setvalue",
+            "options": {
+              "value": "Token Mismatched"
+            },
+            "meta": [],
+            "output": true,
+            "outputType": "text"
+          }
+        ]
+      }
+    },
+    "outputType": "boolean"
+  }
+]

@@ -105,7 +105,20 @@
                 }
               },
               "output": true,
-              "meta": [],
+              "meta": [
+                {
+                  "name": "heading",
+                  "type": "text"
+                },
+                {
+                  "name": "description",
+                  "type": "text"
+                },
+                {
+                  "name": "image",
+                  "type": "text"
+                }
+              ],
               "outputType": "array"
             },
             {

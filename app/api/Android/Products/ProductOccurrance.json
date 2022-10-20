@@ -30,7 +30,7 @@
             "options": {
               "connection": "ClientApp",
               "sql": {
-                "query": "SELECT mp.id as p_id, mp.prod_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_img1, rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin\nFROM m_product mp \nleft join r_price_table rpt on (rpt.prod_id=mp.id)\nleft join m_restaurant mr on (mp.rest_id=mr.id)\nWHERE mp.status=1 AND mp.market_id=@market AND prod_occurance_id=@occur ORDER by random() limit @limit",
+                "query": "SELECT mp.id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_img1, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id)\nWHERE mp.status=1 AND mp.market_id=@market AND prod_occurance_id=@occur ORDER by random() limit @limit",
                 "params": [
                   {
                     "name": "@limit",
@@ -53,12 +53,16 @@
             "output": true,
             "meta": [
               {
-                "name": "p_id",
+                "name": "id",
                 "type": "number"
               },
               {
                 "name": "prod_id",
                 "type": "text"
+              },
+              {
+                "name": "rest_id",
+                "type": "number"
               },
               {
                 "name": "prod_mark_id",
@@ -81,40 +85,34 @@
                 "type": "text"
               },
               {
-                "name": "price_id",
-                "type": "number"
-              },
-              {
-                "name": "quantity",
-                "type": "text"
-              },
-              {
-                "name": "q_unit",
-                "type": "text"
-              },
-              {
-                "name": "mrp",
-                "type": "text"
-              },
-              {
                 "name": "price",
-                "type": "text"
-              },
-              {
-                "name": "product_tax",
-                "type": "text"
-              },
-              {
-                "name": "shop_name_en",
-                "type": "text"
-              },
-              {
-                "name": "shop_name_bn",
-                "type": "text"
-              },
-              {
-                "name": "shop_name_hin",
-                "type": "text"
+                "type": "array",
+                "sub": [
+                  {
+                    "name": "price_id",
+                    "type": "number"
+                  },
+                  {
+                    "name": "quantity",
+                    "type": "text"
+                  },
+                  {
+                    "name": "q_unit",
+                    "type": "text"
+                  },
+                  {
+                    "name": "mrp",
+                    "type": "text"
+                  },
+                  {
+                    "name": "price",
+                    "type": "text"
+                  },
+                  {
+                    "name": "product_tax",
+                    "type": "text"
+                  }
+                ]
               }
             ],
             "outputType": "array"
@@ -128,7 +126,7 @@
             "options": {
               "connection": "ClientApp",
               "sql": {
-                "query": "SELECT mp.id as p_id, mp.prod_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_img1,  rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin\nFROM m_product mp \nleft join r_price_table rpt on (rpt.prod_id=mp.id)\nleft join m_restaurant mr on (mp.rest_id=mr.id)\nWHERE mp.status=1 AND mp.market_id=@market AND prod_occurance_id=@occur ORDER by mp.id desc",
+                "query": "SELECT mp.id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_img1, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id)\nWHERE mp.status=1 AND mp.market_id=@market AND prod_occurance_id=@occur ORDER by mp.id desc",
                 "params": [
                   {
                     "name": "@market",
@@ -146,12 +144,16 @@
             "output": true,
             "meta": [
               {
-                "name": "p_id",
+                "name": "id",
                 "type": "number"
               },
               {
                 "name": "prod_id",
                 "type": "text"
+              },
+              {
+                "name": "rest_id",
+                "type": "number"
               },
               {
                 "name": "prod_mark_id",
@@ -174,40 +176,34 @@
                 "type": "text"
               },
               {
-                "name": "price_id",
-                "type": "number"
-              },
-              {
-                "name": "quantity",
-                "type": "text"
-              },
-              {
-                "name": "q_unit",
-                "type": "text"
-              },
-              {
-                "name": "mrp",
-                "type": "text"
-              },
-              {
                 "name": "price",
-                "type": "text"
-              },
-              {
-                "name": "product_tax",
-                "type": "text"
-              },
-              {
-                "name": "shop_name_en",
-                "type": "text"
-              },
-              {
-                "name": "shop_name_bn",
-                "type": "text"
-              },
-              {
-                "name": "shop_name_hin",
-                "type": "text"
+                "type": "array",
+                "sub": [
+                  {
+                    "name": "price_id",
+                    "type": "number"
+                  },
+                  {
+                    "name": "quantity",
+                    "type": "text"
+                  },
+                  {
+                    "name": "q_unit",
+                    "type": "text"
+                  },
+                  {
+                    "name": "mrp",
+                    "type": "text"
+                  },
+                  {
+                    "name": "price",
+                    "type": "text"
+                  },
+                  {
+                    "name": "product_tax",
+                    "type": "text"
+                  }
+                ]
               }
             ],
             "outputType": "array"

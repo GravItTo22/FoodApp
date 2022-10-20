@@ -1,0 +1,255 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "p_id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetProd",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "m_product",
+                      "column": "id"
+                    },
+                    {
+                      "table": "m_product",
+                      "column": "market_id"
+                    },
+                    {
+                      "table": "m_product",
+                      "column": "rest_id"
+                    },
+                    {
+                      "table": "m_product",
+                      "column": "category_id"
+                    },
+                    {
+                      "table": "m_product",
+                      "column": "prod_mark_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "m_product"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "m_product.id",
+                        "field": "m_product.id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{$_GET.p_id}}",
+                        "data": {
+                          "table": "m_product",
+                          "column": "id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "increments",
+                            "default": "",
+                            "primary": true,
+                            "unique": true,
+                            "nullable": false,
+                            "name": "id"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT id, market_id, rest_id, category_id, prod_mark_id\nFROM m_product\nWHERE id = :P1 /* {{$_GET.p_id}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.p_id}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "id"
+                },
+                {
+                  "type": "number",
+                  "name": "market_id"
+                },
+                {
+                  "type": "number",
+                  "name": "rest_id"
+                },
+                {
+                  "type": "number",
+                  "name": "category_id"
+                },
+                {
+                  "type": "number",
+                  "name": "prod_mark_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "GetRelatedProd",
+              "module": "dbupdater",
+              "action": "custom",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "query": "SELECT mp.id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_occurance_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_img1, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price \nFROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id) \nWHERE mp.status = 1 AND mp.id != @p_id AND mp.market_id = @market_id AND mp.prod_mark_id = @prod_mark_id AND (mp.category_id = @category_id OR mp.rest_id = @rest_id)",
+                  "params": [
+                    {
+                      "name": "@p_id",
+                      "value": "{{GetProd.id}}",
+                      "test": "4"
+                    },
+                    {
+                      "name": "@market_id",
+                      "value": "{{GetProd.market_id}}",
+                      "test": "1"
+                    },
+                    {
+                      "name": "@prod_mark_id",
+                      "value": "{{GetProd.prod_mark_id}}",
+                      "test": "1"
+                    },
+                    {
+                      "name": "@category_id",
+                      "value": "{{GetProd.category_id}}",
+                      "test": "1"
+                    },
+                    {
+                      "name": "@rest_id",
+                      "value": "{{GetProd.rest_id}}",
+                      "test": "1"
+                    }
+                  ]
+                }
+              },
+              "output": true,
+              "meta": [
+                {
+                  "name": "id",
+                  "type": "number"
+                },
+                {
+                  "name": "prod_id",
+                  "type": "text"
+                },
+                {
+                  "name": "rest_id",
+                  "type": "number"
+                },
+                {
+                  "name": "prod_mark_id",
+                  "type": "number"
+                },
+                {
+                  "name": "prod_occurance_id",
+                  "type": "number"
+                },
+                {
+                  "name": "prod_name_en",
+                  "type": "text"
+                },
+                {
+                  "name": "prod_name_bn",
+                  "type": "text"
+                },
+                {
+                  "name": "prod_name_hin",
+                  "type": "text"
+                },
+                {
+                  "name": "prod_img1",
+                  "type": "text"
+                },
+                {
+                  "name": "shop_name_en",
+                  "type": "text"
+                },
+                {
+                  "name": "shop_name_bn",
+                  "type": "text"
+                },
+                {
+                  "name": "shop_name_hin",
+                  "type": "text"
+                },
+                {
+                  "name": "price",
+                  "type": "array",
+                  "sub": [
+                    {
+                      "name": "price_id",
+                      "type": "number"
+                    },
+                    {
+                      "name": "quantity",
+                      "type": "text"
+                    },
+                    {
+                      "name": "q_unit",
+                      "type": "text"
+                    },
+                    {
+                      "name": "mrp",
+                      "type": "text"
+                    },
+                    {
+                      "name": "price",
+                      "type": "text"
+                    },
+                    {
+                      "name": "product_tax",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              "outputType": "array"
+            }
+          ]
+        },
+        "catch": {
+          "steps": {
+            "name": "Resp",
+            "module": "core",
+            "action": "setvalue",
+            "options": {
+              "value": "Suspicious Activity"
+            },
+            "meta": [],
+            "output": true,
+            "outputType": "text"
+          }
+        }
+      }
+    }
+  }
+}

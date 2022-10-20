@@ -4,6 +4,14 @@
       {
         "type": "text",
         "name": "Mobile"
+      },
+      {
+        "type": "number",
+        "name": "user_id"
+      },
+      {
+        "type": "number",
+        "name": "created_by"
       }
     ]
   },
@@ -27,8 +35,11 @@
                     {
                       "table": "m_customer",
                       "column": "id",
-                      "alias": "CountId",
-                      "aggregate": "COUNT"
+                      "aggregate": ""
+                    },
+                    {
+                      "table": "m_customer",
+                      "column": "mobile"
                     }
                   ],
                   "table": {
@@ -36,7 +47,6 @@
                   },
                   "primary": "id",
                   "joins": [],
-                  "groupBy": [],
                   "wheres": {
                     "condition": "AND",
                     "rules": [
@@ -110,7 +120,7 @@
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT COUNT(id) AS CountId\nFROM m_customer\nWHERE mobile = :P1 /* {{$_POST.Mobile}} */ AND status = :P2 /* {{1}} */ AND user_type_id = :P3 /* {{6}} */",
+                  "query": "SELECT id, mobile\nFROM m_customer\nWHERE mobile = :P1 /* {{$_POST.Mobile}} */ AND status = :P2 /* {{1}} */ AND user_type_id = :P3 /* {{6}} */",
                   "params": [
                     {
                       "operator": "equal",
@@ -137,7 +147,11 @@
               "meta": [
                 {
                   "type": "number",
-                  "name": "CountId"
+                  "name": "id"
+                },
+                {
+                  "type": "text",
+                  "name": "mobile"
                 }
               ],
               "outputType": "object"
@@ -147,7 +161,7 @@
               "module": "core",
               "action": "condition",
               "options": {
-                "if": "{{CheckUser.CountId>0}}",
+                "if": "{{CheckUser.id}}",
                 "then": {
                   "steps": [
                     {
@@ -158,7 +172,91 @@
                         "value": "{{UUID.md5(123456).substr(1, 6).uppercase()}}"
                       },
                       "meta": [],
-                      "outputType": "text"
+                      "outputType": "text",
+                      "output": true
+                    },
+                    {
+                      "name": "AddOTP",
+                      "module": "dbupdater",
+                      "action": "insert",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "insert",
+                          "values": [
+                            {
+                              "table": "temp_otp_code",
+                              "column": "otp",
+                              "type": "text",
+                              "value": "{{OTP}}"
+                            },
+                            {
+                              "table": "temp_otp_code",
+                              "column": "user_id",
+                              "type": "number",
+                              "value": "{{CheckUser.id}}"
+                            },
+                            {
+                              "table": "temp_otp_code",
+                              "column": "status",
+                              "type": "number",
+                              "value": "{{1}}"
+                            },
+                            {
+                              "table": "temp_otp_code",
+                              "column": "created_on",
+                              "type": "datetime",
+                              "value": "{{NOW}}"
+                            },
+                            {
+                              "table": "temp_otp_code",
+                              "column": "created_by",
+                              "type": "number",
+                              "value": "{{CheckUser.id}}"
+                            }
+                          ],
+                          "table": "temp_otp_code",
+                          "returning": "id",
+                          "query": "INSERT INTO temp_otp_code\n(otp, user_id, status, created_on, created_by) VALUES (:P1 /* {{OTP}} */, :P2 /* {{CheckUser.id}} */, :P3 /* {{1}} */, :P4 /* {{NOW}} */, :P5 /* {{CheckUser.id}} */)",
+                          "params": [
+                            {
+                              "name": ":P1",
+                              "type": "expression",
+                              "value": "{{OTP}}"
+                            },
+                            {
+                              "name": ":P2",
+                              "type": "expression",
+                              "value": "{{CheckUser.id}}"
+                            },
+                            {
+                              "name": ":P3",
+                              "type": "expression",
+                              "value": "{{1}}"
+                            },
+                            {
+                              "name": ":P4",
+                              "type": "expression",
+                              "value": "{{NOW}}"
+                            },
+                            {
+                              "name": ":P5",
+                              "type": "expression",
+                              "value": "{{CheckUser.id}}"
+                            }
+                          ]
+                        }
+                      },
+                      "meta": [
+                        {
+                          "name": "identity",
+                          "type": "text"
+                        },
+                        {
+                          "name": "affected",
+                          "type": "number"
+                        }
+                      ]
                     },
                     {
                       "name": "Status",

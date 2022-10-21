@@ -59,6 +59,10 @@
                     {
                       "table": "r_cart",
                       "column": "total_price"
+                    },
+                    {
+                      "table": "r_cart",
+                      "column": "cart_mrp"
                     }
                   ],
                   "table": {
@@ -94,7 +98,7 @@
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price\nFROM r_cart\nWHERE id = :P1 /* {{$_GET.cart_id}} */",
+                  "query": "SELECT prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, cart_mrp\nFROM r_cart\nWHERE id = :P1 /* {{$_GET.cart_id}} */",
                   "params": [
                     {
                       "operator": "equal",
@@ -130,6 +134,10 @@
                 {
                   "type": "text",
                   "name": "total_price"
+                },
+                {
+                  "type": "text",
+                  "name": "cart_mrp"
                 }
               ],
               "outputType": "object"
@@ -196,11 +204,17 @@
                       "column": "created_on",
                       "type": "datetime",
                       "value": "{{NOW}}"
+                    },
+                    {
+                      "table": "r_wishlist",
+                      "column": "wishlist_mrp",
+                      "type": "text",
+                      "value": "{{GetCartItems.cart_mrp}}"
                     }
                   ],
                   "table": "r_wishlist",
                   "returning": "id",
-                  "query": "INSERT INTO r_wishlist\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, ips, created_by, created_on) VALUES (:P1 /* {{GetCartItems.prod_id}} */, :P2 /* {{GetCartItems.price_id}} */, :P3 /* {{GetCartItems.user_id}} */, :P4 /* {{GetCartItems.prod_unit_price}} */, :P5 /* {{GetCartItems.prod_qty}} */, :P6 /* {{GetCartItems.total_price}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetCartItems.user_id}} */, :P9 /* {{NOW}} */)",
+                  "query": "INSERT INTO r_wishlist\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, ips, created_by, created_on, wishlist_mrp) VALUES (:P1 /* {{GetCartItems.prod_id}} */, :P2 /* {{GetCartItems.price_id}} */, :P3 /* {{GetCartItems.user_id}} */, :P4 /* {{GetCartItems.prod_unit_price}} */, :P5 /* {{GetCartItems.prod_qty}} */, :P6 /* {{GetCartItems.total_price}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetCartItems.user_id}} */, :P9 /* {{NOW}} */, :P10 /* {{GetCartItems.cart_mrp}} */)",
                   "params": [
                     {
                       "name": ":P1",
@@ -246,6 +260,11 @@
                       "name": ":P9",
                       "type": "expression",
                       "value": "{{NOW}}"
+                    },
+                    {
+                      "name": ":P10",
+                      "type": "expression",
+                      "value": "{{GetCartItems.cart_mrp}}"
                     }
                   ]
                 }

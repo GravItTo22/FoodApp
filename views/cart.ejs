@@ -6,6 +6,8 @@
 <dmx-serverconnect id="scCartItems" url="/api/Cart/CartItems"></dmx-serverconnect>
 <dmx-serverconnect id="scRemoveCartItems" url="/api/Cart/RemoveCartItems" noload></dmx-serverconnect>
 <dmx-serverconnect id="scRemoveCartAddWish" url="/api/WishList/CartToWishlist" noload></dmx-serverconnect>
+<dmx-serverconnect id="scIncreaseQty" url="/api/Cart/IncreaseQty" noload></dmx-serverconnect>
+<dmx-serverconnect id="scDecreaseQty" url="/api/Cart/DecreaseQty" noload></dmx-serverconnect>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
     <div class="container">
@@ -40,8 +42,10 @@
                     </div>
                     <div class="col-md-5 col-12">
                         <!-- product name  -->
-                        <h4 class="product_name text-monospace">{{varLanguage.value=='English'?content.scCartItems.data.GetCartItems[$index].prod_name_en:varLanguage.value=='Bengali'?content.scCartItems.data.GetCartItems[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scCartItems.data.GetCartItems[$index].prod_name_hin:content.scCartItems.data.GetCartItems[$index].prod_name_en}}</h4>
-                        <p class="mb-0 text-monospace text-primary">Seller: <a href="#">{{varLanguage.value=='English'?content.scCartItems.data.GetCartItems[$index].shop_name_en:varLanguage.value=='Bengali'?content.scCartItems.data.GetCartItems[$index].shop_name_bn:varLanguage.value=='Hindi'?content.scCartItems.data.GetCartItems[$index].shop_name_hin:content.scCartItems.data.GetCartItems[$index].shop_name_en}}</a></p>
+                        <a href="#" dmx-bind:href="'/product-details/'+content.scCartItems.data.GetCartItems[0].prod_id+'/'+content.scCartItems.data.GetCartItems[$index].prod_name_en">
+                            <h4 class="product_name text-monospace">{{varLanguage.value=='English'?content.scCartItems.data.GetCartItems[$index].prod_name_en:varLanguage.value=='Bengali'?content.scCartItems.data.GetCartItems[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scCartItems.data.GetCartItems[$index].prod_name_hin:content.scCartItems.data.GetCartItems[$index].prod_name_en}}</h4>
+                        </a>
+                        <p class="mb-0 text-monospace text-primary">Seller: <a href="#" dmx-bind:href="'/shop-details/'+content.scCartItems.data.GetCartItems[$index].rest_id+'/'+content.scCartItems.data.GetCartItems[$index].shop_name_en">{{varLanguage.value=='English'?content.scCartItems.data.GetCartItems[$index].shop_name_en:varLanguage.value=='Bengali'?content.scCartItems.data.GetCartItems[$index].shop_name_bn:varLanguage.value=='Hindi'?content.scCartItems.data.GetCartItems[$index].shop_name_hin:content.scCartItems.data.GetCartItems[$index].shop_name_en}}</a></p>
                         <p class="mb-0">Prod. Mark: {{content.scCartItems.data.GetCartItems[$index].prod_mark_id==1?'Veg':'Non-Veg'}}</p>
                         <p class="my-2">
                             <span class="px-2 price_money text-info alert-link text-monospace" id="itemval">{{content.scCartItems.data.GetCartItems[$index].prod_unit_price}}</span>
@@ -57,7 +61,7 @@
                                 </p>
                             </div>
                             <div class="col-6 go-items px-0">
-                                <p dmx-on:click="run({run:{action:`notifMain.success(((varLanguage.value==\'English\')?content.scCartItems.data.GetCartItems[$index].prod_name_en:(varLanguage.value==\'Bengali\')?content.scCartItems.data.GetCartItems[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scCartItems.data.GetCartItems.data[$index].prod_name_hin:scCartItems.data.GetCartItems.data[$index].prod_name_en)+\' moved to wishlist\');scRemoveCartAddWish.load({cart_id: scCartItems.data.GetCartItems.data[$index].id},true);scCartItems.load({},true);scDashboardInfo.load(true)`,name:'RemoveCartAddWish'}})">
+                                <p dmx-on:click="run({run:{action:`scRemoveCartAddWish.load({cart_id: scCartItems.data.GetCartItems[$index].id},true);notifMain.success(((varLanguage.value==\'English\')?content.scCartItems.data.GetCartItems[$index].prod_name_en:(varLanguage.value==\'Bengali\')?content.scCartItems.data.GetCartItems[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scCartItems.data.GetCartItems[$index].prod_name_hin:scCartItems.data.GetCartItems[$index].prod_name_en)+\' moved to wishlist\');scDashboardInfo.load({});scCartItems.load({})`,name:'DelCartAddWish'}})">
                                     <i class="fa fa-heart mr-2"></i>Move to Wish List
                                 </p>
                             </div>
@@ -69,15 +73,15 @@
                         </select>
                         <!-- quantity inc dec -->
                         <ul class="pagination set_quantity mt-3 px-2">
-                            <li class="page-item">
-                                <button class="page-link " onclick="decreaseNumber('textbox','itemval')">
+                            <li class="page-item" dmx-on:click="run({run:{action:`scDecreaseQty.load({p_id: scCartItems.data.GetCartItems[$index].prod_id, price_id: repeatcart[$index].selectProdPrice.value, qty: content.scCartItems.data.GetCartItems[$index].prod_qty});browserMain.goto(\'/cart\')`,name:'DecreaseItem'}})" id="DecreaseQty">
+                                <button class="page-link ">
                                     <i class="fa fa-minus"></i> </button>
                             </li>
                             <li class="page-item">
-                                <input type="text" id="AddToCart" dmx-bind:id="'AddToCart'+$index" name="" class="page-link" value="1" dmx-bind:value="content.scCartItems.data.GetCartItems[$index].prod_qty" id="textbox">
+                                <input type="text" id="AddToCart" dmx-bind:id="'AddToCart'+$index" name="" class="page-link" dmx-bind:value="content.scCartItems.data.GetCartItems[$index].prod_qty" id="textbox">
                             </li>
-                            <li class="page-item">
-                                <button class="page-link" onclick="increaseNumber('textbox','itemval')">
+                            <li class="page-item" dmx-on:click="run({run:{action:`scIncreaseQty.load({p_id: scCartItems.data.GetCartItems[$index].prod_id, price_id: repeatcart[$index].selectProdPrice.value, qty: content.scCartItems.data.GetCartItems[$index].prod_qty});browserMain.goto(\'/cart\')`,name:'IncreaseItem'}})" id="IncreaseQty">
+                                <button class="page-link">
                                     <i class="fa fa-plus"></i></button>
                             </li>
                         </ul>
@@ -85,8 +89,8 @@
                     </div>
                 </div>
             </div>
-            <div class="row mx-0" dmx-show="content.scCartItems.data.GetCartItems.data.length==0">
-                <h5 class="text-center text-muted w-100">Empty Wish-List!</h5>
+            <div class="row mx-0" dmx-show="content.scCartItems.data.GetCartItems.length==0">
+                <h5 class="text-center text-muted w-100">Empty Cart!</h5>
             </div>
         </div>
         <!-- right side div -->

@@ -2,6 +2,7 @@
 <meta name="ac:route" content="/wish-list">
 <dmx-serverconnect id="scWishList" url="/api/WishList/WishListItems"></dmx-serverconnect>
 <dmx-serverconnect id="scWishlistToCart" url="/api/Cart/WishlistToCart" noload></dmx-serverconnect>
+<dmx-serverconnect id="scRemoveWishList" url="/api/WishList/DeleteWishList" noload></dmx-serverconnect>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
     <div class="container">
@@ -27,24 +28,25 @@
                 </div>
             </div>
         </div>
-        <div class="row featured__filter" id="repeatProd" is="dmx-repeat" dmx-bind:repeat="scWishList.data.GetWishList.data" key="id">
+        <div class="row featured__filter" id="repeatProd" is="dmx-repeat" dmx-bind:repeat="scWishList.data.GetWishList" key="id">
             <div class="col-lg-3 col-md-4 col-sm-6 mix">
                 <div class="featured__item">
                     <div class="featured__item__pic set-bg">
-                        <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scWishList.data.GetWishList.data[$index].prod_img1" dmx-bind:alt="content.scWishList.data.GetWishList.data[$index].prod_img1">
+                        <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scWishList.data.GetWishList[$index].prod_img1" dmx-bind:alt="content.scWishList.data.GetWishList[$index].prod_img1">
                         <ul class="featured__item__pic__hover">
-                            <li><a href="#"><i class="fa fa-circle" dmx-class:text-success="content.scWishList.data.GetWishList.data[$index].prod_mark_id==1" dmx-class:text-danger="content.scWishList.data.GetWishList.data[$index].prod_mark_id==2"></i></a></li>
-                            <li dmx-on:click="run({run:{action:`scWishlistToCart.load({product_id: scWishList.data.GetWishList.data[$index].prod_id, price: scWishList.data.GetWishList.data[$index].price_id},true);notifMain.success(((varLanguage.value==\'English\')?scWishList.data.GetWishList.data[$index].prod_name_en:(varLanguage.value==\'Bengali\')?scWishList.data.GetWishList.data[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scWishList.data.GetWishList.data[$index].prod_name_hin:scWishList.data.GetWishList.data[$index].prod_name_en)+\'  added to cart \');scWishList.load();scDashboardInfo.load()`,name:'Flow'}})"><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            <li dmx-on:click="run({run:{action:`scRemoveWishList.load({prod_id: scWishList.data.GetWishList[$index].p_id},true);notifMain.success(((varLanguage.value==\'English\')?scWishList.data.GetWishList[$index].prod_name_en:(varLanguage.value==\'Bengali\')?scWishList.data.GetWishList[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scWishList.data.GetWishList[$index].prod_name_hin:scWishList.data.GetWishList[$index].prod_name_en)+\'  deleted from wishlist \');scWishList.load({});scDashboardInfo.load()`,name:'RemoveFlow'}})"><a href="#"><i class="fa fa-remove"></i></a></li>
+                            <li><a href="#"><i class="fa fa-circle" dmx-class:text-success="content.scWishList.data.GetWishList[$index].prod_mark_id==1" dmx-class:text-danger="content.scWishList.data.GetWishList[$index].prod_mark_id==2"></i></a></li>
+                            <li dmx-on:click="run({run:{action:`scWishlistToCart.load({product_id: scWishList.data.GetWishList[$index].prod_id, price: scWishList.data.GetWishList[$index].price_id},true);notifMain.success(((varLanguage.value==\'English\')?scWishList.data.GetWishList[$index].prod_name_en:(varLanguage.value==\'Bengali\')?scWishList.data.GetWishList[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scWishList.data.GetWishList[$index].prod_name_hin:scWishList.data.GetWishList[$index].prod_name_en)+\'  added to cart \');scDashboardInfo.load();scWishList.load()`,name:'Flow'}})"><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
                         </ul>
                     </div>
                     <div class="featured__item__text">
-                        <h6><a href="#">{{varLanguage.value=='English'?scWishList.data.GetWishList.data[$index].prod_name_en:varLanguage.value=='Bengali'?content.scWishList.data.GetWishList.data[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scWishList.data.GetWishList.data[$index].prod_name_hin:''}}</a></h6>
-                        <h5><i class="fa fa-rupee"></i>{{content.scWishList.data.GetWishList.data[$index].price}}</h5>
+                        <h6><a href="#">{{varLanguage.value=='English'?scWishList.data.GetWishList[$index].prod_name_en:varLanguage.value=='Bengali'?content.scWishList.data.GetWishList[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scWishList.data.GetWishList[$index].prod_name_hin:''}}</a></h6><select id="select" dmx-bind:id="'select'+$index" class="form-select form-control d-block w-100 text-monospace font-weight-bold" style="font-size:12px" optiontext="quantity+' '+q_unit+' :: '+price.toNumber().formatCurrency('₹', '.', ',', 2)+' MRP:'+.mrp.toNumber().formatCurrency('₹', '.', ',', 2)" optionvalue="price_ids" dmx-bind:options="scWishList.data.GetWishList[$index].price" dmx-bind:value="scWishList.data.GetWishList[$index].price_id">
+                        </select>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row mx-0" dmx-show="content.scWishList.data.GetWishList.data.length==0">
+        <div class="row mx-0" dmx-show="content.scWishList.data.GetWishList.length==0">
             <h5 class="text-center text-muted w-100">Empty Wish-List!</h5>
         </div>
     </div>

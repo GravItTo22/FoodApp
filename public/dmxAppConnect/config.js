@@ -354,84 +354,114 @@ dmx.config({
     "repeatProd": {
       "meta": [
         {
-          "type": "number",
-          "name": "id"
+          "name": "id",
+          "type": "number"
         },
         {
-          "type": "text",
-          "name": "prod_id"
+          "name": "prod_id",
+          "type": "number"
         },
         {
-          "type": "number",
-          "name": "price_id"
+          "name": "price_id",
+          "type": "number"
         },
         {
-          "type": "number",
-          "name": "user_id"
+          "name": "user_id",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "prod_unit_price"
+          "name": "prod_unit_price",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "prod_qty"
+          "name": "wishlist_mrp",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "total_price"
+          "name": "prod_qty",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "ips"
+          "name": "total_price",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "prod_name_en"
+          "name": "prod_name_en",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "prod_name_bn"
+          "name": "prod_name_bn",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "prod_name_hin"
+          "name": "prod_name_hin",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "prod_desc_en"
+          "name": "prod_desc_en",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "prod_desc_bn"
+          "name": "prod_desc_bn",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "prod_desc_hin"
+          "name": "prod_desc_hin",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "prod_img1"
+          "name": "prod_img1",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "quantity"
+          "name": "prod_mark_id",
+          "type": "number"
         },
         {
-          "type": "text",
-          "name": "q_unit"
+          "name": "shop_name_en",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "mrp"
+          "name": "shop_name_bn",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "price"
+          "name": "shop_name_hin",
+          "type": "text"
         },
         {
-          "type": "text",
-          "name": "product_tax"
+          "name": "rest_id",
+          "type": "number"
+        },
+        {
+          "name": "price",
+          "type": "array",
+          "sub": [
+            {
+              "name": "price_ids",
+              "type": "number"
+            },
+            {
+              "name": "quantity",
+              "type": "text"
+            },
+            {
+              "name": "q_unit",
+              "type": "text"
+            },
+            {
+              "name": "mrp",
+              "type": "text"
+            },
+            {
+              "name": "price",
+              "type": "text"
+            },
+            {
+              "name": "product_tax",
+              "type": "text"
+            }
+          ]
         }
       ],
       "outputType": "array"

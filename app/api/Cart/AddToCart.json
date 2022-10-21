@@ -18,6 +18,10 @@
           }
         },
         "name": "price"
+      },
+      {
+        "type": "text",
+        "name": "quantity"
       }
     ],
     "$_SESSION": [
@@ -526,7 +530,7 @@
                               "table": "r_cart",
                               "column": "prod_qty",
                               "type": "text",
-                              "value": "{{1}}"
+                              "value": "{{($_GET.quantity>0)?$_GET.quantity:1}}"
                             },
                             {
                               "table": "r_cart",
@@ -561,7 +565,7 @@
                           ],
                           "table": "r_cart",
                           "returning": "id",
-                          "query": "INSERT INTO r_cart\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, created_by, created_on, ip_address, cart_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{identity}} */, :P4 /* {{GetProduct.selling_price}} */, :P5 /* {{1}} */, :P6 /* {{GetProduct.selling_price.toNumber()}} */, :P7 /* {{identity?identity:''}} */, :P8 /* {{NOW}} */, :P9 /* {{$_SERVER.REMOTE_ADDR}} */, :P10 /* {{GetProduct.mrp}} */)",
+                          "query": "INSERT INTO r_cart\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, created_by, created_on, ip_address, cart_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{identity}} */, :P4 /* {{GetProduct.selling_price}} */, :P5 /* {{($_GET.quantity>0)?$_GET.quantity:1}} */, :P6 /* {{GetProduct.selling_price.toNumber()}} */, :P7 /* {{identity?identity:''}} */, :P8 /* {{NOW}} */, :P9 /* {{$_SERVER.REMOTE_ADDR}} */, :P10 /* {{GetProduct.mrp}} */)",
                           "params": [
                             {
                               "name": ":P1",
@@ -586,7 +590,7 @@
                             {
                               "name": ":P5",
                               "type": "expression",
-                              "value": "{{1}}"
+                              "value": "{{($_GET.quantity>0)?$_GET.quantity:1}}"
                             },
                             {
                               "name": ":P6",
@@ -786,7 +790,7 @@
                               "table": "r_cart",
                               "column": "prod_qty",
                               "type": "text",
-                              "value": "{{1}}"
+                              "value": "{{($_GET.quantity>0)?$_GET.quantity:1}}"
                             },
                             {
                               "table": "r_cart",
@@ -815,7 +819,7 @@
                           ],
                           "table": "r_cart",
                           "returning": "id",
-                          "query": "INSERT INTO r_cart\n(prod_id, price_id, prod_unit_price, prod_qty, total_price, created_on, ip_address, cart_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetProduct.selling_price}} */, :P4 /* {{1}} */, :P5 /* {{GetProduct.selling_price.toNumber()}} */, :P6 /* {{NOW}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetProduct.mrp}} */)",
+                          "query": "INSERT INTO r_cart\n(prod_id, price_id, prod_unit_price, prod_qty, total_price, created_on, ip_address, cart_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetProduct.selling_price}} */, :P4 /* {{($_GET.quantity>0)?$_GET.quantity:1}} */, :P5 /* {{GetProduct.selling_price.toNumber()}} */, :P6 /* {{NOW}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetProduct.mrp}} */)",
                           "params": [
                             {
                               "name": ":P1",
@@ -835,7 +839,7 @@
                             {
                               "name": ":P4",
                               "type": "expression",
-                              "value": "{{1}}"
+                              "value": "{{($_GET.quantity>0)?$_GET.quantity:1}}"
                             },
                             {
                               "name": ":P5",

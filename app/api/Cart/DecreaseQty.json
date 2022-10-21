@@ -1,0 +1,982 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "p_id"
+      },
+      {
+        "type": "text",
+        "name": "price_id"
+      },
+      {
+        "type": "text",
+        "name": "qty"
+      }
+    ],
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "total_price"
+      },
+      {
+        "type": "text",
+        "name": "ip_address"
+      },
+      {
+        "type": "number",
+        "name": "id"
+      },
+      {
+        "type": "number",
+        "name": "price_id"
+      },
+      {
+        "type": "text",
+        "name": "cart_mrp"
+      }
+    ],
+    "$_SESSION": [
+      {
+        "type": "text",
+        "name": "sessionLogin"
+      }
+    ],
+    "$_SERVER": [
+      {
+        "type": "text",
+        "name": "REMOTE_ADDR"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "GetProduct",
+        "module": "dbconnector",
+        "action": "single",
+        "options": {
+          "connection": "ClientApp",
+          "sql": {
+            "type": "SELECT",
+            "columns": [
+              {
+                "table": "m_product",
+                "column": "prod_id"
+              },
+              {
+                "table": "m_product",
+                "column": "prod_name_en"
+              },
+              {
+                "table": "rpt",
+                "column": "selling_price",
+                "alias": "price"
+              },
+              {
+                "table": "rpt",
+                "column": "mrp"
+              }
+            ],
+            "table": {
+              "name": "m_product"
+            },
+            "primary": "id",
+            "joins": [
+              {
+                "table": "r_price_table",
+                "column": "*",
+                "alias": "rpt",
+                "type": "LEFT",
+                "clauses": {
+                  "condition": "AND",
+                  "rules": [
+                    {
+                      "table": "rpt",
+                      "column": "prod_id",
+                      "operator": "equal",
+                      "value": {
+                        "table": "m_product",
+                        "column": "id"
+                      },
+                      "operation": "="
+                    }
+                  ]
+                },
+                "primary": "id"
+              }
+            ],
+            "query": "SELECT m_product.prod_id, m_product.prod_name_en, rpt.selling_price AS price, rpt.mrp\nFROM m_product\nLEFT JOIN r_price_table AS rpt ON (rpt.prod_id = m_product.id)\nWHERE m_product.id = :P1 /* {{$_GET.p_id}} */ AND rpt.id = :P2 /* {{$_GET.price_id}} */",
+            "params": [
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{$_GET.p_id}}"
+              },
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P2",
+                "value": "{{$_GET.price_id}}"
+              }
+            ],
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "m_product.id",
+                  "field": "m_product.id",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": "{{$_GET.p_id}}",
+                  "data": {
+                    "table": "m_product",
+                    "column": "id",
+                    "type": "number",
+                    "columnObj": {
+                      "type": "increments",
+                      "default": "",
+                      "primary": true,
+                      "unique": true,
+                      "nullable": false,
+                      "name": "id"
+                    }
+                  },
+                  "operation": "="
+                },
+                {
+                  "id": "rpt.id",
+                  "field": "rpt.id",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": "{{$_GET.price_id}}",
+                  "data": {
+                    "table": "rpt",
+                    "column": "id",
+                    "type": "number",
+                    "columnObj": {
+                      "type": "increments",
+                      "default": "",
+                      "primary": true,
+                      "unique": true,
+                      "nullable": false,
+                      "name": "id"
+                    }
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            }
+          }
+        },
+        "output": false,
+        "meta": [
+          {
+            "type": "text",
+            "name": "prod_id"
+          },
+          {
+            "type": "text",
+            "name": "prod_name_en"
+          },
+          {
+            "type": "text",
+            "name": "price"
+          },
+          {
+            "type": "text",
+            "name": "mrp"
+          }
+        ],
+        "outputType": "object"
+      },
+      {
+        "name": "",
+        "module": "core",
+        "action": "condition",
+        "options": {
+          "if": "{{$_SESSION.sessionLogin}}",
+          "then": {
+            "steps": [
+              {
+                "name": "identity",
+                "module": "auth",
+                "action": "identify",
+                "options": {
+                  "provider": "security"
+                },
+                "meta": []
+              },
+              {
+                "name": "GetCartProd",
+                "module": "dbconnector",
+                "action": "single",
+                "options": {
+                  "connection": "ClientApp",
+                  "sql": {
+                    "type": "SELECT",
+                    "columns": [
+                      {
+                        "table": "r_cart",
+                        "column": "id",
+                        "alias": "cart_id"
+                      },
+                      {
+                        "table": "r_cart",
+                        "column": "prod_qty"
+                      },
+                      {
+                        "table": "r_cart",
+                        "column": "total_price"
+                      }
+                    ],
+                    "table": {
+                      "name": "r_cart"
+                    },
+                    "primary": "id",
+                    "joins": [],
+                    "wheres": {
+                      "condition": "AND",
+                      "rules": [
+                        {
+                          "id": "r_cart.prod_id",
+                          "field": "r_cart.prod_id",
+                          "type": "double",
+                          "operator": "equal",
+                          "value": "{{$_GET.p_id}}",
+                          "data": {
+                            "table": "r_cart",
+                            "column": "prod_id",
+                            "type": "number",
+                            "columnObj": {
+                              "type": "reference",
+                              "primary": false,
+                              "unique": false,
+                              "nullable": true,
+                              "references": "id",
+                              "inTable": "m_product",
+                              "referenceType": "integer",
+                              "onUpdate": "NO ACTION",
+                              "onDelete": "NO ACTION",
+                              "name": "prod_id"
+                            }
+                          },
+                          "operation": "="
+                        },
+                        {
+                          "id": "r_cart.price_id",
+                          "field": "r_cart.price_id",
+                          "type": "double",
+                          "operator": "equal",
+                          "value": "{{$_GET.price_id}}",
+                          "data": {
+                            "table": "r_cart",
+                            "column": "price_id",
+                            "type": "number",
+                            "columnObj": {
+                              "type": "reference",
+                              "primary": false,
+                              "unique": false,
+                              "nullable": true,
+                              "references": "id",
+                              "inTable": "r_price_table",
+                              "referenceType": "integer",
+                              "onUpdate": "NO ACTION",
+                              "onDelete": "NO ACTION",
+                              "name": "price_id"
+                            }
+                          },
+                          "operation": "="
+                        },
+                        {
+                          "condition": "OR",
+                          "rules": [
+                            {
+                              "id": "r_cart.user_id",
+                              "field": "r_cart.user_id",
+                              "type": "double",
+                              "operator": "equal",
+                              "value": "{{identity}}",
+                              "data": {
+                                "table": "r_cart",
+                                "column": "user_id",
+                                "type": "number",
+                                "columnObj": {
+                                  "type": "reference",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "references": "id",
+                                  "inTable": "m_customer",
+                                  "referenceType": "integer",
+                                  "onUpdate": "NO ACTION",
+                                  "onDelete": "NO ACTION",
+                                  "name": "user_id"
+                                }
+                              },
+                              "operation": "="
+                            },
+                            {
+                              "id": "r_cart.ip_address",
+                              "field": "r_cart.ip_address",
+                              "type": "string",
+                              "operator": "equal",
+                              "value": "{{$_SERVER.REMOTE_ADDR}}",
+                              "data": {
+                                "table": "r_cart",
+                                "column": "ip_address",
+                                "type": "text",
+                                "columnObj": {
+                                  "type": "string",
+                                  "maxLength": -5,
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "ip_address"
+                                }
+                              },
+                              "operation": "="
+                            }
+                          ],
+                          "conditional": null
+                        }
+                      ],
+                      "conditional": null,
+                      "valid": true
+                    },
+                    "query": "SELECT id AS cart_id, prod_qty, total_price\nFROM r_cart\nWHERE prod_id = :P1 /* {{$_GET.p_id}} */ AND price_id = :P2 /* {{$_GET.price_id}} */ AND (user_id = :P3 /* {{identity}} */ OR ip_address = :P4 /* {{$_SERVER.REMOTE_ADDR}} */)",
+                    "params": [
+                      {
+                        "operator": "equal",
+                        "type": "expression",
+                        "name": ":P1",
+                        "value": "{{$_GET.p_id}}"
+                      },
+                      {
+                        "operator": "equal",
+                        "type": "expression",
+                        "name": ":P2",
+                        "value": "{{$_GET.price_id}}"
+                      },
+                      {
+                        "operator": "equal",
+                        "type": "expression",
+                        "name": ":P3",
+                        "value": "{{identity}}"
+                      },
+                      {
+                        "operator": "equal",
+                        "type": "expression",
+                        "name": ":P4",
+                        "value": "{{$_SERVER.REMOTE_ADDR}}"
+                      }
+                    ]
+                  }
+                },
+                "output": false,
+                "meta": [
+                  {
+                    "type": "number",
+                    "name": "cart_id"
+                  },
+                  {
+                    "type": "text",
+                    "name": "prod_qty"
+                  },
+                  {
+                    "type": "text",
+                    "name": "total_price"
+                  }
+                ],
+                "outputType": "object"
+              },
+              {
+                "name": "NewQty",
+                "module": "core",
+                "action": "setvalue",
+                "options": {
+                  "value": "{{GetCartProd.prod_qty.toNumber()-1}}"
+                },
+                "meta": [],
+                "outputType": "text",
+                "output": false
+              },
+              {
+                "name": "",
+                "module": "core",
+                "action": "condition",
+                "options": {
+                  "if": "{{NewQty.toNumber()>0}}",
+                  "then": {
+                    "steps": [
+                      {
+                        "name": "NewTotalPrice",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "{{GetProduct.price.toNumber()*NewQty.toNumber()}}"
+                        },
+                        "meta": [],
+                        "outputType": "text",
+                        "output": true
+                      },
+                      {
+                        "name": "UpCart",
+                        "module": "dbupdater",
+                        "action": "update",
+                        "options": {
+                          "connection": "ClientApp",
+                          "sql": {
+                            "type": "update",
+                            "values": [
+                              {
+                                "table": "r_cart",
+                                "column": "user_id",
+                                "type": "number",
+                                "value": "{{identity}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "price_id",
+                                "type": "number",
+                                "value": "{{$_POST.price_id}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "prod_unit_price",
+                                "type": "text",
+                                "value": "{{GetProduct.price}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "cart_mrp",
+                                "type": "text",
+                                "value": "{{GetProduct.mrp}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "prod_qty",
+                                "type": "text",
+                                "value": "{{NewQty}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "total_price",
+                                "type": "text",
+                                "value": "{{NewTotalPrice}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "updated_on",
+                                "type": "datetime",
+                                "value": "{{NOW}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "ip_address",
+                                "type": "text",
+                                "value": "{{$_SERVER.REMOTE_ADDR}}"
+                              }
+                            ],
+                            "table": "r_cart",
+                            "wheres": {
+                              "condition": "AND",
+                              "rules": [
+                                {
+                                  "id": "id",
+                                  "field": "id",
+                                  "type": "double",
+                                  "operator": "equal",
+                                  "value": "{{GetCartProd.cart_id}}",
+                                  "data": {
+                                    "column": "id"
+                                  },
+                                  "operation": "="
+                                }
+                              ],
+                              "conditional": null,
+                              "valid": true
+                            },
+                            "returning": "id",
+                            "query": "UPDATE r_cart\nSET user_id = :P1 /* {{identity}} */, price_id = :P2 /* {{$_POST.price_id}} */, prod_unit_price = :P3 /* {{GetProduct.price}} */, cart_mrp = :P4 /* {{GetProduct.mrp}} */, prod_qty = :P5 /* {{NewQty}} */, total_price = :P6 /* {{NewTotalPrice}} */, updated_on = :P7 /* {{NOW}} */, ip_address = :P8 /* {{$_SERVER.REMOTE_ADDR}} */\nWHERE id = :P9 /* {{GetCartProd.cart_id}} */",
+                            "params": [
+                              {
+                                "name": ":P1",
+                                "type": "expression",
+                                "value": "{{identity}}"
+                              },
+                              {
+                                "name": ":P2",
+                                "type": "expression",
+                                "value": "{{$_POST.price_id}}"
+                              },
+                              {
+                                "name": ":P3",
+                                "type": "expression",
+                                "value": "{{GetProduct.price}}"
+                              },
+                              {
+                                "name": ":P4",
+                                "type": "expression",
+                                "value": "{{GetProduct.mrp}}"
+                              },
+                              {
+                                "name": ":P5",
+                                "type": "expression",
+                                "value": "{{NewQty}}"
+                              },
+                              {
+                                "name": ":P6",
+                                "type": "expression",
+                                "value": "{{NewTotalPrice}}"
+                              },
+                              {
+                                "name": ":P7",
+                                "type": "expression",
+                                "value": "{{NOW}}"
+                              },
+                              {
+                                "name": ":P8",
+                                "type": "expression",
+                                "value": "{{$_SERVER.REMOTE_ADDR}}"
+                              },
+                              {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P9",
+                                "value": "{{GetCartProd.cart_id}}"
+                              }
+                            ]
+                          }
+                        },
+                        "meta": [
+                          {
+                            "name": "affected",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "else": {
+                    "steps": {
+                      "name": "delCartItems",
+                      "module": "dbupdater",
+                      "action": "delete",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "delete",
+                          "table": "r_cart",
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "id",
+                                "field": "id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{GetCartProd.cart_id}}",
+                                "data": {
+                                  "column": "id"
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "returning": "id",
+                          "query": "DELETE\nFROM r_cart\nWHERE id = :P1 /* {{GetCartProd.cart_id}} */",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{GetCartProd.cart_id}}"
+                            }
+                          ]
+                        }
+                      },
+                      "meta": [
+                        {
+                          "name": "affected",
+                          "type": "number"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "outputType": "boolean"
+              }
+            ]
+          },
+          "else": {
+            "steps": [
+              {
+                "name": "GetCartProd",
+                "module": "dbconnector",
+                "action": "single",
+                "options": {
+                  "connection": "ClientApp",
+                  "sql": {
+                    "type": "SELECT",
+                    "columns": [
+                      {
+                        "table": "r_cart",
+                        "column": "id",
+                        "alias": "cart_id"
+                      },
+                      {
+                        "table": "r_cart",
+                        "column": "prod_qty"
+                      },
+                      {
+                        "table": "r_cart",
+                        "column": "total_price"
+                      }
+                    ],
+                    "table": {
+                      "name": "r_cart"
+                    },
+                    "primary": "id",
+                    "joins": [],
+                    "wheres": {
+                      "condition": "AND",
+                      "rules": [
+                        {
+                          "id": "r_cart.prod_id",
+                          "field": "r_cart.prod_id",
+                          "type": "double",
+                          "operator": "equal",
+                          "value": "{{$_GET.p_id}}",
+                          "data": {
+                            "table": "r_cart",
+                            "column": "prod_id",
+                            "type": "number",
+                            "columnObj": {
+                              "type": "reference",
+                              "primary": false,
+                              "unique": false,
+                              "nullable": true,
+                              "references": "id",
+                              "inTable": "m_product",
+                              "referenceType": "integer",
+                              "onUpdate": "NO ACTION",
+                              "onDelete": "NO ACTION",
+                              "name": "prod_id"
+                            }
+                          },
+                          "operation": "="
+                        },
+                        {
+                          "id": "r_cart.price_id",
+                          "field": "r_cart.price_id",
+                          "type": "double",
+                          "operator": "equal",
+                          "value": "{{$_GET.price_id}}",
+                          "data": {
+                            "table": "r_cart",
+                            "column": "price_id",
+                            "type": "number",
+                            "columnObj": {
+                              "type": "reference",
+                              "primary": false,
+                              "unique": false,
+                              "nullable": true,
+                              "references": "id",
+                              "inTable": "r_price_table",
+                              "referenceType": "integer",
+                              "onUpdate": "NO ACTION",
+                              "onDelete": "NO ACTION",
+                              "name": "price_id"
+                            }
+                          },
+                          "operation": "="
+                        },
+                        {
+                          "id": "r_cart.ip_address",
+                          "field": "r_cart.ip_address",
+                          "type": "string",
+                          "operator": "equal",
+                          "value": "{{$_SERVER.REMOTE_ADDR}}",
+                          "data": {
+                            "table": "r_cart",
+                            "column": "ip_address",
+                            "type": "text",
+                            "columnObj": {
+                              "type": "string",
+                              "maxLength": -5,
+                              "primary": false,
+                              "unique": false,
+                              "nullable": true,
+                              "name": "ip_address"
+                            }
+                          },
+                          "operation": "="
+                        }
+                      ],
+                      "conditional": null,
+                      "valid": true
+                    },
+                    "query": "SELECT id AS cart_id, prod_qty, total_price\nFROM r_cart\nWHERE prod_id = :P1 /* {{$_GET.p_id}} */ AND price_id = :P2 /* {{$_GET.price_id}} */ AND ip_address = :P3 /* {{$_SERVER.REMOTE_ADDR}} */",
+                    "params": [
+                      {
+                        "operator": "equal",
+                        "type": "expression",
+                        "name": ":P1",
+                        "value": "{{$_GET.p_id}}"
+                      },
+                      {
+                        "operator": "equal",
+                        "type": "expression",
+                        "name": ":P2",
+                        "value": "{{$_GET.price_id}}"
+                      },
+                      {
+                        "operator": "equal",
+                        "type": "expression",
+                        "name": ":P3",
+                        "value": "{{$_SERVER.REMOTE_ADDR}}"
+                      }
+                    ]
+                  }
+                },
+                "output": false,
+                "meta": [
+                  {
+                    "type": "number",
+                    "name": "cart_id"
+                  },
+                  {
+                    "type": "text",
+                    "name": "prod_qty"
+                  },
+                  {
+                    "type": "text",
+                    "name": "total_price"
+                  }
+                ],
+                "outputType": "object"
+              },
+              {
+                "name": "NewQty",
+                "module": "core",
+                "action": "setvalue",
+                "options": {
+                  "value": "{{GetCartProd.prod_qty.toNumber()-1}}"
+                },
+                "meta": [],
+                "outputType": "text",
+                "output": false
+              },
+              {
+                "name": "",
+                "module": "core",
+                "action": "condition",
+                "options": {
+                  "if": "{{NewQty.toNumber()>0}}",
+                  "then": {
+                    "steps": [
+                      {
+                        "name": "NewTotalPrice",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "{{GetProduct.price.toNumber()*NewQty.toNumber()}}"
+                        },
+                        "meta": [],
+                        "outputType": "text",
+                        "output": false
+                      },
+                      {
+                        "name": "UpCart",
+                        "module": "dbupdater",
+                        "action": "update",
+                        "options": {
+                          "connection": "ClientApp",
+                          "sql": {
+                            "type": "update",
+                            "values": [
+                              {
+                                "table": "r_cart",
+                                "column": "price_id",
+                                "type": "number",
+                                "value": "{{$_POST.price_id}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "prod_unit_price",
+                                "type": "text",
+                                "value": "{{GetProduct.price}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "cart_mrp",
+                                "type": "text",
+                                "value": "{{GetProduct.mrp}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "prod_qty",
+                                "type": "text",
+                                "value": "{{NewQty}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "total_price",
+                                "type": "text",
+                                "value": "{{NewTotalPrice}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "updated_on",
+                                "type": "datetime",
+                                "value": "{{NOW}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "ip_address",
+                                "type": "text",
+                                "value": "{{$_SERVER.REMOTE_ADDR}}"
+                              }
+                            ],
+                            "table": "r_cart",
+                            "wheres": {
+                              "condition": "AND",
+                              "rules": [
+                                {
+                                  "id": "id",
+                                  "field": "id",
+                                  "type": "double",
+                                  "operator": "equal",
+                                  "value": "{{GetCartProd.cart_id}}",
+                                  "data": {
+                                    "column": "id"
+                                  },
+                                  "operation": "="
+                                }
+                              ],
+                              "conditional": null,
+                              "valid": true
+                            },
+                            "returning": "id",
+                            "query": "UPDATE r_cart\nSET price_id = :P1 /* {{$_POST.price_id}} */, prod_unit_price = :P2 /* {{GetProduct.price}} */, cart_mrp = :P3 /* {{GetProduct.mrp}} */, prod_qty = :P4 /* {{NewQty}} */, total_price = :P5 /* {{NewTotalPrice}} */, updated_on = :P6 /* {{NOW}} */, ip_address = :P7 /* {{$_SERVER.REMOTE_ADDR}} */\nWHERE id = :P8 /* {{GetCartProd.cart_id}} */",
+                            "params": [
+                              {
+                                "name": ":P1",
+                                "type": "expression",
+                                "value": "{{$_POST.price_id}}"
+                              },
+                              {
+                                "name": ":P2",
+                                "type": "expression",
+                                "value": "{{GetProduct.price}}"
+                              },
+                              {
+                                "name": ":P3",
+                                "type": "expression",
+                                "value": "{{GetProduct.mrp}}"
+                              },
+                              {
+                                "name": ":P4",
+                                "type": "expression",
+                                "value": "{{NewQty}}"
+                              },
+                              {
+                                "name": ":P5",
+                                "type": "expression",
+                                "value": "{{NewTotalPrice}}"
+                              },
+                              {
+                                "name": ":P6",
+                                "type": "expression",
+                                "value": "{{NOW}}"
+                              },
+                              {
+                                "name": ":P7",
+                                "type": "expression",
+                                "value": "{{$_SERVER.REMOTE_ADDR}}"
+                              },
+                              {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P8",
+                                "value": "{{GetCartProd.cart_id}}"
+                              }
+                            ]
+                          }
+                        },
+                        "meta": [
+                          {
+                            "name": "affected",
+                            "type": "number"
+                          }
+                        ],
+                        "output": true
+                      }
+                    ]
+                  },
+                  "else": {
+                    "steps": {
+                      "name": "delCartItems",
+                      "module": "dbupdater",
+                      "action": "delete",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "delete",
+                          "table": "r_cart",
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "id",
+                                "field": "id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{GetCartProd.cart_id}}",
+                                "data": {
+                                  "column": "id"
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "returning": "id",
+                          "query": "DELETE\nFROM r_cart\nWHERE id = :P1 /* {{GetCartProd.cart_id}} */",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{GetCartProd.cart_id}}"
+                            }
+                          ]
+                        }
+                      },
+                      "meta": [
+                        {
+                          "name": "affected",
+                          "type": "number"
+                        }
+                      ],
+                      "output": false
+                    }
+                  }
+                },
+                "outputType": "boolean"
+              }
+            ]
+          }
+        },
+        "outputType": "boolean"
+      }
+    ]
+  }
+}

@@ -541,11 +541,17 @@
                               "column": "created_on",
                               "type": "datetime",
                               "value": "{{NOW}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "wishlist_mrp",
+                              "type": "text",
+                              "value": "{{GetProduct.mrp}}"
                             }
                           ],
                           "table": "r_wishlist",
                           "returning": "id",
-                          "query": "INSERT INTO r_wishlist\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, ips, created_by, created_on) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{identity?identity:''}} */, :P4 /* {{GetProduct.price}} */, :P5 /* {{GetProduct.quantity}} */, :P6 /* {{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{identity?identity:''}} */, :P9 /* {{NOW}} */)",
+                          "query": "INSERT INTO r_wishlist\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, ips, created_by, created_on, wishlist_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{identity?identity:''}} */, :P4 /* {{GetProduct.price}} */, :P5 /* {{GetProduct.quantity}} */, :P6 /* {{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{identity?identity:''}} */, :P9 /* {{NOW}} */, :P10 /* {{GetProduct.mrp}} */)",
                           "params": [
                             {
                               "name": ":P1",
@@ -591,6 +597,11 @@
                               "name": ":P9",
                               "type": "expression",
                               "value": "{{NOW}}"
+                            },
+                            {
+                              "name": ":P10",
+                              "type": "expression",
+                              "value": "{{GetProduct.mrp}}"
                             }
                           ]
                         }
@@ -779,11 +790,17 @@
                               "column": "created_on",
                               "type": "datetime",
                               "value": "{{NOW}}"
+                            },
+                            {
+                              "table": "r_wishlist",
+                              "column": "wishlist_mrp",
+                              "type": "text",
+                              "value": "{{GetProduct.mrp}}"
                             }
                           ],
                           "table": "r_wishlist",
                           "returning": "id",
-                          "query": "INSERT INTO r_wishlist\n(prod_id, price_id, prod_unit_price, prod_qty, total_price, ips, created_on) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetProduct.price}} */, :P4 /* {{GetProduct.quantity}} */, :P5 /* {{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}} */, :P6 /* {{$_SERVER.REMOTE_ADDR}} */, :P7 /* {{NOW}} */)",
+                          "query": "INSERT INTO r_wishlist\n(prod_id, price_id, prod_unit_price, prod_qty, total_price, ips, created_on, wishlist_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetProduct.price}} */, :P4 /* {{GetProduct.quantity}} */, :P5 /* {{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}} */, :P6 /* {{$_SERVER.REMOTE_ADDR}} */, :P7 /* {{NOW}} */, :P8 /* {{GetProduct.mrp}} */)",
                           "params": [
                             {
                               "name": ":P1",
@@ -819,6 +836,11 @@
                               "name": ":P7",
                               "type": "expression",
                               "value": "{{NOW}}"
+                            },
+                            {
+                              "name": ":P8",
+                              "type": "expression",
+                              "value": "{{GetProduct.mrp}}"
                             }
                           ]
                         }

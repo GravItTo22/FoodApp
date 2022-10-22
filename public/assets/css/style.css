@@ -375,7 +375,9 @@ ol {
 
 
 
-
+.gio-font-11{
+    font-size: 11px;
+}
 .header__top__right__profile {
 	position: relative;
 	display: inline-block;

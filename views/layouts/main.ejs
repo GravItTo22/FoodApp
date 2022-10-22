@@ -77,10 +77,10 @@
                     <li dmx-repeat:repeatlanguage="scLanguage.data.GetLanguage" dmx-on:click="varLanguage.setValue(scLanguage.data.GetLanguage[$index].language_name)"><a href="#">{{scLanguage.data.GetLanguage[$index].language_name}}</a></li>
                 </ul>
             </div>
-            <div id="myBtnMobile" class="header__top__right__auth" dmx-hide="scDashboardInfo.data.varLogin==1">
+            <div id="myBtnMobile" class="header__top__right__auth" dmx-hide="scDashboardInfo.data.varLogin">
                 <a href="#"><i class="fa fa-user"></i> Login</a>
             </div>
-            <div class="header__top__right__profile" dmx-show="scDashboardInfo.data.varLogin==1">
+            <div class="header__top__right__profile" dmx-show="scDashboardInfo.data.varLogin">
                 <div><i class="fa fa-user"></i> {{scDashboardInfo.data.GetUserInfo.fname}}</div>
                 <span class="arrow_carrot-down"></span>
                 <ul>
@@ -153,7 +153,7 @@
                                     <li dmx-repeat:repeatlanguage="scLanguage.data.GetLanguage" dmx-on:click="varLanguage.setValue(scLanguage.data.GetLanguage[$index].language_name)"><a href="#">{{scLanguage.data.GetLanguage[$index].language_name}}</a></li>
                                 </ul>
                             </div>
-                            <div class="header__top__right__profile" dmx-show="scDashboardInfo.data.varLogin==1">
+                            <div class="header__top__right__profile" dmx-show="scDashboardInfo.data.varLogin">
                                 <div><i class="fa fa-user"></i> {{scDashboardInfo.data.GetUserInfo.fname}}</div>
                                 <span class="arrow_carrot-down"></span>
                                 <ul>
@@ -166,7 +166,7 @@
                             </div>
                             <div class="header__top__right__auth">
 
-                                <a id="myBtn" href="#" class="btn btn-big" dmx-hide="scDashboardInfo.data.varLogin==1"><i class="fa fa-user"></i>login</a>
+                                <a id="myBtn" href="#" class="btn btn-big" dmx-hide="scDashboardInfo.data.varLogin"><i class="fa fa-user"></i>login</a>
                                 <!-- The Modal -->
                                 <div id="myModal" class="modal">
                                     <!-- Modal content -->

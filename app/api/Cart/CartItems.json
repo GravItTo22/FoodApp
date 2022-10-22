@@ -211,6 +211,576 @@
                 }
               ],
               "outputType": "array"
+            },
+            {
+              "name": "GetNewUser",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "r_order",
+                      "column": "id",
+                      "alias": "CountNewCust",
+                      "aggregate": "COUNT"
+                    }
+                  ],
+                  "table": {
+                    "name": "r_order"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "groupBy": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "r_order.user_id",
+                        "field": "r_order.user_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{identity}}",
+                        "data": {
+                          "table": "r_order",
+                          "column": "user_id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "reference",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "references": "id",
+                            "inTable": "m_customer",
+                            "referenceType": "integer",
+                            "onUpdate": "NO ACTION",
+                            "onDelete": "NO ACTION",
+                            "name": "user_id"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT COUNT(id) AS CountNewCust\nFROM r_order\nWHERE user_id = :P1 /* {{identity}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{identity}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "CountNewCust"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetNewUser.CountNewCust<1}}",
+                "then": {
+                  "steps": {
+                    "name": "GetPromoCode",
+                    "module": "dbconnector",
+                    "action": "single",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "type": "SELECT",
+                        "columns": [
+                          {
+                            "table": "promo_code",
+                            "column": "id"
+                          },
+                          {
+                            "table": "promo_code",
+                            "column": "promo_name"
+                          },
+                          {
+                            "table": "promo_code",
+                            "column": "promo_code"
+                          },
+                          {
+                            "table": "promo_code",
+                            "column": "amt_or_percent"
+                          },
+                          {
+                            "table": "promo_code",
+                            "column": "promo_amt"
+                          },
+                          {
+                            "table": "promo_code",
+                            "column": "promo_per"
+                          }
+                        ],
+                        "table": {
+                          "name": "promo_code"
+                        },
+                        "joins": [],
+                        "primary": "id",
+                        "query": "SELECT id, promo_name, promo_code, amt_or_percent, promo_amt, promo_per\nFROM promo_code\nWHERE auto_apply = :P1 /* {{'Yes'}} */ AND allotted_for = :P2 /* {{'All'}} */ AND status = :P3 /* {{1}} */ AND start_date < :P4 /* {{NOW}} */ AND end_date >= :P5 /* {{NOW}} */",
+                        "params": [
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P1",
+                            "value": "{{'Yes'}}"
+                          },
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P2",
+                            "value": "{{'All'}}"
+                          },
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P3",
+                            "value": "{{1}}"
+                          },
+                          {
+                            "operator": "less",
+                            "type": "expression",
+                            "name": ":P4",
+                            "value": "{{NOW}}"
+                          },
+                          {
+                            "operator": "greater_or_equal",
+                            "type": "expression",
+                            "name": ":P5",
+                            "value": "{{NOW}}"
+                          }
+                        ],
+                        "wheres": {
+                          "condition": "AND",
+                          "rules": [
+                            {
+                              "id": "promo_code.auto_apply",
+                              "field": "promo_code.auto_apply",
+                              "type": "string",
+                              "operator": "equal",
+                              "value": "{{'Yes'}}",
+                              "data": {
+                                "table": "promo_code",
+                                "column": "auto_apply",
+                                "type": "text",
+                                "columnObj": {
+                                  "type": "string",
+                                  "maxLength": -5,
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "auto_apply"
+                                }
+                              },
+                              "operation": "="
+                            },
+                            {
+                              "id": "promo_code.allotted_for",
+                              "field": "promo_code.allotted_for",
+                              "type": "string",
+                              "operator": "equal",
+                              "value": "{{'All'}}",
+                              "data": {
+                                "table": "promo_code",
+                                "column": "allotted_for",
+                                "type": "text",
+                                "columnObj": {
+                                  "type": "string",
+                                  "maxLength": -5,
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "allotted_for"
+                                }
+                              },
+                              "operation": "="
+                            },
+                            {
+                              "id": "promo_code.status",
+                              "field": "promo_code.status",
+                              "type": "double",
+                              "operator": "equal",
+                              "value": "{{1}}",
+                              "data": {
+                                "table": "promo_code",
+                                "column": "status",
+                                "type": "number",
+                                "columnObj": {
+                                  "type": "integer",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "status"
+                                }
+                              },
+                              "operation": "="
+                            },
+                            {
+                              "id": "promo_code.start_date",
+                              "field": "promo_code.start_date",
+                              "type": "datetime",
+                              "operator": "less",
+                              "value": "{{NOW}}",
+                              "data": {
+                                "table": "promo_code",
+                                "column": "start_date",
+                                "type": "datetime",
+                                "columnObj": {
+                                  "type": "timestamp",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "start_date"
+                                }
+                              },
+                              "operation": "<"
+                            },
+                            {
+                              "id": "promo_code.end_date",
+                              "field": "promo_code.end_date",
+                              "type": "datetime",
+                              "operator": "greater_or_equal",
+                              "value": "{{NOW}}",
+                              "data": {
+                                "table": "promo_code",
+                                "column": "end_date",
+                                "type": "datetime",
+                                "columnObj": {
+                                  "type": "timestamp",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "end_date"
+                                }
+                              },
+                              "operation": ">="
+                            }
+                          ],
+                          "conditional": null,
+                          "valid": true
+                        }
+                      }
+                    },
+                    "output": true,
+                    "meta": [
+                      {
+                        "type": "number",
+                        "name": "id"
+                      },
+                      {
+                        "type": "text",
+                        "name": "promo_name"
+                      },
+                      {
+                        "type": "text",
+                        "name": "promo_code"
+                      },
+                      {
+                        "type": "text",
+                        "name": "amt_or_percent"
+                      },
+                      {
+                        "type": "text",
+                        "name": "promo_amt"
+                      },
+                      {
+                        "type": "text",
+                        "name": "promo_per"
+                      }
+                    ],
+                    "outputType": "object"
+                  }
+                },
+                "else": {
+                  "steps": {
+                    "name": "GetPromoCode",
+                    "module": "dbconnector",
+                    "action": "single",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "type": "SELECT",
+                        "columns": [
+                          {
+                            "table": "promo_code",
+                            "column": "id"
+                          },
+                          {
+                            "table": "promo_code",
+                            "column": "promo_name"
+                          },
+                          {
+                            "table": "promo_code",
+                            "column": "promo_code"
+                          },
+                          {
+                            "table": "promo_code",
+                            "column": "amt_or_percent"
+                          },
+                          {
+                            "table": "promo_code",
+                            "column": "promo_amt"
+                          },
+                          {
+                            "table": "promo_code",
+                            "column": "promo_per"
+                          }
+                        ],
+                        "table": {
+                          "name": "promo_code"
+                        },
+                        "joins": [],
+                        "primary": "id",
+                        "query": "SELECT id, promo_name, promo_code, amt_or_percent, promo_amt, promo_per\nFROM promo_code\nWHERE auto_apply = :P1 /* {{'Yes'}} */ AND status = :P2 /* {{1}} */ AND start_date < :P3 /* {{NOW}} */ AND end_date >= :P4 /* {{NOW}} */ AND (user_id = :P5 /* {{identity}} */ OR allotted_for = :P6 /* {{'All'}} */) AND promo_code <> :P7 /* {{'NEWCUSTOMER'}} */",
+                        "params": [
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P1",
+                            "value": "{{'Yes'}}"
+                          },
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P2",
+                            "value": "{{1}}"
+                          },
+                          {
+                            "operator": "less",
+                            "type": "expression",
+                            "name": ":P3",
+                            "value": "{{NOW}}"
+                          },
+                          {
+                            "operator": "greater_or_equal",
+                            "type": "expression",
+                            "name": ":P4",
+                            "value": "{{NOW}}"
+                          },
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P5",
+                            "value": "{{identity}}"
+                          },
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P6",
+                            "value": "{{'All'}}"
+                          },
+                          {
+                            "operator": "not_equal",
+                            "type": "expression",
+                            "name": ":P7",
+                            "value": "{{'NEWCUSTOMER'}}"
+                          }
+                        ],
+                        "wheres": {
+                          "condition": "AND",
+                          "rules": [
+                            {
+                              "id": "promo_code.auto_apply",
+                              "field": "promo_code.auto_apply",
+                              "type": "string",
+                              "operator": "equal",
+                              "value": "{{'Yes'}}",
+                              "data": {
+                                "table": "promo_code",
+                                "column": "auto_apply",
+                                "type": "text",
+                                "columnObj": {
+                                  "type": "string",
+                                  "maxLength": -5,
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "auto_apply"
+                                }
+                              },
+                              "operation": "="
+                            },
+                            {
+                              "id": "promo_code.status",
+                              "field": "promo_code.status",
+                              "type": "double",
+                              "operator": "equal",
+                              "value": "{{1}}",
+                              "data": {
+                                "table": "promo_code",
+                                "column": "status",
+                                "type": "number",
+                                "columnObj": {
+                                  "type": "integer",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "status"
+                                }
+                              },
+                              "operation": "="
+                            },
+                            {
+                              "id": "promo_code.start_date",
+                              "field": "promo_code.start_date",
+                              "type": "datetime",
+                              "operator": "less",
+                              "value": "{{NOW}}",
+                              "data": {
+                                "table": "promo_code",
+                                "column": "start_date",
+                                "type": "datetime",
+                                "columnObj": {
+                                  "type": "timestamp",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "start_date"
+                                }
+                              },
+                              "operation": "<"
+                            },
+                            {
+                              "id": "promo_code.end_date",
+                              "field": "promo_code.end_date",
+                              "type": "datetime",
+                              "operator": "greater_or_equal",
+                              "value": "{{NOW}}",
+                              "data": {
+                                "table": "promo_code",
+                                "column": "end_date",
+                                "type": "datetime",
+                                "columnObj": {
+                                  "type": "timestamp",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "end_date"
+                                }
+                              },
+                              "operation": ">="
+                            },
+                            {
+                              "condition": "OR",
+                              "rules": [
+                                {
+                                  "id": "promo_code.user_id",
+                                  "field": "promo_code.user_id",
+                                  "type": "double",
+                                  "operator": "equal",
+                                  "value": "{{identity}}",
+                                  "data": {
+                                    "table": "promo_code",
+                                    "column": "user_id",
+                                    "type": "number",
+                                    "columnObj": {
+                                      "type": "integer",
+                                      "primary": false,
+                                      "unique": false,
+                                      "nullable": true,
+                                      "name": "user_id"
+                                    }
+                                  },
+                                  "operation": "="
+                                },
+                                {
+                                  "id": "promo_code.allotted_for",
+                                  "field": "promo_code.allotted_for",
+                                  "type": "string",
+                                  "operator": "equal",
+                                  "value": "{{'All'}}",
+                                  "data": {
+                                    "table": "promo_code",
+                                    "column": "allotted_for",
+                                    "type": "text",
+                                    "columnObj": {
+                                      "type": "string",
+                                      "maxLength": -5,
+                                      "primary": false,
+                                      "unique": false,
+                                      "nullable": true,
+                                      "name": "allotted_for"
+                                    }
+                                  },
+                                  "operation": "="
+                                }
+                              ],
+                              "conditional": null
+                            },
+                            {
+                              "id": "promo_code.promo_code",
+                              "field": "promo_code.promo_code",
+                              "type": "string",
+                              "operator": "not_equal",
+                              "value": "{{'NEWCUSTOMER'}}",
+                              "data": {
+                                "table": "promo_code",
+                                "column": "promo_code",
+                                "type": "text",
+                                "columnObj": {
+                                  "type": "string",
+                                  "maxLength": -5,
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "promo_code"
+                                }
+                              },
+                              "operation": "<>"
+                            }
+                          ],
+                          "conditional": null,
+                          "valid": true
+                        }
+                      }
+                    },
+                    "output": true,
+                    "meta": [
+                      {
+                        "type": "number",
+                        "name": "id"
+                      },
+                      {
+                        "type": "text",
+                        "name": "promo_name"
+                      },
+                      {
+                        "type": "text",
+                        "name": "promo_code"
+                      },
+                      {
+                        "type": "text",
+                        "name": "amt_or_percent"
+                      },
+                      {
+                        "type": "text",
+                        "name": "promo_amt"
+                      },
+                      {
+                        "type": "text",
+                        "name": "promo_per"
+                      }
+                    ],
+                    "outputType": "object"
+                  }
+                }
+              },
+              "outputType": "boolean"
             }
           ]
         },

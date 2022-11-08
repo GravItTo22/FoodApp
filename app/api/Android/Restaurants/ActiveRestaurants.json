@@ -64,7 +64,7 @@
                             "options": {
                               "connection": "ClientApp",
                               "sql": {
-                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_en, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
+                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_en as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
                                 "params": [
                                   {
                                     "name": "@limit",
@@ -126,7 +126,7 @@
                             "options": {
                               "connection": "ClientApp",
                               "sql": {
-                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_bn, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
+                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_bn as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
                                 "params": [
                                   {
                                     "name": "@limit",
@@ -188,7 +188,7 @@
                             "options": {
                               "connection": "ClientApp",
                               "sql": {
-                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_hin, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
+                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_hin as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
                                 "params": [
                                   {
                                     "name": "@limit",
@@ -254,7 +254,7 @@
                             "options": {
                               "connection": "ClientApp",
                               "sql": {
-                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_en, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
+                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_en as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
                                 "params": [
                                   {
                                     "name": "@market",
@@ -311,7 +311,7 @@
                             "options": {
                               "connection": "ClientApp",
                               "sql": {
-                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_hin, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
+                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_hin as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
                                 "params": [
                                   {
                                     "name": "@market",
@@ -368,7 +368,7 @@
                             "options": {
                               "connection": "ClientApp",
                               "sql": {
-                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_bn, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
+                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_bn as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
                                 "params": [
                                   {
                                     "name": "@market",

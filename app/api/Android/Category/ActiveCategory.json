@@ -67,7 +67,8 @@
                                 },
                                 {
                                   "table": "m_category",
-                                  "column": "bn_name"
+                                  "column": "bn_name",
+                                  "alias": "cat_name"
                                 },
                                 {
                                   "table": "m_category",
@@ -131,7 +132,7 @@
                                 "conditional": null,
                                 "valid": true
                               },
-                              "query": "SELECT id AS cat_id, bn_name, image\nFROM m_category\nWHERE status = :P1 /* {{1}} */ AND market_id = :P2 /* {{$_GET.market}} */\nORDER BY id ASC",
+                              "query": "SELECT id AS cat_id, bn_name AS cat_name, image\nFROM m_category\nWHERE status = :P1 /* {{1}} */ AND market_id = :P2 /* {{$_GET.market}} */\nORDER BY id ASC",
                               "params": [
                                 {
                                   "operator": "equal",
@@ -216,7 +217,7 @@
                                 },
                                 {
                                   "type": "text",
-                                  "name": "bn_name"
+                                  "name": "cat_name"
                                 },
                                 {
                                   "type": "text",
@@ -254,7 +255,8 @@
                                 },
                                 {
                                   "table": "m_category",
-                                  "column": "hin_name"
+                                  "column": "hin_name",
+                                  "alias": "cat_name"
                                 },
                                 {
                                   "table": "m_category",
@@ -318,7 +320,7 @@
                                 "conditional": null,
                                 "valid": true
                               },
-                              "query": "SELECT id AS cat_id, hin_name, image\nFROM m_category\nWHERE status = :P1 /* {{1}} */ AND market_id = :P2 /* {{$_GET.market}} */\nORDER BY id ASC",
+                              "query": "SELECT id AS cat_id, hin_name AS cat_name, image\nFROM m_category\nWHERE status = :P1 /* {{1}} */ AND market_id = :P2 /* {{$_GET.market}} */\nORDER BY id ASC",
                               "params": [
                                 {
                                   "operator": "equal",
@@ -403,7 +405,7 @@
                                 },
                                 {
                                   "type": "text",
-                                  "name": "hin_name"
+                                  "name": "cat_name"
                                 },
                                 {
                                   "type": "text",
@@ -441,7 +443,8 @@
                                 },
                                 {
                                   "table": "m_category",
-                                  "column": "en_name"
+                                  "column": "en_name",
+                                  "alias": "cat_name"
                                 },
                                 {
                                   "table": "m_category",
@@ -505,7 +508,7 @@
                                 "conditional": null,
                                 "valid": true
                               },
-                              "query": "SELECT id AS cat_id, en_name, image\nFROM m_category\nWHERE status = :P1 /* {{1}} */ AND market_id = :P2 /* {{$_GET.market}} */\nORDER BY id ASC",
+                              "query": "SELECT id AS cat_id, en_name AS cat_name, image\nFROM m_category\nWHERE status = :P1 /* {{1}} */ AND market_id = :P2 /* {{$_GET.market}} */\nORDER BY id ASC",
                               "params": [
                                 {
                                   "operator": "equal",
@@ -590,7 +593,7 @@
                                 },
                                 {
                                   "type": "text",
-                                  "name": "en_name"
+                                  "name": "cat_name"
                                 },
                                 {
                                   "type": "text",

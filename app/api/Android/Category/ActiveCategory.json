@@ -601,32 +601,6 @@
                           ],
                           "outputType": "object"
                         }
-                      },
-                      "else": {
-                        "steps": [
-                          {
-                            "name": "Status",
-                            "module": "core",
-                            "action": "setvalue",
-                            "options": {
-                              "value": 400
-                            },
-                            "meta": [],
-                            "output": true,
-                            "outputType": "text"
-                          },
-                          {
-                            "name": "Resp",
-                            "module": "core",
-                            "action": "setvalue",
-                            "options": {
-                              "value": "No Record Found!"
-                            },
-                            "meta": [],
-                            "output": true,
-                            "outputType": "text"
-                          }
-                        ]
                       }
                     },
                     "outputType": "boolean"

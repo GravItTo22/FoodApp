@@ -8,11 +8,13 @@
       {
         "type": "text",
         "options": {
-          "rules": {
-            "core:required": {}
-          }
+          "rules": {}
         },
         "name": "lang"
+      },
+      {
+        "type": "text",
+        "name": "limit"
       }
     ]
   },

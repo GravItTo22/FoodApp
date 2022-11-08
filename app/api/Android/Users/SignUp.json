@@ -60,6 +60,11 @@
       {
         "type": "text",
         "fieldName": "District",
+        "options": {
+          "rules": {
+            "core:required": {}
+          }
+        },
         "name": "District"
       },
       {
@@ -77,6 +82,11 @@
       {
         "type": "text",
         "fieldName": "Address",
+        "options": {
+          "rules": {
+            "core:required": {}
+          }
+        },
         "name": "Address"
       }
     ],
@@ -540,7 +550,7 @@
                       "module": "core",
                       "action": "setvalue",
                       "options": {
-                        "value": 403
+                        "value": 400
                       },
                       "meta": [],
                       "outputType": "text",

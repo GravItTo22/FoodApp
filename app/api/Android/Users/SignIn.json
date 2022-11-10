@@ -220,6 +220,28 @@
                       "meta": []
                     },
                     {
+                      "name": "Status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 200
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "Resp",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Login Success"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
                       "name": "loginToken",
                       "module": "core",
                       "action": "setsession",
@@ -510,28 +532,6 @@
                           "type": "number"
                         }
                       ]
-                    },
-                    {
-                      "name": "Status",
-                      "module": "core",
-                      "action": "setvalue",
-                      "options": {
-                        "value": 200
-                      },
-                      "meta": [],
-                      "output": true,
-                      "outputType": "text"
-                    },
-                    {
-                      "name": "Resp",
-                      "module": "core",
-                      "action": "setvalue",
-                      "options": {
-                        "value": "Login Success"
-                      },
-                      "meta": [],
-                      "output": true,
-                      "outputType": "text"
                     }
                   ]
                 },

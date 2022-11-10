@@ -4,14 +4,6 @@
       {
         "type": "text",
         "name": "Mobile"
-      },
-      {
-        "type": "number",
-        "name": "user_id"
-      },
-      {
-        "type": "number",
-        "name": "created_by"
       }
     ]
   },

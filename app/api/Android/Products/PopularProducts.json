@@ -660,7 +660,7 @@
                     "outputType": "text"
                   },
                   {
-                    "name": "Resp",
+                    "name": "message",
                     "module": "core",
                     "action": "setvalue",
                     "options": {
@@ -690,7 +690,7 @@
               "outputType": "text"
             },
             {
-              "name": "Resp",
+              "name": "message",
               "module": "core",
               "action": "setvalue",
               "options": {

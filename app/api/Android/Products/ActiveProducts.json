@@ -628,7 +628,7 @@
               "outputType": "text"
             },
             {
-              "name": "Resp",
+              "name": "message",
               "module": "core",
               "action": "setvalue",
               "options": {

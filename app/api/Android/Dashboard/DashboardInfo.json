@@ -107,6 +107,27 @@
                       "outputType": "text"
                     },
                     {
+                      "name": "HomePageBanner",
+                      "module": "dbupdater",
+                      "action": "custom",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "query": "select msi.heading,  msi.description, msi.image from m_sliding_image msi where msi.market_id = @market and msi.status =1",
+                          "params": [
+                            {
+                              "name": "@market",
+                              "value": "{{$_GET.market}}",
+                              "test": "1"
+                            }
+                          ]
+                        }
+                      },
+                      "output": true,
+                      "meta": [],
+                      "outputType": "array"
+                    },
+                    {
                       "name": "GetHelpDesk",
                       "module": "dbconnector",
                       "action": "single",
@@ -441,6 +462,27 @@
                       "meta": [],
                       "output": true,
                       "outputType": "text"
+                    },
+                    {
+                      "name": "HomePageBanner",
+                      "module": "dbupdater",
+                      "action": "custom",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "query": "select msi.heading,  msi.description, msi.image from m_sliding_image msi where msi.market_id = @market and msi.status =1",
+                          "params": [
+                            {
+                              "name": "@market",
+                              "value": "{{$_GET.market}}",
+                              "test": "1"
+                            }
+                          ]
+                        }
+                      },
+                      "output": true,
+                      "meta": [],
+                      "outputType": "array"
                     },
                     {
                       "name": "GetHelpDesk",

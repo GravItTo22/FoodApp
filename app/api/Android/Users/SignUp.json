@@ -453,7 +453,7 @@
                               "then": {
                                 "steps": [
                                   {
-                                    "name": "Status",
+                                    "name": "status",
                                     "module": "core",
                                     "action": "setvalue",
                                     "options": {
@@ -479,7 +479,7 @@
                               "else": {
                                 "steps": [
                                   {
-                                    "name": "Status_copy",
+                                    "name": "status",
                                     "module": "core",
                                     "action": "setvalue",
                                     "options": {

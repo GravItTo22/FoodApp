@@ -127,7 +127,7 @@
                 "then": {
                   "steps": [
                     {
-                      "name": "Status",
+                      "name": "status",
                       "module": "core",
                       "action": "setvalue",
                       "options": {
@@ -487,7 +487,7 @@
                 "else": {
                   "steps": [
                     {
-                      "name": "Status",
+                      "name": "status",
                       "module": "core",
                       "action": "setvalue",
                       "options": {
@@ -518,7 +518,7 @@
         "catch": {
           "steps": [
             {
-              "name": "Status",
+              "name": "status",
               "module": "core",
               "action": "setvalue",
               "options": {

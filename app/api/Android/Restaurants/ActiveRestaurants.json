@@ -3,14 +3,6 @@
     "$_GET": [
       {
         "type": "text",
-        "name": "sort"
-      },
-      {
-        "type": "text",
-        "name": "dir"
-      },
-      {
-        "type": "text",
         "name": "limit"
       },
       {
@@ -32,206 +24,494 @@
         "try": {
           "steps": [
             {
-              "name": "Status",
-              "module": "core",
-              "action": "setvalue",
+              "name": "CheckRest",
+              "module": "dbconnector",
+              "action": "single",
               "options": {
-                "value": 200
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "m_restaurant",
+                      "column": "id",
+                      "alias": "CountId",
+                      "aggregate": "COUNT"
+                    }
+                  ],
+                  "table": {
+                    "name": "m_restaurant"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "groupBy": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "m_restaurant.market_id",
+                        "field": "m_restaurant.market_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{$_GET.market}}",
+                        "data": {
+                          "table": "m_restaurant",
+                          "column": "market_id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "reference",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "references": "id",
+                            "inTable": "m_market",
+                            "referenceType": "integer",
+                            "onUpdate": "NO ACTION",
+                            "onDelete": "NO ACTION",
+                            "name": "market_id"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "m_restaurant.status",
+                        "field": "m_restaurant.status",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{1}}",
+                        "data": {
+                          "table": "m_restaurant",
+                          "column": "status",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "integer",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "status"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT COUNT(id) AS CountId\nFROM m_restaurant\nWHERE market_id = :P1 /* {{$_GET.market}} */ AND status = :P2 /* {{1}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.market}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{1}}"
+                    }
+                  ]
+                }
               },
-              "meta": [],
-              "output": true,
-              "outputType": "text"
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "CountId"
+                }
+              ],
+              "outputType": "object"
             },
             {
               "name": "",
               "module": "core",
               "action": "condition",
               "options": {
-                "if": "{{$_GET.limit&&$_GET.market&&$_GET.lang}}",
+                "if": "{{CheckRest.CountId>=1}}",
                 "then": {
                   "steps": [
                     {
-                      "name": "",
+                      "name": "status",
                       "module": "core",
-                      "action": "condition",
+                      "action": "setvalue",
                       "options": {
-                        "if": "{{($_GET.lang=='EN')}}",
-                        "then": {
-                          "steps": {
-                            "name": "FetchRest",
-                            "module": "dbupdater",
-                            "action": "custom",
-                            "options": {
-                              "connection": "ClientApp",
-                              "sql": {
-                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_en as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
-                                "params": [
-                                  {
-                                    "name": "@limit",
-                                    "value": "{{$_GET.limit}}",
-                                    "test": "10"
-                                  },
-                                  {
-                                    "name": "@market",
-                                    "value": "{{$_GET.market}}",
-                                    "test": "1"
-                                  }
-                                ]
-                              }
-                            },
-                            "output": true,
-                            "meta": [
-                              {
-                                "name": "id",
-                                "type": "number"
-                              },
-                              {
-                                "name": "gen_shop_id",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_en",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_bn",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_hin",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_logo",
-                                "type": "text"
-                              }
-                            ],
-                            "outputType": "array"
-                          }
-                        }
+                        "value": 200
                       },
-                      "outputType": "boolean"
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
                     },
                     {
                       "name": "",
                       "module": "core",
                       "action": "condition",
                       "options": {
-                        "if": "{{($_GET.lang=='BN')}}",
+                        "if": "{{$_GET.limit&&$_GET.market&&$_GET.lang}}",
                         "then": {
-                          "steps": {
-                            "name": "FetchRest",
-                            "module": "dbupdater",
-                            "action": "custom",
-                            "options": {
-                              "connection": "ClientApp",
-                              "sql": {
-                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_bn as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
-                                "params": [
-                                  {
-                                    "name": "@limit",
-                                    "value": "{{$_GET.limit}}",
-                                    "test": "10"
-                                  },
-                                  {
-                                    "name": "@market",
-                                    "value": "{{$_GET.market}}",
-                                    "test": "1"
+                          "steps": [
+                            {
+                              "name": "",
+                              "module": "core",
+                              "action": "condition",
+                              "options": {
+                                "if": "{{($_GET.lang=='EN')}}",
+                                "then": {
+                                  "steps": {
+                                    "name": "FetchRest",
+                                    "module": "dbupdater",
+                                    "action": "custom",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_en as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
+                                        "params": [
+                                          {
+                                            "name": "@limit",
+                                            "value": "{{$_GET.limit}}",
+                                            "test": "10"
+                                          },
+                                          {
+                                            "name": "@market",
+                                            "value": "{{$_GET.market}}",
+                                            "test": "1"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "output": true,
+                                    "meta": [
+                                      {
+                                        "name": "id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "gen_shop_id",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_en",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_bn",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_hin",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_logo",
+                                        "type": "text"
+                                      }
+                                    ],
+                                    "outputType": "array"
                                   }
-                                ]
-                              }
+                                }
+                              },
+                              "outputType": "boolean"
                             },
-                            "output": true,
-                            "meta": [
-                              {
-                                "name": "id",
-                                "type": "number"
-                              },
-                              {
-                                "name": "gen_shop_id",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_en",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_bn",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_hin",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_logo",
-                                "type": "text"
-                              }
-                            ],
-                            "outputType": "array"
-                          }
-                        }
-                      },
-                      "outputType": "boolean"
-                    },
-                    {
-                      "name": "",
-                      "module": "core",
-                      "action": "condition",
-                      "options": {
-                        "if": "{{($_GET.lang=='HIN')}}",
-                        "then": {
-                          "steps": {
-                            "name": "FetchRest",
-                            "module": "dbupdater",
-                            "action": "custom",
-                            "options": {
-                              "connection": "ClientApp",
-                              "sql": {
-                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_hin as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
-                                "params": [
-                                  {
-                                    "name": "@limit",
-                                    "value": "{{$_GET.limit}}",
-                                    "test": "10"
-                                  },
-                                  {
-                                    "name": "@market",
-                                    "value": "{{$_GET.market}}",
-                                    "test": "1"
+                            {
+                              "name": "",
+                              "module": "core",
+                              "action": "condition",
+                              "options": {
+                                "if": "{{($_GET.lang=='BN')}}",
+                                "then": {
+                                  "steps": {
+                                    "name": "FetchRest",
+                                    "module": "dbupdater",
+                                    "action": "custom",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_bn as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
+                                        "params": [
+                                          {
+                                            "name": "@limit",
+                                            "value": "{{$_GET.limit}}",
+                                            "test": "10"
+                                          },
+                                          {
+                                            "name": "@market",
+                                            "value": "{{$_GET.market}}",
+                                            "test": "1"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "output": true,
+                                    "meta": [
+                                      {
+                                        "name": "id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "gen_shop_id",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_en",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_bn",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_hin",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_logo",
+                                        "type": "text"
+                                      }
+                                    ],
+                                    "outputType": "array"
                                   }
-                                ]
-                              }
+                                }
+                              },
+                              "outputType": "boolean"
                             },
-                            "output": true,
-                            "meta": [
-                              {
-                                "name": "id",
-                                "type": "number"
+                            {
+                              "name": "",
+                              "module": "core",
+                              "action": "condition",
+                              "options": {
+                                "if": "{{($_GET.lang=='HIN')}}",
+                                "then": {
+                                  "steps": {
+                                    "name": "FetchRest",
+                                    "module": "dbupdater",
+                                    "action": "custom",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_hin as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
+                                        "params": [
+                                          {
+                                            "name": "@limit",
+                                            "value": "{{$_GET.limit}}",
+                                            "test": "10"
+                                          },
+                                          {
+                                            "name": "@market",
+                                            "value": "{{$_GET.market}}",
+                                            "test": "1"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "output": true,
+                                    "meta": [
+                                      {
+                                        "name": "id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "gen_shop_id",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_en",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_bn",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_hin",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_logo",
+                                        "type": "text"
+                                      }
+                                    ],
+                                    "outputType": "array"
+                                  }
+                                }
                               },
-                              {
-                                "name": "gen_shop_id",
-                                "type": "text"
+                              "outputType": "boolean"
+                            }
+                          ]
+                        },
+                        "else": {
+                          "steps": [
+                            {
+                              "name": "",
+                              "module": "core",
+                              "action": "condition",
+                              "options": {
+                                "if": "{{($_GET.lang=='EN')}}",
+                                "then": {
+                                  "steps": {
+                                    "name": "FetchRest",
+                                    "module": "dbupdater",
+                                    "action": "custom",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_en as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
+                                        "params": [
+                                          {
+                                            "name": "@market",
+                                            "value": "{{$_GET.market}}",
+                                            "test": "1"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "output": true,
+                                    "meta": [
+                                      {
+                                        "name": "id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "gen_shop_id",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_en",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_bn",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_hin",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_logo",
+                                        "type": "text"
+                                      }
+                                    ],
+                                    "outputType": "array"
+                                  }
+                                }
                               },
-                              {
-                                "name": "shop_name_en",
-                                "type": "text"
+                              "outputType": "boolean"
+                            },
+                            {
+                              "name": "",
+                              "module": "core",
+                              "action": "condition",
+                              "options": {
+                                "if": "{{($_GET.lang=='HIN')}}",
+                                "then": {
+                                  "steps": {
+                                    "name": "FetchRest",
+                                    "module": "dbupdater",
+                                    "action": "custom",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_hin as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
+                                        "params": [
+                                          {
+                                            "name": "@market",
+                                            "value": "{{$_GET.market}}",
+                                            "test": "1"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "output": true,
+                                    "meta": [
+                                      {
+                                        "name": "id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "gen_shop_id",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_en",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_bn",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_hin",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_logo",
+                                        "type": "text"
+                                      }
+                                    ],
+                                    "outputType": "array"
+                                  }
+                                }
                               },
-                              {
-                                "name": "shop_name_bn",
-                                "type": "text"
+                              "outputType": "boolean"
+                            },
+                            {
+                              "name": "",
+                              "module": "core",
+                              "action": "condition",
+                              "options": {
+                                "if": "{{($_GET.lang=='BN')}}",
+                                "then": {
+                                  "steps": {
+                                    "name": "FetchRest",
+                                    "module": "dbupdater",
+                                    "action": "custom",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_bn as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
+                                        "params": [
+                                          {
+                                            "name": "@market",
+                                            "value": "{{$_GET.market}}",
+                                            "test": "1"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "output": true,
+                                    "meta": [
+                                      {
+                                        "name": "id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "gen_shop_id",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_en",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_bn",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_name_hin",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_logo",
+                                        "type": "text"
+                                      }
+                                    ],
+                                    "outputType": "array"
+                                  }
+                                }
                               },
-                              {
-                                "name": "shop_name_hin",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_logo",
-                                "type": "text"
-                              }
-                            ],
-                            "outputType": "array"
-                          }
+                              "outputType": "boolean"
+                            }
+                          ]
                         }
                       },
                       "outputType": "boolean"
@@ -241,175 +521,26 @@
                 "else": {
                   "steps": [
                     {
-                      "name": "",
+                      "name": "status",
                       "module": "core",
-                      "action": "condition",
+                      "action": "setvalue",
                       "options": {
-                        "if": "{{($_GET.lang=='EN')}}",
-                        "then": {
-                          "steps": {
-                            "name": "FetchRest",
-                            "module": "dbupdater",
-                            "action": "custom",
-                            "options": {
-                              "connection": "ClientApp",
-                              "sql": {
-                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_en as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
-                                "params": [
-                                  {
-                                    "name": "@market",
-                                    "value": "{{$_GET.market}}",
-                                    "test": "1"
-                                  }
-                                ]
-                              }
-                            },
-                            "output": true,
-                            "meta": [
-                              {
-                                "name": "id",
-                                "type": "number"
-                              },
-                              {
-                                "name": "gen_shop_id",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_en",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_bn",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_hin",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_logo",
-                                "type": "text"
-                              }
-                            ],
-                            "outputType": "array"
-                          }
-                        }
+                        "value": 400
                       },
-                      "outputType": "boolean"
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
                     },
                     {
-                      "name": "",
+                      "name": "message",
                       "module": "core",
-                      "action": "condition",
+                      "action": "setvalue",
                       "options": {
-                        "if": "{{($_GET.lang=='HIN')}}",
-                        "then": {
-                          "steps": {
-                            "name": "FetchRest",
-                            "module": "dbupdater",
-                            "action": "custom",
-                            "options": {
-                              "connection": "ClientApp",
-                              "sql": {
-                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_hin as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
-                                "params": [
-                                  {
-                                    "name": "@market",
-                                    "value": "{{$_GET.market}}",
-                                    "test": "1"
-                                  }
-                                ]
-                              }
-                            },
-                            "output": true,
-                            "meta": [
-                              {
-                                "name": "id",
-                                "type": "number"
-                              },
-                              {
-                                "name": "gen_shop_id",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_en",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_bn",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_hin",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_logo",
-                                "type": "text"
-                              }
-                            ],
-                            "outputType": "array"
-                          }
-                        }
+                        "value": "No Record Found"
                       },
-                      "outputType": "boolean"
-                    },
-                    {
-                      "name": "",
-                      "module": "core",
-                      "action": "condition",
-                      "options": {
-                        "if": "{{($_GET.lang=='BN')}}",
-                        "then": {
-                          "steps": {
-                            "name": "FetchRest",
-                            "module": "dbupdater",
-                            "action": "custom",
-                            "options": {
-                              "connection": "ClientApp",
-                              "sql": {
-                                "query": "SELECT id as rest_id, gen_shop_id, shop_name_bn as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
-                                "params": [
-                                  {
-                                    "name": "@market",
-                                    "value": "{{$_GET.market}}",
-                                    "test": "1"
-                                  }
-                                ]
-                              }
-                            },
-                            "output": true,
-                            "meta": [
-                              {
-                                "name": "id",
-                                "type": "number"
-                              },
-                              {
-                                "name": "gen_shop_id",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_en",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_bn",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_name_hin",
-                                "type": "text"
-                              },
-                              {
-                                "name": "shop_logo",
-                                "type": "text"
-                              }
-                            ],
-                            "outputType": "array"
-                          }
-                        }
-                      },
-                      "outputType": "boolean"
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
                     }
                   ]
                 }
@@ -421,7 +552,7 @@
         "catch": {
           "steps": [
             {
-              "name": "Status",
+              "name": "status",
               "module": "core",
               "action": "setvalue",
               "options": {
@@ -432,7 +563,7 @@
               "outputType": "text"
             },
             {
-              "name": "Resp",
+              "name": "message",
               "module": "core",
               "action": "setvalue",
               "options": {

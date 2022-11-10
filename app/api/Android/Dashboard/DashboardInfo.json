@@ -4,6 +4,10 @@
       {
         "type": "text",
         "name": "logintoken"
+      },
+      {
+        "type": "text",
+        "name": "market"
       }
     ]
   },
@@ -145,7 +149,7 @@
                                 "field": "m_help_desk.market_id",
                                 "type": "double",
                                 "operator": "equal",
-                                "value": "{{1}}",
+                                "value": "{{$_GET.market}}",
                                 "data": {
                                   "table": "m_help_desk",
                                   "column": "market_id",
@@ -184,13 +188,13 @@
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT tech_support_mobile, tech_support_email, customer_care_mobile, customer_care_email, office_address\nFROM m_help_desk\nWHERE market_id = :P1 /* {{1}} */ AND status = :P2 /* {{1}} */",
+                          "query": "SELECT tech_support_mobile, tech_support_email, customer_care_mobile, customer_care_email, office_address\nFROM m_help_desk\nWHERE market_id = :P1 /* {{$_GET.market}} */ AND status = :P2 /* {{1}} */",
                           "params": [
                             {
                               "operator": "equal",
                               "type": "expression",
                               "name": ":P1",
-                              "value": "{{1}}"
+                              "value": "{{$_GET.market}}"
                             },
                             {
                               "operator": "equal",
@@ -481,7 +485,7 @@
                                 "field": "m_help_desk.market_id",
                                 "type": "double",
                                 "operator": "equal",
-                                "value": "{{1}}",
+                                "value": "{{$_GET.market}}",
                                 "data": {
                                   "table": "m_help_desk",
                                   "column": "market_id",
@@ -520,13 +524,13 @@
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT tech_support_mobile, tech_support_email, customer_care_mobile, customer_care_email, office_address\nFROM m_help_desk\nWHERE market_id = :P1 /* {{1}} */ AND status = :P2 /* {{1}} */",
+                          "query": "SELECT tech_support_mobile, tech_support_email, customer_care_mobile, customer_care_email, office_address\nFROM m_help_desk\nWHERE market_id = :P1 /* {{$_GET.market}} */ AND status = :P2 /* {{1}} */",
                           "params": [
                             {
                               "operator": "equal",
                               "type": "expression",
                               "name": ":P1",
-                              "value": "{{1}}"
+                              "value": "{{$_GET.market}}"
                             },
                             {
                               "operator": "equal",

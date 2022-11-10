@@ -138,7 +138,7 @@
                     "module": "core",
                     "action": "condition",
                     "options": {
-                      "if": "{{CountCategory.CountId}}",
+                      "if": "{{CountCategory.CountId>=1}}",
                       "then": {
                         "steps": [
                           {

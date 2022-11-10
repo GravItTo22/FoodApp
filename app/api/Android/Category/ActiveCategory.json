@@ -34,147 +34,286 @@
               "then": {
                 "steps": [
                   {
-                    "name": "Status",
-                    "module": "core",
-                    "action": "setvalue",
+                    "name": "CountCategory",
+                    "module": "dbconnector",
+                    "action": "single",
                     "options": {
-                      "value": 200
-                    },
-                    "meta": [],
-                    "output": true,
-                    "outputType": "text"
-                  },
-                  {
-                    "name": "",
-                    "module": "core",
-                    "action": "condition",
-                    "options": {
-                      "if": "{{($_GET.lang=='BN')}}",
-                      "then": {
-                        "steps": {
-                          "name": "GetCat",
-                          "module": "dbupdater",
-                          "action": "custom",
-                          "options": {
-                            "connection": "ClientApp",
-                            "sql": {
-                              "query": "SELECT id AS cat_id, bn_name AS cat_name, image FROM m_category WHERE status = 1 AND market_id = @market ORDER BY id ASC",
-                              "params": [
-                                {
-                                  "name": "@market",
-                                  "value": "{{$_GET.market}}",
-                                  "test": "1"
+                      "connection": "ClientApp",
+                      "sql": {
+                        "type": "SELECT",
+                        "columns": [
+                          {
+                            "table": "m_category",
+                            "column": "id",
+                            "alias": "CountId",
+                            "aggregate": "COUNT"
+                          }
+                        ],
+                        "table": {
+                          "name": "m_category"
+                        },
+                        "primary": "id",
+                        "joins": [],
+                        "groupBy": [],
+                        "wheres": {
+                          "condition": "AND",
+                          "rules": [
+                            {
+                              "id": "m_category.market_id",
+                              "field": "m_category.market_id",
+                              "type": "double",
+                              "operator": "equal",
+                              "value": "{{$_GET.market}}",
+                              "data": {
+                                "table": "m_category",
+                                "column": "market_id",
+                                "type": "number",
+                                "columnObj": {
+                                  "type": "reference",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "references": "id",
+                                  "inTable": "m_market",
+                                  "referenceType": "integer",
+                                  "onUpdate": "NO ACTION",
+                                  "onDelete": "NO ACTION",
+                                  "name": "market_id"
                                 }
-                              ]
-                            }
-                          },
-                          "output": true,
-                          "meta": [
-                            {
-                              "name": "cat_id",
-                              "type": "number"
+                              },
+                              "operation": "="
                             },
                             {
-                              "name": "cat_name",
-                              "type": "text"
-                            },
-                            {
-                              "name": "image",
-                              "type": "text"
+                              "id": "m_category.status",
+                              "field": "m_category.status",
+                              "type": "double",
+                              "operator": "equal",
+                              "value": "{{1}}",
+                              "data": {
+                                "table": "m_category",
+                                "column": "status",
+                                "type": "number",
+                                "columnObj": {
+                                  "type": "integer",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "status"
+                                }
+                              },
+                              "operation": "="
                             }
                           ],
-                          "outputType": "array"
-                        }
+                          "conditional": null,
+                          "valid": true
+                        },
+                        "query": "SELECT COUNT(id) AS CountId\nFROM m_category\nWHERE market_id = :P1 /* {{$_GET.market}} */ AND status = :P2 /* {{1}} */",
+                        "params": [
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P1",
+                            "value": "{{$_GET.market}}"
+                          },
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P2",
+                            "value": "{{1}}"
+                          }
+                        ]
                       }
                     },
-                    "outputType": "boolean"
-                  },
-                  {
-                    "name": "",
-                    "module": "core",
-                    "action": "condition",
-                    "options": {
-                      "if": "{{($_GET.lang=='HIN')}}",
-                      "then": {
-                        "steps": {
-                          "name": "GetCat",
-                          "module": "dbupdater",
-                          "action": "custom",
-                          "options": {
-                            "connection": "ClientApp",
-                            "sql": {
-                              "query": "SELECT id AS cat_id, hin_name AS cat_name, image FROM m_category WHERE status = 1 AND market_id = @market ORDER BY id ASC",
-                              "params": [
-                                {
-                                  "name": "@market",
-                                  "value": "{{$_GET.market}}",
-                                  "test": "1"
-                                }
-                              ]
-                            }
-                          },
-                          "output": true,
-                          "meta": [
-                            {
-                              "name": "cat_id",
-                              "type": "number"
-                            },
-                            {
-                              "name": "cat_name",
-                              "type": "text"
-                            },
-                            {
-                              "name": "image",
-                              "type": "text"
-                            }
-                          ],
-                          "outputType": "array"
-                        }
+                    "output": false,
+                    "meta": [
+                      {
+                        "type": "number",
+                        "name": "CountId"
                       }
-                    },
-                    "outputType": "boolean"
+                    ],
+                    "outputType": "object"
                   },
                   {
                     "name": "",
                     "module": "core",
                     "action": "condition",
                     "options": {
-                      "if": "{{($_GET.lang=='EN')}}",
+                      "if": "{{CountCategory.CountId}}",
                       "then": {
-                        "steps": {
-                          "name": "GetCat",
-                          "module": "dbupdater",
-                          "action": "custom",
-                          "options": {
-                            "connection": "ClientApp",
-                            "sql": {
-                              "query": "SELECT id AS cat_id, en_name AS cat_name, image FROM m_category WHERE status = 1 AND market_id = @market ORDER BY id ASC",
-                              "params": [
-                                {
-                                  "name": "@market",
-                                  "value": "{{$_GET.market}}",
-                                  "test": "1"
-                                }
-                              ]
-                            }
+                        "steps": [
+                          {
+                            "name": "status",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": 200
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
                           },
-                          "output": true,
-                          "meta": [
-                            {
-                              "name": "cat_id",
-                              "type": "number"
+                          {
+                            "name": "",
+                            "module": "core",
+                            "action": "condition",
+                            "options": {
+                              "if": "{{($_GET.lang=='EN')}}",
+                              "then": {
+                                "steps": {
+                                  "name": "GetCat",
+                                  "module": "dbupdater",
+                                  "action": "custom",
+                                  "options": {
+                                    "connection": "ClientApp",
+                                    "sql": {
+                                      "query": "SELECT id AS cat_id, en_name AS cat_name, image FROM m_category WHERE status = 1 AND market_id = @market ORDER BY id ASC",
+                                      "params": [
+                                        {
+                                          "name": "@market",
+                                          "value": "{{$_GET.market}}",
+                                          "test": "1"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "output": true,
+                                  "meta": [
+                                    {
+                                      "name": "cat_id",
+                                      "type": "number"
+                                    },
+                                    {
+                                      "name": "cat_name",
+                                      "type": "text"
+                                    },
+                                    {
+                                      "name": "image",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "outputType": "array"
+                                }
+                              }
                             },
-                            {
-                              "name": "cat_name",
-                              "type": "text"
+                            "outputType": "boolean"
+                          },
+                          {
+                            "name": "",
+                            "module": "core",
+                            "action": "condition",
+                            "options": {
+                              "if": "{{($_GET.lang=='HIN')}}",
+                              "then": {
+                                "steps": {
+                                  "name": "GetCat",
+                                  "module": "dbupdater",
+                                  "action": "custom",
+                                  "options": {
+                                    "connection": "ClientApp",
+                                    "sql": {
+                                      "query": "SELECT id AS cat_id, hin_name AS cat_name, image FROM m_category WHERE status = 1 AND market_id = @market ORDER BY id ASC",
+                                      "params": [
+                                        {
+                                          "name": "@market",
+                                          "value": "{{$_GET.market}}",
+                                          "test": "1"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "output": true,
+                                  "meta": [
+                                    {
+                                      "name": "cat_id",
+                                      "type": "number"
+                                    },
+                                    {
+                                      "name": "cat_name",
+                                      "type": "text"
+                                    },
+                                    {
+                                      "name": "image",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "outputType": "array"
+                                }
+                              }
                             },
-                            {
-                              "name": "image",
-                              "type": "text"
-                            }
-                          ],
-                          "outputType": "array"
-                        }
+                            "outputType": "boolean"
+                          },
+                          {
+                            "name": "",
+                            "module": "core",
+                            "action": "condition",
+                            "options": {
+                              "if": "{{($_GET.lang=='BN')}}",
+                              "then": {
+                                "steps": {
+                                  "name": "GetCat",
+                                  "module": "dbupdater",
+                                  "action": "custom",
+                                  "options": {
+                                    "connection": "ClientApp",
+                                    "sql": {
+                                      "query": "SELECT id AS cat_id, bn_name AS cat_name, image FROM m_category WHERE status = 1 AND market_id = @market ORDER BY id ASC",
+                                      "params": [
+                                        {
+                                          "name": "@market",
+                                          "value": "{{$_GET.market}}",
+                                          "test": "1"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "output": true,
+                                  "meta": [
+                                    {
+                                      "name": "cat_id",
+                                      "type": "number"
+                                    },
+                                    {
+                                      "name": "cat_name",
+                                      "type": "text"
+                                    },
+                                    {
+                                      "name": "image",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "outputType": "array"
+                                }
+                              }
+                            },
+                            "outputType": "boolean"
+                          }
+                        ]
+                      },
+                      "else": {
+                        "steps": [
+                          {
+                            "name": "status",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": 400
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          },
+                          {
+                            "name": "message",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": "No Category Available "
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          }
+                        ]
                       }
                     },
                     "outputType": "boolean"
@@ -184,7 +323,7 @@
               "else": {
                 "steps": [
                   {
-                    "name": "Status",
+                    "name": "status",
                     "module": "core",
                     "action": "setvalue",
                     "options": {
@@ -214,7 +353,7 @@
         "catch": {
           "steps": [
             {
-              "name": "Status",
+              "name": "status",
               "module": "core",
               "action": "setvalue",
               "options": {

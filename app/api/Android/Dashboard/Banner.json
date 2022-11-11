@@ -35,13 +35,19 @@
                     "name": "m_sliding_image"
                   },
                   "joins": [],
-                  "query": "SELECT COUNT(id) AS CountId\nFROM m_sliding_image\nWHERE market_id = :P1 /* {{$_GET.market}} */",
+                  "query": "SELECT COUNT(id) AS CountId\nFROM m_sliding_image\nWHERE market_id = :P1 /* {{$_GET.market}} */ AND status = :P2 /* {{1}} */",
                   "params": [
                     {
                       "operator": "equal",
                       "type": "expression",
                       "name": ":P1",
                       "value": "{{$_GET.market}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{1}}"
                     }
                   ],
                   "primary": "id",
@@ -65,6 +71,26 @@
                             "unique": false,
                             "nullable": true,
                             "name": "market_id"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "m_sliding_image.status",
+                        "field": "m_sliding_image.status",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{1}}",
+                        "data": {
+                          "table": "m_sliding_image",
+                          "column": "status",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "integer",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "status"
                           }
                         },
                         "operation": "="

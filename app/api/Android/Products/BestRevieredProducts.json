@@ -1,0 +1,838 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "limit"
+      },
+      {
+        "type": "text",
+        "name": "market"
+      },
+      {
+        "type": "text",
+        "name": "lang"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": {
+            "name": "",
+            "module": "core",
+            "action": "condition",
+            "options": {
+              "if": "{{($_GET.market&&$_GET.lang)}}",
+              "then": {
+                "steps": [
+                  {
+                    "name": "CountProd",
+                    "module": "dbconnector",
+                    "action": "single",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "type": "SELECT",
+                        "columns": [
+                          {
+                            "table": "m_product",
+                            "column": "id",
+                            "alias": "CountId",
+                            "aggregate": "COUNT"
+                          }
+                        ],
+                        "table": {
+                          "name": "m_product"
+                        },
+                        "primary": "id",
+                        "joins": [],
+                        "wheres": {
+                          "condition": "AND",
+                          "rules": [
+                            {
+                              "id": "m_product.market_id",
+                              "field": "m_product.market_id",
+                              "type": "double",
+                              "operator": "equal",
+                              "value": "{{$_GET.market}}",
+                              "data": {
+                                "table": "m_product",
+                                "column": "market_id",
+                                "type": "number",
+                                "columnObj": {
+                                  "type": "reference",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "references": "id",
+                                  "inTable": "m_market",
+                                  "referenceType": "integer",
+                                  "onUpdate": "NO ACTION",
+                                  "onDelete": "NO ACTION",
+                                  "name": "market_id"
+                                }
+                              },
+                              "operation": "="
+                            },
+                            {
+                              "id": "m_product.status",
+                              "field": "m_product.status",
+                              "type": "double",
+                              "operator": "equal",
+                              "value": "{{1}}",
+                              "data": {
+                                "table": "m_product",
+                                "column": "status",
+                                "type": "number",
+                                "columnObj": {
+                                  "type": "integer",
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "status"
+                                }
+                              },
+                              "operation": "="
+                            }
+                          ],
+                          "conditional": null,
+                          "valid": true
+                        },
+                        "groupBy": [],
+                        "query": "SELECT COUNT(id) AS CountId\nFROM m_product\nWHERE market_id = :P1 /* {{$_GET.market}} */ AND status = :P2 /* {{1}} */",
+                        "params": [
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P1",
+                            "value": "{{$_GET.market}}"
+                          },
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P2",
+                            "value": "{{1}}"
+                          }
+                        ]
+                      }
+                    },
+                    "output": false,
+                    "meta": [
+                      {
+                        "type": "number",
+                        "name": "CountId"
+                      }
+                    ],
+                    "outputType": "object"
+                  },
+                  {
+                    "name": "",
+                    "module": "core",
+                    "action": "condition",
+                    "options": {
+                      "if": "{{CountProd.CountId>=1}}",
+                      "then": {
+                        "steps": [
+                          {
+                            "name": "status",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": 200
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          },
+                          {
+                            "name": "",
+                            "module": "core",
+                            "action": "condition",
+                            "options": {
+                              "if": "{{$_GET.limit}}",
+                              "then": {
+                                "steps": [
+                                  {
+                                    "name": "",
+                                    "module": "core",
+                                    "action": "condition",
+                                    "options": {
+                                      "if": "{{($_GET.lang=='EN')}}",
+                                      "then": {
+                                        "steps": {
+                                          "name": "GetProd",
+                                          "module": "dbupdater",
+                                          "action": "custom",
+                                          "options": {
+                                            "connection": "ClientApp",
+                                            "sql": {
+                                              "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, mp.prod_img1, mr.shop_name_en as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mp.market_id=@market ORDER by random() limit @limit",
+                                              "params": [
+                                                {
+                                                  "name": "@limit",
+                                                  "value": "{{$_GET.limit}}",
+                                                  "test": "10"
+                                                },
+                                                {
+                                                  "name": "@market",
+                                                  "value": "{{$_GET.market}}",
+                                                  "test": "1"
+                                                }
+                                              ]
+                                            }
+                                          },
+                                          "output": true,
+                                          "meta": [
+                                            {
+                                              "name": "p_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_id",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "rest_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_mark_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_name",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_img1",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "shop_name",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "price",
+                                              "type": "array",
+                                              "sub": [
+                                                {
+                                                  "name": "price_id",
+                                                  "type": "number"
+                                                },
+                                                {
+                                                  "name": "quantity",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "q_unit",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "mrp",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "price",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "product_tax",
+                                                  "type": "text"
+                                                }
+                                              ]
+                                            }
+                                          ],
+                                          "outputType": "array"
+                                        }
+                                      }
+                                    },
+                                    "outputType": "boolean"
+                                  },
+                                  {
+                                    "name": "",
+                                    "module": "core",
+                                    "action": "condition",
+                                    "options": {
+                                      "if": "{{($_GET.lang=='BN')}}",
+                                      "then": {
+                                        "steps": {
+                                          "name": "GetProd",
+                                          "module": "dbupdater",
+                                          "action": "custom",
+                                          "options": {
+                                            "connection": "ClientApp",
+                                            "sql": {
+                                              "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, mp.prod_img1, mr.shop_name_bn as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mp.market_id=@market ORDER by random() limit @limit",
+                                              "params": [
+                                                {
+                                                  "name": "@limit",
+                                                  "value": "{{$_GET.limit}}",
+                                                  "test": "10"
+                                                },
+                                                {
+                                                  "name": "@market",
+                                                  "value": "{{$_GET.market}}",
+                                                  "test": "1"
+                                                }
+                                              ]
+                                            }
+                                          },
+                                          "output": true,
+                                          "meta": [
+                                            {
+                                              "name": "p_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_id",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "rest_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_mark_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_name",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_img1",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "shop_name",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "price",
+                                              "type": "array",
+                                              "sub": [
+                                                {
+                                                  "name": "price_id",
+                                                  "type": "number"
+                                                },
+                                                {
+                                                  "name": "quantity",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "q_unit",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "mrp",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "price",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "product_tax",
+                                                  "type": "text"
+                                                }
+                                              ]
+                                            }
+                                          ],
+                                          "outputType": "array"
+                                        }
+                                      }
+                                    },
+                                    "outputType": "boolean"
+                                  },
+                                  {
+                                    "name": "",
+                                    "module": "core",
+                                    "action": "condition",
+                                    "options": {
+                                      "if": "{{($_GET.lang=='HIN')}}",
+                                      "then": {
+                                        "steps": {
+                                          "name": "GetProd",
+                                          "module": "dbupdater",
+                                          "action": "custom",
+                                          "options": {
+                                            "connection": "ClientApp",
+                                            "sql": {
+                                              "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, mp.prod_img1, mr.shop_name_hin as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mp.market_id=@market ORDER by random() limit @limit",
+                                              "params": [
+                                                {
+                                                  "name": "@limit",
+                                                  "value": "{{$_GET.limit}}",
+                                                  "test": "10"
+                                                },
+                                                {
+                                                  "name": "@market",
+                                                  "value": "{{$_GET.market}}",
+                                                  "test": "1"
+                                                }
+                                              ]
+                                            }
+                                          },
+                                          "output": true,
+                                          "meta": [
+                                            {
+                                              "name": "p_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_id",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "rest_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_mark_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_name",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_img1",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "shop_name",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "price",
+                                              "type": "array",
+                                              "sub": [
+                                                {
+                                                  "name": "price_id",
+                                                  "type": "number"
+                                                },
+                                                {
+                                                  "name": "quantity",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "q_unit",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "mrp",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "price",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "product_tax",
+                                                  "type": "text"
+                                                }
+                                              ]
+                                            }
+                                          ],
+                                          "outputType": "array"
+                                        }
+                                      }
+                                    },
+                                    "outputType": "boolean"
+                                  }
+                                ]
+                              },
+                              "else": {
+                                "steps": [
+                                  {
+                                    "name": "",
+                                    "module": "core",
+                                    "action": "condition",
+                                    "options": {
+                                      "if": "{{($_GET.lang=='EN')}}",
+                                      "then": {
+                                        "steps": {
+                                          "name": "GetProd",
+                                          "module": "dbupdater",
+                                          "action": "custom",
+                                          "options": {
+                                            "connection": "ClientApp",
+                                            "sql": {
+                                              "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, mp.prod_img1, mr.shop_name_en as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mp.market_id=@market ORDER by mp.id desc",
+                                              "params": [
+                                                {
+                                                  "name": "@market",
+                                                  "value": "{{$_GET.market}}",
+                                                  "test": "1"
+                                                }
+                                              ]
+                                            }
+                                          },
+                                          "output": true,
+                                          "meta": [
+                                            {
+                                              "name": "p_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_id",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "rest_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_mark_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_name",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_img1",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "shop_name",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "price",
+                                              "type": "array",
+                                              "sub": [
+                                                {
+                                                  "name": "price_id",
+                                                  "type": "number"
+                                                },
+                                                {
+                                                  "name": "quantity",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "q_unit",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "mrp",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "price",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "product_tax",
+                                                  "type": "text"
+                                                }
+                                              ]
+                                            }
+                                          ],
+                                          "outputType": "array"
+                                        }
+                                      }
+                                    },
+                                    "outputType": "boolean"
+                                  },
+                                  {
+                                    "name": "",
+                                    "module": "core",
+                                    "action": "condition",
+                                    "options": {
+                                      "if": "{{($_GET.lang=='BN')}}",
+                                      "then": {
+                                        "steps": {
+                                          "name": "GetProd",
+                                          "module": "dbupdater",
+                                          "action": "custom",
+                                          "options": {
+                                            "connection": "ClientApp",
+                                            "sql": {
+                                              "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, mp.prod_img1,  mr.shop_name_bn as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mp.market_id=@market ORDER by mp.id desc",
+                                              "params": [
+                                                {
+                                                  "name": "@market",
+                                                  "value": "{{$_GET.market}}",
+                                                  "test": "1"
+                                                }
+                                              ]
+                                            }
+                                          },
+                                          "output": true,
+                                          "meta": [
+                                            {
+                                              "name": "p_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_id",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "rest_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_mark_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_name",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_img1",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "shop_name",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "price",
+                                              "type": "array",
+                                              "sub": [
+                                                {
+                                                  "name": "price_id",
+                                                  "type": "number"
+                                                },
+                                                {
+                                                  "name": "quantity",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "q_unit",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "mrp",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "price",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "product_tax",
+                                                  "type": "text"
+                                                }
+                                              ]
+                                            }
+                                          ],
+                                          "outputType": "array"
+                                        }
+                                      }
+                                    },
+                                    "outputType": "boolean"
+                                  },
+                                  {
+                                    "name": "",
+                                    "module": "core",
+                                    "action": "condition",
+                                    "options": {
+                                      "if": "{{($_GET.lang=='HIN')}}",
+                                      "then": {
+                                        "steps": {
+                                          "name": "GetProd",
+                                          "module": "dbupdater",
+                                          "action": "custom",
+                                          "options": {
+                                            "connection": "ClientApp",
+                                            "sql": {
+                                              "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, mp.prod_img1, mr.shop_name_hin as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mp.market_id=@market ORDER by mp.id desc",
+                                              "params": [
+                                                {
+                                                  "name": "@market",
+                                                  "value": "{{$_GET.market}}",
+                                                  "test": "1"
+                                                }
+                                              ]
+                                            }
+                                          },
+                                          "output": true,
+                                          "meta": [
+                                            {
+                                              "name": "p_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_id",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "rest_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_mark_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_name_en",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_name_bn",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_name_hin",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_img1",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "shop_name_en",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "shop_name_bn",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "shop_name_hin",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "price",
+                                              "type": "array",
+                                              "sub": [
+                                                {
+                                                  "name": "price_id",
+                                                  "type": "number"
+                                                },
+                                                {
+                                                  "name": "quantity",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "q_unit",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "mrp",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "price",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "product_tax",
+                                                  "type": "text"
+                                                }
+                                              ]
+                                            }
+                                          ],
+                                          "outputType": "array"
+                                        }
+                                      }
+                                    },
+                                    "outputType": "boolean"
+                                  }
+                                ]
+                              }
+                            },
+                            "outputType": "boolean"
+                          }
+                        ]
+                      },
+                      "else": {
+                        "steps": [
+                          {
+                            "name": "status",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": 400
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          },
+                          {
+                            "name": "message",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": "No Active Products Available!"
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          }
+                        ]
+                      }
+                    },
+                    "outputType": "boolean"
+                  }
+                ]
+              },
+              "else": {
+                "steps": [
+                  {
+                    "name": "status",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": 400
+                    },
+                    "meta": [],
+                    "output": true,
+                    "outputType": "text"
+                  },
+                  {
+                    "name": "message",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": "No Record Found!"
+                    },
+                    "meta": [],
+                    "output": true,
+                    "outputType": "text"
+                  }
+                ]
+              }
+            },
+            "outputType": "boolean"
+          }
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1321 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "market"
+      },
+      {
+        "type": "text",
+        "name": "search_item"
+      },
+      {
+        "type": "text",
+        "name": "lang"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": {
+            "name": "",
+            "module": "core",
+            "action": "condition",
+            "options": {
+              "if": "{{($_GET.market&&$_GET.search_item)}}",
+              "then": {
+                "steps": [
+                  {
+                    "name": "",
+                    "module": "core",
+                    "action": "condition",
+                    "options": {
+                      "if": "{{($_GET.lang=='EN')}}",
+                      "then": {
+                        "steps": [
+                          {
+                            "name": "Search",
+                            "module": "dbconnector",
+                            "action": "select",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "SELECT",
+                                "columns": [
+                                  {
+                                    "table": "m_product",
+                                    "column": "id"
+                                  },
+                                  {
+                                    "table": "m_product",
+                                    "column": "prod_name_en",
+                                    "alias": "prod_name"
+                                  },
+                                  {
+                                    "table": "m_product",
+                                    "column": "prod_img1"
+                                  },
+                                  {
+                                    "table": "m_product",
+                                    "column": "rest_id"
+                                  },
+                                  {
+                                    "table": "mr",
+                                    "column": "shop_name_en",
+                                    "alias": "shop_name"
+                                  }
+                                ],
+                                "table": {
+                                  "name": "m_product"
+                                },
+                                "primary": "id",
+                                "joins": [
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "*",
+                                    "alias": "mr",
+                                    "type": "LEFT",
+                                    "clauses": {
+                                      "condition": "AND",
+                                      "rules": [
+                                        {
+                                          "table": "mr",
+                                          "column": "id",
+                                          "operator": "equal",
+                                          "value": {
+                                            "table": "m_product",
+                                            "column": "rest_id"
+                                          },
+                                          "operation": "="
+                                        }
+                                      ]
+                                    },
+                                    "primary": "id"
+                                  }
+                                ],
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "m_product.status",
+                                      "field": "m_product.status",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{1}}",
+                                      "data": {
+                                        "table": "m_product",
+                                        "column": "status",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "integer",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "name": "status"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "id": "m_product.market_id",
+                                      "field": "m_product.market_id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{$_GET.market}}",
+                                      "data": {
+                                        "table": "m_product",
+                                        "column": "market_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "reference",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "references": "id",
+                                          "inTable": "m_market",
+                                          "referenceType": "integer",
+                                          "onUpdate": "NO ACTION",
+                                          "onDelete": "NO ACTION",
+                                          "name": "market_id"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "id": "mr.status",
+                                      "field": "mr.status",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{1}}",
+                                      "data": {
+                                        "table": "mr",
+                                        "column": "status",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "integer",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "name": "status"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "condition": "OR",
+                                      "rules": [
+                                        {
+                                          "id": "m_product.prod_name_en",
+                                          "field": "m_product.prod_name_en",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "m_product",
+                                            "column": "prod_name_en",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "prod_name_en"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "m_product.prod_name_bn",
+                                          "field": "m_product.prod_name_bn",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "m_product",
+                                            "column": "prod_name_bn",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "prod_name_bn"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "m_product.prod_name_hin",
+                                          "field": "m_product.prod_name_hin",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "m_product",
+                                            "column": "prod_name_hin",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "prod_name_hin"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "mr.shop_name_en",
+                                          "field": "mr.shop_name_en",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "mr",
+                                            "column": "shop_name_en",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "shop_name_en"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "mr.shop_name_bn",
+                                          "field": "mr.shop_name_bn",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "mr",
+                                            "column": "shop_name_bn",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "shop_name_bn"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "mr.shop_name_hin",
+                                          "field": "mr.shop_name_hin",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "mr",
+                                            "column": "shop_name_hin",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "shop_name_hin"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        }
+                                      ],
+                                      "conditional": null
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                },
+                                "query": "SELECT m_product.id, m_product.prod_name_en AS prod_name, m_product.prod_img1, m_product.rest_id, mr.shop_name_en AS shop_name\nFROM m_product\nLEFT JOIN m_restaurant AS mr ON (mr.id = m_product.rest_id)\nWHERE m_product.status = :P1 /* {{1}} */ AND m_product.market_id = :P2 /* {{$_GET.market}} */ AND mr.status = :P3 /* {{1}} */ AND (m_product.prod_name_en LIKE :P4 /* {{$_GET.search_item}} */ OR m_product.prod_name_bn LIKE :P5 /* {{$_GET.search_item}} */ OR m_product.prod_name_hin LIKE :P6 /* {{$_GET.search_item}} */ OR mr.shop_name_en LIKE :P7 /* {{$_GET.search_item}} */ OR mr.shop_name_bn LIKE :P8 /* {{$_GET.search_item}} */ OR mr.shop_name_hin LIKE :P9 /* {{$_GET.search_item}} */)",
+                                "params": [
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P1",
+                                    "value": "{{1}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P2",
+                                    "value": "{{$_GET.market}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P3",
+                                    "value": "{{1}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P4",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P5",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P6",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P7",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P8",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P9",
+                                    "value": "{{$_GET.search_item}}"
+                                  }
+                                ]
+                              }
+                            },
+                            "output": true,
+                            "meta": [
+                              {
+                                "type": "number",
+                                "name": "id"
+                              },
+                              {
+                                "type": "text",
+                                "name": "prod_name"
+                              },
+                              {
+                                "type": "text",
+                                "name": "prod_img1"
+                              },
+                              {
+                                "type": "number",
+                                "name": "rest_id"
+                              },
+                              {
+                                "type": "text",
+                                "name": "shop_name"
+                              }
+                            ],
+                            "outputType": "array"
+                          },
+                          {
+                            "name": "",
+                            "module": "core",
+                            "action": "condition",
+                            "options": {
+                              "if": "{{Search[0].id}}",
+                              "then": {
+                                "steps": {
+                                  "name": "status",
+                                  "module": "core",
+                                  "action": "setvalue",
+                                  "options": {
+                                    "value": 200
+                                  },
+                                  "meta": [],
+                                  "output": true,
+                                  "outputType": "text"
+                                }
+                              },
+                              "else": {
+                                "steps": [
+                                  {
+                                    "name": "status",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": 400
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  },
+                                  {
+                                    "name": "message",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": "No Record Found!"
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  }
+                                ]
+                              }
+                            },
+                            "outputType": "boolean"
+                          }
+                        ]
+                      }
+                    },
+                    "outputType": "boolean"
+                  },
+                  {
+                    "name": "",
+                    "module": "core",
+                    "action": "condition",
+                    "options": {
+                      "if": "{{($_GET.lang=='BN')}}",
+                      "then": {
+                        "steps": [
+                          {
+                            "name": "Search",
+                            "module": "dbconnector",
+                            "action": "select",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "SELECT",
+                                "columns": [
+                                  {
+                                    "table": "m_product",
+                                    "column": "id"
+                                  },
+                                  {
+                                    "table": "m_product",
+                                    "column": "prod_img1"
+                                  },
+                                  {
+                                    "table": "m_product",
+                                    "column": "rest_id"
+                                  },
+                                  {
+                                    "table": "m_product",
+                                    "column": "prod_name_bn",
+                                    "alias": "prod_name"
+                                  },
+                                  {
+                                    "table": "mr",
+                                    "column": "shop_name_bn",
+                                    "alias": "shop_name"
+                                  }
+                                ],
+                                "table": {
+                                  "name": "m_product"
+                                },
+                                "primary": "id",
+                                "joins": [
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "*",
+                                    "alias": "mr",
+                                    "type": "LEFT",
+                                    "clauses": {
+                                      "condition": "AND",
+                                      "rules": [
+                                        {
+                                          "table": "mr",
+                                          "column": "id",
+                                          "operator": "equal",
+                                          "value": {
+                                            "table": "m_product",
+                                            "column": "rest_id"
+                                          },
+                                          "operation": "="
+                                        }
+                                      ]
+                                    },
+                                    "primary": "id"
+                                  }
+                                ],
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "m_product.status",
+                                      "field": "m_product.status",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{1}}",
+                                      "data": {
+                                        "table": "m_product",
+                                        "column": "status",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "integer",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "name": "status"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "id": "m_product.market_id",
+                                      "field": "m_product.market_id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{$_GET.market}}",
+                                      "data": {
+                                        "table": "m_product",
+                                        "column": "market_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "reference",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "references": "id",
+                                          "inTable": "m_market",
+                                          "referenceType": "integer",
+                                          "onUpdate": "NO ACTION",
+                                          "onDelete": "NO ACTION",
+                                          "name": "market_id"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "id": "mr.status",
+                                      "field": "mr.status",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{1}}",
+                                      "data": {
+                                        "table": "mr",
+                                        "column": "status",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "integer",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "name": "status"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "condition": "OR",
+                                      "rules": [
+                                        {
+                                          "id": "m_product.prod_name_en",
+                                          "field": "m_product.prod_name_en",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "m_product",
+                                            "column": "prod_name_en",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "prod_name_en"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "m_product.prod_name_bn",
+                                          "field": "m_product.prod_name_bn",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "m_product",
+                                            "column": "prod_name_bn",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "prod_name_bn"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "m_product.prod_name_hin",
+                                          "field": "m_product.prod_name_hin",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "m_product",
+                                            "column": "prod_name_hin",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "prod_name_hin"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "mr.shop_name_en",
+                                          "field": "mr.shop_name_en",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "mr",
+                                            "column": "shop_name_en",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "shop_name_en"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "mr.shop_name_bn",
+                                          "field": "mr.shop_name_bn",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "mr",
+                                            "column": "shop_name_bn",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "shop_name_bn"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "mr.shop_name_hin",
+                                          "field": "mr.shop_name_hin",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "mr",
+                                            "column": "shop_name_hin",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "shop_name_hin"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        }
+                                      ],
+                                      "conditional": null
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                },
+                                "query": "SELECT m_product.id, m_product.prod_img1, m_product.rest_id, m_product.prod_name_bn AS prod_name, mr.shop_name_bn AS shop_name\nFROM m_product\nLEFT JOIN m_restaurant AS mr ON (mr.id = m_product.rest_id)\nWHERE m_product.status = :P1 /* {{1}} */ AND m_product.market_id = :P2 /* {{$_GET.market}} */ AND mr.status = :P3 /* {{1}} */ AND (m_product.prod_name_en LIKE :P4 /* {{$_GET.search_item}} */ OR m_product.prod_name_bn LIKE :P5 /* {{$_GET.search_item}} */ OR m_product.prod_name_hin LIKE :P6 /* {{$_GET.search_item}} */ OR mr.shop_name_en LIKE :P7 /* {{$_GET.search_item}} */ OR mr.shop_name_bn LIKE :P8 /* {{$_GET.search_item}} */ OR mr.shop_name_hin LIKE :P9 /* {{$_GET.search_item}} */)",
+                                "params": [
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P1",
+                                    "value": "{{1}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P2",
+                                    "value": "{{$_GET.market}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P3",
+                                    "value": "{{1}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P4",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P5",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P6",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P7",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P8",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P9",
+                                    "value": "{{$_GET.search_item}}"
+                                  }
+                                ]
+                              }
+                            },
+                            "output": true,
+                            "meta": [
+                              {
+                                "type": "number",
+                                "name": "id"
+                              },
+                              {
+                                "type": "text",
+                                "name": "prod_img1"
+                              },
+                              {
+                                "type": "number",
+                                "name": "rest_id"
+                              },
+                              {
+                                "type": "text",
+                                "name": "prod_name"
+                              },
+                              {
+                                "type": "text",
+                                "name": "shop_name"
+                              }
+                            ],
+                            "outputType": "array"
+                          },
+                          {
+                            "name": "",
+                            "module": "core",
+                            "action": "condition",
+                            "options": {
+                              "if": "{{Search[0].id}}",
+                              "then": {
+                                "steps": {
+                                  "name": "status",
+                                  "module": "core",
+                                  "action": "setvalue",
+                                  "options": {
+                                    "value": 200
+                                  },
+                                  "meta": [],
+                                  "output": true,
+                                  "outputType": "text"
+                                }
+                              },
+                              "else": {
+                                "steps": [
+                                  {
+                                    "name": "status_copy",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": 400
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  },
+                                  {
+                                    "name": "message_copy",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": "No Record Found!"
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  }
+                                ]
+                              }
+                            },
+                            "outputType": "boolean"
+                          }
+                        ]
+                      }
+                    },
+                    "outputType": "boolean"
+                  },
+                  {
+                    "name": "",
+                    "module": "core",
+                    "action": "condition",
+                    "options": {
+                      "if": "{{($_GET.lang=='HIN')}}",
+                      "then": {
+                        "steps": [
+                          {
+                            "name": "Search",
+                            "module": "dbconnector",
+                            "action": "select",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "SELECT",
+                                "columns": [
+                                  {
+                                    "table": "m_product",
+                                    "column": "id"
+                                  },
+                                  {
+                                    "table": "m_product",
+                                    "column": "prod_img1"
+                                  },
+                                  {
+                                    "table": "m_product",
+                                    "column": "rest_id"
+                                  },
+                                  {
+                                    "table": "m_product",
+                                    "column": "prod_name_hin",
+                                    "alias": "prod_name"
+                                  },
+                                  {
+                                    "table": "mr",
+                                    "column": "shop_name_hin",
+                                    "alias": "shop_name"
+                                  }
+                                ],
+                                "table": {
+                                  "name": "m_product"
+                                },
+                                "primary": "id",
+                                "joins": [
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "*",
+                                    "alias": "mr",
+                                    "type": "LEFT",
+                                    "clauses": {
+                                      "condition": "AND",
+                                      "rules": [
+                                        {
+                                          "table": "mr",
+                                          "column": "id",
+                                          "operator": "equal",
+                                          "value": {
+                                            "table": "m_product",
+                                            "column": "rest_id"
+                                          },
+                                          "operation": "="
+                                        }
+                                      ]
+                                    },
+                                    "primary": "id"
+                                  }
+                                ],
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "m_product.status",
+                                      "field": "m_product.status",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{1}}",
+                                      "data": {
+                                        "table": "m_product",
+                                        "column": "status",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "integer",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "name": "status"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "id": "m_product.market_id",
+                                      "field": "m_product.market_id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{$_GET.market}}",
+                                      "data": {
+                                        "table": "m_product",
+                                        "column": "market_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "reference",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "references": "id",
+                                          "inTable": "m_market",
+                                          "referenceType": "integer",
+                                          "onUpdate": "NO ACTION",
+                                          "onDelete": "NO ACTION",
+                                          "name": "market_id"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "id": "mr.status",
+                                      "field": "mr.status",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{1}}",
+                                      "data": {
+                                        "table": "mr",
+                                        "column": "status",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "integer",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "name": "status"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "condition": "OR",
+                                      "rules": [
+                                        {
+                                          "id": "m_product.prod_name_en",
+                                          "field": "m_product.prod_name_en",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "m_product",
+                                            "column": "prod_name_en",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "prod_name_en"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "m_product.prod_name_bn",
+                                          "field": "m_product.prod_name_bn",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "m_product",
+                                            "column": "prod_name_bn",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "prod_name_bn"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "m_product.prod_name_hin",
+                                          "field": "m_product.prod_name_hin",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "m_product",
+                                            "column": "prod_name_hin",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "prod_name_hin"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "mr.shop_name_en",
+                                          "field": "mr.shop_name_en",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "mr",
+                                            "column": "shop_name_en",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "shop_name_en"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "mr.shop_name_bn",
+                                          "field": "mr.shop_name_bn",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "mr",
+                                            "column": "shop_name_bn",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "shop_name_bn"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        },
+                                        {
+                                          "id": "mr.shop_name_hin",
+                                          "field": "mr.shop_name_hin",
+                                          "type": "string",
+                                          "operator": "contains",
+                                          "value": "{{$_GET.search_item}}",
+                                          "data": {
+                                            "table": "mr",
+                                            "column": "shop_name_hin",
+                                            "type": "text",
+                                            "columnObj": {
+                                              "type": "string",
+                                              "maxLength": -5,
+                                              "primary": false,
+                                              "unique": false,
+                                              "nullable": true,
+                                              "name": "shop_name_hin"
+                                            }
+                                          },
+                                          "operation": "LIKE"
+                                        }
+                                      ],
+                                      "conditional": null
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                },
+                                "query": "SELECT m_product.id, m_product.prod_img1, m_product.rest_id, m_product.prod_name_hin AS prod_name, mr.shop_name_hin AS shop_name\nFROM m_product\nLEFT JOIN m_restaurant AS mr ON (mr.id = m_product.rest_id)\nWHERE m_product.status = :P1 /* {{1}} */ AND m_product.market_id = :P2 /* {{$_GET.market}} */ AND mr.status = :P3 /* {{1}} */ AND (m_product.prod_name_en LIKE :P4 /* {{$_GET.search_item}} */ OR m_product.prod_name_bn LIKE :P5 /* {{$_GET.search_item}} */ OR m_product.prod_name_hin LIKE :P6 /* {{$_GET.search_item}} */ OR mr.shop_name_en LIKE :P7 /* {{$_GET.search_item}} */ OR mr.shop_name_bn LIKE :P8 /* {{$_GET.search_item}} */ OR mr.shop_name_hin LIKE :P9 /* {{$_GET.search_item}} */)",
+                                "params": [
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P1",
+                                    "value": "{{1}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P2",
+                                    "value": "{{$_GET.market}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P3",
+                                    "value": "{{1}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P4",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P5",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P6",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P7",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P8",
+                                    "value": "{{$_GET.search_item}}"
+                                  },
+                                  {
+                                    "operator": "contains",
+                                    "type": "expression",
+                                    "name": ":P9",
+                                    "value": "{{$_GET.search_item}}"
+                                  }
+                                ]
+                              }
+                            },
+                            "output": true,
+                            "meta": [
+                              {
+                                "type": "number",
+                                "name": "id"
+                              },
+                              {
+                                "type": "text",
+                                "name": "prod_img1"
+                              },
+                              {
+                                "type": "number",
+                                "name": "rest_id"
+                              },
+                              {
+                                "type": "text",
+                                "name": "prod_name"
+                              },
+                              {
+                                "type": "text",
+                                "name": "shop_name"
+                              }
+                            ],
+                            "outputType": "array"
+                          },
+                          {
+                            "name": "",
+                            "module": "core",
+                            "action": "condition",
+                            "options": {
+                              "if": "{{Search[0].id}}",
+                              "then": {
+                                "steps": {
+                                  "name": "status",
+                                  "module": "core",
+                                  "action": "setvalue",
+                                  "options": {
+                                    "value": 200
+                                  },
+                                  "meta": [],
+                                  "output": true,
+                                  "outputType": "text"
+                                }
+                              },
+                              "else": {
+                                "steps": [
+                                  {
+                                    "name": "status",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": 400
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  },
+                                  {
+                                    "name": "message",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": "No Record Found!"
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  }
+                                ]
+                              }
+                            },
+                            "outputType": "boolean"
+                          }
+                        ]
+                      }
+                    },
+                    "outputType": "boolean"
+                  }
+                ]
+              },
+              "else": {
+                "steps": [
+                  {
+                    "name": "status",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": 400
+                    },
+                    "meta": [],
+                    "output": true,
+                    "outputType": "text"
+                  },
+                  {
+                    "name": "message",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": "No Record Found!"
+                    },
+                    "meta": [],
+                    "output": true,
+                    "outputType": "text"
+                  }
+                ]
+              }
+            },
+            "outputType": "boolean"
+          }
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

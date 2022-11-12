@@ -138,7 +138,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_en as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
+                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_en as shop_name, shop_logo, address FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
                                         "params": [
                                           {
                                             "name": "@limit",
@@ -156,7 +156,7 @@
                                     "output": true,
                                     "meta": [
                                       {
-                                        "name": "id",
+                                        "name": "rest_id",
                                         "type": "number"
                                       },
                                       {
@@ -164,19 +164,15 @@
                                         "type": "text"
                                       },
                                       {
-                                        "name": "shop_name_en",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "name": "shop_name_bn",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "name": "shop_name_hin",
+                                        "name": "shop_name",
                                         "type": "text"
                                       },
                                       {
                                         "name": "shop_logo",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "address",
                                         "type": "text"
                                       }
                                     ],
@@ -200,7 +196,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_bn as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
+                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_bn as shop_name, shop_logo, address FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
                                         "params": [
                                           {
                                             "name": "@limit",
@@ -218,7 +214,7 @@
                                     "output": true,
                                     "meta": [
                                       {
-                                        "name": "id",
+                                        "name": "rest_id",
                                         "type": "number"
                                       },
                                       {
@@ -226,19 +222,15 @@
                                         "type": "text"
                                       },
                                       {
-                                        "name": "shop_name_en",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "name": "shop_name_bn",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "name": "shop_name_hin",
+                                        "name": "shop_name",
                                         "type": "text"
                                       },
                                       {
                                         "name": "shop_logo",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "address",
                                         "type": "text"
                                       }
                                     ],
@@ -262,7 +254,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_hin as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
+                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_hin as shop_name, shop_logo, address FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
                                         "params": [
                                           {
                                             "name": "@limit",
@@ -280,7 +272,7 @@
                                     "output": true,
                                     "meta": [
                                       {
-                                        "name": "id",
+                                        "name": "rest_id",
                                         "type": "number"
                                       },
                                       {
@@ -288,19 +280,15 @@
                                         "type": "text"
                                       },
                                       {
-                                        "name": "shop_name_en",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "name": "shop_name_bn",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "name": "shop_name_hin",
+                                        "name": "shop_name",
                                         "type": "text"
                                       },
                                       {
                                         "name": "shop_logo",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "address",
                                         "type": "text"
                                       }
                                     ],
@@ -328,7 +316,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_en as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
+                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_en as shop_name, shop_logo, address FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
                                         "params": [
                                           {
                                             "name": "@market",
@@ -341,7 +329,7 @@
                                     "output": true,
                                     "meta": [
                                       {
-                                        "name": "id",
+                                        "name": "rest_id",
                                         "type": "number"
                                       },
                                       {
@@ -349,19 +337,15 @@
                                         "type": "text"
                                       },
                                       {
-                                        "name": "shop_name_en",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "name": "shop_name_bn",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "name": "shop_name_hin",
+                                        "name": "shop_name",
                                         "type": "text"
                                       },
                                       {
                                         "name": "shop_logo",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "address",
                                         "type": "text"
                                       }
                                     ],
@@ -385,7 +369,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_hin as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
+                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_hin as shop_name, shop_logo, address FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
                                         "params": [
                                           {
                                             "name": "@market",
@@ -398,7 +382,7 @@
                                     "output": true,
                                     "meta": [
                                       {
-                                        "name": "id",
+                                        "name": "rest_id",
                                         "type": "number"
                                       },
                                       {
@@ -406,19 +390,15 @@
                                         "type": "text"
                                       },
                                       {
-                                        "name": "shop_name_en",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "name": "shop_name_bn",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "name": "shop_name_hin",
+                                        "name": "shop_name",
                                         "type": "text"
                                       },
                                       {
                                         "name": "shop_logo",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "address",
                                         "type": "text"
                                       }
                                     ],
@@ -442,7 +422,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_bn as shop_name, shop_logo FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
+                                        "query": "SELECT id as rest_id, gen_shop_id, shop_name_bn as shop_name, shop_logo, address FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
                                         "params": [
                                           {
                                             "name": "@market",
@@ -455,7 +435,7 @@
                                     "output": true,
                                     "meta": [
                                       {
-                                        "name": "id",
+                                        "name": "rest_id",
                                         "type": "number"
                                       },
                                       {
@@ -463,19 +443,15 @@
                                         "type": "text"
                                       },
                                       {
-                                        "name": "shop_name_en",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "name": "shop_name_bn",
-                                        "type": "text"
-                                      },
-                                      {
-                                        "name": "shop_name_hin",
+                                        "name": "shop_name",
                                         "type": "text"
                                       },
                                       {
                                         "name": "shop_logo",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "address",
                                         "type": "text"
                                       }
                                     ],

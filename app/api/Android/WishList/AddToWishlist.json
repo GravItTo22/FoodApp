@@ -13,6 +13,12 @@
         "type": "text",
         "name": "logintoken"
       }
+    ],
+    "$_SERVER": [
+      {
+        "type": "text",
+        "name": "REMOTE_ADDR"
+      }
     ]
   },
   "exec": {
@@ -584,7 +590,7 @@
                                       "table": "r_wishlist",
                                       "column": "total_price",
                                       "type": "text",
-                                      "value": "{{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}}"
+                                      "value": "{{GetProduct.price.toNumber()}}"
                                     },
                                     {
                                       "table": "r_wishlist",
@@ -613,7 +619,7 @@
                                   ],
                                   "table": "r_wishlist",
                                   "returning": "id",
-                                  "query": "INSERT INTO r_wishlist\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, ips, created_by, created_on, wishlist_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetVerify.user_id}} */, :P4 /* {{GetProduct.price}} */, :P5 /* {{GetProduct.quantity}} */, :P6 /* {{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetVerify.user_id}} */, :P9 /* {{NOW}} */, :P10 /* {{GetProduct.mrp}} */)",
+                                  "query": "INSERT INTO r_wishlist\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, ips, created_by, created_on, wishlist_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetVerify.user_id}} */, :P4 /* {{GetProduct.price}} */, :P5 /* {{GetProduct.quantity}} */, :P6 /* {{GetProduct.price.toNumber()}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetVerify.user_id}} */, :P9 /* {{NOW}} */, :P10 /* {{GetProduct.mrp}} */)",
                                   "params": [
                                     {
                                       "name": ":P1",
@@ -643,7 +649,7 @@
                                     {
                                       "name": ":P6",
                                       "type": "expression",
-                                      "value": "{{GetProduct.price.toNumber()*GetProduct.quantity.toNumber()}}"
+                                      "value": "{{GetProduct.price.toNumber()}}"
                                     },
                                     {
                                       "name": ":P7",

@@ -29,17 +29,6 @@
               "then": {
                 "steps": [
                   {
-                    "name": "status",
-                    "module": "core",
-                    "action": "setvalue",
-                    "options": {
-                      "value": 200
-                    },
-                    "meta": [],
-                    "output": true,
-                    "outputType": "text"
-                  },
-                  {
                     "name": "GetUser",
                     "module": "dbconnector",
                     "action": "single",
@@ -223,6 +212,17 @@
                               "if": "{{(CountCart.CountId>=1)}}",
                               "then": {
                                 "steps": [
+                                  {
+                                    "name": "status",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": 200
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  },
                                   {
                                     "name": "GetCartItems",
                                     "module": "dbupdater",

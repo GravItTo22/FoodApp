@@ -1,13 +1,13 @@
 {
   "meta": {
-    "$_GET": [
+    "$_POST": [
       {
         "type": "text",
-        "name": "prod_id"
+        "name": "p_id"
       },
       {
         "type": "text",
-        "name": "loginloken"
+        "name": "logintoken"
       }
     ]
   },
@@ -46,7 +46,7 @@
                         "field": "t_user_log.login_token",
                         "type": "string",
                         "operator": "equal",
-                        "value": "{{$_GET.loginloken}}",
+                        "value": "{{$_POST.logintoken}}",
                         "data": {
                           "table": "t_user_log",
                           "column": "login_token",
@@ -61,18 +61,45 @@
                           }
                         },
                         "operation": "="
+                      },
+                      {
+                        "id": "t_user_log.login_from",
+                        "field": "t_user_log.login_from",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{'Android'}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_from",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_from"
+                          }
+                        },
+                        "operation": "="
                       }
                     ],
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_GET.loginloken}} */",
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_POST.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */",
                   "params": [
                     {
                       "operator": "equal",
                       "type": "expression",
                       "name": ":P1",
-                      "value": "{{$_GET.loginloken}}"
+                      "value": "{{$_POST.logintoken}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{'Android'}}"
                     }
                   ]
                 }
@@ -93,157 +120,119 @@
               "options": {
                 "if": "{{GetVerify.user_id}}",
                 "then": {
-                  "steps": {
-                    "name": "delWL",
-                    "module": "dbupdater",
-                    "action": "delete",
-                    "options": {
-                      "connection": "ClientApp",
-                      "sql": {
-                        "type": "delete",
-                        "table": "r_wishlist",
-                        "wheres": {
-                          "condition": "AND",
-                          "rules": [
-                            {
-                              "id": "prod_id",
-                              "field": "prod_id",
-                              "type": "double",
-                              "operator": "equal",
-                              "value": "{{$_GET.prod_id}}",
-                              "data": {
-                                "column": "prod_id"
+                  "steps": [
+                    {
+                      "name": "delWL",
+                      "module": "dbupdater",
+                      "action": "delete",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "delete",
+                          "table": "r_wishlist",
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "prod_id",
+                                "field": "prod_id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{$_POST.p_id}}",
+                                "data": {
+                                  "column": "prod_id"
+                                },
+                                "operation": "="
                               },
-                              "operation": "="
+                              {
+                                "id": "user_id",
+                                "field": "user_id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{GetVerify.user_id}}",
+                                "data": {
+                                  "column": "user_id"
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "returning": "id",
+                          "query": "DELETE\nFROM r_wishlist\nWHERE prod_id = :P1 /* {{$_POST.p_id}} */ AND user_id = :P2 /* {{GetVerify.user_id}} */",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{$_POST.p_id}}"
                             },
                             {
-                              "condition": "OR",
-                              "rules": [
-                                {
-                                  "id": "user_id",
-                                  "field": "user_id",
-                                  "type": "double",
-                                  "operator": "equal",
-                                  "value": "{{GetVerify.user_id}}",
-                                  "data": {
-                                    "column": "user_id"
-                                  },
-                                  "operation": "="
-                                },
-                                {
-                                  "id": "ips",
-                                  "field": "ips",
-                                  "type": "string",
-                                  "operator": "equal",
-                                  "value": "{{$_SERVER.REMOTE_ADDR}}",
-                                  "data": {
-                                    "column": "ips"
-                                  },
-                                  "operation": "="
-                                }
-                              ],
-                              "conditional": null
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P2",
+                              "value": "{{GetVerify.user_id}}"
                             }
-                          ],
-                          "conditional": null,
-                          "valid": true
-                        },
-                        "returning": "id",
-                        "query": "DELETE\nFROM r_wishlist\nWHERE prod_id = :P1 /* {{$_GET.prod_id}} */ AND (user_id = :P2 /* {{GetVerify.user_id}} */ OR ips = :P3 /* {{$_SERVER.REMOTE_ADDR}} */)",
-                        "params": [
-                          {
-                            "operator": "equal",
-                            "type": "expression",
-                            "name": ":P1",
-                            "value": "{{$_GET.prod_id}}"
-                          },
-                          {
-                            "operator": "equal",
-                            "type": "expression",
-                            "name": ":P2",
-                            "value": "{{GetVerify.user_id}}"
-                          },
-                          {
-                            "operator": "equal",
-                            "type": "expression",
-                            "name": ":P3",
-                            "value": "{{$_SERVER.REMOTE_ADDR}}"
-                          }
-                        ]
-                      }
+                          ]
+                        }
+                      },
+                      "meta": [
+                        {
+                          "name": "affected",
+                          "type": "number"
+                        }
+                      ]
                     },
-                    "meta": [
-                      {
-                        "name": "affected",
-                        "type": "number"
-                      }
-                    ]
-                  }
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 200
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Items removed from Wish-List"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
                 },
                 "else": {
-                  "steps": {
-                    "name": "delWL",
-                    "module": "dbupdater",
-                    "action": "delete",
-                    "options": {
-                      "connection": "ClientApp",
-                      "sql": {
-                        "type": "delete",
-                        "table": "r_wishlist",
-                        "wheres": {
-                          "condition": "AND",
-                          "rules": [
-                            {
-                              "id": "prod_id",
-                              "field": "prod_id",
-                              "type": "double",
-                              "operator": "equal",
-                              "value": "{{$_GET.prod_id}}",
-                              "data": {
-                                "column": "prod_id"
-                              },
-                              "operation": "="
-                            },
-                            {
-                              "id": "ips",
-                              "field": "ips",
-                              "type": "string",
-                              "operator": "equal",
-                              "value": "{{$_SERVER.REMOTE_ADDR}}",
-                              "data": {
-                                "column": "ips"
-                              },
-                              "operation": "="
-                            }
-                          ],
-                          "conditional": null,
-                          "valid": true
-                        },
-                        "returning": "id",
-                        "query": "DELETE\nFROM r_wishlist\nWHERE prod_id = :P1 /* {{$_GET.prod_id}} */ AND ips = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
-                        "params": [
-                          {
-                            "operator": "equal",
-                            "type": "expression",
-                            "name": ":P1",
-                            "value": "{{$_GET.prod_id}}"
-                          },
-                          {
-                            "operator": "equal",
-                            "type": "expression",
-                            "name": ":P2",
-                            "value": "{{$_SERVER.REMOTE_ADDR}}"
-                          }
-                        ]
-                      }
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
                     },
-                    "meta": [
-                      {
-                        "name": "affected",
-                        "type": "number"
-                      }
-                    ]
-                  }
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "No Record Found!"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
                 }
               },
               "outputType": "boolean"
@@ -251,16 +240,30 @@
           ]
         },
         "catch": {
-          "steps": {
-            "name": "Resp",
-            "module": "core",
-            "action": "response",
-            "options": {
-              "status": 403,
-              "data": "Suspicious Activity"
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
             },
-            "output": true
-          }
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
         }
       }
     }

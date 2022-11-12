@@ -534,28 +534,6 @@
                                 "then": {
                                   "steps": [
                                     {
-                                      "name": "status",
-                                      "module": "core",
-                                      "action": "setvalue",
-                                      "options": {
-                                        "value": 200
-                                      },
-                                      "meta": [],
-                                      "output": true,
-                                      "outputType": "text"
-                                    },
-                                    {
-                                      "name": "message",
-                                      "module": "core",
-                                      "action": "setvalue",
-                                      "options": {
-                                        "value": "Product Added to Wish-List"
-                                      },
-                                      "meta": [],
-                                      "output": true,
-                                      "outputType": "text"
-                                    },
-                                    {
                                       "name": "AddProduct",
                                       "module": "dbupdater",
                                       "action": "insert",
@@ -692,6 +670,28 @@
                                           "type": "number"
                                         }
                                       ]
+                                    },
+                                    {
+                                      "name": "status",
+                                      "module": "core",
+                                      "action": "setvalue",
+                                      "options": {
+                                        "value": 200
+                                      },
+                                      "meta": [],
+                                      "output": true,
+                                      "outputType": "text"
+                                    },
+                                    {
+                                      "name": "message",
+                                      "module": "core",
+                                      "action": "setvalue",
+                                      "options": {
+                                        "value": "Product Added to Wish-List"
+                                      },
+                                      "meta": [],
+                                      "output": true,
+                                      "outputType": "text"
                                     }
                                   ]
                                 },

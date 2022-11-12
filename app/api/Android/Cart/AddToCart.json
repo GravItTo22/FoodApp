@@ -1,23 +1,13 @@
 {
   "meta": {
-    "$_GET": [
+    "$_POST": [
       {
         "type": "text",
-        "options": {
-          "rules": {
-            "core:required": {}
-          }
-        },
-        "name": "product_id"
+        "name": "p_id"
       },
       {
         "type": "text",
-        "options": {
-          "rules": {
-            "core:required": {}
-          }
-        },
-        "name": "price"
+        "name": "price_id"
       },
       {
         "type": "text",
@@ -40,296 +30,6 @@
         "try": {
           "steps": [
             {
-              "name": "GetProduct",
-              "module": "dbconnector",
-              "action": "single",
-              "options": {
-                "connection": "ClientApp",
-                "sql": {
-                  "type": "SELECT",
-                  "columns": [
-                    {
-                      "table": "m_product",
-                      "column": "id"
-                    },
-                    {
-                      "table": "m_product",
-                      "column": "market_id"
-                    },
-                    {
-                      "table": "m_product",
-                      "column": "rest_id"
-                    },
-                    {
-                      "table": "m_product",
-                      "column": "category_id"
-                    },
-                    {
-                      "table": "m_product",
-                      "column": "brand_id"
-                    },
-                    {
-                      "table": "m_product",
-                      "column": "slab_id"
-                    },
-                    {
-                      "table": "m_product",
-                      "column": "prod_mark_id"
-                    },
-                    {
-                      "table": "m_product",
-                      "column": "prod_occurance_id"
-                    },
-                    {
-                      "table": "m_product",
-                      "column": "prod_name_en"
-                    },
-                    {
-                      "table": "m_product",
-                      "column": "prod_name_bn"
-                    },
-                    {
-                      "table": "m_product",
-                      "column": "prod_name_hin"
-                    },
-                    {
-                      "table": "m_product",
-                      "column": "prod_desc_en"
-                    },
-                    {
-                      "table": "m_product",
-                      "column": "prod_desc_bn"
-                    },
-                    {
-                      "table": "m_product",
-                      "column": "prod_desc_hin"
-                    },
-                    {
-                      "table": "price",
-                      "column": "id",
-                      "alias": "price_id"
-                    },
-                    {
-                      "table": "price",
-                      "column": "quantity"
-                    },
-                    {
-                      "table": "price",
-                      "column": "q_unit"
-                    },
-                    {
-                      "table": "price",
-                      "column": "mrp"
-                    },
-                    {
-                      "table": "price",
-                      "column": "selling_price"
-                    },
-                    {
-                      "table": "price",
-                      "column": "product_tax"
-                    }
-                  ],
-                  "table": {
-                    "name": "m_product"
-                  },
-                  "primary": "id",
-                  "joins": [
-                    {
-                      "table": "r_price_table",
-                      "column": "*",
-                      "alias": "price",
-                      "type": "LEFT",
-                      "clauses": {
-                        "condition": "AND",
-                        "rules": [
-                          {
-                            "table": "price",
-                            "column": "prod_id",
-                            "operator": "equal",
-                            "value": {
-                              "table": "m_product",
-                              "column": "id"
-                            },
-                            "operation": "="
-                          }
-                        ]
-                      },
-                      "primary": "id"
-                    }
-                  ],
-                  "wheres": {
-                    "condition": "AND",
-                    "rules": [
-                      {
-                        "id": "m_product.prod_id",
-                        "field": "m_product.prod_id",
-                        "type": "string",
-                        "operator": "equal",
-                        "value": "{{$_GET.product_id}}",
-                        "data": {
-                          "table": "m_product",
-                          "column": "prod_id",
-                          "type": "text",
-                          "columnObj": {
-                            "type": "string",
-                            "maxLength": -5,
-                            "primary": false,
-                            "unique": false,
-                            "nullable": true,
-                            "name": "prod_id"
-                          }
-                        },
-                        "operation": "="
-                      },
-                      {
-                        "id": "m_product.status",
-                        "field": "m_product.status",
-                        "type": "double",
-                        "operator": "equal",
-                        "value": 1,
-                        "data": {
-                          "table": "m_product",
-                          "column": "status",
-                          "type": "number",
-                          "columnObj": {
-                            "type": "integer",
-                            "primary": false,
-                            "unique": false,
-                            "nullable": true,
-                            "name": "status"
-                          }
-                        },
-                        "operation": "="
-                      },
-                      {
-                        "id": "price.id",
-                        "field": "price.id",
-                        "type": "double",
-                        "operator": "equal",
-                        "value": "{{$_GET.price}}",
-                        "data": {
-                          "table": "price",
-                          "column": "id",
-                          "type": "number",
-                          "columnObj": {
-                            "type": "increments",
-                            "default": "",
-                            "primary": true,
-                            "unique": true,
-                            "nullable": false,
-                            "name": "id"
-                          }
-                        },
-                        "operation": "="
-                      }
-                    ],
-                    "conditional": null,
-                    "valid": true
-                  },
-                  "query": "SELECT m_product.id, m_product.market_id, m_product.rest_id, m_product.category_id, m_product.brand_id, m_product.slab_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_desc_en, m_product.prod_desc_bn, m_product.prod_desc_hin, price.id AS price_id, price.quantity, price.q_unit, price.mrp, price.selling_price, price.product_tax\nFROM m_product\nLEFT JOIN r_price_table AS price ON (price.prod_id = m_product.id)\nWHERE m_product.prod_id = :P1 /* {{$_GET.product_id}} */ AND m_product.status = 1 AND price.id = :P2 /* {{$_GET.price}} */",
-                  "params": [
-                    {
-                      "operator": "equal",
-                      "type": "expression",
-                      "name": ":P1",
-                      "value": "{{$_GET.product_id}}"
-                    },
-                    {
-                      "operator": "equal",
-                      "type": "expression",
-                      "name": ":P2",
-                      "value": "{{$_GET.price}}"
-                    }
-                  ]
-                }
-              },
-              "output": false,
-              "meta": [
-                {
-                  "type": "number",
-                  "name": "id"
-                },
-                {
-                  "type": "number",
-                  "name": "market_id"
-                },
-                {
-                  "type": "number",
-                  "name": "rest_id"
-                },
-                {
-                  "type": "number",
-                  "name": "category_id"
-                },
-                {
-                  "type": "number",
-                  "name": "brand_id"
-                },
-                {
-                  "type": "number",
-                  "name": "slab_id"
-                },
-                {
-                  "type": "number",
-                  "name": "prod_mark_id"
-                },
-                {
-                  "type": "number",
-                  "name": "prod_occurance_id"
-                },
-                {
-                  "type": "text",
-                  "name": "prod_name_en"
-                },
-                {
-                  "type": "text",
-                  "name": "prod_name_bn"
-                },
-                {
-                  "type": "text",
-                  "name": "prod_name_hin"
-                },
-                {
-                  "type": "text",
-                  "name": "prod_desc_en"
-                },
-                {
-                  "type": "text",
-                  "name": "prod_desc_bn"
-                },
-                {
-                  "type": "text",
-                  "name": "prod_desc_hin"
-                },
-                {
-                  "type": "number",
-                  "name": "price_id"
-                },
-                {
-                  "type": "text",
-                  "name": "quantity"
-                },
-                {
-                  "type": "text",
-                  "name": "q_unit"
-                },
-                {
-                  "type": "text",
-                  "name": "mrp"
-                },
-                {
-                  "type": "text",
-                  "name": "selling_price"
-                },
-                {
-                  "type": "text",
-                  "name": "product_tax"
-                }
-              ],
-              "outputType": "object"
-            },
-            {
               "name": "GetVerify",
               "module": "dbconnector",
               "action": "single",
@@ -348,15 +48,6 @@
                   },
                   "primary": "id",
                   "joins": [],
-                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_GET.logintoken}} */",
-                  "params": [
-                    {
-                      "operator": "equal",
-                      "type": "expression",
-                      "name": ":P1",
-                      "value": "{{$_GET.logintoken}}"
-                    }
-                  ],
                   "wheres": {
                     "condition": "AND",
                     "rules": [
@@ -365,7 +56,7 @@
                         "field": "t_user_log.login_token",
                         "type": "string",
                         "operator": "equal",
-                        "value": "{{$_GET.logintoken}}",
+                        "value": "{{$_POST.logintoken}}",
                         "data": {
                           "table": "t_user_log",
                           "column": "login_token",
@@ -380,11 +71,47 @@
                           }
                         },
                         "operation": "="
+                      },
+                      {
+                        "id": "t_user_log.login_from",
+                        "field": "t_user_log.login_from",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{'Android'}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_from",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_from"
+                          }
+                        },
+                        "operation": "="
                       }
                     ],
                     "conditional": null,
                     "valid": true
-                  }
+                  },
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_POST.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_POST.logintoken}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{'Android'}}"
+                    }
+                  ]
                 }
               },
               "output": false,
@@ -405,7 +132,7 @@
                 "then": {
                   "steps": [
                     {
-                      "name": "GetCartInfo",
+                      "name": "GetProduct",
                       "module": "dbconnector",
                       "action": "single",
                       "options": {
@@ -414,121 +141,197 @@
                           "type": "SELECT",
                           "columns": [
                             {
-                              "table": "r_cart",
+                              "table": "m_product",
+                              "column": "id"
+                            },
+                            {
+                              "table": "m_product",
+                              "column": "market_id"
+                            },
+                            {
+                              "table": "m_product",
+                              "column": "rest_id"
+                            },
+                            {
+                              "table": "m_product",
+                              "column": "category_id"
+                            },
+                            {
+                              "table": "m_product",
+                              "column": "brand_id"
+                            },
+                            {
+                              "table": "m_product",
+                              "column": "slab_id"
+                            },
+                            {
+                              "table": "m_product",
+                              "column": "prod_mark_id"
+                            },
+                            {
+                              "table": "m_product",
+                              "column": "prod_occurance_id"
+                            },
+                            {
+                              "table": "m_product",
+                              "column": "prod_name_en"
+                            },
+                            {
+                              "table": "m_product",
+                              "column": "prod_name_bn"
+                            },
+                            {
+                              "table": "m_product",
+                              "column": "prod_name_hin"
+                            },
+                            {
+                              "table": "m_product",
+                              "column": "prod_desc_en"
+                            },
+                            {
+                              "table": "m_product",
+                              "column": "prod_desc_bn"
+                            },
+                            {
+                              "table": "m_product",
+                              "column": "prod_desc_hin"
+                            },
+                            {
+                              "table": "price",
                               "column": "id",
-                              "alias": "CountProd",
-                              "aggregate": "COUNT"
+                              "alias": "price_id"
+                            },
+                            {
+                              "table": "price",
+                              "column": "quantity"
+                            },
+                            {
+                              "table": "price",
+                              "column": "q_unit"
+                            },
+                            {
+                              "table": "price",
+                              "column": "mrp"
+                            },
+                            {
+                              "table": "price",
+                              "column": "selling_price"
+                            },
+                            {
+                              "table": "price",
+                              "column": "product_tax"
                             }
                           ],
                           "table": {
-                            "name": "r_cart"
+                            "name": "m_product"
                           },
                           "primary": "id",
-                          "joins": [],
-                          "groupBy": [],
+                          "joins": [
+                            {
+                              "table": "r_price_table",
+                              "column": "*",
+                              "alias": "price",
+                              "type": "LEFT",
+                              "clauses": {
+                                "condition": "AND",
+                                "rules": [
+                                  {
+                                    "table": "price",
+                                    "column": "prod_id",
+                                    "operator": "equal",
+                                    "value": {
+                                      "table": "m_product",
+                                      "column": "id"
+                                    },
+                                    "operation": "="
+                                  }
+                                ]
+                              },
+                              "primary": "id"
+                            }
+                          ],
                           "wheres": {
                             "condition": "AND",
                             "rules": [
                               {
-                                "id": "r_cart.prod_id",
-                                "field": "r_cart.prod_id",
-                                "type": "double",
+                                "id": "m_product.prod_id",
+                                "field": "m_product.prod_id",
+                                "type": "string",
                                 "operator": "equal",
-                                "value": "{{GetProduct.id}}",
+                                "value": "{{$_POST.p_id}}",
                                 "data": {
-                                  "table": "r_cart",
+                                  "table": "m_product",
                                   "column": "prod_id",
-                                  "type": "number",
+                                  "type": "text",
                                   "columnObj": {
-                                    "type": "reference",
+                                    "type": "string",
+                                    "maxLength": -5,
                                     "primary": false,
                                     "unique": false,
                                     "nullable": true,
-                                    "references": "id",
-                                    "inTable": "m_product",
-                                    "referenceType": "integer",
-                                    "onUpdate": "NO ACTION",
-                                    "onDelete": "NO ACTION",
                                     "name": "prod_id"
                                   }
                                 },
                                 "operation": "="
                               },
                               {
-                                "condition": "OR",
-                                "rules": [
-                                  {
-                                    "id": "r_cart.user_id",
-                                    "field": "r_cart.user_id",
-                                    "type": "double",
-                                    "operator": "equal",
-                                    "value": "{{GetVerify.user_id}}",
-                                    "data": {
-                                      "table": "r_cart",
-                                      "column": "user_id",
-                                      "type": "number",
-                                      "columnObj": {
-                                        "type": "reference",
-                                        "primary": false,
-                                        "unique": false,
-                                        "nullable": true,
-                                        "references": "id",
-                                        "inTable": "m_customer",
-                                        "referenceType": "integer",
-                                        "onUpdate": "NO ACTION",
-                                        "onDelete": "NO ACTION",
-                                        "name": "user_id"
-                                      }
-                                    },
-                                    "operation": "="
-                                  },
-                                  {
-                                    "id": "r_cart.ip_address",
-                                    "field": "r_cart.ip_address",
-                                    "type": "string",
-                                    "operator": "equal",
-                                    "value": "{{$_SERVER.REMOTE_ADDR}}",
-                                    "data": {
-                                      "table": "r_cart",
-                                      "column": "ip_address",
-                                      "type": "text",
-                                      "columnObj": {
-                                        "type": "string",
-                                        "maxLength": -5,
-                                        "primary": false,
-                                        "unique": false,
-                                        "nullable": true,
-                                        "name": "ip_address"
-                                      }
-                                    },
-                                    "operation": "="
+                                "id": "m_product.status",
+                                "field": "m_product.status",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": 1,
+                                "data": {
+                                  "table": "m_product",
+                                  "column": "status",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "integer",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "status"
                                   }
-                                ],
-                                "conditional": null
+                                },
+                                "operation": "="
+                              },
+                              {
+                                "id": "price.id",
+                                "field": "price.id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{$_POST.price_id}}",
+                                "data": {
+                                  "table": "price",
+                                  "column": "id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "increments",
+                                    "default": "",
+                                    "primary": true,
+                                    "unique": true,
+                                    "nullable": false,
+                                    "name": "id"
+                                  }
+                                },
+                                "operation": "="
                               }
                             ],
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT COUNT(id) AS CountProd\nFROM r_cart\nWHERE prod_id = :P1 /* {{GetProduct.id}} */ AND (user_id = :P2 /* {{GetVerify.user_id}} */ OR ip_address = :P3 /* {{$_SERVER.REMOTE_ADDR}} */)",
+                          "query": "SELECT m_product.id, m_product.market_id, m_product.rest_id, m_product.category_id, m_product.brand_id, m_product.slab_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_desc_en, m_product.prod_desc_bn, m_product.prod_desc_hin, price.id AS price_id, price.quantity, price.q_unit, price.mrp, price.selling_price, price.product_tax\nFROM m_product\nLEFT JOIN r_price_table AS price ON (price.prod_id = m_product.id)\nWHERE m_product.prod_id = :P1 /* {{$_POST.p_id}} */ AND m_product.status = 1 AND price.id = :P2 /* {{$_POST.price_id}} */",
                           "params": [
                             {
                               "operator": "equal",
                               "type": "expression",
                               "name": ":P1",
-                              "value": "{{GetProduct.id}}"
+                              "value": "{{$_POST.p_id}}"
                             },
                             {
                               "operator": "equal",
                               "type": "expression",
                               "name": ":P2",
-                              "value": "{{GetVerify.user_id}}"
-                            },
-                            {
-                              "operator": "equal",
-                              "type": "expression",
-                              "name": ":P3",
-                              "value": "{{$_SERVER.REMOTE_ADDR}}"
+                              "value": "{{$_POST.price_id}}"
                             }
                           ]
                         }
@@ -537,7 +340,83 @@
                       "meta": [
                         {
                           "type": "number",
-                          "name": "CountProd"
+                          "name": "id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "market_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "rest_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "category_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "brand_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "slab_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "prod_mark_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "prod_occurance_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "prod_name_en"
+                        },
+                        {
+                          "type": "text",
+                          "name": "prod_name_bn"
+                        },
+                        {
+                          "type": "text",
+                          "name": "prod_name_hin"
+                        },
+                        {
+                          "type": "text",
+                          "name": "prod_desc_en"
+                        },
+                        {
+                          "type": "text",
+                          "name": "prod_desc_bn"
+                        },
+                        {
+                          "type": "text",
+                          "name": "prod_desc_hin"
+                        },
+                        {
+                          "type": "number",
+                          "name": "price_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "quantity"
+                        },
+                        {
+                          "type": "text",
+                          "name": "q_unit"
+                        },
+                        {
+                          "type": "text",
+                          "name": "mrp"
+                        },
+                        {
+                          "type": "text",
+                          "name": "selling_price"
+                        },
+                        {
+                          "type": "text",
+                          "name": "product_tax"
                         }
                       ],
                       "outputType": "object"
@@ -547,242 +426,386 @@
                       "module": "core",
                       "action": "condition",
                       "options": {
-                        "if": "{{GetCartInfo.CountProd<1}}",
+                        "if": "{{GetProduct.id}}",
                         "then": {
                           "steps": [
                             {
-                              "name": "AddProduct",
-                              "module": "dbupdater",
-                              "action": "insert",
+                              "name": "GetCartInfo",
+                              "module": "dbconnector",
+                              "action": "single",
                               "options": {
                                 "connection": "ClientApp",
                                 "sql": {
-                                  "type": "insert",
-                                  "values": [
+                                  "type": "SELECT",
+                                  "columns": [
                                     {
                                       "table": "r_cart",
-                                      "column": "prod_id",
-                                      "type": "number",
-                                      "value": "{{GetProduct.id}}"
-                                    },
-                                    {
-                                      "table": "r_cart",
-                                      "column": "price_id",
-                                      "type": "number",
-                                      "value": "{{GetProduct.price_id}}"
-                                    },
-                                    {
-                                      "table": "r_cart",
-                                      "column": "user_id",
-                                      "type": "number",
-                                      "value": "{{GetVerify.user_id}}"
-                                    },
-                                    {
-                                      "table": "r_cart",
-                                      "column": "prod_unit_price",
-                                      "type": "text",
-                                      "value": "{{GetProduct.selling_price}}"
-                                    },
-                                    {
-                                      "table": "r_cart",
-                                      "column": "prod_qty",
-                                      "type": "text",
-                                      "value": "{{GetProduct.quantity}}"
-                                    },
-                                    {
-                                      "table": "r_cart",
-                                      "column": "total_price",
-                                      "type": "text",
-                                      "value": "{{GetProduct.quantity.toNumber()*GetProduct.selling_price.toNumber()}}"
-                                    },
-                                    {
-                                      "table": "r_cart",
-                                      "column": "created_by",
-                                      "type": "number",
-                                      "value": "{{GetVerify.user_id}}"
-                                    },
-                                    {
-                                      "table": "r_cart",
-                                      "column": "created_on",
-                                      "type": "datetime",
-                                      "value": "{{NOW}}"
-                                    },
-                                    {
-                                      "table": "r_cart",
-                                      "column": "ip_address",
-                                      "type": "text",
-                                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                      "column": "id",
+                                      "alias": "CountProd",
+                                      "aggregate": "COUNT"
                                     }
                                   ],
-                                  "table": "r_cart",
-                                  "returning": "id",
-                                  "query": "INSERT INTO r_cart\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, created_by, created_on, ip_address) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetVerify.user_id}} */, :P4 /* {{GetProduct.selling_price}} */, :P5 /* {{GetProduct.quantity}} */, :P6 /* {{GetProduct.quantity.toNumber()*GetProduct.selling_price.toNumber()}} */, :P7 /* {{GetVerify.user_id}} */, :P8 /* {{NOW}} */, :P9 /* {{$_SERVER.REMOTE_ADDR}} */)",
+                                  "table": {
+                                    "name": "r_cart"
+                                  },
+                                  "primary": "id",
+                                  "joins": [],
+                                  "groupBy": [],
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "r_cart.prod_id",
+                                        "field": "r_cart.prod_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{GetProduct.id}}",
+                                        "data": {
+                                          "table": "r_cart",
+                                          "column": "prod_id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "reference",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "references": "id",
+                                            "inTable": "m_product",
+                                            "referenceType": "integer",
+                                            "onUpdate": "NO ACTION",
+                                            "onDelete": "NO ACTION",
+                                            "name": "prod_id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      },
+                                      {
+                                        "id": "r_cart.user_id",
+                                        "field": "r_cart.user_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{GetVerify.user_id}}",
+                                        "data": {
+                                          "table": "r_cart",
+                                          "column": "user_id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "reference",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "references": "id",
+                                            "inTable": "m_customer",
+                                            "referenceType": "integer",
+                                            "onUpdate": "NO ACTION",
+                                            "onDelete": "NO ACTION",
+                                            "name": "user_id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "query": "SELECT COUNT(id) AS CountProd\nFROM r_cart\nWHERE prod_id = :P1 /* {{GetProduct.id}} */ AND user_id = :P2 /* {{GetVerify.user_id}} */",
                                   "params": [
                                     {
-                                      "name": ":P1",
+                                      "operator": "equal",
                                       "type": "expression",
+                                      "name": ":P1",
                                       "value": "{{GetProduct.id}}"
                                     },
                                     {
+                                      "operator": "equal",
+                                      "type": "expression",
                                       "name": ":P2",
-                                      "type": "expression",
-                                      "value": "{{GetProduct.price_id}}"
-                                    },
-                                    {
-                                      "name": ":P3",
-                                      "type": "expression",
                                       "value": "{{GetVerify.user_id}}"
-                                    },
-                                    {
-                                      "name": ":P4",
-                                      "type": "expression",
-                                      "value": "{{GetProduct.selling_price}}"
-                                    },
-                                    {
-                                      "name": ":P5",
-                                      "type": "expression",
-                                      "value": "{{GetProduct.quantity}}"
-                                    },
-                                    {
-                                      "name": ":P6",
-                                      "type": "expression",
-                                      "value": "{{GetProduct.quantity.toNumber()*GetProduct.selling_price.toNumber()}}"
-                                    },
-                                    {
-                                      "name": ":P7",
-                                      "type": "expression",
-                                      "value": "{{GetVerify.user_id}}"
-                                    },
-                                    {
-                                      "name": ":P8",
-                                      "type": "expression",
-                                      "value": "{{NOW}}"
-                                    },
-                                    {
-                                      "name": ":P9",
-                                      "type": "expression",
-                                      "value": "{{$_SERVER.REMOTE_ADDR}}"
                                     }
                                   ]
                                 }
                               },
+                              "output": false,
                               "meta": [
                                 {
-                                  "name": "identity",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "affected",
-                                  "type": "number"
-                                }
-                              ]
-                            },
-                            {
-                              "name": "Resp",
-                              "module": "core",
-                              "action": "setvalue",
-                              "options": {
-                                "value": "{{GetProduct.prod_name_en+' Added to Cart'}}"
-                              },
-                              "meta": [
-                                {
-                                  "name": "id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "market_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "rest_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "category_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "brand_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "slab_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "prod_mark_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "prod_occurance_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "prod_name_en",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "prod_name_bn",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "prod_name_hin",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "prod_desc_en",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "prod_desc_bn",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "prod_desc_hin",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "price_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "quantity",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "q_unit",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "mrp",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "selling_price",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "product_tax",
-                                  "type": "text"
+                                  "type": "number",
+                                  "name": "CountProd"
                                 }
                               ],
-                              "output": true,
-                              "outputType": "text"
+                              "outputType": "object"
+                            },
+                            {
+                              "name": "",
+                              "module": "core",
+                              "action": "condition",
+                              "options": {
+                                "if": "{{GetCartInfo.CountProd<1}}",
+                                "then": {
+                                  "steps": [
+                                    {
+                                      "name": "AddProduct",
+                                      "module": "dbupdater",
+                                      "action": "insert",
+                                      "options": {
+                                        "connection": "ClientApp",
+                                        "sql": {
+                                          "type": "insert",
+                                          "values": [
+                                            {
+                                              "table": "r_cart",
+                                              "column": "prod_id",
+                                              "type": "number",
+                                              "value": "{{GetProduct.id}}"
+                                            },
+                                            {
+                                              "table": "r_cart",
+                                              "column": "price_id",
+                                              "type": "number",
+                                              "value": "{{GetProduct.price_id}}"
+                                            },
+                                            {
+                                              "table": "r_cart",
+                                              "column": "user_id",
+                                              "type": "number",
+                                              "value": "{{GetVerify.user_id}}"
+                                            },
+                                            {
+                                              "table": "r_cart",
+                                              "column": "prod_unit_price",
+                                              "type": "text",
+                                              "value": "{{GetProduct.selling_price}}"
+                                            },
+                                            {
+                                              "table": "r_cart",
+                                              "column": "prod_qty",
+                                              "type": "text",
+                                              "value": "{{GetProduct.quantity}}"
+                                            },
+                                            {
+                                              "table": "r_cart",
+                                              "column": "total_price",
+                                              "type": "text",
+                                              "value": "{{GetProduct.selling_price}}"
+                                            },
+                                            {
+                                              "table": "r_cart",
+                                              "column": "created_by",
+                                              "type": "number",
+                                              "value": "{{GetVerify.user_id}}"
+                                            },
+                                            {
+                                              "table": "r_cart",
+                                              "column": "created_on",
+                                              "type": "datetime",
+                                              "value": "{{NOW}}"
+                                            },
+                                            {
+                                              "table": "r_cart",
+                                              "column": "ip_address",
+                                              "type": "text",
+                                              "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                            }
+                                          ],
+                                          "table": "r_cart",
+                                          "returning": "id",
+                                          "query": "INSERT INTO r_cart\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, created_by, created_on, ip_address) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetVerify.user_id}} */, :P4 /* {{GetProduct.selling_price}} */, :P5 /* {{GetProduct.quantity}} */, :P6 /* {{GetProduct.selling_price}} */, :P7 /* {{GetVerify.user_id}} */, :P8 /* {{NOW}} */, :P9 /* {{$_SERVER.REMOTE_ADDR}} */)",
+                                          "params": [
+                                            {
+                                              "name": ":P1",
+                                              "type": "expression",
+                                              "value": "{{GetProduct.id}}"
+                                            },
+                                            {
+                                              "name": ":P2",
+                                              "type": "expression",
+                                              "value": "{{GetProduct.price_id}}"
+                                            },
+                                            {
+                                              "name": ":P3",
+                                              "type": "expression",
+                                              "value": "{{GetVerify.user_id}}"
+                                            },
+                                            {
+                                              "name": ":P4",
+                                              "type": "expression",
+                                              "value": "{{GetProduct.selling_price}}"
+                                            },
+                                            {
+                                              "name": ":P5",
+                                              "type": "expression",
+                                              "value": "{{GetProduct.quantity}}"
+                                            },
+                                            {
+                                              "name": ":P6",
+                                              "type": "expression",
+                                              "value": "{{GetProduct.selling_price}}"
+                                            },
+                                            {
+                                              "name": ":P7",
+                                              "type": "expression",
+                                              "value": "{{GetVerify.user_id}}"
+                                            },
+                                            {
+                                              "name": ":P8",
+                                              "type": "expression",
+                                              "value": "{{NOW}}"
+                                            },
+                                            {
+                                              "name": ":P9",
+                                              "type": "expression",
+                                              "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "meta": [
+                                        {
+                                          "name": "identity",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "affected",
+                                          "type": "number"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "name": "message",
+                                      "module": "core",
+                                      "action": "setvalue",
+                                      "options": {
+                                        "value": "{{GetProduct.prod_name_en+' Added to Cart'}}"
+                                      },
+                                      "meta": [
+                                        {
+                                          "name": "id",
+                                          "type": "number"
+                                        },
+                                        {
+                                          "name": "market_id",
+                                          "type": "number"
+                                        },
+                                        {
+                                          "name": "rest_id",
+                                          "type": "number"
+                                        },
+                                        {
+                                          "name": "category_id",
+                                          "type": "number"
+                                        },
+                                        {
+                                          "name": "brand_id",
+                                          "type": "number"
+                                        },
+                                        {
+                                          "name": "slab_id",
+                                          "type": "number"
+                                        },
+                                        {
+                                          "name": "prod_mark_id",
+                                          "type": "number"
+                                        },
+                                        {
+                                          "name": "prod_occurance_id",
+                                          "type": "number"
+                                        },
+                                        {
+                                          "name": "prod_name_en",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "prod_name_bn",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "prod_name_hin",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "prod_desc_en",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "prod_desc_bn",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "prod_desc_hin",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "price_id",
+                                          "type": "number"
+                                        },
+                                        {
+                                          "name": "quantity",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "q_unit",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "mrp",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "selling_price",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "product_tax",
+                                          "type": "text"
+                                        }
+                                      ],
+                                      "output": true,
+                                      "outputType": "text"
+                                    }
+                                  ]
+                                },
+                                "else": {
+                                  "steps": {
+                                    "name": "message",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": "Product already exists in cart"
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  }
+                                }
+                              },
+                              "outputType": "boolean"
                             }
                           ]
                         },
                         "else": {
-                          "steps": {
-                            "name": "Resp",
-                            "module": "core",
-                            "action": "setvalue",
-                            "options": {
-                              "value": "Product already exists in cart"
+                          "steps": [
+                            {
+                              "name": "status",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": 400
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
                             },
-                            "meta": [],
-                            "output": true,
-                            "outputType": "text"
-                          }
+                            {
+                              "name": "message",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "Product Already Exists in the Cart"
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            }
+                          ]
                         }
                       },
                       "outputType": "boolean"
@@ -792,328 +815,26 @@
                 "else": {
                   "steps": [
                     {
-                      "name": "GetCartInfo",
-                      "module": "dbconnector",
-                      "action": "single",
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
                       "options": {
-                        "connection": "ClientApp",
-                        "sql": {
-                          "type": "SELECT",
-                          "columns": [
-                            {
-                              "table": "r_cart",
-                              "column": "id",
-                              "alias": "CountProd",
-                              "aggregate": "COUNT"
-                            }
-                          ],
-                          "table": {
-                            "name": "r_cart"
-                          },
-                          "primary": "id",
-                          "joins": [],
-                          "groupBy": [],
-                          "wheres": {
-                            "condition": "AND",
-                            "rules": [
-                              {
-                                "id": "r_cart.prod_id",
-                                "field": "r_cart.prod_id",
-                                "type": "double",
-                                "operator": "equal",
-                                "value": "{{GetProduct.id}}",
-                                "data": {
-                                  "table": "r_cart",
-                                  "column": "prod_id",
-                                  "type": "number",
-                                  "columnObj": {
-                                    "type": "reference",
-                                    "primary": false,
-                                    "unique": false,
-                                    "nullable": true,
-                                    "references": "id",
-                                    "inTable": "m_product",
-                                    "referenceType": "integer",
-                                    "onUpdate": "NO ACTION",
-                                    "onDelete": "NO ACTION",
-                                    "name": "prod_id"
-                                  }
-                                },
-                                "operation": "="
-                              },
-                              {
-                                "id": "r_cart.ip_address",
-                                "field": "r_cart.ip_address",
-                                "type": "string",
-                                "operator": "equal",
-                                "value": "{{$_SERVER.REMOTE_ADDR}}",
-                                "data": {
-                                  "table": "r_cart",
-                                  "column": "ip_address",
-                                  "type": "text",
-                                  "columnObj": {
-                                    "type": "string",
-                                    "maxLength": -5,
-                                    "primary": false,
-                                    "unique": false,
-                                    "nullable": true,
-                                    "name": "ip_address"
-                                  }
-                                },
-                                "operation": "="
-                              }
-                            ],
-                            "conditional": null,
-                            "valid": true
-                          },
-                          "query": "SELECT COUNT(id) AS CountProd\nFROM r_cart\nWHERE prod_id = :P1 /* {{GetProduct.id}} */ AND ip_address = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
-                          "params": [
-                            {
-                              "operator": "equal",
-                              "type": "expression",
-                              "name": ":P1",
-                              "value": "{{GetProduct.id}}"
-                            },
-                            {
-                              "operator": "equal",
-                              "type": "expression",
-                              "name": ":P2",
-                              "value": "{{$_SERVER.REMOTE_ADDR}}"
-                            }
-                          ]
-                        }
+                        "value": 400
                       },
-                      "output": false,
-                      "meta": [
-                        {
-                          "type": "number",
-                          "name": "CountProd"
-                        }
-                      ],
-                      "outputType": "object"
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
                     },
                     {
-                      "name": "",
+                      "name": "message",
                       "module": "core",
-                      "action": "condition",
+                      "action": "setvalue",
                       "options": {
-                        "if": "{{GetCartInfo.CountProd<1}}",
-                        "then": {
-                          "steps": [
-                            {
-                              "name": "AddProduct",
-                              "module": "dbupdater",
-                              "action": "insert",
-                              "options": {
-                                "connection": "ClientApp",
-                                "sql": {
-                                  "type": "insert",
-                                  "values": [
-                                    {
-                                      "table": "r_cart",
-                                      "column": "prod_id",
-                                      "type": "number",
-                                      "value": "{{GetProduct.id}}"
-                                    },
-                                    {
-                                      "table": "r_cart",
-                                      "column": "price_id",
-                                      "type": "number",
-                                      "value": "{{GetProduct.price_id}}"
-                                    },
-                                    {
-                                      "table": "r_cart",
-                                      "column": "prod_unit_price",
-                                      "type": "text",
-                                      "value": "{{GetProduct.selling_price}}"
-                                    },
-                                    {
-                                      "table": "r_cart",
-                                      "column": "prod_qty",
-                                      "type": "text",
-                                      "value": "{{GetProduct.quantity}}"
-                                    },
-                                    {
-                                      "table": "r_cart",
-                                      "column": "total_price",
-                                      "type": "text",
-                                      "value": "{{GetProduct.quantity.toNumber()*GetProduct.selling_price.toNumber()}}"
-                                    },
-                                    {
-                                      "table": "r_cart",
-                                      "column": "created_on",
-                                      "type": "datetime",
-                                      "value": "{{NOW}}"
-                                    },
-                                    {
-                                      "table": "r_cart",
-                                      "column": "ip_address",
-                                      "type": "text",
-                                      "value": "{{$_SERVER.REMOTE_ADDR}}"
-                                    }
-                                  ],
-                                  "table": "r_cart",
-                                  "returning": "id",
-                                  "query": "INSERT INTO r_cart\n(prod_id, price_id, prod_unit_price, prod_qty, total_price, created_on, ip_address) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetProduct.selling_price}} */, :P4 /* {{GetProduct.quantity}} */, :P5 /* {{GetProduct.quantity.toNumber()*GetProduct.selling_price.toNumber()}} */, :P6 /* {{NOW}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */)",
-                                  "params": [
-                                    {
-                                      "name": ":P1",
-                                      "type": "expression",
-                                      "value": "{{GetProduct.id}}"
-                                    },
-                                    {
-                                      "name": ":P2",
-                                      "type": "expression",
-                                      "value": "{{GetProduct.price_id}}"
-                                    },
-                                    {
-                                      "name": ":P3",
-                                      "type": "expression",
-                                      "value": "{{GetProduct.selling_price}}"
-                                    },
-                                    {
-                                      "name": ":P4",
-                                      "type": "expression",
-                                      "value": "{{GetProduct.quantity}}"
-                                    },
-                                    {
-                                      "name": ":P5",
-                                      "type": "expression",
-                                      "value": "{{GetProduct.quantity.toNumber()*GetProduct.selling_price.toNumber()}}"
-                                    },
-                                    {
-                                      "name": ":P6",
-                                      "type": "expression",
-                                      "value": "{{NOW}}"
-                                    },
-                                    {
-                                      "name": ":P7",
-                                      "type": "expression",
-                                      "value": "{{$_SERVER.REMOTE_ADDR}}"
-                                    }
-                                  ]
-                                }
-                              },
-                              "meta": [
-                                {
-                                  "name": "identity",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "affected",
-                                  "type": "number"
-                                }
-                              ]
-                            },
-                            {
-                              "name": "Resp",
-                              "module": "core",
-                              "action": "setvalue",
-                              "options": {
-                                "value": "{{GetProduct.prod_name_en+' Added to Cart'}}"
-                              },
-                              "meta": [
-                                {
-                                  "name": "id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "market_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "rest_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "category_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "brand_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "slab_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "prod_mark_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "prod_occurance_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "prod_name_en",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "prod_name_bn",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "prod_name_hin",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "prod_desc_en",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "prod_desc_bn",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "prod_desc_hin",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "price_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "quantity",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "q_unit",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "mrp",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "selling_price",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "product_tax",
-                                  "type": "text"
-                                }
-                              ],
-                              "output": true,
-                              "outputType": "text"
-                            }
-                          ]
-                        },
-                        "else": {
-                          "steps": {
-                            "name": "Resp",
-                            "module": "core",
-                            "action": "setvalue",
-                            "options": {
-                              "value": "Product already exists in cart"
-                            },
-                            "meta": [],
-                            "output": true,
-                            "outputType": "text"
-                          }
-                        }
+                        "value": "Unauthorized User"
                       },
-                      "outputType": "boolean"
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
                     }
                   ]
                 }
@@ -1123,17 +844,30 @@
           ]
         },
         "catch": {
-          "steps": {
-            "name": "Resp",
-            "module": "core",
-            "action": "setvalue",
-            "options": {
-              "value": "Suspicious Activity"
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
             },
-            "meta": [],
-            "output": true,
-            "outputType": "text"
-          }
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
         }
       }
     }

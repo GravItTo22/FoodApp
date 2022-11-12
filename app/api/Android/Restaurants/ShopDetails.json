@@ -184,13 +184,40 @@
                                   {
                                     "table": "m_restaurant",
                                     "column": "address"
+                                  },
+                                  {
+                                    "table": "rsi",
+                                    "column": "cover_image"
                                   }
                                 ],
                                 "table": {
                                   "name": "m_restaurant"
                                 },
                                 "primary": "id",
-                                "joins": [],
+                                "joins": [
+                                  {
+                                    "table": "rest_sliding_img",
+                                    "column": "*",
+                                    "alias": "rsi",
+                                    "type": "LEFT",
+                                    "clauses": {
+                                      "condition": "AND",
+                                      "rules": [
+                                        {
+                                          "table": "rsi",
+                                          "column": "rest_id",
+                                          "operator": "equal",
+                                          "value": {
+                                            "table": "m_restaurant",
+                                            "column": "id"
+                                          },
+                                          "operation": "="
+                                        }
+                                      ]
+                                    },
+                                    "primary": "id"
+                                  }
+                                ],
                                 "wheres": {
                                   "condition": "AND",
                                   "rules": [
@@ -244,7 +271,7 @@
                                   "conditional": null,
                                   "valid": true
                                 },
-                                "query": "SELECT id AS rest_id, cat_type_id, gen_shop_id, shop_name_hin AS shop_name, shop_logo, address\nFROM m_restaurant\nWHERE id = :P1 /* {{$_GET.rest_id}} */ AND market_id = :P2 /* {{$_GET.market}} */",
+                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_hin AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
                                 "params": [
                                   {
                                     "operator": "equal",
@@ -286,6 +313,10 @@
                               {
                                 "type": "text",
                                 "name": "address"
+                              },
+                              {
+                                "type": "text",
+                                "name": "cover_image"
                               }
                             ],
                             "outputType": "object",
@@ -336,13 +367,40 @@
                                   {
                                     "table": "m_restaurant",
                                     "column": "address"
+                                  },
+                                  {
+                                    "table": "rsi",
+                                    "column": "cover_image"
                                   }
                                 ],
                                 "table": {
                                   "name": "m_restaurant"
                                 },
                                 "primary": "id",
-                                "joins": [],
+                                "joins": [
+                                  {
+                                    "table": "rest_sliding_img",
+                                    "column": "*",
+                                    "alias": "rsi",
+                                    "type": "LEFT",
+                                    "clauses": {
+                                      "condition": "AND",
+                                      "rules": [
+                                        {
+                                          "table": "rsi",
+                                          "column": "rest_id",
+                                          "operator": "equal",
+                                          "value": {
+                                            "table": "m_restaurant",
+                                            "column": "id"
+                                          },
+                                          "operation": "="
+                                        }
+                                      ]
+                                    },
+                                    "primary": "id"
+                                  }
+                                ],
                                 "wheres": {
                                   "condition": "AND",
                                   "rules": [
@@ -396,7 +454,7 @@
                                   "conditional": null,
                                   "valid": true
                                 },
-                                "query": "SELECT id AS rest_id, cat_type_id, gen_shop_id, shop_name_bn AS shop_name, shop_logo, address\nFROM m_restaurant\nWHERE id = :P1 /* {{$_GET.rest_id}} */ AND market_id = :P2 /* {{$_GET.market}} */",
+                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_bn AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
                                 "params": [
                                   {
                                     "operator": "equal",
@@ -438,6 +496,10 @@
                               {
                                 "type": "text",
                                 "name": "address"
+                              },
+                              {
+                                "type": "text",
+                                "name": "cover_image"
                               }
                             ],
                             "outputType": "object",
@@ -488,13 +550,40 @@
                                   {
                                     "table": "m_restaurant",
                                     "column": "address"
+                                  },
+                                  {
+                                    "table": "rsi",
+                                    "column": "cover_image"
                                   }
                                 ],
                                 "table": {
                                   "name": "m_restaurant"
                                 },
                                 "primary": "id",
-                                "joins": [],
+                                "joins": [
+                                  {
+                                    "table": "rest_sliding_img",
+                                    "column": "*",
+                                    "alias": "rsi",
+                                    "type": "LEFT",
+                                    "clauses": {
+                                      "condition": "AND",
+                                      "rules": [
+                                        {
+                                          "table": "rsi",
+                                          "column": "rest_id",
+                                          "operator": "equal",
+                                          "value": {
+                                            "table": "m_restaurant",
+                                            "column": "id"
+                                          },
+                                          "operation": "="
+                                        }
+                                      ]
+                                    },
+                                    "primary": "id"
+                                  }
+                                ],
                                 "wheres": {
                                   "condition": "AND",
                                   "rules": [
@@ -548,7 +637,7 @@
                                   "conditional": null,
                                   "valid": true
                                 },
-                                "query": "SELECT id AS rest_id, cat_type_id, gen_shop_id, shop_name_en AS shop_name, shop_logo, address\nFROM m_restaurant\nWHERE id = :P1 /* {{$_GET.rest_id}} */ AND market_id = :P2 /* {{$_GET.market}} */",
+                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_en AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
                                 "params": [
                                   {
                                     "operator": "equal",
@@ -590,6 +679,10 @@
                               {
                                 "type": "text",
                                 "name": "address"
+                              },
+                              {
+                                "type": "text",
+                                "name": "cover_image"
                               }
                             ],
                             "outputType": "object",

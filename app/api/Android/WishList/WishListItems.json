@@ -100,7 +100,7 @@
                   ]
                 }
               },
-              "output": true,
+              "output": false,
               "meta": [
                 {
                   "type": "number",
@@ -177,7 +177,7 @@
                           ]
                         }
                       },
-                      "output": true,
+                      "output": false,
                       "meta": [
                         {
                           "type": "number",
@@ -337,7 +337,7 @@
                               "module": "core",
                               "action": "setvalue",
                               "options": {
-                                "value": "No Record Found!"
+                                "value": "Empty List"
                               },
                               "meta": [],
                               "output": true,

@@ -165,7 +165,7 @@
                             "options": {
                               "connection": "ClientApp",
                               "sql": {
-                                "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, mp.prod_img1, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) WHERE mp.status=1 AND mp.market_id=@market AND mp.rest_id=@rest_id ORDER by mp.id desc LIMIT @limit",
+                                "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, mp.prod_desc_hin as prod_description, mp.prod_img1, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) WHERE mp.status=1 AND mp.market_id=@market AND mp.rest_id=@rest_id ORDER by mp.id desc LIMIT @limit",
                                 "params": [
                                   {
                                     "name": "@market",
@@ -205,6 +205,10 @@
                               },
                               {
                                 "name": "prod_name",
+                                "type": "text"
+                              },
+                              {
+                                "name": "prod_description",
                                 "type": "text"
                               },
                               {
@@ -262,7 +266,7 @@
                             "options": {
                               "connection": "ClientApp",
                               "sql": {
-                                "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, mp.prod_img1, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) WHERE mp.status=1 AND mp.market_id=@market AND mp.rest_id=@rest_id ORDER by mp.id desc LIMIT @limit",
+                                "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, mp.prod_desc_bn as prod_description, mp.prod_img1, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) WHERE mp.status=1 AND mp.market_id=@market AND mp.rest_id=@rest_id ORDER by mp.id desc LIMIT @limit",
                                 "params": [
                                   {
                                     "name": "@market",
@@ -302,6 +306,10 @@
                               },
                               {
                                 "name": "prod_name",
+                                "type": "text"
+                              },
+                              {
+                                "name": "prod_description",
                                 "type": "text"
                               },
                               {
@@ -359,7 +367,7 @@
                             "options": {
                               "connection": "ClientApp",
                               "sql": {
-                                "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, mp.prod_img1, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) WHERE mp.status=1 AND mp.market_id=@market AND mp.rest_id=@rest_id ORDER by mp.id desc LIMIT @limit",
+                                "query": "SELECT mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, mp.prod_desc_en as prod_description, mp.prod_img1, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) WHERE mp.status=1 AND mp.market_id=@market AND mp.rest_id=@rest_id ORDER by mp.id desc LIMIT @limit",
                                 "params": [
                                   {
                                     "name": "@market",
@@ -399,6 +407,10 @@
                               },
                               {
                                 "name": "prod_name",
+                                "type": "text"
+                              },
+                              {
+                                "name": "prod_description",
                                 "type": "text"
                               },
                               {

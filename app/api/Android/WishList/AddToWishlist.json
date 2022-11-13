@@ -12,10 +12,6 @@
       {
         "type": "text",
         "name": "logintoken"
-      },
-      {
-        "type": "text",
-        "name": "quantity"
       }
     ],
     "$_SERVER": [
@@ -575,13 +571,13 @@
                                               "table": "r_wishlist",
                                               "column": "prod_qty",
                                               "type": "text",
-                                              "value": "{{$_POST.quantity}}"
+                                              "value": "{{1}}"
                                             },
                                             {
                                               "table": "r_wishlist",
                                               "column": "total_price",
                                               "type": "text",
-                                              "value": "{{GetProduct.price.toNumber()*$_POST.quantity.toNumber()}}"
+                                              "value": "{{GetProduct.price}}"
                                             },
                                             {
                                               "table": "r_wishlist",
@@ -610,7 +606,7 @@
                                           ],
                                           "table": "r_wishlist",
                                           "returning": "id",
-                                          "query": "INSERT INTO r_wishlist\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, ips, created_by, created_on, wishlist_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetVerify.user_id}} */, :P4 /* {{GetProduct.price}} */, :P5 /* {{$_POST.quantity}} */, :P6 /* {{GetProduct.price.toNumber()*$_POST.quantity.toNumber()}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetVerify.user_id}} */, :P9 /* {{NOW}} */, :P10 /* {{GetProduct.mrp}} */)",
+                                          "query": "INSERT INTO r_wishlist\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, ips, created_by, created_on, wishlist_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetVerify.user_id}} */, :P4 /* {{GetProduct.price}} */, :P5 /* {{1}} */, :P6 /* {{GetProduct.price}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetVerify.user_id}} */, :P9 /* {{NOW}} */, :P10 /* {{GetProduct.mrp}} */)",
                                           "params": [
                                             {
                                               "name": ":P1",
@@ -635,12 +631,12 @@
                                             {
                                               "name": ":P5",
                                               "type": "expression",
-                                              "value": "{{$_POST.quantity}}"
+                                              "value": "{{1}}"
                                             },
                                             {
                                               "name": ":P6",
                                               "type": "expression",
-                                              "value": "{{GetProduct.price.toNumber()*$_POST.quantity.toNumber()}}"
+                                              "value": "{{GetProduct.price}}"
                                             },
                                             {
                                               "name": ":P7",

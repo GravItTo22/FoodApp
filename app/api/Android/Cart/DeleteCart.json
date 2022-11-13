@@ -1,0 +1,415 @@
+{
+  "meta": {
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "p_id"
+      },
+      {
+        "type": "text",
+        "name": "logintoken"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetVerify",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "t_user_log",
+                      "column": "user_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "t_user_log"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "t_user_log.login_token",
+                        "field": "t_user_log.login_token",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_POST.logintoken}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_token",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_token"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "t_user_log.login_from",
+                        "field": "t_user_log.login_from",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{'Android'}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_from",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_from"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_POST.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_POST.logintoken}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{'Android'}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "user_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetVerify.user_id}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "CountCart",
+                      "module": "dbconnector",
+                      "action": "single",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [
+                            {
+                              "table": "r_cart",
+                              "column": "id",
+                              "alias": "CountId",
+                              "aggregate": "COUNT"
+                            }
+                          ],
+                          "table": {
+                            "name": "r_cart"
+                          },
+                          "primary": "id",
+                          "joins": [],
+                          "groupBy": [],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "r_cart.prod_id",
+                                "field": "r_cart.prod_id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{$_POST.p_id}}",
+                                "data": {
+                                  "table": "r_cart",
+                                  "column": "prod_id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "reference",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "references": "id",
+                                    "inTable": "m_product",
+                                    "referenceType": "integer",
+                                    "onUpdate": "NO ACTION",
+                                    "onDelete": "NO ACTION",
+                                    "name": "prod_id"
+                                  }
+                                },
+                                "operation": "="
+                              },
+                              {
+                                "id": "r_cart.user_id",
+                                "field": "r_cart.user_id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{GetVerify.user_id}}",
+                                "data": {
+                                  "table": "r_cart",
+                                  "column": "user_id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "reference",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "references": "id",
+                                    "inTable": "m_customer",
+                                    "referenceType": "integer",
+                                    "onUpdate": "NO ACTION",
+                                    "onDelete": "NO ACTION",
+                                    "name": "user_id"
+                                  }
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "query": "SELECT COUNT(id) AS CountId\nFROM r_cart\nWHERE prod_id = :P1 /* {{$_POST.p_id}} */ AND user_id = :P2 /* {{GetVerify.user_id}} */",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{$_POST.p_id}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P2",
+                              "value": "{{GetVerify.user_id}}"
+                            }
+                          ]
+                        }
+                      },
+                      "output": false,
+                      "meta": [
+                        {
+                          "type": "number",
+                          "name": "CountId"
+                        }
+                      ],
+                      "outputType": "object"
+                    },
+                    {
+                      "name": "",
+                      "module": "core",
+                      "action": "condition",
+                      "options": {
+                        "if": "{{CountCart.CountId}}",
+                        "then": {
+                          "steps": [
+                            {
+                              "name": "delCart",
+                              "module": "dbupdater",
+                              "action": "delete",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "delete",
+                                  "table": "r_cart",
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "prod_id",
+                                        "field": "prod_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{$_POST.p_id}}",
+                                        "data": {
+                                          "column": "prod_id"
+                                        },
+                                        "operation": "="
+                                      },
+                                      {
+                                        "id": "user_id",
+                                        "field": "user_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{GetVerify.user_id}}",
+                                        "data": {
+                                          "column": "user_id"
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "returning": "id",
+                                  "query": "DELETE\nFROM r_cart\nWHERE prod_id = :P1 /* {{$_POST.p_id}} */ AND user_id = :P2 /* {{GetVerify.user_id}} */",
+                                  "params": [
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P1",
+                                      "value": "{{$_POST.p_id}}"
+                                    },
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P2",
+                                      "value": "{{GetVerify.user_id}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "status",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": 200
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "message",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "Items removed from Cart"
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            }
+                          ]
+                        },
+                        "else": {
+                          "steps": [
+                            {
+                              "name": "status",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": 400
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "message",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "No Such Items Available"
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            }
+                          ]
+                        }
+                      },
+                      "outputType": "boolean"
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Unauthorized User"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -13,12 +13,6 @@
         "type": "text",
         "name": "logintoken"
       }
-    ],
-    "$_SERVER": [
-      {
-        "type": "text",
-        "name": "REMOTE_ADDR"
-      }
     ]
   },
   "exec": {
@@ -146,23 +140,15 @@
                             },
                             {
                               "table": "m_product",
+                              "column": "prod_id"
+                            },
+                            {
+                              "table": "m_product",
                               "column": "market_id"
                             },
                             {
                               "table": "m_product",
                               "column": "rest_id"
-                            },
-                            {
-                              "table": "m_product",
-                              "column": "category_id"
-                            },
-                            {
-                              "table": "m_product",
-                              "column": "brand_id"
-                            },
-                            {
-                              "table": "m_product",
-                              "column": "slab_id"
                             },
                             {
                               "table": "m_product",
@@ -186,40 +172,32 @@
                             },
                             {
                               "table": "m_product",
-                              "column": "prod_desc_en"
+                              "column": "prod_img1"
                             },
                             {
-                              "table": "m_product",
-                              "column": "prod_desc_bn"
-                            },
-                            {
-                              "table": "m_product",
-                              "column": "prod_desc_hin"
-                            },
-                            {
-                              "table": "price",
+                              "table": "rpt",
                               "column": "id",
                               "alias": "price_id"
                             },
                             {
-                              "table": "price",
+                              "table": "rpt",
                               "column": "quantity"
                             },
                             {
-                              "table": "price",
+                              "table": "rpt",
                               "column": "q_unit"
                             },
                             {
-                              "table": "price",
+                              "table": "rpt",
                               "column": "mrp"
                             },
                             {
-                              "table": "price",
+                              "table": "rpt",
                               "column": "selling_price",
                               "alias": "price"
                             },
                             {
-                              "table": "price",
+                              "table": "rpt",
                               "column": "product_tax"
                             }
                           ],
@@ -231,13 +209,13 @@
                             {
                               "table": "r_price_table",
                               "column": "*",
-                              "alias": "price",
+                              "alias": "rpt",
                               "type": "LEFT",
                               "clauses": {
                                 "condition": "AND",
                                 "rules": [
                                   {
-                                    "table": "price",
+                                    "table": "rpt",
                                     "column": "prod_id",
                                     "operator": "equal",
                                     "value": {
@@ -251,26 +229,74 @@
                               "primary": "id"
                             }
                           ],
+                          "query": "SELECT m_product.id, m_product.prod_id, m_product.market_id, m_product.rest_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_img1, rpt.id AS price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price AS price, rpt.product_tax\nFROM m_product\nLEFT JOIN r_price_table AS rpt ON (rpt.prod_id = m_product.id)\nWHERE m_product.id = :P1 /* {{$_POST.p_id}} */ AND rpt.id = :P2 /* {{$_POST.price_id}} */ AND m_product.status = :P3 /* {{1}} */ AND rpt.status = :P4 /* {{1}} */",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{$_POST.p_id}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P2",
+                              "value": "{{$_POST.price_id}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P3",
+                              "value": "{{1}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P4",
+                              "value": "{{1}}"
+                            }
+                          ],
                           "wheres": {
                             "condition": "AND",
                             "rules": [
                               {
-                                "id": "m_product.prod_id",
-                                "field": "m_product.prod_id",
-                                "type": "string",
+                                "id": "m_product.id",
+                                "field": "m_product.id",
+                                "type": "double",
                                 "operator": "equal",
                                 "value": "{{$_POST.p_id}}",
                                 "data": {
                                   "table": "m_product",
-                                  "column": "prod_id",
-                                  "type": "text",
+                                  "column": "id",
+                                  "type": "number",
                                   "columnObj": {
-                                    "type": "string",
-                                    "maxLength": -5,
-                                    "primary": false,
-                                    "unique": false,
-                                    "nullable": true,
-                                    "name": "prod_id"
+                                    "type": "increments",
+                                    "default": "",
+                                    "primary": true,
+                                    "unique": true,
+                                    "nullable": false,
+                                    "name": "id"
+                                  }
+                                },
+                                "operation": "="
+                              },
+                              {
+                                "id": "rpt.id",
+                                "field": "rpt.id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{$_POST.price_id}}",
+                                "data": {
+                                  "table": "rpt",
+                                  "column": "id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "increments",
+                                    "default": "",
+                                    "primary": true,
+                                    "unique": true,
+                                    "nullable": false,
+                                    "name": "id"
                                   }
                                 },
                                 "operation": "="
@@ -280,7 +306,7 @@
                                 "field": "m_product.status",
                                 "type": "double",
                                 "operator": "equal",
-                                "value": 1,
+                                "value": "{{1}}",
                                 "data": {
                                   "table": "m_product",
                                   "column": "status",
@@ -296,22 +322,21 @@
                                 "operation": "="
                               },
                               {
-                                "id": "price.id",
-                                "field": "price.id",
+                                "id": "rpt.status",
+                                "field": "rpt.status",
                                 "type": "double",
                                 "operator": "equal",
-                                "value": "{{$_POST.price_id}}",
+                                "value": "{{1}}",
                                 "data": {
-                                  "table": "price",
-                                  "column": "id",
+                                  "table": "rpt",
+                                  "column": "status",
                                   "type": "number",
                                   "columnObj": {
-                                    "type": "increments",
-                                    "default": "",
-                                    "primary": true,
-                                    "unique": true,
-                                    "nullable": false,
-                                    "name": "id"
+                                    "type": "integer",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "status"
                                   }
                                 },
                                 "operation": "="
@@ -319,22 +344,7 @@
                             ],
                             "conditional": null,
                             "valid": true
-                          },
-                          "query": "SELECT m_product.id, m_product.market_id, m_product.rest_id, m_product.category_id, m_product.brand_id, m_product.slab_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_desc_en, m_product.prod_desc_bn, m_product.prod_desc_hin, price.id AS price_id, price.quantity, price.q_unit, price.mrp, price.selling_price AS price, price.product_tax\nFROM m_product\nLEFT JOIN r_price_table AS price ON (price.prod_id = m_product.id)\nWHERE m_product.prod_id = :P1 /* {{$_POST.p_id}} */ AND m_product.status = 1 AND price.id = :P2 /* {{$_POST.price_id}} */",
-                          "params": [
-                            {
-                              "operator": "equal",
-                              "type": "expression",
-                              "name": ":P1",
-                              "value": "{{$_POST.p_id}}"
-                            },
-                            {
-                              "operator": "equal",
-                              "type": "expression",
-                              "name": ":P2",
-                              "value": "{{$_POST.price_id}}"
-                            }
-                          ]
+                          }
                         }
                       },
                       "output": false,
@@ -344,24 +354,16 @@
                           "name": "id"
                         },
                         {
+                          "type": "text",
+                          "name": "prod_id"
+                        },
+                        {
                           "type": "number",
                           "name": "market_id"
                         },
                         {
                           "type": "number",
                           "name": "rest_id"
-                        },
-                        {
-                          "type": "number",
-                          "name": "category_id"
-                        },
-                        {
-                          "type": "number",
-                          "name": "brand_id"
-                        },
-                        {
-                          "type": "number",
-                          "name": "slab_id"
                         },
                         {
                           "type": "number",
@@ -385,15 +387,7 @@
                         },
                         {
                           "type": "text",
-                          "name": "prod_desc_en"
-                        },
-                        {
-                          "type": "text",
-                          "name": "prod_desc_bn"
-                        },
-                        {
-                          "type": "text",
-                          "name": "prod_desc_hin"
+                          "name": "prod_img1"
                         },
                         {
                           "type": "number",
@@ -516,7 +510,7 @@
                                   ]
                                 }
                               },
-                              "output": false,
+                              "output": true,
                               "meta": [
                                 {
                                   "type": "number",

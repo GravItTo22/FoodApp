@@ -12,6 +12,10 @@
       {
         "type": "text",
         "name": "logintoken"
+      },
+      {
+        "type": "text",
+        "name": "quantity"
       }
     ],
     "$_SERVER": [
@@ -215,7 +219,8 @@
                             },
                             {
                               "table": "price",
-                              "column": "selling_price"
+                              "column": "selling_price",
+                              "alias": "price"
                             },
                             {
                               "table": "price",
@@ -254,22 +259,22 @@
                             "condition": "AND",
                             "rules": [
                               {
-                                "id": "m_product.prod_id",
-                                "field": "m_product.prod_id",
-                                "type": "string",
+                                "id": "m_product.id",
+                                "field": "m_product.id",
+                                "type": "double",
                                 "operator": "equal",
                                 "value": "{{$_POST.p_id}}",
                                 "data": {
                                   "table": "m_product",
-                                  "column": "prod_id",
-                                  "type": "text",
+                                  "column": "id",
+                                  "type": "number",
                                   "columnObj": {
-                                    "type": "string",
-                                    "maxLength": -5,
-                                    "primary": false,
-                                    "unique": false,
-                                    "nullable": true,
-                                    "name": "prod_id"
+                                    "type": "increments",
+                                    "default": "",
+                                    "primary": true,
+                                    "unique": true,
+                                    "nullable": false,
+                                    "name": "id"
                                   }
                                 },
                                 "operation": "="
@@ -279,7 +284,7 @@
                                 "field": "m_product.status",
                                 "type": "double",
                                 "operator": "equal",
-                                "value": 1,
+                                "value": "{{1}}",
                                 "data": {
                                   "table": "m_product",
                                   "column": "status",
@@ -314,12 +319,32 @@
                                   }
                                 },
                                 "operation": "="
+                              },
+                              {
+                                "id": "price.status",
+                                "field": "price.status",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{1}}",
+                                "data": {
+                                  "table": "price",
+                                  "column": "status",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "integer",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "status"
+                                  }
+                                },
+                                "operation": "="
                               }
                             ],
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT m_product.id, m_product.market_id, m_product.rest_id, m_product.category_id, m_product.brand_id, m_product.slab_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_desc_en, m_product.prod_desc_bn, m_product.prod_desc_hin, price.id AS price_id, price.quantity, price.q_unit, price.mrp, price.selling_price, price.product_tax\nFROM m_product\nLEFT JOIN r_price_table AS price ON (price.prod_id = m_product.id)\nWHERE m_product.prod_id = :P1 /* {{$_POST.p_id}} */ AND m_product.status = 1 AND price.id = :P2 /* {{$_POST.price_id}} */",
+                          "query": "SELECT m_product.id, m_product.market_id, m_product.rest_id, m_product.category_id, m_product.brand_id, m_product.slab_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_desc_en, m_product.prod_desc_bn, m_product.prod_desc_hin, price.id AS price_id, price.quantity, price.q_unit, price.mrp, price.selling_price AS price, price.product_tax\nFROM m_product\nLEFT JOIN r_price_table AS price ON (price.prod_id = m_product.id)\nWHERE m_product.id = :P1 /* {{$_POST.p_id}} */ AND m_product.status = :P2 /* {{1}} */ AND price.id = :P3 /* {{$_POST.price_id}} */ AND price.status = :P4 /* {{1}} */",
                           "params": [
                             {
                               "operator": "equal",
@@ -331,7 +356,19 @@
                               "operator": "equal",
                               "type": "expression",
                               "name": ":P2",
+                              "value": "{{1}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P3",
                               "value": "{{$_POST.price_id}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P4",
+                              "value": "{{1}}"
                             }
                           ]
                         }
@@ -412,7 +449,7 @@
                         },
                         {
                           "type": "text",
-                          "name": "selling_price"
+                          "name": "price"
                         },
                         {
                           "type": "text",
@@ -573,19 +610,19 @@
                                               "table": "r_cart",
                                               "column": "prod_unit_price",
                                               "type": "text",
-                                              "value": "{{GetProduct.selling_price}}"
+                                              "value": "{{GetProduct.price}}"
                                             },
                                             {
                                               "table": "r_cart",
                                               "column": "prod_qty",
                                               "type": "text",
-                                              "value": "{{GetProduct.quantity}}"
+                                              "value": "{{$_POST.quantity}}"
                                             },
                                             {
                                               "table": "r_cart",
                                               "column": "total_price",
                                               "type": "text",
-                                              "value": "{{GetProduct.selling_price}}"
+                                              "value": "{{GetProduct.price.toNumber()*$_POST.quantity.toNumber()}}"
                                             },
                                             {
                                               "table": "r_cart",
@@ -608,7 +645,7 @@
                                           ],
                                           "table": "r_cart",
                                           "returning": "id",
-                                          "query": "INSERT INTO r_cart\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, created_by, created_on, ip_address) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetVerify.user_id}} */, :P4 /* {{GetProduct.selling_price}} */, :P5 /* {{GetProduct.quantity}} */, :P6 /* {{GetProduct.selling_price}} */, :P7 /* {{GetVerify.user_id}} */, :P8 /* {{NOW}} */, :P9 /* {{$_SERVER.REMOTE_ADDR}} */)",
+                                          "query": "INSERT INTO r_cart\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, created_by, created_on, ip_address) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetVerify.user_id}} */, :P4 /* {{GetProduct.price}} */, :P5 /* {{$_POST.quantity}} */, :P6 /* {{GetProduct.price.toNumber()*$_POST.quantity.toNumber()}} */, :P7 /* {{GetVerify.user_id}} */, :P8 /* {{NOW}} */, :P9 /* {{$_SERVER.REMOTE_ADDR}} */)",
                                           "params": [
                                             {
                                               "name": ":P1",
@@ -628,17 +665,17 @@
                                             {
                                               "name": ":P4",
                                               "type": "expression",
-                                              "value": "{{GetProduct.selling_price}}"
+                                              "value": "{{GetProduct.price}}"
                                             },
                                             {
                                               "name": ":P5",
                                               "type": "expression",
-                                              "value": "{{GetProduct.quantity}}"
+                                              "value": "{{$_POST.quantity}}"
                                             },
                                             {
                                               "name": ":P6",
                                               "type": "expression",
-                                              "value": "{{GetProduct.selling_price}}"
+                                              "value": "{{GetProduct.price.toNumber()*$_POST.quantity.toNumber()}}"
                                             },
                                             {
                                               "name": ":P7",
@@ -761,7 +798,7 @@
                                           "type": "text"
                                         },
                                         {
-                                          "name": "selling_price",
+                                          "name": "price",
                                           "type": "text"
                                         },
                                         {

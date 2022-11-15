@@ -62,5 +62,9 @@
   "my-order.ejs": {
     "layoutPage": "main",
     "description": ""
+  },
+  "order-details.ejs": {
+    "layoutPage": "main",
+    "description": ""
   }
 }

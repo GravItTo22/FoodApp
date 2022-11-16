@@ -860,7 +860,7 @@
                               "module": "core",
                               "action": "setvalue",
                               "options": {
-                                "value": "Product Already Exists in the Cart"
+                                "value": "Wrong Product Information"
                               },
                               "meta": [],
                               "output": true,

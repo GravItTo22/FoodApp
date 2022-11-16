@@ -47,7 +47,30 @@
                     "name": "m_product"
                   },
                   "primary": "id",
-                  "joins": [],
+                  "joins": [
+                    {
+                      "table": "m_restaurant",
+                      "column": "*",
+                      "alias": "mr",
+                      "type": "LEFT",
+                      "clauses": {
+                        "condition": "AND",
+                        "rules": [
+                          {
+                            "table": "mr",
+                            "column": "id",
+                            "operator": "equal",
+                            "value": {
+                              "table": "m_product",
+                              "column": "rest_id"
+                            },
+                            "operation": "="
+                          }
+                        ]
+                      },
+                      "primary": "id"
+                    }
+                  ],
                   "groupBy": [],
                   "wheres": {
                     "condition": "AND",
@@ -96,12 +119,57 @@
                           }
                         },
                         "operation": "="
+                      },
+                      {
+                        "id": "m_product.prod_occurance_id",
+                        "field": "m_product.prod_occurance_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{1}}",
+                        "data": {
+                          "table": "m_product",
+                          "column": "prod_occurance_id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "reference",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "references": "id",
+                            "inTable": "m_prod_occurance",
+                            "referenceType": "integer",
+                            "onUpdate": "NO ACTION",
+                            "onDelete": "NO ACTION",
+                            "name": "prod_occurance_id"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "mr.status",
+                        "field": "mr.status",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{1}}",
+                        "data": {
+                          "table": "mr",
+                          "column": "status",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "integer",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "status"
+                          }
+                        },
+                        "operation": "="
                       }
                     ],
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT COUNT(id) AS CountId\nFROM m_product\nWHERE market_id = :P1 /* {{$_GET.market}} */ AND status = :P2 /* {{1}} */",
+                  "query": "SELECT COUNT(m_product.id) AS CountId\nFROM m_product\nLEFT JOIN m_restaurant AS mr ON (mr.id = m_product.rest_id)\nWHERE m_product.market_id = :P1 /* {{$_GET.market}} */ AND m_product.status = :P2 /* {{1}} */ AND m_product.prod_occurance_id = :P3 /* {{1}} */ AND mr.status = :P4 /* {{1}} */",
                   "params": [
                     {
                       "operator": "equal",
@@ -113,6 +181,18 @@
                       "operator": "equal",
                       "type": "expression",
                       "name": ":P2",
+                      "value": "{{1}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P3",
+                      "value": "{{1}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P4",
                       "value": "{{1}}"
                     }
                   ]

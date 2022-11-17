@@ -1,0 +1,158 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "order_id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "",
+        "module": "auth",
+        "action": "restrict",
+        "options": {
+          "provider": "security",
+          "permissions": [
+            "write"
+          ],
+          "loginUrl": "/login",
+          "forbiddenUrl": "/403-forbidden"
+        }
+      },
+      {
+        "name": "identity",
+        "module": "auth",
+        "action": "identify",
+        "options": {
+          "provider": "security"
+        },
+        "output": false,
+        "meta": []
+      },
+      {
+        "name": "",
+        "module": "core",
+        "action": "trycatch",
+        "options": {
+          "try": {
+            "steps": [
+              {
+                "name": "status",
+                "module": "core",
+                "action": "setvalue",
+                "options": {
+                  "value": 200
+                },
+                "meta": [],
+                "output": true,
+                "outputType": "text"
+              },
+              {
+                "name": "OrderedProducts",
+                "module": "dbupdater",
+                "action": "custom",
+                "options": {
+                  "connection": "ClientApp",
+                  "sql": {
+                    "query": "select rod.id, rod.prod_id, rod.price_id, rod.prod_qty, rod.each_unit_price, rod.each_net_amt, rod.order_status, rod.created_on, rod.updated_on, \nmp.prod_id, mp.prod_name_en as prod_name, mp.prod_mark_id, mp.prod_img1, mr.shop_name_en as shop_name, rpt.quantity as howmuch, rpt.q_unit, rpt.mrp \nfrom r_order_details rod \nleft join m_product mp on (mp.id = rod.prod_id)\nleft join m_restaurant mr on (mr.id = mp.rest_id)\nleft join r_price_table rpt on (rpt.id = rod.price_id)\nwhere rod.user_id = @user_id and rod.order_table_id = @order_id;",
+                    "params": [
+                      {
+                        "name": "@user_id",
+                        "value": "{{identity}}",
+                        "test": "82"
+                      },
+                      {
+                        "name": "@order_id",
+                        "value": "{{$_GET.order_id}}",
+                        "test": "9"
+                      }
+                    ]
+                  }
+                },
+                "output": true,
+                "meta": [
+                  {
+                    "name": "id",
+                    "type": "number"
+                  },
+                  {
+                    "name": "prod_id",
+                    "type": "text"
+                  },
+                  {
+                    "name": "price_id",
+                    "type": "number"
+                  },
+                  {
+                    "name": "prod_qty",
+                    "type": "text"
+                  },
+                  {
+                    "name": "each_unit_price",
+                    "type": "text"
+                  },
+                  {
+                    "name": "each_net_amt",
+                    "type": "text"
+                  },
+                  {
+                    "name": "order_status",
+                    "type": "number"
+                  },
+                  {
+                    "name": "created_on",
+                    "type": "text"
+                  },
+                  {
+                    "name": "updated_on",
+                    "type": "text"
+                  },
+                  {
+                    "name": "prod_name",
+                    "type": "text"
+                  },
+                  {
+                    "name": "prod_img1",
+                    "type": "text"
+                  },
+                  {
+                    "name": "shop_name",
+                    "type": "text"
+                  },
+                  {
+                    "name": "quantity",
+                    "type": "text"
+                  },
+                  {
+                    "name": "q_unit",
+                    "type": "text"
+                  },
+                  {
+                    "name": "mrp",
+                    "type": "text"
+                  }
+                ],
+                "outputType": "array"
+              }
+            ]
+          },
+          "catch": {
+            "steps": {
+              "name": "Resp",
+              "module": "core",
+              "action": "response",
+              "options": {
+                "status": 403,
+                "data": "Suspicious Activity"
+              },
+              "output": true
+            }
+          }
+        }
+      }
+    ]
+  }
+}

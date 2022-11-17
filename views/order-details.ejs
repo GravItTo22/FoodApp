@@ -1,6 +1,9 @@
-<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="orderdetails" appConnect="local" -->
-<meta name="ac:route" content="/order-details">
-<!-- New Wappler Page -->
+<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="orderdetails" appConnect="local" components="{dmxDataTraversal:{}}" -->
+<meta name="ac:route" content="/order-details/:id">
+<dmx-serverconnect id="scOrderDetails" url="/api/Orders/OrderDetails" dmx-param:order_id="<%= $_PARAM.id %>"></dmx-serverconnect>
+<dmx-data-view id="dvOrderDetails" dmx-bind:data="content.scOrderDetails.data.OrderedProducts"></dmx-data-view>
+<dmx-data-detail id="ddOrderDetails" dmx-bind:data="content.dvOrderDetails.data" key="id"></dmx-data-detail>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -43,29 +46,29 @@
             <input type="search" id="myInput1" placeholder="Search your product.." title="Type in a name">
             <button type="submit1" class="site-btn11">SEARCH</button>
             <div class="col-lg-3"></div>
-            <div class="card ml-0 mr-md-3 mr-0">
+            <div class="card ml-0 mr-md-3 mr-0" dmx-repeat:repeatdetails="dvOrderDetails.data">
                 <div class="card-body m-0">
                     <div class="media row mx-0">
                         <div class="col-md-2 col-4 sq align-self-center text-center mb-3 mb-md-0">
-                            <img class="my-auto align-self-center mr-2 mr-md-4 pl-0 p-0 m-0" src="/assets/img/cart/cart-1.jpg" />
+                            <img class="my-auto align-self-center mr-2 mr-md-4 pl-0 p-0 m-0" dmx-bind:src="'https://secure.gravitto.com'+prod_img1" />
                         </div>
                         <div class="col-md-3 col-8 mb-3 mb-md-0">
-                            <h6 class="font-weight-bold mb-0">Paneer</h6>
-                            <p class="m-0">Restaurent</p>
-                            <small class="text-black-50">Veg</small>
-                            <small class="text-black-50">500 Gram</small>
+                            <h6 class="font-weight-bold mb-0">{{content.scOrderDetails.data.OrderedProducts[$index].prod_name}}</h6>
+                            <p class="m-0">{{content.scOrderDetails.data.OrderedProducts[$index].shop_name}}</p>
+                            <small class="text-black-50">{{(content.scOrderDetails.data.OrderedProducts[$index].prod_mark_id==1)?'Veg':(content.scOrderDetails.data.OrderedProducts[$index].prod_mark_id==2)?'Non-Veg':''}}</small>/
+                            <small class="text-black-50">{{content.scOrderDetails.data.OrderedProducts[$index].howmuch}} {{content.scOrderDetails.data.OrderedProducts[$index].q_unit}}</small>
                         </div>
                         <div class="col-md-3 col-4">
                             <small class="text-black-50">
-                                MRP: <b class="text-decoration-line-through"><i class="fa fa-rupee"></i>300</b>
-                            </small>&emsp;<small class="text-black-50">Qty: 5</small>
+                                MRP: <b class="text-decoration-line-through"><i class="fa fa-rupee"></i>{{content.scOrderDetails.data.OrderedProducts[$index].mrp}}</b>
+                            </small>&emsp;<small class="text-black-50">Qty: {{content.scOrderDetails.data.OrderedProducts[$index].prod_qty}}</small>
                             <br />
-                            <small class="text-black-50">Price: <i class="fa fa-rupee"></i>200</small>&emsp;
-                            <small class="text-black-50">Total: <i class="fa fa-rupee"></i>1000</small>
+                            <small class="text-black-50">Price: <i class="fa fa-rupee"></i>{{content.scOrderDetails.data.OrderedProducts[$index].each_unit_price}}</small>&emsp;
+                            <small class="text-black-50">Total: <i class="fa fa-rupee"></i>{{content.scOrderDetails.data.OrderedProducts[$index].each_net_amt}}</small>
                         </div>
                         <div class="col-md-3 col-7">
-                            <h6 class="mb-0">Out for Deliverey</h6>
-                            <small>14 June 2022 11:10 PM</small>
+                            <h6 class="mb-0">{{(content.scOrderDetails.data.OrderedProducts[$index].order_status==1)?'Confirmed':(content.scOrderDetails.data.OrderedProducts[$index].order_status==2)?'Processing':(content.scOrderDetails.data.OrderedProducts[$index].order_status==3)?'Out for Delivery':(content.scOrderDetails.data.OrderedProducts[$index].order_status==4)?'Delivered':(content.scOrderDetails.data.OrderedProducts[$index].order_status==5)?'Cancelled':''}}</h6>
+                            <small>{{content.scOrderDetails.data.OrderedProducts[$index].updated_on?content.scOrderDetails.data.OrderedProducts[$index].updated_on.formatDate('dd MMM yyyy hh:mm A'):content.scOrderDetails.data.OrderedProducts[$index].created_on.formatDate('dd MMM yyyy hh:mm A')}}</small>
                             <br>
                             <a href="#" class="text-black-50"><i class="fa fa-star"></i> Rate and Review Product</a>
                         </div>

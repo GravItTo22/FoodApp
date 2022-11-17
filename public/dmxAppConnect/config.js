@@ -719,5 +719,477 @@ dmx.config({
       ],
       "outputType": "array"
     }
+  },
+  "myorder": {
+    "dvOrderList": {
+      "meta": [
+        {
+          "name": "id",
+          "type": "number"
+        },
+        {
+          "name": "order_id",
+          "type": "text"
+        },
+        {
+          "name": "total_amt",
+          "type": "text"
+        },
+        {
+          "name": "discount",
+          "type": "text"
+        },
+        {
+          "name": "delevery_amt",
+          "type": "text"
+        },
+        {
+          "name": "user_name",
+          "type": "text"
+        },
+        {
+          "name": "address",
+          "type": "text"
+        },
+        {
+          "name": "mobile",
+          "type": "text"
+        },
+        {
+          "name": "pin",
+          "type": "text"
+        },
+        {
+          "name": "dist",
+          "type": "text"
+        },
+        {
+          "name": "state",
+          "type": "text"
+        },
+        {
+          "name": "wallet_bal",
+          "type": "text"
+        },
+        {
+          "name": "created_on",
+          "type": "text"
+        },
+        {
+          "name": "updated_on",
+          "type": "text"
+        },
+        {
+          "name": "status",
+          "type": "number"
+        },
+        {
+          "name": "product",
+          "type": "array",
+          "sub": [
+            {
+              "name": "p_id",
+              "type": "number"
+            },
+            {
+              "name": "prod_name",
+              "type": "text"
+            },
+            {
+              "name": "rest_id",
+              "type": "number"
+            },
+            {
+              "name": "shop_name",
+              "type": "text"
+            },
+            {
+              "name": "shop_address",
+              "type": "text"
+            }
+          ]
+        }
+      ],
+      "outputType": "array"
+    },
+    "ddOrderList": {
+      "meta": [
+        {
+          "name": "id",
+          "type": "number"
+        },
+        {
+          "name": "order_id",
+          "type": "text"
+        },
+        {
+          "name": "total_amt",
+          "type": "text"
+        },
+        {
+          "name": "discount",
+          "type": "text"
+        },
+        {
+          "name": "delevery_amt",
+          "type": "text"
+        },
+        {
+          "name": "user_name",
+          "type": "text"
+        },
+        {
+          "name": "address",
+          "type": "text"
+        },
+        {
+          "name": "mobile",
+          "type": "text"
+        },
+        {
+          "name": "pin",
+          "type": "text"
+        },
+        {
+          "name": "dist",
+          "type": "text"
+        },
+        {
+          "name": "state",
+          "type": "text"
+        },
+        {
+          "name": "wallet_bal",
+          "type": "text"
+        },
+        {
+          "name": "created_on",
+          "type": "text"
+        },
+        {
+          "name": "updated_on",
+          "type": "text"
+        },
+        {
+          "name": "status",
+          "type": "number"
+        },
+        {
+          "name": "product",
+          "type": "array",
+          "sub": [
+            {
+              "name": "p_id",
+              "type": "number"
+            },
+            {
+              "name": "prod_name",
+              "type": "text"
+            },
+            {
+              "name": "rest_id",
+              "type": "number"
+            },
+            {
+              "name": "shop_name",
+              "type": "text"
+            },
+            {
+              "name": "shop_address",
+              "type": "text"
+            }
+          ]
+        }
+      ],
+      "outputType": "array"
+    },
+    "repeat1": {
+      "meta": [
+        {
+          "name": "id",
+          "type": "number"
+        },
+        {
+          "name": "order_id",
+          "type": "text"
+        },
+        {
+          "name": "total_amt",
+          "type": "text"
+        },
+        {
+          "name": "discount",
+          "type": "text"
+        },
+        {
+          "name": "delevery_amt",
+          "type": "text"
+        },
+        {
+          "name": "user_name",
+          "type": "text"
+        },
+        {
+          "name": "address",
+          "type": "text"
+        },
+        {
+          "name": "mobile",
+          "type": "text"
+        },
+        {
+          "name": "pin",
+          "type": "text"
+        },
+        {
+          "name": "dist",
+          "type": "text"
+        },
+        {
+          "name": "state",
+          "type": "text"
+        },
+        {
+          "name": "wallet_bal",
+          "type": "text"
+        },
+        {
+          "name": "created_on",
+          "type": "text"
+        },
+        {
+          "name": "updated_on",
+          "type": "text"
+        },
+        {
+          "name": "status",
+          "type": "number"
+        },
+        {
+          "name": "product",
+          "type": "array",
+          "sub": [
+            {
+              "name": "p_id",
+              "type": "number"
+            },
+            {
+              "name": "prod_name",
+              "type": "text"
+            },
+            {
+              "name": "rest_id",
+              "type": "number"
+            },
+            {
+              "name": "shop_name",
+              "type": "text"
+            },
+            {
+              "name": "shop_address",
+              "type": "text"
+            }
+          ]
+        }
+      ],
+      "outputType": "array"
+    }
+  },
+  "orderdetails": {
+    "dvOrderDetails": {
+      "meta": [
+        {
+          "name": "id",
+          "type": "number"
+        },
+        {
+          "name": "prod_id",
+          "type": "text"
+        },
+        {
+          "name": "price_id",
+          "type": "number"
+        },
+        {
+          "name": "prod_qty",
+          "type": "text"
+        },
+        {
+          "name": "each_unit_price",
+          "type": "text"
+        },
+        {
+          "name": "each_net_amt",
+          "type": "text"
+        },
+        {
+          "name": "order_status",
+          "type": "number"
+        },
+        {
+          "name": "created_on",
+          "type": "text"
+        },
+        {
+          "name": "updated_on",
+          "type": "text"
+        },
+        {
+          "name": "prod_name",
+          "type": "text"
+        },
+        {
+          "name": "prod_img1",
+          "type": "text"
+        },
+        {
+          "name": "shop_name",
+          "type": "text"
+        },
+        {
+          "name": "quantity",
+          "type": "text"
+        },
+        {
+          "name": "q_unit",
+          "type": "text"
+        },
+        {
+          "name": "mrp",
+          "type": "text"
+        }
+      ],
+      "outputType": "array"
+    },
+    "ddOrderDetails": {
+      "meta": [
+        {
+          "name": "id",
+          "type": "number"
+        },
+        {
+          "name": "prod_id",
+          "type": "text"
+        },
+        {
+          "name": "price_id",
+          "type": "number"
+        },
+        {
+          "name": "prod_qty",
+          "type": "text"
+        },
+        {
+          "name": "each_unit_price",
+          "type": "text"
+        },
+        {
+          "name": "each_net_amt",
+          "type": "text"
+        },
+        {
+          "name": "order_status",
+          "type": "number"
+        },
+        {
+          "name": "created_on",
+          "type": "text"
+        },
+        {
+          "name": "updated_on",
+          "type": "text"
+        },
+        {
+          "name": "prod_name",
+          "type": "text"
+        },
+        {
+          "name": "prod_img1",
+          "type": "text"
+        },
+        {
+          "name": "shop_name",
+          "type": "text"
+        },
+        {
+          "name": "quantity",
+          "type": "text"
+        },
+        {
+          "name": "q_unit",
+          "type": "text"
+        },
+        {
+          "name": "mrp",
+          "type": "text"
+        }
+      ],
+      "outputType": "array"
+    },
+    "repeatdetails": {
+      "meta": [
+        {
+          "name": "id",
+          "type": "number"
+        },
+        {
+          "name": "prod_id",
+          "type": "text"
+        },
+        {
+          "name": "price_id",
+          "type": "number"
+        },
+        {
+          "name": "prod_qty",
+          "type": "text"
+        },
+        {
+          "name": "each_unit_price",
+          "type": "text"
+        },
+        {
+          "name": "each_net_amt",
+          "type": "text"
+        },
+        {
+          "name": "order_status",
+          "type": "number"
+        },
+        {
+          "name": "created_on",
+          "type": "text"
+        },
+        {
+          "name": "updated_on",
+          "type": "text"
+        },
+        {
+          "name": "prod_name",
+          "type": "text"
+        },
+        {
+          "name": "prod_img1",
+          "type": "text"
+        },
+        {
+          "name": "shop_name",
+          "type": "text"
+        },
+        {
+          "name": "quantity",
+          "type": "text"
+        },
+        {
+          "name": "q_unit",
+          "type": "text"
+        },
+        {
+          "name": "mrp",
+          "type": "text"
+        }
+      ],
+      "outputType": "array"
+    }
   }
 });

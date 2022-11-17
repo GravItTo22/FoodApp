@@ -83,7 +83,7 @@
       "layout": "main"
     },
     {
-      "path": "/order-details",
+      "path": "/order-details/:id",
       "page": "order-details",
       "layout": "main"
     }

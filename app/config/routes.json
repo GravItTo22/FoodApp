@@ -80,12 +80,14 @@
     {
       "path": "/my-order",
       "page": "my-order",
-      "layout": "main"
+      "layout": "main",
+      "exec": "/api/PageAccess/UserAuth"
     },
     {
       "path": "/order-details/:id",
       "page": "order-details",
-      "layout": "main"
+      "layout": "main",
+      "exec": "/api/PageAccess/UserAuth"
     }
   ]
 }

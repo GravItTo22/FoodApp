@@ -271,9 +271,6 @@
               "nullable": true
             }
           }
-        },
-        "refs": {
-          "m_product": "brand_id"
         }
       },
       "m_category": {
@@ -430,17 +427,12 @@
           }
         },
         "refs": {
-          "m_product": "category_id",
           "r_slab": "category_id"
         }
       },
       "m_category_type": {
         "db": {
           "schema": "public"
-        },
-        "refs": {
-          "m_category": "cat_type_id",
-          "m_restaurant": "cat_type_id"
         }
       },
       "m_contact_us": {
@@ -732,7 +724,6 @@
           }
         },
         "refs": {
-          "r_cart": "user_id",
           "r_shipping_add": "c_id"
         }
       },
@@ -874,27 +865,16 @@
       "m_market": {
         "db": {
           "schema": "public"
-        },
-        "refs": {
-          "m_category": "market_id",
-          "m_product": "market_id",
-          "m_restaurant": "market_id"
         }
       },
       "m_prod_mark": {
         "db": {
           "schema": "public"
-        },
-        "refs": {
-          "m_product": "prod_mark_id"
         }
       },
       "m_prod_occurance": {
         "db": {
           "schema": "public"
-        },
-        "refs": {
-          "m_product": "prod_occurance_id"
         }
       },
       "m_product": {
@@ -1188,8 +1168,6 @@
           }
         },
         "refs": {
-          "r_cart": "prod_id",
-          "r_order_details": "prod_id",
           "r_price_table": "prod_id"
         }
       },
@@ -1489,9 +1467,6 @@
               "nullable": true
             }
           }
-        },
-        "refs": {
-          "m_product": "rest_id"
         }
       },
       "m_sliding_image": {
@@ -1777,41 +1752,29 @@
           },
           "prod_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "m_product",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "price_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "r_price_table",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "user_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "m_customer",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "prod_unit_price": {
@@ -1918,9 +1881,6 @@
               "nullable": true
             }
           }
-        },
-        "refs": {
-          "r_order_details": "cart_id"
         }
       },
       "r_order": {
@@ -1948,15 +1908,11 @@
           },
           "user_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "m_customer",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "total_amt": {
@@ -2152,10 +2108,15 @@
               "unique": false,
               "nullable": true
             }
+          },
+          "status": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
           }
-        },
-        "sub": {
-          "r_order_details": "order_table_id"
         }
       },
       "r_order_details": {
@@ -2402,8 +2363,7 @@
               "nullable": true
             }
           }
-        },
-        "parent": "r_order"
+        }
       },
       "r_price_table": {
         "db": {
@@ -2598,10 +2558,6 @@
               "nullable": true
             }
           }
-        },
-        "refs": {
-          "r_cart": "price_id",
-          "r_order_details": "price_id"
         }
       },
       "r_shipping_add": {
@@ -2612,9 +2568,6 @@
       "r_slab": {
         "db": {
           "schema": "public"
-        },
-        "refs": {
-          "m_product": "slab_id"
         }
       },
       "r_wishlist": {
@@ -2754,6 +2707,54 @@
             "db": {
               "type": "string",
               "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          }
+        }
+      },
+      "r_wishlist_rest": {
+        "db": {
+          "schema": "public"
+        },
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "default": "",
+              "primary": true,
+              "unique": true,
+              "nullable": false
+            }
+          },
+          "user_id": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "rest_id": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "status": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "created_on": {
+            "db": {
+              "type": "timestamp",
               "primary": false,
               "unique": false,
               "nullable": true

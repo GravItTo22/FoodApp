@@ -1,0 +1,148 @@
+{
+  "meta": {
+    "$_SESSION": [
+      {
+        "type": "text",
+        "name": "sessionLogin"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetVerify",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "m_customer",
+                      "column": "id",
+                      "alias": "CountId",
+                      "aggregate": "COUNT"
+                    }
+                  ],
+                  "table": {
+                    "name": "m_customer"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "groupBy": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "m_customer.id",
+                        "field": "m_customer.id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{$_SESSION.sessionLogin}}",
+                        "data": {
+                          "table": "m_customer",
+                          "column": "id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "increments",
+                            "default": "",
+                            "primary": true,
+                            "unique": true,
+                            "nullable": false,
+                            "name": "id"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "m_customer.status",
+                        "field": "m_customer.status",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{1}}",
+                        "data": {
+                          "table": "m_customer",
+                          "column": "status",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "integer",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "status"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT COUNT(id) AS CountId\nFROM m_customer\nWHERE id = :P1 /* {{$_SESSION.sessionLogin}} */ AND status = :P2 /* {{1}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_SESSION.sessionLogin}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{1}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "CountId"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetVerify.CountId<1}}",
+                "then": {
+                  "steps": {
+                    "name": "Login",
+                    "module": "core",
+                    "action": "redirect",
+                    "options": {
+                      "url": "/login"
+                    }
+                  }
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": {
+            "name": "Login",
+            "module": "core",
+            "action": "redirect",
+            "options": {
+              "url": "/login"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,405 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "logintoken"
+      },
+      {
+        "type": "text",
+        "name": "lang"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": {
+            "name": "",
+            "module": "core",
+            "action": "condition",
+            "options": {
+              "if": "{{$_GET.logintoken&&$_GET.lang}}",
+              "then": {
+                "steps": [
+                  {
+                    "name": "GetVerify",
+                    "module": "dbconnector",
+                    "action": "single",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "type": "SELECT",
+                        "columns": [
+                          {
+                            "table": "t_user_log",
+                            "column": "user_id"
+                          }
+                        ],
+                        "table": {
+                          "name": "t_user_log"
+                        },
+                        "primary": "id",
+                        "joins": [],
+                        "wheres": {
+                          "condition": "AND",
+                          "rules": [
+                            {
+                              "id": "t_user_log.login_token",
+                              "field": "t_user_log.login_token",
+                              "type": "string",
+                              "operator": "equal",
+                              "value": "{{$_GET.logintoken}}",
+                              "data": {
+                                "table": "t_user_log",
+                                "column": "login_token",
+                                "type": "text",
+                                "columnObj": {
+                                  "type": "string",
+                                  "maxLength": -5,
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "login_token"
+                                }
+                              },
+                              "operation": "="
+                            },
+                            {
+                              "id": "t_user_log.login_from",
+                              "field": "t_user_log.login_from",
+                              "type": "string",
+                              "operator": "equal",
+                              "value": "{{'Android'}}",
+                              "data": {
+                                "table": "t_user_log",
+                                "column": "login_from",
+                                "type": "text",
+                                "columnObj": {
+                                  "type": "string",
+                                  "maxLength": -5,
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "login_from"
+                                }
+                              },
+                              "operation": "="
+                            }
+                          ],
+                          "conditional": null,
+                          "valid": true
+                        },
+                        "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_GET.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */",
+                        "params": [
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P1",
+                            "value": "{{$_GET.logintoken}}"
+                          },
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P2",
+                            "value": "{{'Android'}}"
+                          }
+                        ]
+                      }
+                    },
+                    "output": false,
+                    "meta": [
+                      {
+                        "type": "number",
+                        "name": "user_id"
+                      }
+                    ],
+                    "outputType": "object"
+                  },
+                  {
+                    "name": "",
+                    "module": "core",
+                    "action": "condition",
+                    "options": {
+                      "if": "{{GetVerify.user_id}}",
+                      "then": {
+                        "steps": [
+                          {
+                            "name": "status",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": 200
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          },
+                          {
+                            "name": "",
+                            "module": "core",
+                            "action": "condition",
+                            "options": {
+                              "if": "{{$_GET.lang=='EN'}}",
+                              "then": {
+                                "steps": {
+                                  "name": "GetRestWishList",
+                                  "module": "dbupdater",
+                                  "action": "custom",
+                                  "options": {
+                                    "connection": "ClientApp",
+                                    "sql": {
+                                      "query": "select rwr.rest_id, rwr.created_on::text, mr.market_id, mr.shop_name_en as shop_name, mr.shop_logo, mr.address \nfrom r_wishlist_rest rwr \nleft join m_restaurant mr on (mr.id=rwr.rest_id)\nwhere rwr.user_id = @user_id;",
+                                      "params": [
+                                        {
+                                          "name": "@user_id",
+                                          "value": "{{GetVerify.user_id}}",
+                                          "test": "82"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "output": true,
+                                  "meta": [
+                                    {
+                                      "name": "rest_id",
+                                      "type": "number"
+                                    },
+                                    {
+                                      "name": "created_on",
+                                      "type": "text"
+                                    },
+                                    {
+                                      "name": "market_id",
+                                      "type": "number"
+                                    },
+                                    {
+                                      "name": "shop_name",
+                                      "type": "text"
+                                    },
+                                    {
+                                      "name": "shop_logo",
+                                      "type": "text"
+                                    },
+                                    {
+                                      "name": "address",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "outputType": "array"
+                                }
+                              }
+                            },
+                            "outputType": "boolean"
+                          },
+                          {
+                            "name": "",
+                            "module": "core",
+                            "action": "condition",
+                            "options": {
+                              "if": "{{$_GET.lang=='BN'}}",
+                              "then": {
+                                "steps": {
+                                  "name": "GetRestWishList",
+                                  "module": "dbupdater",
+                                  "action": "custom",
+                                  "options": {
+                                    "connection": "ClientApp",
+                                    "sql": {
+                                      "query": "select rwr.rest_id, rwr.created_on::text, mr.market_id, mr.shop_name_bn as shop_name, mr.shop_logo, mr.address \nfrom r_wishlist_rest rwr \nleft join m_restaurant mr on (mr.id=rwr.rest_id)\nwhere rwr.user_id = @user_id;",
+                                      "params": [
+                                        {
+                                          "name": "@user_id",
+                                          "value": "{{GetVerify.user_id}}",
+                                          "test": "82"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "output": true,
+                                  "meta": [
+                                    {
+                                      "name": "rest_id",
+                                      "type": "number"
+                                    },
+                                    {
+                                      "name": "created_on",
+                                      "type": "text"
+                                    },
+                                    {
+                                      "name": "market_id",
+                                      "type": "number"
+                                    },
+                                    {
+                                      "name": "shop_name",
+                                      "type": "text"
+                                    },
+                                    {
+                                      "name": "shop_logo",
+                                      "type": "text"
+                                    },
+                                    {
+                                      "name": "address",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "outputType": "array"
+                                }
+                              }
+                            },
+                            "outputType": "boolean"
+                          },
+                          {
+                            "name": "",
+                            "module": "core",
+                            "action": "condition",
+                            "options": {
+                              "if": "{{$_GET.lang=='HIN'}}",
+                              "then": {
+                                "steps": {
+                                  "name": "GetRestWishList",
+                                  "module": "dbupdater",
+                                  "action": "custom",
+                                  "options": {
+                                    "connection": "ClientApp",
+                                    "sql": {
+                                      "query": "select rwr.rest_id, rwr.created_on::text, mr.market_id, mr.shop_name_hin as shop_name, mr.shop_logo, mr.address \nfrom r_wishlist_rest rwr \nleft join m_restaurant mr on (mr.id=rwr.rest_id)\nwhere rwr.user_id = @user_id;",
+                                      "params": [
+                                        {
+                                          "name": "@user_id",
+                                          "value": "{{GetVerify.user_id}}",
+                                          "test": "82"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "output": true,
+                                  "meta": [
+                                    {
+                                      "name": "rest_id",
+                                      "type": "number"
+                                    },
+                                    {
+                                      "name": "created_on",
+                                      "type": "text"
+                                    },
+                                    {
+                                      "name": "market_id",
+                                      "type": "number"
+                                    },
+                                    {
+                                      "name": "shop_name",
+                                      "type": "text"
+                                    },
+                                    {
+                                      "name": "shop_logo",
+                                      "type": "text"
+                                    },
+                                    {
+                                      "name": "address",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "outputType": "array"
+                                }
+                              }
+                            },
+                            "outputType": "boolean"
+                          }
+                        ]
+                      },
+                      "else": {
+                        "steps": [
+                          {
+                            "name": "status",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": 400
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          },
+                          {
+                            "name": "message",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": "Unauthorized User"
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          }
+                        ]
+                      }
+                    },
+                    "outputType": "boolean"
+                  }
+                ]
+              },
+              "else": {
+                "steps": [
+                  {
+                    "name": "status",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": 400
+                    },
+                    "meta": [],
+                    "output": true,
+                    "outputType": "text"
+                  },
+                  {
+                    "name": "message",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": "All fields are required"
+                    },
+                    "meta": [],
+                    "output": true,
+                    "outputType": "text"
+                  }
+                ]
+              }
+            },
+            "outputType": "boolean"
+          }
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

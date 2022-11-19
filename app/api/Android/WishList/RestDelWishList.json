@@ -1,0 +1,442 @@
+{
+  "meta": {
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "rest_id"
+      },
+      {
+        "type": "text",
+        "name": "logintoken"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": {
+            "name": "",
+            "module": "core",
+            "action": "condition",
+            "options": {
+              "if": "{{$_POST.rest_id&&$_POST.logintoken}}",
+              "then": {
+                "steps": [
+                  {
+                    "name": "GetVerify",
+                    "module": "dbconnector",
+                    "action": "single",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "type": "SELECT",
+                        "columns": [
+                          {
+                            "table": "t_user_log",
+                            "column": "user_id"
+                          }
+                        ],
+                        "table": {
+                          "name": "t_user_log"
+                        },
+                        "primary": "id",
+                        "joins": [],
+                        "wheres": {
+                          "condition": "AND",
+                          "rules": [
+                            {
+                              "id": "t_user_log.login_token",
+                              "field": "t_user_log.login_token",
+                              "type": "string",
+                              "operator": "equal",
+                              "value": "{{$_POST.logintoken}}",
+                              "data": {
+                                "table": "t_user_log",
+                                "column": "login_token",
+                                "type": "text",
+                                "columnObj": {
+                                  "type": "string",
+                                  "maxLength": -5,
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "login_token"
+                                }
+                              },
+                              "operation": "="
+                            },
+                            {
+                              "id": "t_user_log.login_from",
+                              "field": "t_user_log.login_from",
+                              "type": "string",
+                              "operator": "equal",
+                              "value": "{{'Android'}}",
+                              "data": {
+                                "table": "t_user_log",
+                                "column": "login_from",
+                                "type": "text",
+                                "columnObj": {
+                                  "type": "string",
+                                  "maxLength": -5,
+                                  "primary": false,
+                                  "unique": false,
+                                  "nullable": true,
+                                  "name": "login_from"
+                                }
+                              },
+                              "operation": "="
+                            }
+                          ],
+                          "conditional": null,
+                          "valid": true
+                        },
+                        "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_POST.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */",
+                        "params": [
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P1",
+                            "value": "{{$_POST.logintoken}}"
+                          },
+                          {
+                            "operator": "equal",
+                            "type": "expression",
+                            "name": ":P2",
+                            "value": "{{'Android'}}"
+                          }
+                        ]
+                      }
+                    },
+                    "output": false,
+                    "meta": [
+                      {
+                        "type": "number",
+                        "name": "user_id"
+                      }
+                    ],
+                    "outputType": "object"
+                  },
+                  {
+                    "name": "",
+                    "module": "core",
+                    "action": "condition",
+                    "options": {
+                      "if": "{{GetVerify.user_id}}",
+                      "then": {
+                        "steps": [
+                          {
+                            "name": "GetWhishlist",
+                            "module": "dbconnector",
+                            "action": "single",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "SELECT",
+                                "columns": [
+                                  {
+                                    "table": "r_wishlist_rest",
+                                    "column": "id",
+                                    "alias": "CountId",
+                                    "aggregate": "COUNT"
+                                  }
+                                ],
+                                "table": {
+                                  "name": "r_wishlist_rest"
+                                },
+                                "primary": "id",
+                                "joins": [],
+                                "query": "SELECT COUNT(id) AS CountId\nFROM r_wishlist_rest\nWHERE user_id = :P1 /* {{GetVerify.user_id}} */ AND rest_id = :P2 /* {{$_POST.rest_id}} */",
+                                "params": [
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P1",
+                                    "value": "{{GetVerify.user_id}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P2",
+                                    "value": "{{$_POST.rest_id}}"
+                                  }
+                                ],
+                                "groupBy": [],
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "r_wishlist_rest.user_id",
+                                      "field": "r_wishlist_rest.user_id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{GetVerify.user_id}}",
+                                      "data": {
+                                        "table": "r_wishlist_rest",
+                                        "column": "user_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "integer",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "name": "user_id"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "id": "r_wishlist_rest.rest_id",
+                                      "field": "r_wishlist_rest.rest_id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{$_POST.rest_id}}",
+                                      "data": {
+                                        "table": "r_wishlist_rest",
+                                        "column": "rest_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "integer",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "name": "rest_id"
+                                        }
+                                      },
+                                      "operation": "="
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                }
+                              }
+                            },
+                            "output": false,
+                            "meta": [
+                              {
+                                "type": "number",
+                                "name": "CountId"
+                              }
+                            ],
+                            "outputType": "object"
+                          },
+                          {
+                            "name": "",
+                            "module": "core",
+                            "action": "condition",
+                            "options": {
+                              "if": "{{(GetWhishlist.CountId>=1)}}",
+                              "then": {
+                                "steps": [
+                                  {
+                                    "name": "delWL",
+                                    "module": "dbupdater",
+                                    "action": "delete",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "type": "delete",
+                                        "table": "r_wishlist_rest",
+                                        "wheres": {
+                                          "condition": "AND",
+                                          "rules": [
+                                            {
+                                              "id": "user_id",
+                                              "field": "user_id",
+                                              "type": "double",
+                                              "operator": "equal",
+                                              "value": "{{GetVerify.user_id}}",
+                                              "data": {
+                                                "column": "user_id"
+                                              },
+                                              "operation": "="
+                                            },
+                                            {
+                                              "id": "rest_id",
+                                              "field": "rest_id",
+                                              "type": "double",
+                                              "operator": "equal",
+                                              "value": "{{$_POST.rest_id}}",
+                                              "data": {
+                                                "column": "rest_id"
+                                              },
+                                              "operation": "="
+                                            }
+                                          ],
+                                          "conditional": null,
+                                          "valid": true
+                                        },
+                                        "returning": "id",
+                                        "query": "DELETE\nFROM r_wishlist_rest\nWHERE user_id = :P1 /* {{GetVerify.user_id}} */ AND rest_id = :P2 /* {{$_POST.rest_id}} */",
+                                        "params": [
+                                          {
+                                            "operator": "equal",
+                                            "type": "expression",
+                                            "name": ":P1",
+                                            "value": "{{GetVerify.user_id}}"
+                                          },
+                                          {
+                                            "operator": "equal",
+                                            "type": "expression",
+                                            "name": ":P2",
+                                            "value": "{{$_POST.rest_id}}"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "meta": [
+                                      {
+                                        "name": "affected",
+                                        "type": "number"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "status",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": 200
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  },
+                                  {
+                                    "name": "message",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": "Restaurant removed from Wish-List"
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  }
+                                ]
+                              },
+                              "else": {
+                                "steps": [
+                                  {
+                                    "name": "status",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": 400
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  },
+                                  {
+                                    "name": "message",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": "No Such Record Found!"
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  }
+                                ]
+                              }
+                            },
+                            "outputType": "boolean"
+                          }
+                        ]
+                      },
+                      "else": {
+                        "steps": [
+                          {
+                            "name": "status",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": 400
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          },
+                          {
+                            "name": "message",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": "Unauthorized User"
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          }
+                        ]
+                      }
+                    },
+                    "outputType": "boolean"
+                  }
+                ]
+              },
+              "else": {
+                "steps": [
+                  {
+                    "name": "status",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": 400
+                    },
+                    "meta": [],
+                    "output": true,
+                    "outputType": "text"
+                  },
+                  {
+                    "name": "message_",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": "All fields are required"
+                    },
+                    "meta": [],
+                    "output": true,
+                    "outputType": "text"
+                  }
+                ]
+              }
+            },
+            "outputType": "boolean"
+          }
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

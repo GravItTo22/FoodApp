@@ -3,6 +3,33 @@
 <dmx-serverconnect id="scProdDetails" url="/api/Products/ProdDetails" dmx-param:p_id="<%= $_PARAM.id %>"></dmx-serverconnect>
 <dmx-serverconnect id="scRelatedProd" url="/api/Products/RelatedProducts" dmx-param:p_id="<%= $_PARAM.id %>"></dmx-serverconnect>
 <dmx-value id="varZoomImg" dmx-bind:value="'https://secure.gravitto.com'+content.scProdDetails.data.GetProdDetails[0].prod_img1+'?w=1200&amp;ch=DPR&amp;dpr=2'"></dmx-value>
+<style>
+    .smileySlider {
+        width: 300px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        padding: 0rem;
+    }
+
+
+    h1 {
+        text-align: center;
+    }
+
+    .sliderValue-wrapper {
+        width: 300px;
+        border: none;
+        background-color: #ECC377;
+        text-align: center;
+        font-size: small;
+    }
+
+    #emoji {
+        font-size: 8rem;
+        text-align: center;
+    }
+</style>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
     <div class="container">
@@ -109,47 +136,37 @@
                 <div class="tab-pane" id="tabs-2" role="tabpanel">
                     <div class="product__details__tab__desc">
                         <h6>Products Infomation</h6>
-                        <p></p>
-                        <p></p>
                     </div>
                 </div>
                 <div class="tab-pane" id="tabs-3" role="tabpanel">
                     <h6 class="ab">Products Infomation</h6>
                     <div class="product__details__tab__desc row">
 
-                        <input type="radio" name="rate" id="star-1">
-                        <input type="radio" name="rate" id="star-2">
-                        <input type="radio" name="rate" id="star-3">
-                        <input type="radio" name="rate" id="star-4">
-                        <input type="radio" name="rate" id="star-5">
-                        <div class="content col-3 ">
-                            <!--  <div class="outer">
-                                <div class="emojis">
-                                  <li class="slideImg"><img src="emojis/emoji-1.png" alt=""></li>
-                                  <li><img src="emojis/emoji-2.png" alt=""></li>
-                                  <li><img src="emojis/emoji-3.png" alt=""></li>
-                                  <li><img src="emojis/emoji-4.png" alt=""></li>
-                                  <li><img src="emojis/emoji-5.png" alt=""></li>
-                                </div>
-                              </div>-->
-                            <div class="stars float-right">
-                                <label for="star-1" class="star-1 fas fa-star"></label>
-                                <label for="star-2" class="star-2 fas fa-star"></label>
-                                <label for="star-3" class="star-3 fas fa-star"></label>
-                                <label for="star-4" class="star-4 fas fa-star"></label>
-                                <label for="star-5" class="star-5 fas fa-star"></label>
-                            </div>
-                        </div>
-                        <span class="footer1 col-1 ">
-                            <span class="text"></span>
-                            <span class="numb"></span>
-                        </span>
+                        <! ## End Inline CSS>
+                            <form id="filterForm1" method="post" action="api/action" is="dmx-serverconnect-form">
+                                <! ## Begin Inline HTML>
+                                    <div class="smileySlider my-5 py-5">
+                                        <div id="emoji">😊</div>
+                                        <input id="slider" type="range" min="1" max="5" name="slider">
+
+                                        <div class="sliderValue-wrapper" hidden>
+                                            <span id="sliderValue">3</span>/5
+                                        </div>
+                                        <h4>{{(slider.value==1)?'Very Poor':(slider.value==2)?'Poor':(slider.value==3)?'Good':(slider.value==4)?'Very Good':(slider.value==5)?'Excellent':''}}</h4>
+                                    </div>
+                                    <! ## End Inline HTML>
+                                        <button type="submit">Submit</button>
+                            </form>
+
+
+
+
+
+
+
+
                     </div>
                     <div class="card-body tab-content border-0">
-                        <div class="names">
-                            <input type="text" class="firstname" placeholder="First name">
-                            <input type="text" class="lastname" placeholder="Last name">
-                        </div>
                         <div class="input">
                             <div class="inputbox">
                                 <textarea type="text" class="reviewinp" placeholder="Write a review"></textarea>
@@ -246,3 +263,44 @@
                 hoverBoundingBox: true,
               });
 </script>
+<! ## Begin Inline JavaScript>
+    <script>
+        const 
+  slider = document.getElementById('slider'), 
+  value = document.getElementById('sliderValue'),
+  emoji = document.getElementById('emoji');
+
+slider.addEventListener('input', ()=>{
+  
+  number = slider.value;
+  value.innerHTML = number;
+  console.log(number);
+  
+ 
+  if(number <= 1){
+    emojiVal = "😞";
+  }
+  if(number > 1 && number <= 2){
+    emojiVal = "😕";
+  }
+  if(number > 2 && number <= 3){
+    emojiVal = "😊";
+  }
+//   if(number > 45 && number <= 55){
+//     emojiVal = "🤔";
+//   }
+//   if(number > 55 && number <= 70){
+//     emojiVal = "🙂";
+//   }
+  if(number > 3 && number <= 4){
+    emojiVal = "😵‍💫";
+  }
+  if(number > 4){
+    emojiVal = "😍";
+  }
+
+  
+  emoji.innerHTML = emojiVal;
+})
+    </script>
+    <! ## End Inline JavaScript>

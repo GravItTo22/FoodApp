@@ -243,7 +243,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_en as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY random() LIMIT @limit;",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_en as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY random() LIMIT @limit",
                                               "params": [
                                                 {
                                                   "name": "@limit",
@@ -310,7 +310,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_bn as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY random() LIMIT @limit;",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_bn as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY random() LIMIT @limit",
                                               "params": [
                                                 {
                                                   "name": "@limit",
@@ -377,7 +377,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_hin as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY random() LIMIT @limit;",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_hin as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY random() LIMIT @limit",
                                               "params": [
                                                 {
                                                   "name": "@limit",

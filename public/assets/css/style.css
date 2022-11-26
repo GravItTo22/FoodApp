@@ -2333,7 +2333,8 @@ span a{
 	border-radius: 4px;
 }
 .checkout h6{
-margin-top: 30px;
+margin-top: 30px;    
+margin-bottom: 30px;
 }
 .btn5{
 	margin-bottom:30px;

@@ -2695,7 +2695,7 @@
               "nullable": true
             }
           },
-          "address2": {
+          "email_id": {
             "db": {
               "type": "string",
               "maxLength": -5,
@@ -2784,7 +2784,7 @@
               "nullable": true
             }
           },
-          "blank3": {
+          "full_name": {
             "db": {
               "type": "string",
               "maxLength": -5,

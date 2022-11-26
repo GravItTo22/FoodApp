@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "number",
+        "name": "shipping_id"
+      }
+    ],
+    "$_POST": [
+      {
+        "type": "number",
+        "name": "id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "",
+        "module": "auth",
+        "action": "restrict",
+        "options": {
+          "provider": "security",
+          "permissions": [
+            "write"
+          ],
+          "loginUrl": "/login",
+          "forbiddenUrl": "/403-forbidden"
+        }
+      },
+      {
+        "name": "identity",
+        "module": "auth",
+        "action": "identify",
+        "options": {
+          "provider": "security"
+        },
+        "output": false,
+        "meta": []
+      },
+      {
+        "name": "upShippingAll",
+        "module": "dbupdater",
+        "action": "update",
+        "options": {
+          "connection": "ClientApp",
+          "sql": {
+            "type": "update",
+            "values": [
+              {
+                "table": "r_shipping_add",
+                "column": "status",
+                "type": "number",
+                "value": "{{1}}"
+              }
+            ],
+            "table": "r_shipping_add",
+            "returning": "id",
+            "query": "UPDATE r_shipping_add\nSET status = :P1 /* {{1}} */\nWHERE c_id = :P2 /* {{identity}} */",
+            "params": [
+              {
+                "name": ":P1",
+                "type": "expression",
+                "value": "{{1}}"
+              },
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P2",
+                "value": "{{identity}}"
+              }
+            ],
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "c_id",
+                  "field": "c_id",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": "{{identity}}",
+                  "data": {
+                    "column": "c_id"
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            }
+          }
+        },
+        "meta": [
+          {
+            "name": "affected",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "upShippingAddress",
+        "module": "dbupdater",
+        "action": "update",
+        "options": {
+          "connection": "ClientApp",
+          "sql": {
+            "type": "update",
+            "values": [
+              {
+                "table": "r_shipping_add",
+                "column": "status",
+                "type": "number",
+                "value": "{{2}}"
+              }
+            ],
+            "table": "r_shipping_add",
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "id",
+                  "field": "id",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": "{{$_GET.shipping_id}}",
+                  "data": {
+                    "column": "id"
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            },
+            "returning": "id",
+            "query": "UPDATE r_shipping_add\nSET status = :P1 /* {{2}} */\nWHERE id = :P2 /* {{$_GET.shipping_id}} */",
+            "params": [
+              {
+                "name": ":P1",
+                "type": "expression",
+                "value": "{{2}}"
+              },
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P2",
+                "value": "{{$_GET.shipping_id}}"
+              }
+            ]
+          }
+        },
+        "meta": [
+          {
+            "name": "affected",
+            "type": "number"
+          }
+        ]
+      }
+    ]
+  }
+}

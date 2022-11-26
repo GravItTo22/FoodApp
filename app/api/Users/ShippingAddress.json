@@ -59,7 +59,7 @@
               },
               {
                 "table": "r_shipping_add",
-                "column": "address2"
+                "column": "email_id"
               },
               {
                 "table": "r_shipping_add",
@@ -84,6 +84,157 @@
               {
                 "table": "r_shipping_add",
                 "column": "status"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "full_name"
+              }
+            ],
+            "table": {
+              "name": "r_shipping_add"
+            },
+            "primary": "id",
+            "joins": [],
+            "orders": [
+              {
+                "table": "r_shipping_add",
+                "column": "id",
+                "direction": "DESC",
+                "recid": 1
+              }
+            ],
+            "query": "SELECT id, mobile, address1, email_id, ps, district, state, country, pin, status, full_name\nFROM r_shipping_add\nWHERE c_id = :P1 /* {{identity}} */\nORDER BY id DESC",
+            "params": [
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{identity}}"
+              }
+            ],
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "r_shipping_add.c_id",
+                  "field": "r_shipping_add.c_id",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": "{{identity}}",
+                  "data": {
+                    "table": "r_shipping_add",
+                    "column": "c_id",
+                    "type": "number",
+                    "columnObj": {
+                      "type": "reference",
+                      "primary": false,
+                      "unique": false,
+                      "nullable": true,
+                      "references": "id",
+                      "inTable": "m_customer",
+                      "referenceType": "integer",
+                      "onUpdate": "NO ACTION",
+                      "onDelete": "NO ACTION",
+                      "name": "c_id"
+                    }
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            }
+          }
+        },
+        "output": true,
+        "meta": [
+          {
+            "type": "number",
+            "name": "id"
+          },
+          {
+            "type": "text",
+            "name": "mobile"
+          },
+          {
+            "type": "text",
+            "name": "address1"
+          },
+          {
+            "type": "text",
+            "name": "email_id"
+          },
+          {
+            "type": "text",
+            "name": "ps"
+          },
+          {
+            "type": "text",
+            "name": "district"
+          },
+          {
+            "type": "text",
+            "name": "state"
+          },
+          {
+            "type": "text",
+            "name": "country"
+          },
+          {
+            "type": "text",
+            "name": "pin"
+          },
+          {
+            "type": "number",
+            "name": "status"
+          },
+          {
+            "type": "text",
+            "name": "full_name"
+          }
+        ],
+        "outputType": "array"
+      },
+      {
+        "name": "ActiveAddress",
+        "module": "dbconnector",
+        "action": "single",
+        "options": {
+          "connection": "ClientApp",
+          "sql": {
+            "type": "SELECT",
+            "columns": [
+              {
+                "table": "r_shipping_add",
+                "column": "mobile"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "address1"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "email_id"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "district"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "state"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "country"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "pin"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "full_name"
               }
             ],
             "table": {
@@ -118,35 +269,50 @@
                     }
                   },
                   "operation": "="
+                },
+                {
+                  "id": "r_shipping_add.status",
+                  "field": "r_shipping_add.status",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": "{{2}}",
+                  "data": {
+                    "table": "r_shipping_add",
+                    "column": "status",
+                    "type": "number",
+                    "columnObj": {
+                      "type": "integer",
+                      "primary": false,
+                      "unique": false,
+                      "nullable": true,
+                      "name": "status"
+                    }
+                  },
+                  "operation": "="
                 }
               ],
               "conditional": null,
               "valid": true
             },
-            "orders": [
-              {
-                "table": "r_shipping_add",
-                "column": "id",
-                "direction": "DESC"
-              }
-            ],
-            "query": "SELECT id, mobile, address1, address2, ps, district, state, country, pin, status\nFROM r_shipping_add\nWHERE c_id = :P1 /* {{identity}} */\nORDER BY id DESC",
+            "query": "SELECT mobile, address1, email_id, district, state, country, pin, full_name\nFROM r_shipping_add\nWHERE c_id = :P1 /* {{identity}} */ AND status = :P2 /* {{2}} */",
             "params": [
               {
                 "operator": "equal",
                 "type": "expression",
                 "name": ":P1",
                 "value": "{{identity}}"
+              },
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P2",
+                "value": "{{2}}"
               }
             ]
           }
         },
         "output": true,
         "meta": [
-          {
-            "type": "number",
-            "name": "id"
-          },
           {
             "type": "text",
             "name": "mobile"
@@ -157,11 +323,7 @@
           },
           {
             "type": "text",
-            "name": "address2"
-          },
-          {
-            "type": "text",
-            "name": "ps"
+            "name": "email_id"
           },
           {
             "type": "text",
@@ -180,11 +342,11 @@
             "name": "pin"
           },
           {
-            "type": "number",
-            "name": "status"
+            "type": "text",
+            "name": "full_name"
           }
         ],
-        "outputType": "array"
+        "outputType": "object"
       }
     ]
   }

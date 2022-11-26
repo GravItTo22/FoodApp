@@ -3,6 +3,14 @@
 <dmx-serverconnect id="scCartItems" url="/api/Cart/CartItems"></dmx-serverconnect>
 <dmx-serverconnect id="scAppliedCode" url="/api/Cart/FetchPromoCode"></dmx-serverconnect>
 <dmx-serverconnect id="scGetShippingAddress" url="/api/Users/ShippingAddress"></dmx-serverconnect>
+<dmx-serverconnect id="scUpShippingStatus" noload url="/api/Users/UpStatusShippingAdd" dmx-on:success="scGetShippingAddress.load({},true)"></dmx-serverconnect>
+<dmx-value id="varShippingId" dmx-bind:value=""></dmx-value>
+<dmx-value id="varMobile" dmx-bind:value=""></dmx-value>
+<dmx-value id="varPin" dmx-bind:value=""></dmx-value>
+<dmx-value id="varFullName" dmx-bind:value=""></dmx-value>
+<dmx-value id="varEmail" dmx-bind:value=""></dmx-value>
+<dmx-value id="varAddress" dmx-bind:value=""></dmx-value>
+<dmx-value id="varDistrict" dmx-bind:value=""></dmx-value>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
     <div class="container">
@@ -25,13 +33,13 @@
             <div class="checkout__form mt-3">
                 <h4>Billing Details</h4>
                 <div class="col-lg-12">
-                    <h6> Delivery to:<b> {{scDashboardInfo.data.GetUserInfo.fname}} {{scDashboardInfo.data.GetUserInfo.lname}}, {{scDashboardInfo.data.GetUserInfo.pin}}</b><br>
-                        {{scDashboardInfo.data.GetUserInfo.address}} <i>{{scDashboardInfo.data.GetUserInfo.district}}, {{scDashboardInfo.data.GetUserInfo.state}}</i>
+                    <h6> Delivery to:<b> {{content.scGetShippingAddress.data.ActiveAddress.full_name}}, {{content.scGetShippingAddress.data.ActiveAddress.pin}}</b><br>
+                        {{content.scGetShippingAddress.data.ActiveAddress.address1}} <i>{{content.scGetShippingAddress.data.ActiveAddress.district}}, {{content.scGetShippingAddress.data.ActiveAddress.state}}</i>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-light border-dark float-right mb-3" data-toggle="modal" data-target="#exampleModalLong">
+                            Change
+                        </button>
                     </h6>
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-light border-dark float-right mb-3" data-toggle="modal" data-target="#exampleModalLong">
-                        Change
-                    </button>
                     <!-- Modal -->
                     <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                         <div class="modal-dialog1" role="document">
@@ -41,24 +49,28 @@
                                     <p class="font-weight-bold">Select Delivery Address</p>
                                     <div class="ShippingAddress">
                                         <div class="container1" dmx-repeat:repeat2="scGetShippingAddress.data.GetAddress">
-                                            <label class="form-check-label">{{scDashboardInfo.data.GetUserInfo.fname}} {{scDashboardInfo.data.GetUserInfo.lname}}, {{scDashboardInfo.data.GetUserInfo.pin}}
-                                                <br> {{scDashboardInfo.data.GetUserInfo.address}} <i>{{scDashboardInfo.data.GetUserInfo.district}}, {{scDashboardInfo.data.GetUserInfo.state}}</i></label>
-                                            <input type="radio" checked="checked" name="radio">
-                                            <span class="checkmark"></span>
+                                            <label class="form-check-label"><b>{{scGetShippingAddress.data.GetAddress[$index].full_name}},</b> <i>{{scGetShippingAddress.data.GetAddress[$index].mobile}},</i> {{scGetShippingAddress.data.GetAddress[$index].pin}}
+                                                <br> {{scGetShippingAddress.data.GetAddress[$index].address1}} <i>{{scGetShippingAddress.data.GetAddress[$index].district}}, {{scGetShippingAddress.data.GetAddress[$index].state}}</i></label>
+                                            <input type="radio" dmx-bind:checked="(content.scGetShippingAddress.data.GetAddress[$index].status==2)?'checked':''" name="radio">
+                                            <span class="checkmark" dmx-on:click="scUpShippingStatus.load({shipping_id: scGetShippingAddress.data.GetAddress[$index].id});varShippingId.setValue(scGetShippingAddress.data.GetAddress[$index].id);varMobile.setValue(scGetShippingAddress.data.GetAddress[$index].mobile);varPin.setValue(scGetShippingAddress.data.GetAddress[$index].pin);varFullName.setValue(scGetShippingAddress.data.GetAddress[$index].full_name);varEmail.setValue(scGetShippingAddress.data.GetAddress[$index].email_id);varAddress.setValue(scGetShippingAddress.data.GetAddress[$index].address1);varDistrict.setValue(scGetShippingAddress.data.GetAddress[$index].district)"></span>
                                         </div>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
 
                                     </div>
-                                    <p>use pincode to check delivery info</p>
-                                    <input type="number" name="mobile" class="form-control mb-2" placeholder="Mobile Number *">
-                                    <input type="number" name="pin code" class="form-control mb-2" placeholder="Enter Your Pin Code *">
-                                    <input type="text" name="name" class="form-control mb-2" placeholder="Enter Name *">
-                                    <input type="text" name="Email" class="form-control mb-2" placeholder="Email Id *">
-                                    <input type="text" name="address" class="form-control mb-2" placeholder="Address *">
-                                    <input type="submit" value="Submit" class="btn btns w-25">
-                                    <input type="button" value="Close" class="btn btn-dark w-25 pull-right text-center mt-2" data-bs-dismiss="modal" aria-label="Close" dmx-on:click="browserMain.goto('/place-order')">
+                                    <p>Add/ Edit Shipping Address:</p>
+                                    <form is="dmx-serverconnect-form" method="post" id="scformShippingAddress" action="/api/Users/AddShippingAddress" dmx-on:success="notifMain.success(content.scformShippingAddress.data);scformShippingAddress.reset();scGetShippingAddress.load({});varShippingId.setValue();varMobile.setValue();varPin.setValue();varFullName.setValue();varEmail.setValue();varAddress.setValue();varDistrict.setValue()" dmx-on:forbidden="notifMain.warning(lastError.response)" dmx-on:unauthorized="notifMain.warning(lastError.response)">
+                                        <input type="hidden" name="ShippingId" class="form-control mb-2" dmx-bind:value="varShippingId.value">
+                                        <input type="number" name="mobile" class="form-control mb-2" placeholder="Mobile Number *" required="" dmx-bind:value="varMobile.value">
+                                        <input type="number" name="pincode" class="form-control mb-2" placeholder="Enter Your Pin Code *" required="" dmx-bind:value="varPin.value">
+                                        <input type="text" name="name" class="form-control mb-2" placeholder="Enter Full Name *" required="" dmx-bind:value="varFullName.value">
+                                        <input type="text" name="Email" class="form-control mb-2" placeholder="Email Id" dmx-bind:value="varEmail.value">
+                                        <input type="text" name="address" class="form-control mb-2" placeholder="Address *" required="" dmx-bind:value="varAddress.value">
+                                        <input type="text" name="district" class="form-control mb-2" placeholder="District *" required="" dmx-bind:value="varDistrict.value">
+                                        <input type="submit" value="Submit" class="btn btns w-25">
+                                        <input type="button" value="Close" class="btn btn-dark w-25 pull-right text-center mt-2" data-bs-dismiss="modal" aria-label="Close" dmx-on:click="browserMain.goto('/place-order')">
+                                    </form>
                                 </div>
                             </div>
                         </div>

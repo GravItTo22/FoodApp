@@ -1,7 +1,8 @@
-<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="placeorder" appConnect="local" -->
+<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="placeorder" appConnect="local" components="{dmxBootstrap5Modal:{}}" -->
 <meta name="ac:route" content="/place-order">
 <dmx-serverconnect id="scCartItems" url="/api/Cart/CartItems"></dmx-serverconnect>
 <dmx-serverconnect id="scAppliedCode" url="/api/Cart/FetchPromoCode"></dmx-serverconnect>
+<dmx-serverconnect id="scGetShippingAddress" url="/api/Users/ShippingAddress"></dmx-serverconnect>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
     <div class="container">
@@ -34,34 +35,30 @@
                     <!-- Modal -->
                     <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                         <div class="modal-dialog1" role="document">
-                            <div class="modal-content1 ml-2">
+                            <div class="modal-content1 p-3">
                                 <h5 class="modal-title" id="exampleModalLongTitle"></h5>
                                 <div class="modal-header1">
                                     <p class="font-weight-bold">Select Delivery Address</p>
-
-                                    <label class="container1">
-                                        <label class="form-check-label">{{scDashboardInfo.data.GetUserInfo.fname}} {{scDashboardInfo.data.GetUserInfo.lname}}, {{scDashboardInfo.data.GetUserInfo.pin}}
-                                            <a href="index">Home</a>
-                                            <br> {{scDashboardInfo.data.GetUserInfo.address}} <i>{{scDashboardInfo.data.GetUserInfo.district}}, {{scDashboardInfo.data.GetUserInfo.state}}</i></label>
-                                        <input type="radio" checked="checked" name="radio">
-                                        <span class="checkmark"></span>
-                                    </label>
+                                    <div class="ShippingAddress">
+                                        <div class="container1" dmx-repeat:repeat2="scGetShippingAddress.data.GetAddress">
+                                            <label class="form-check-label">{{scDashboardInfo.data.GetUserInfo.fname}} {{scDashboardInfo.data.GetUserInfo.lname}}, {{scDashboardInfo.data.GetUserInfo.pin}}
+                                                <br> {{scDashboardInfo.data.GetUserInfo.address}} <i>{{scDashboardInfo.data.GetUserInfo.district}}, {{scDashboardInfo.data.GetUserInfo.state}}</i></label>
+                                            <input type="radio" checked="checked" name="radio">
+                                            <span class="checkmark"></span>
+                                        </div>
+                                    </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
 
                                     </div>
                                     <p>use pincode to check delivery info</p>
-                                    <label>Enter Your Pin Code<span>*</span></label>
-                                    <input type="text" name="pin code" class="form-control">
-                                    <label>Name<span>*</span></label>
-                                    <input type="text" name="name" class="form-control">
-                                    <label>Email<span>*</span></label>
-                                    <input type="text" name="Email" class="form-control">
-                                    <label>Address<span>*</span></label>
-                                    <input type="text" name="address" class="form-control">
-                                    <label>Mobile Number<span>*</span></label>
-                                    <input type="text" name="mobile" class="form-control">
-                                    <input type="submit" value="Submit" class="btns">
+                                    <input type="number" name="mobile" class="form-control mb-2" placeholder="Mobile Number *">
+                                    <input type="number" name="pin code" class="form-control mb-2" placeholder="Enter Your Pin Code *">
+                                    <input type="text" name="name" class="form-control mb-2" placeholder="Enter Name *">
+                                    <input type="text" name="Email" class="form-control mb-2" placeholder="Email Id *">
+                                    <input type="text" name="address" class="form-control mb-2" placeholder="Address *">
+                                    <input type="submit" value="Submit" class="btn btns w-25">
+                                    <input type="button" value="Close" class="btn btn-dark w-25 pull-right text-center mt-2" data-bs-dismiss="modal" aria-label="Close" dmx-on:click="browserMain.goto('/place-order')">
                                 </div>
                             </div>
                         </div>

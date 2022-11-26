@@ -453,6 +453,144 @@
                               "then": {
                                 "steps": [
                                   {
+                                    "name": "AddShippingAddress",
+                                    "module": "dbupdater",
+                                    "action": "insert",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "type": "insert",
+                                        "values": [
+                                          {
+                                            "table": "r_shipping_add",
+                                            "column": "c_id",
+                                            "type": "number",
+                                            "value": "{{AddUsers.identity}}"
+                                          },
+                                          {
+                                            "table": "r_shipping_add",
+                                            "column": "mobile",
+                                            "type": "text",
+                                            "value": "{{$_POST.Mobile}}"
+                                          },
+                                          {
+                                            "table": "r_shipping_add",
+                                            "column": "address1",
+                                            "type": "text",
+                                            "value": "{{$_POST.Address}}"
+                                          },
+                                          {
+                                            "table": "r_shipping_add",
+                                            "column": "district",
+                                            "type": "text",
+                                            "value": "{{$_POST.District}}"
+                                          },
+                                          {
+                                            "table": "r_shipping_add",
+                                            "column": "state",
+                                            "type": "text",
+                                            "value": "{{'Assam'}}"
+                                          },
+                                          {
+                                            "table": "r_shipping_add",
+                                            "column": "country",
+                                            "type": "text",
+                                            "value": "{{'India'}}"
+                                          },
+                                          {
+                                            "table": "r_shipping_add",
+                                            "column": "pin",
+                                            "type": "text",
+                                            "value": "{{$_POST.PIN}}"
+                                          },
+                                          {
+                                            "table": "r_shipping_add",
+                                            "column": "status",
+                                            "type": "number",
+                                            "value": "{{2}}"
+                                          },
+                                          {
+                                            "table": "r_shipping_add",
+                                            "column": "created_by",
+                                            "type": "number",
+                                            "value": "{{AddUsers.identity}}"
+                                          },
+                                          {
+                                            "table": "r_shipping_add",
+                                            "column": "created_on",
+                                            "type": "datetime",
+                                            "value": "{{NOW}}"
+                                          }
+                                        ],
+                                        "table": "r_shipping_add",
+                                        "returning": "id",
+                                        "query": "INSERT INTO r_shipping_add\n(c_id, mobile, address1, district, state, country, pin, status, created_by, created_on) VALUES (:P1 /* {{AddUsers.identity}} */, :P2 /* {{$_POST.Mobile}} */, :P3 /* {{$_POST.Address}} */, :P4 /* {{$_POST.District}} */, :P5 /* {{'Assam'}} */, :P6 /* {{'India'}} */, :P7 /* {{$_POST.PIN}} */, :P8 /* {{2}} */, :P9 /* {{AddUsers.identity}} */, :P10 /* {{NOW}} */)",
+                                        "params": [
+                                          {
+                                            "name": ":P1",
+                                            "type": "expression",
+                                            "value": "{{AddUsers.identity}}"
+                                          },
+                                          {
+                                            "name": ":P2",
+                                            "type": "expression",
+                                            "value": "{{$_POST.Mobile}}"
+                                          },
+                                          {
+                                            "name": ":P3",
+                                            "type": "expression",
+                                            "value": "{{$_POST.Address}}"
+                                          },
+                                          {
+                                            "name": ":P4",
+                                            "type": "expression",
+                                            "value": "{{$_POST.District}}"
+                                          },
+                                          {
+                                            "name": ":P5",
+                                            "type": "expression",
+                                            "value": "{{'Assam'}}"
+                                          },
+                                          {
+                                            "name": ":P6",
+                                            "type": "expression",
+                                            "value": "{{'India'}}"
+                                          },
+                                          {
+                                            "name": ":P7",
+                                            "type": "expression",
+                                            "value": "{{$_POST.PIN}}"
+                                          },
+                                          {
+                                            "name": ":P8",
+                                            "type": "expression",
+                                            "value": "{{2}}"
+                                          },
+                                          {
+                                            "name": ":P9",
+                                            "type": "expression",
+                                            "value": "{{AddUsers.identity}}"
+                                          },
+                                          {
+                                            "name": ":P10",
+                                            "type": "expression",
+                                            "value": "{{NOW}}"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "meta": [
+                                      {
+                                        "name": "identity",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "affected",
+                                        "type": "number"
+                                      }
+                                    ]
+                                  },
+                                  {
                                     "name": "status",
                                     "module": "core",
                                     "action": "setvalue",

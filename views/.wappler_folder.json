@@ -66,5 +66,9 @@
   "order-details.ejs": {
     "layoutPage": "main",
     "description": ""
+  },
+  "restCountries.ejs": {
+    "layoutPage": "main",
+    "description": ""
   }
 }

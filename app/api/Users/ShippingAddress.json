@@ -1,0 +1,191 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "",
+        "module": "auth",
+        "action": "restrict",
+        "options": {
+          "provider": "security",
+          "permissions": [
+            "write"
+          ],
+          "loginUrl": "/login",
+          "forbiddenUrl": "/403-forbidden"
+        }
+      },
+      {
+        "name": "identity",
+        "module": "auth",
+        "action": "identify",
+        "options": {
+          "provider": "security"
+        },
+        "output": false,
+        "meta": []
+      },
+      {
+        "name": "GetAddress",
+        "module": "dbconnector",
+        "action": "select",
+        "options": {
+          "connection": "ClientApp",
+          "sql": {
+            "type": "SELECT",
+            "columns": [
+              {
+                "table": "r_shipping_add",
+                "column": "id"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "mobile"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "address1"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "address2"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "ps"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "district"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "state"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "country"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "pin"
+              },
+              {
+                "table": "r_shipping_add",
+                "column": "status"
+              }
+            ],
+            "table": {
+              "name": "r_shipping_add"
+            },
+            "primary": "id",
+            "joins": [],
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "r_shipping_add.c_id",
+                  "field": "r_shipping_add.c_id",
+                  "type": "double",
+                  "operator": "equal",
+                  "value": "{{identity}}",
+                  "data": {
+                    "table": "r_shipping_add",
+                    "column": "c_id",
+                    "type": "number",
+                    "columnObj": {
+                      "type": "reference",
+                      "primary": false,
+                      "unique": false,
+                      "nullable": true,
+                      "references": "id",
+                      "inTable": "m_customer",
+                      "referenceType": "integer",
+                      "onUpdate": "NO ACTION",
+                      "onDelete": "NO ACTION",
+                      "name": "c_id"
+                    }
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            },
+            "orders": [
+              {
+                "table": "r_shipping_add",
+                "column": "id",
+                "direction": "DESC"
+              }
+            ],
+            "query": "SELECT id, mobile, address1, address2, ps, district, state, country, pin, status\nFROM r_shipping_add\nWHERE c_id = :P1 /* {{identity}} */\nORDER BY id DESC",
+            "params": [
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{identity}}"
+              }
+            ]
+          }
+        },
+        "output": true,
+        "meta": [
+          {
+            "type": "number",
+            "name": "id"
+          },
+          {
+            "type": "text",
+            "name": "mobile"
+          },
+          {
+            "type": "text",
+            "name": "address1"
+          },
+          {
+            "type": "text",
+            "name": "address2"
+          },
+          {
+            "type": "text",
+            "name": "ps"
+          },
+          {
+            "type": "text",
+            "name": "district"
+          },
+          {
+            "type": "text",
+            "name": "state"
+          },
+          {
+            "type": "text",
+            "name": "country"
+          },
+          {
+            "type": "text",
+            "name": "pin"
+          },
+          {
+            "type": "number",
+            "name": "status"
+          }
+        ],
+        "outputType": "array"
+      }
+    ]
+  }
+}

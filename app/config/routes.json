@@ -88,6 +88,11 @@
       "page": "order-details",
       "layout": "main",
       "exec": "/api/PageAccess/UserAuth"
+    },
+    {
+      "path": "/restCountries",
+      "page": "restCountries",
+      "layout": "main"
     }
   ]
 }

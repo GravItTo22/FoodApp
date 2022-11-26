@@ -1220,5 +1220,52 @@ dmx.config({
       ],
       "outputType": "array"
     }
+  },
+  "placeorder": {
+    "repeat2": {
+      "meta": [
+        {
+          "type": "number",
+          "name": "id"
+        },
+        {
+          "type": "text",
+          "name": "mobile"
+        },
+        {
+          "type": "text",
+          "name": "address1"
+        },
+        {
+          "type": "text",
+          "name": "address2"
+        },
+        {
+          "type": "text",
+          "name": "ps"
+        },
+        {
+          "type": "text",
+          "name": "district"
+        },
+        {
+          "type": "text",
+          "name": "state"
+        },
+        {
+          "type": "text",
+          "name": "country"
+        },
+        {
+          "type": "text",
+          "name": "pin"
+        },
+        {
+          "type": "number",
+          "name": "status"
+        }
+      ],
+      "outputType": "array"
+    }
   }
 });

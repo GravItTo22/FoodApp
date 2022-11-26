@@ -2263,16 +2263,18 @@ ol {
     padding-top: 10px;
     border: none;
     border-bottom: 2px solid lightgray;
-    width: 340px;
     font-size: small;
-    padding: 5px;
 }
 .form-check-label{
-    font-size: 14px;
-   
-
+    font-size: 13px;
 
 }
+
+.ShippingAddress{
+    height: 100px;
+    overflow-y: scroll;
+}
+
 .btns{
     margin-top: 10px;
     border: none;

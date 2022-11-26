@@ -5,7 +5,7 @@
     },
     "$_GET": [
       {
-        "type": "text",
+        "type": "number",
         "name": "rest_id"
       },
       {

@@ -34,7 +34,7 @@
             "output": true,
             "meta": [
               {
-                "name": "prod_review_id",
+                "name": "rest_review_id",
                 "type": "number"
               },
               {
@@ -43,6 +43,10 @@
               },
               {
                 "name": "review_comment",
+                "type": "text"
+              },
+              {
+                "name": "review_reply",
                 "type": "text"
               },
               {

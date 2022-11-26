@@ -3,13 +3,15 @@
     "$_GET": [
       {
         "type": "text",
-        "name": "id"
-      }
-    ],
-    "$_SESSION": [
+        "name": "rest_id"
+      },
       {
         "type": "text",
-        "name": "sessionLogin"
+        "name": "market"
+      },
+      {
+        "type": "text",
+        "name": "lang"
       }
     ]
   },
@@ -20,220 +22,950 @@
       "action": "trycatch",
       "options": {
         "try": {
-          "steps": {
-            "name": "GetShops",
-            "module": "dbconnector",
-            "action": "single",
-            "options": {
-              "connection": "ClientApp",
-              "sql": {
-                "type": "SELECT",
-                "columns": [],
-                "table": {
-                  "name": "m_restaurant"
-                },
-                "primary": "id",
-                "joins": [],
-                "wheres": {
-                  "condition": "OR",
-                  "rules": [
+          "steps": [
+            {
+              "name": "CheckRest",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
                     {
-                      "id": "m_restaurant.id",
-                      "field": "m_restaurant.id",
-                      "type": "double",
-                      "operator": "equal",
-                      "value": "{{$_PARAM.id}}",
-                      "data": {
-                        "table": "m_restaurant",
-                        "column": "id",
-                        "type": "number",
-                        "columnObj": {
-                          "type": "increments",
-                          "default": "",
-                          "primary": true,
-                          "unique": true,
-                          "nullable": false,
-                          "name": "id"
-                        }
-                      },
-                      "operation": "="
-                    },
-                    {
-                      "id": "m_restaurant.id",
-                      "field": "m_restaurant.id",
-                      "type": "double",
-                      "operator": "equal",
-                      "value": "{{$_GET.id}}",
-                      "data": {
-                        "table": "m_restaurant",
-                        "column": "id",
-                        "type": "number",
-                        "columnObj": {
-                          "type": "increments",
-                          "default": "",
-                          "primary": true,
-                          "unique": true,
-                          "nullable": false,
-                          "name": "id"
-                        }
-                      },
-                      "operation": "="
+                      "table": "m_restaurant",
+                      "column": "id",
+                      "alias": "CountId",
+                      "aggregate": "COUNT"
                     }
                   ],
-                  "conditional": null,
-                  "valid": true
-                },
-                "query": "SELECT *\nFROM m_restaurant\nWHERE id = :P1 /* {{$_PARAM.id}} */ OR id = :P2 /* {{$_GET.id}} */",
-                "params": [
-                  {
-                    "operator": "equal",
-                    "type": "expression",
-                    "name": ":P1",
-                    "value": "{{$_PARAM.id}}"
+                  "table": {
+                    "name": "m_restaurant"
                   },
-                  {
-                    "operator": "equal",
-                    "type": "expression",
-                    "name": ":P2",
-                    "value": "{{$_GET.id}}"
-                  }
-                ]
-              }
+                  "primary": "id",
+                  "joins": [],
+                  "groupBy": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "m_restaurant.id",
+                        "field": "m_restaurant.id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{$_GET.rest_id}}",
+                        "data": {
+                          "table": "m_restaurant",
+                          "column": "id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "increments",
+                            "default": "",
+                            "primary": true,
+                            "unique": true,
+                            "nullable": false,
+                            "name": "id"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "m_restaurant.market_id",
+                        "field": "m_restaurant.market_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{$_GET.market}}",
+                        "data": {
+                          "table": "m_restaurant",
+                          "column": "market_id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "reference",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "references": "id",
+                            "inTable": "m_market",
+                            "referenceType": "integer",
+                            "onUpdate": "NO ACTION",
+                            "onDelete": "NO ACTION",
+                            "name": "market_id"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT COUNT(id) AS CountId\nFROM m_restaurant\nWHERE id = :P1 /* {{$_GET.rest_id}} */ AND market_id = :P2 /* {{$_GET.market}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.rest_id}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{$_GET.market}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "CountId"
+                }
+              ],
+              "outputType": "object"
             },
-            "output": true,
-            "meta": [
-              {
-                "type": "number",
-                "name": "id"
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{CheckRest.CountId>=1}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 200
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "",
+                      "module": "core",
+                      "action": "condition",
+                      "options": {
+                        "if": "{{($_GET.lang=='Hindi')}}",
+                        "then": {
+                          "steps": {
+                            "name": "GetShops",
+                            "module": "dbconnector",
+                            "action": "single",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "SELECT",
+                                "columns": [
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "id",
+                                    "alias": "rest_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "cat_type_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "gen_shop_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "shop_name_hin",
+                                    "alias": "shop_name"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "shop_logo"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "address"
+                                  },
+                                  {
+                                    "table": "rsi",
+                                    "column": "cover_image"
+                                  },
+                                  {
+                                    "table": "rrr",
+                                    "column": "review_value",
+                                    "alias": "avg_rating",
+                                    "aggregate": "AVG"
+                                  },
+                                  {
+                                    "table": "rrr",
+                                    "column": "review_value",
+                                    "alias": "CountRating",
+                                    "aggregate": "COUNT"
+                                  }
+                                ],
+                                "table": {
+                                  "name": "m_restaurant"
+                                },
+                                "primary": "id",
+                                "joins": [
+                                  {
+                                    "table": "rest_sliding_img",
+                                    "column": "*",
+                                    "alias": "rsi",
+                                    "type": "LEFT",
+                                    "clauses": {
+                                      "condition": "AND",
+                                      "rules": [
+                                        {
+                                          "table": "rsi",
+                                          "column": "rest_id",
+                                          "operator": "equal",
+                                          "value": {
+                                            "table": "m_restaurant",
+                                            "column": "id"
+                                          },
+                                          "operation": "="
+                                        }
+                                      ]
+                                    },
+                                    "primary": "id"
+                                  },
+                                  {
+                                    "table": "r_rest_review",
+                                    "column": "*",
+                                    "alias": "rrr",
+                                    "type": "LEFT",
+                                    "clauses": {
+                                      "condition": "AND",
+                                      "rules": [
+                                        {
+                                          "table": "rrr",
+                                          "column": "rest_id",
+                                          "operator": "equal",
+                                          "value": {
+                                            "table": "m_restaurant",
+                                            "column": "id"
+                                          },
+                                          "operation": "="
+                                        }
+                                      ]
+                                    },
+                                    "primary": "id"
+                                  }
+                                ],
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "m_restaurant.id",
+                                      "field": "m_restaurant.id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{$_GET.rest_id}}",
+                                      "data": {
+                                        "table": "m_restaurant",
+                                        "column": "id",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "increments",
+                                          "default": "",
+                                          "primary": true,
+                                          "unique": true,
+                                          "nullable": false,
+                                          "name": "id"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "id": "m_restaurant.market_id",
+                                      "field": "m_restaurant.market_id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{$_GET.market}}",
+                                      "data": {
+                                        "table": "m_restaurant",
+                                        "column": "market_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "reference",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "references": "id",
+                                          "inTable": "m_market",
+                                          "referenceType": "integer",
+                                          "onUpdate": "NO ACTION",
+                                          "onDelete": "NO ACTION",
+                                          "name": "market_id"
+                                        }
+                                      },
+                                      "operation": "="
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                },
+                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_hin AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image, AVG(rrr.review_value) AS avg_rating, COUNT(rrr.review_value) AS CountRating\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id) LEFT JOIN r_rest_review AS rrr ON (rrr.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */\nGROUP BY m_restaurant.id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_hin, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image",
+                                "params": [
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P1",
+                                    "value": "{{$_GET.rest_id}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P2",
+                                    "value": "{{$_GET.market}}"
+                                  }
+                                ],
+                                "groupBy": [
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "cat_type_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "gen_shop_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "shop_name_hin"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "shop_logo"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "address"
+                                  },
+                                  {
+                                    "table": "rsi",
+                                    "column": "cover_image"
+                                  }
+                                ]
+                              }
+                            },
+                            "output": true,
+                            "meta": [
+                              {
+                                "type": "number",
+                                "name": "rest_id"
+                              },
+                              {
+                                "type": "number",
+                                "name": "cat_type_id"
+                              },
+                              {
+                                "type": "text",
+                                "name": "gen_shop_id"
+                              },
+                              {
+                                "type": "text",
+                                "name": "shop_name"
+                              },
+                              {
+                                "type": "text",
+                                "name": "shop_logo"
+                              },
+                              {
+                                "type": "text",
+                                "name": "address"
+                              },
+                              {
+                                "type": "text",
+                                "name": "cover_image"
+                              },
+                              {
+                                "type": "number",
+                                "name": "avg_rating"
+                              },
+                              {
+                                "type": "number",
+                                "name": "CountRating"
+                              }
+                            ],
+                            "outputType": "object",
+                            "type": "dbconnector_single"
+                          }
+                        }
+                      },
+                      "outputType": "boolean"
+                    },
+                    {
+                      "name": "",
+                      "module": "core",
+                      "action": "condition",
+                      "options": {
+                        "if": "{{($_GET.lang=='Bengali')}}",
+                        "then": {
+                          "steps": {
+                            "name": "GetShops",
+                            "module": "dbconnector",
+                            "action": "single",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "SELECT",
+                                "columns": [
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "id",
+                                    "alias": "rest_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "cat_type_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "gen_shop_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "shop_name_bn",
+                                    "alias": "shop_name"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "shop_logo"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "address"
+                                  },
+                                  {
+                                    "table": "rsi",
+                                    "column": "cover_image"
+                                  },
+                                  {
+                                    "table": "rrr",
+                                    "column": "review_value",
+                                    "alias": "avg_rating",
+                                    "aggregate": "AVG"
+                                  },
+                                  {
+                                    "table": "rrr",
+                                    "column": "review_value",
+                                    "alias": "CountRating",
+                                    "aggregate": "COUNT"
+                                  }
+                                ],
+                                "table": {
+                                  "name": "m_restaurant"
+                                },
+                                "primary": "id",
+                                "joins": [
+                                  {
+                                    "table": "rest_sliding_img",
+                                    "column": "*",
+                                    "alias": "rsi",
+                                    "type": "LEFT",
+                                    "clauses": {
+                                      "condition": "AND",
+                                      "rules": [
+                                        {
+                                          "table": "rsi",
+                                          "column": "rest_id",
+                                          "operator": "equal",
+                                          "value": {
+                                            "table": "m_restaurant",
+                                            "column": "id"
+                                          },
+                                          "operation": "="
+                                        }
+                                      ]
+                                    },
+                                    "primary": "id"
+                                  },
+                                  {
+                                    "table": "r_rest_review",
+                                    "column": "*",
+                                    "alias": "rrr",
+                                    "type": "LEFT",
+                                    "clauses": {
+                                      "condition": "AND",
+                                      "rules": [
+                                        {
+                                          "table": "rrr",
+                                          "column": "rest_id",
+                                          "operator": "equal",
+                                          "value": {
+                                            "table": "m_restaurant",
+                                            "column": "id"
+                                          },
+                                          "operation": "="
+                                        }
+                                      ]
+                                    },
+                                    "primary": "id"
+                                  }
+                                ],
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "m_restaurant.id",
+                                      "field": "m_restaurant.id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{$_GET.rest_id}}",
+                                      "data": {
+                                        "table": "m_restaurant",
+                                        "column": "id",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "increments",
+                                          "default": "",
+                                          "primary": true,
+                                          "unique": true,
+                                          "nullable": false,
+                                          "name": "id"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "id": "m_restaurant.market_id",
+                                      "field": "m_restaurant.market_id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{$_GET.market}}",
+                                      "data": {
+                                        "table": "m_restaurant",
+                                        "column": "market_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "reference",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "references": "id",
+                                          "inTable": "m_market",
+                                          "referenceType": "integer",
+                                          "onUpdate": "NO ACTION",
+                                          "onDelete": "NO ACTION",
+                                          "name": "market_id"
+                                        }
+                                      },
+                                      "operation": "="
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                },
+                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_bn AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image, AVG(rrr.review_value) AS avg_rating, COUNT(rrr.review_value) AS CountRating\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id) LEFT JOIN r_rest_review AS rrr ON (rrr.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */\nGROUP BY m_restaurant.id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_bn, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image",
+                                "params": [
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P1",
+                                    "value": "{{$_GET.rest_id}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P2",
+                                    "value": "{{$_GET.market}}"
+                                  }
+                                ],
+                                "groupBy": [
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "cat_type_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "gen_shop_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "shop_name_bn"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "shop_logo"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "address"
+                                  },
+                                  {
+                                    "table": "rsi",
+                                    "column": "cover_image"
+                                  }
+                                ]
+                              }
+                            },
+                            "output": true,
+                            "meta": [
+                              {
+                                "type": "number",
+                                "name": "rest_id"
+                              },
+                              {
+                                "type": "number",
+                                "name": "cat_type_id"
+                              },
+                              {
+                                "type": "text",
+                                "name": "gen_shop_id"
+                              },
+                              {
+                                "type": "text",
+                                "name": "shop_name"
+                              },
+                              {
+                                "type": "text",
+                                "name": "shop_logo"
+                              },
+                              {
+                                "type": "text",
+                                "name": "address"
+                              },
+                              {
+                                "type": "text",
+                                "name": "cover_image"
+                              },
+                              {
+                                "type": "number",
+                                "name": "avg_rating"
+                              },
+                              {
+                                "type": "number",
+                                "name": "CountRating"
+                              }
+                            ],
+                            "outputType": "object",
+                            "type": "dbconnector_single"
+                          }
+                        }
+                      },
+                      "outputType": "boolean"
+                    },
+                    {
+                      "name": "",
+                      "module": "core",
+                      "action": "condition",
+                      "options": {
+                        "if": "{{($_GET.lang=='English')}}",
+                        "then": {
+                          "steps": {
+                            "name": "GetShops",
+                            "module": "dbconnector",
+                            "action": "single",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "SELECT",
+                                "columns": [
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "id",
+                                    "alias": "rest_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "cat_type_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "gen_shop_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "shop_name_en",
+                                    "alias": "shop_name"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "shop_logo"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "address"
+                                  },
+                                  {
+                                    "table": "rsi",
+                                    "column": "cover_image"
+                                  },
+                                  {
+                                    "table": "rrr",
+                                    "column": "review_value",
+                                    "alias": "avg_rating",
+                                    "aggregate": "AVG"
+                                  },
+                                  {
+                                    "table": "rrr",
+                                    "column": "review_value",
+                                    "alias": "CountRating",
+                                    "aggregate": "COUNT"
+                                  }
+                                ],
+                                "table": {
+                                  "name": "m_restaurant"
+                                },
+                                "primary": "id",
+                                "joins": [
+                                  {
+                                    "table": "rest_sliding_img",
+                                    "column": "*",
+                                    "alias": "rsi",
+                                    "type": "LEFT",
+                                    "clauses": {
+                                      "condition": "AND",
+                                      "rules": [
+                                        {
+                                          "table": "rsi",
+                                          "column": "rest_id",
+                                          "operator": "equal",
+                                          "value": {
+                                            "table": "m_restaurant",
+                                            "column": "id"
+                                          },
+                                          "operation": "="
+                                        }
+                                      ]
+                                    },
+                                    "primary": "id"
+                                  },
+                                  {
+                                    "table": "r_rest_review",
+                                    "column": "*",
+                                    "alias": "rrr",
+                                    "type": "LEFT",
+                                    "clauses": {
+                                      "condition": "AND",
+                                      "rules": [
+                                        {
+                                          "table": "rrr",
+                                          "column": "rest_id",
+                                          "operator": "equal",
+                                          "value": {
+                                            "table": "m_restaurant",
+                                            "column": "id"
+                                          },
+                                          "operation": "="
+                                        }
+                                      ]
+                                    },
+                                    "primary": "id"
+                                  }
+                                ],
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "m_restaurant.id",
+                                      "field": "m_restaurant.id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{$_GET.rest_id}}",
+                                      "data": {
+                                        "table": "m_restaurant",
+                                        "column": "id",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "increments",
+                                          "default": "",
+                                          "primary": true,
+                                          "unique": true,
+                                          "nullable": false,
+                                          "name": "id"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "id": "m_restaurant.market_id",
+                                      "field": "m_restaurant.market_id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{$_GET.market}}",
+                                      "data": {
+                                        "table": "m_restaurant",
+                                        "column": "market_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "reference",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "references": "id",
+                                          "inTable": "m_market",
+                                          "referenceType": "integer",
+                                          "onUpdate": "NO ACTION",
+                                          "onDelete": "NO ACTION",
+                                          "name": "market_id"
+                                        }
+                                      },
+                                      "operation": "="
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                },
+                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_en AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image, AVG(rrr.review_value) AS avg_rating, COUNT(rrr.review_value) AS CountRating\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id) LEFT JOIN r_rest_review AS rrr ON (rrr.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */\nGROUP BY m_restaurant.id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_en, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image",
+                                "params": [
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P1",
+                                    "value": "{{$_GET.rest_id}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P2",
+                                    "value": "{{$_GET.market}}"
+                                  }
+                                ],
+                                "groupBy": [
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "cat_type_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "gen_shop_id"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "shop_name_en"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "shop_logo"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "address"
+                                  },
+                                  {
+                                    "table": "rsi",
+                                    "column": "cover_image"
+                                  }
+                                ]
+                              }
+                            },
+                            "output": true,
+                            "meta": [
+                              {
+                                "type": "number",
+                                "name": "rest_id"
+                              },
+                              {
+                                "type": "number",
+                                "name": "cat_type_id"
+                              },
+                              {
+                                "type": "text",
+                                "name": "gen_shop_id"
+                              },
+                              {
+                                "type": "text",
+                                "name": "shop_name"
+                              },
+                              {
+                                "type": "text",
+                                "name": "shop_logo"
+                              },
+                              {
+                                "type": "text",
+                                "name": "address"
+                              },
+                              {
+                                "type": "text",
+                                "name": "cover_image"
+                              },
+                              {
+                                "type": "number",
+                                "name": "avg_rating"
+                              },
+                              {
+                                "type": "number",
+                                "name": "CountRating"
+                              }
+                            ],
+                            "outputType": "object",
+                            "type": "dbconnector_single"
+                          }
+                        }
+                      },
+                      "outputType": "boolean"
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "No Record Found!"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
               },
-              {
-                "type": "number",
-                "name": "market_id"
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
               },
-              {
-                "type": "number",
-                "name": "cat_type_id"
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
               },
-              {
-                "type": "text",
-                "name": "gen_shop_id"
-              },
-              {
-                "type": "text",
-                "name": "shop_name_en"
-              },
-              {
-                "type": "text",
-                "name": "shop_name_bn"
-              },
-              {
-                "type": "text",
-                "name": "shop_name_hin"
-              },
-              {
-                "type": "text",
-                "name": "shop_logo"
-              },
-              {
-                "type": "text",
-                "name": "shop_mobile_no"
-              },
-              {
-                "type": "text",
-                "name": "is_watsapp"
-              },
-              {
-                "type": "text",
-                "name": "watsapp_no"
-              },
-              {
-                "type": "text",
-                "name": "email_id"
-              },
-              {
-                "type": "text",
-                "name": "owner_name"
-              },
-              {
-                "type": "text",
-                "name": "gst_in"
-              },
-              {
-                "type": "text",
-                "name": "is_rmc"
-              },
-              {
-                "type": "text",
-                "name": "rmc_no"
-              },
-              {
-                "type": "text",
-                "name": "is_fsc"
-              },
-              {
-                "type": "text",
-                "name": "balance_amount"
-              },
-              {
-                "type": "text",
-                "name": "is_sliding_img"
-              },
-              {
-                "type": "text",
-                "name": "pan_no"
-              },
-              {
-                "type": "text",
-                "name": "address"
-              },
-              {
-                "type": "text",
-                "name": "pin"
-              },
-              {
-                "type": "text",
-                "name": "kyc_status"
-              },
-              {
-                "type": "number",
-                "name": "status"
-              },
-              {
-                "type": "text",
-                "name": "remarks"
-              },
-              {
-                "type": "text",
-                "name": "blank1"
-              },
-              {
-                "type": "text",
-                "name": "blank2"
-              },
-              {
-                "type": "text",
-                "name": "blank3"
-              },
-              {
-                "type": "number",
-                "name": "created_by"
-              },
-              {
-                "type": "datetime",
-                "name": "created_on"
-              },
-              {
-                "type": "datetime",
-                "name": "updated_on"
-              },
-              {
-                "type": "datetime",
-                "name": "deleted_on"
-              }
-            ],
-            "outputType": "object",
-            "type": "dbconnector_single"
-          }
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
         }
       }
     }

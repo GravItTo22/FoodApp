@@ -1,9 +1,10 @@
 <!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="shopdetails" appConnect="local" components="{dmxFormatter:{}}" -->
 <meta name="ac:route" content="/shop-details/:id/:shop_name">
-<dmx-serverconnect id="scShopDetails" url="/api/Restaurant/ShopDetails" dmx-param:id="<%= $_PARAM.id %>"></dmx-serverconnect>
+<dmx-serverconnect id="scShopDetails" url="/api/Restaurant/ShopDetails" dmx-param:rest_id="<%= $_PARAM.id %>" dmx-param:market="1" dmx-param:lang="varLanguage.value"></dmx-serverconnect>
 <dmx-serverconnect id="scRestProd" url="/api/Products/RestProducts" dmx-param:rest_id="<%= $_PARAM.id %>" dmx-param:market="1"></dmx-serverconnect>
 <dmx-serverconnect id="scRestReviewList" url="/api/Review/GetARestReviews" dmx-param:rest_id="<%= $_PARAM.id %>"></dmx-serverconnect>
-<!-- <dmx-serverconnect id="scProdReviewAdd" url="/api/Review/AddReviewProd" dmx-param:p_id="<%= $_PARAM.id %>" dmx-param:slider="slider.value" dmx-param:review="reviewtext.value" noload dmx-on:success="notifMain.success(content.scProdReviewAdd.data.message)"></dmx-serverconnect> -->
+<dmx-serverconnect id="scRestReviewAdd" url="/api/Review/AddReviewRest" dmx-param:rest_id="<%= $_PARAM.id %>" dmx-param:slider="content.slider.value" dmx-param:review="content.reviewtext.value" noload dmx-on:success="notifMain.success(content.scRestReviewAdd.data.message)"></dmx-serverconnect>
+
 <style>
     .smileySlider {
         width: 300px;
@@ -37,10 +38,20 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="breadcrumb__text">
-                    <h2>{{content.scShopDetails.data.GetShops.shop_name_en}}</h2>
+                    <h2>{{content.scShopDetails.data.GetShops.shop_name}} ({{(content.scShopDetails.data.GetShops.avg_rating == null) ? 0 : content.scShopDetails.data.GetShops.avg_rating.toNumber().toFixed(1)}})</h2>
+                    <h4>
+                        <div class="reviews" style="color: #ffff;">
+                            <i class="fa" dmx-class:fa-star="(content.scShopDetails.data.GetShops.avg_rating.toNumber()>=1)" dmx-class:fa-star-o="(content.scShopDetails.data.GetShops.avg_rating.toNumber()<1)" dmx-class:fa-star-half-o="content.scShopDetails.data.GetShops.avg_rating.toNumber().inRange(0, 1)"></i>
+                            <i class="fa fa-star-o" dmx-class:fa-star="(content.scShopDetails.data.GetShops.avg_rating.toNumber()>=2)" dmx-class:fa-star-o="(content.scShopDetails.data.GetShops.avg_rating.toNumber()<2)" dmx-class:fa-star-half-o="content.scShopDetails.data.GetShops.avg_rating.toNumber().inRange(1, 2)"></i>
+                            <i class="fa fa-star-o" dmx-class:fa-star="(content.scShopDetails.data.GetShops.avg_rating.toNumber()>=3)" dmx-class:fa-star-o="(content.scShopDetails.data.GetShops.avg_rating.toNumber()<3)" dmx-class:fa-star-half-o="content.scShopDetails.data.GetShops.avg_rating.toNumber().inRange(2, 3)"></i>
+                            <i class="fa fa-star-o" dmx-class:fa-star="(content.scShopDetails.data.GetShops.avg_rating.toNumber()>=4)" dmx-class:fa-star-o="(content.scShopDetails.data.GetShops.avg_rating.toNumber()<4)" dmx-class:fa-star-half-o="content.scShopDetails.data.GetShops.avg_rating.toNumber().inRange(3, 4)"></i>
+                            <i class="fa fa-star-o" dmx-class:fa-star="(content.scShopDetails.data.GetShops.avg_rating.toNumber()==5)" dmx-class:fa-star-o="(content.scShopDetails.data.GetShops.avg_rating.toNumber()<5)" dmx-class:fa-star-half-o="content.scShopDetails.data.GetShops.avg_rating.toNumber().inRange(4, 5)"></i>
+                            <!--Empty star-->
+                        </div>
+                    </h4>
                     <div class="breadcrumb__option">
                         <a href="index">Home</a>
-                        <span>Restaurant Details</span>
+                        <span>Restaurant Details ({{content.scShopDetails.data.GetShops.CountRating}} Reviews)</span>
                     </div>
                 </div>
             </div>
@@ -391,11 +402,11 @@
                             <!-- content.scProdDetails.data.GetProdDetails[0].review_comment -->
                         </div>
                         <div class="submitbtn text-center">
-                            <button class="submit" type="button" dmx-on:click="scRestReviewAdd.load({rest_id: content.scProdDetails.data.GetProdDetails[0].p_id, slider: slider.value, review: reviewtext.value})">{{content.scProdDetails.data.GetProdDetails[0].review_value?'Update':'Submit'}} Review</button>
+                            <button class="submit" type="button" dmx-on:click="scRestReviewAdd.load({rest_id: <%= $_PARAM.id %>, slider: slider.value, review: reviewtext.value})" dmx-bind:disabled="state.executing">{{content.scProdDetails.data.GetProdDetails[0].review_value?'Update':'Submit'}} Review <span class="spinner-border spinner-border-sm" role="status" dmx-show="state.executing"></span></button>
                         </div>
                     </div>
-                    <div class="testimonial-box-container" id="repeatReviewList" is="dmx-repeat" dmx-bind:repeat="scProdReviewList.data.GetReviews" key="prod_review_id">
-                        <div class="testimonial-box px-3 pt-3 pb-1">
+                    <div class="testimonial-box-container" id="repeatReviewList" is="dmx-repeat" dmx-bind:repeat="scRestReviewList.data.GetReviews" key="rest_review_id">
+                        <div class="testimonial-box px-3 pt-3 pb-1 mb-2">
                             <!--top------------------------->
                             <div class="box-top">
                                 <!--profile----->
@@ -406,23 +417,23 @@
                                     </div>
                                     <!--name-and-username-->
                                     <div class="name-user">
-                                        <strong>{{content.scProdReviewList.data.GetReviews[$index].fname}} {{content.scProdReviewList.data.GetReviews[$index].lname}}</strong>
-                                        <span>{{content.scProdReviewList.data.GetReviews[$index].created_on}}</span>
+                                        <strong>{{content.scRestReviewList.data.GetReviews[$index].fname}} {{content.scRestReviewList.data.GetReviews[$index].lname}}</strong>
+                                        <span>{{content.scRestReviewList.data.GetReviews[$index].created_on}}</span>
                                     </div>
                                 </div>
                                 <!--reviews------>
                                 <div class="reviews">
-                                    <i class="fa" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value>=1)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<1)"></i>
-                                    <i class="fa fa-star-o" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value>=2)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<2)"></i>
-                                    <i class="fa fa-star-o" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value>=3)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<3)"></i>
-                                    <i class="fa fa-star-o" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value>=4)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<4)"></i>
-                                    <i class="fa fa-star-o" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value==5)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<5)"></i>
+                                    <i class="fa" dmx-class:fa-star="(scRestReviewList.data.GetReviews[$index].review_value>=1)" dmx-class:fa-star-o="(scRestReviewList.data.GetReviews[$index].review_value<1)"></i>
+                                    <i class="fa fa-star-o" dmx-class:fa-star="(scRestReviewList.data.GetReviews[$index].review_value>=2)" dmx-class:fa-star-o="(scRestReviewList.data.GetReviews[$index].review_value<2)"></i>
+                                    <i class="fa fa-star-o" dmx-class:fa-star="(scRestReviewList.data.GetReviews[$index].review_value>=3)" dmx-class:fa-star-o="(scRestReviewList.data.GetReviews[$index].review_value<3)"></i>
+                                    <i class="fa fa-star-o" dmx-class:fa-star="(scRestReviewList.data.GetReviews[$index].review_value>=4)" dmx-class:fa-star-o="(scRestReviewList.data.GetReviews[$index].review_value<4)"></i>
+                                    <i class="fa fa-star-o" dmx-class:fa-star="(scRestReviewList.data.GetReviews[$index].review_value==5)" dmx-class:fa-star-o="(scRestReviewList.data.GetReviews[$index].review_value<5)"></i>
                                     <!--Empty star-->
                                 </div>
                             </div>
                             <!--Comments---------------------------------------->
                             <div class="client-comment">
-                                <p class="">{{content.scProdReviewList.data.GetReviews[$index].review_comment}}</p>
+                                <p class="">{{content.scRestReviewList.data.GetReviews[$index].review_comment}}</p>
                             </div>
                         </div>
                     </div>

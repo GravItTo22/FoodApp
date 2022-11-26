@@ -52,7 +52,9 @@
                             <img class="my-auto align-self-center mr-2 mr-md-4 pl-0 p-0 m-0" dmx-bind:src="'https://secure.gravitto.com'+content.dvOrderList.data[$index].product[0].shop_logo" />
                         </div>
                         <div class="col-md-3 col-8 mb-3 mb-md-0">
-                            <h6 class="font-weight-bold mb-0">{{content.dvOrderList.data[$index].product[0].shop_name}}</h6>
+                            <a dmx-bind:href="'/shop-details/'+content.dvOrderList.data[$index].product[0].rest_id+'/'+content.dvOrderList.data[$index].product[0].shop_name">
+                                <h6 class="font-weight-bold mb-0">{{content.dvOrderList.data[$index].product[0].shop_name}}</h6>
+                            </a>
                             <p class="m-0">{{content.dvOrderList.data[$index].product[0].shop_address}}</p>
                             <small class="text-black-50">39 mints</small>
                         </div>

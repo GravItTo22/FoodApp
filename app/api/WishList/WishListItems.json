@@ -51,15 +51,17 @@
               "options": {
                 "connection": "ClientApp",
                 "sql": {
-                  "query": "SELECT rw.id, rw.prod_id as p_id, rw.price_id, rw.user_id, rw.prod_unit_price, rw.wishlist_mrp, rw.prod_qty, rw.total_price, mp.prod_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_mark_id, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, mp.rest_id, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_wishlist rw \nLEFT JOIN m_product AS mp ON (mp.id = rc.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rc.user_id = @user OR rc.ip_address = @ip",
+                  "query": "SELECT rw.id, rw.prod_id as p_id, rw.price_id, rw.user_id, rw.prod_unit_price, rw.wishlist_mrp, rw.prod_qty, rw.total_price, mp.prod_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_mark_id, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, mp.rest_id, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_wishlist rw \nLEFT JOIN m_product AS mp ON (mp.id = rw.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rw.user_id = @user OR rw.ips = @ip",
                   "params": [
                     {
                       "name": "@user",
-                      "value": "{{identity}}"
+                      "value": "{{identity}}",
+                      "test": "82"
                     },
                     {
                       "name": "@ip",
-                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                      "value": "{{$_SERVER.REMOTE_ADDR}}",
+                      "test": "::1"
                     }
                   ]
                 }

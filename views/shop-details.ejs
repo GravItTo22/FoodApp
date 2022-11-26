@@ -2,6 +2,35 @@
 <meta name="ac:route" content="/shop-details/:id/:shop_name">
 <dmx-serverconnect id="scShopDetails" url="/api/Restaurant/ShopDetails" dmx-param:id="<%= $_PARAM.id %>"></dmx-serverconnect>
 <dmx-serverconnect id="scRestProd" url="/api/Products/RestProducts" dmx-param:rest_id="<%= $_PARAM.id %>" dmx-param:market="1"></dmx-serverconnect>
+<dmx-serverconnect id="scRestReviewList" url="/api/Review/GetARestReviews" dmx-param:rest_id="<%= $_PARAM.id %>"></dmx-serverconnect>
+<!-- <dmx-serverconnect id="scProdReviewAdd" url="/api/Review/AddReviewProd" dmx-param:p_id="<%= $_PARAM.id %>" dmx-param:slider="slider.value" dmx-param:review="reviewtext.value" noload dmx-on:success="notifMain.success(content.scProdReviewAdd.data.message)"></dmx-serverconnect> -->
+<style>
+    .smileySlider {
+        width: 300px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        padding: 0rem;
+    }
+
+
+    h1 {
+        text-align: center;
+    }
+
+    .sliderValue-wrapper {
+        width: 300px;
+        border: none;
+        background-color: #ECC377;
+        text-align: center;
+        font-size: small;
+    }
+
+    #emoji {
+        font-size: 5rem;
+        text-align: center;
+    }
+</style>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
     <div class="container">
@@ -344,8 +373,102 @@
                     <a href="#">3</a>
                     <a href="#"><i class="fa fa-long-arrow-right"></i></a>
                 </div>
+
+                <div class="col-12">
+                    <h6 class="ab mb-3">Restaurant Review</h6>
+                    <div class="card-body tab-content border-0" dmx-show="scDashboardInfo.data.varLogin">
+                        <div class="names">
+                            <div class="smileySlider">
+                                <div id="emoji">😊</div>
+                                <input id="slider" type="range" min="1" max="5" name="slider" dmx-bind:value="">
+                                <!-- content.scProdDetails.data.GetProdDetails[0].review_value -->
+                                <div class="sliderValue-wrapper" hidden>
+                                    <span id="sliderValue">3</span>/5
+                                </div>
+                                <h4>{{(slider.value==1)?'Very Poor':(slider.value==2)?'Poor':(slider.value==3)?'Good':(slider.value==4)?'Very Good':(slider.value==5)?'Excellent':''}}</h4>
+                            </div>
+                            <input type="text" class="reviewinp mx-3" name="reviewtext" placeholder="Write a review" dmx-bind:value="">
+                            <!-- content.scProdDetails.data.GetProdDetails[0].review_comment -->
+                        </div>
+                        <div class="submitbtn text-center">
+                            <button class="submit" type="button" dmx-on:click="scRestReviewAdd.load({rest_id: content.scProdDetails.data.GetProdDetails[0].p_id, slider: slider.value, review: reviewtext.value})">{{content.scProdDetails.data.GetProdDetails[0].review_value?'Update':'Submit'}} Review</button>
+                        </div>
+                    </div>
+                    <div class="testimonial-box-container" id="repeatReviewList" is="dmx-repeat" dmx-bind:repeat="scProdReviewList.data.GetReviews" key="prod_review_id">
+                        <div class="testimonial-box px-3 pt-3 pb-1">
+                            <!--top------------------------->
+                            <div class="box-top">
+                                <!--profile----->
+                                <div class="profile">
+                                    <!--img---->
+                                    <div class="profile-img">
+                                        <img src="https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png" />
+                                    </div>
+                                    <!--name-and-username-->
+                                    <div class="name-user">
+                                        <strong>{{content.scProdReviewList.data.GetReviews[$index].fname}} {{content.scProdReviewList.data.GetReviews[$index].lname}}</strong>
+                                        <span>{{content.scProdReviewList.data.GetReviews[$index].created_on}}</span>
+                                    </div>
+                                </div>
+                                <!--reviews------>
+                                <div class="reviews">
+                                    <i class="fa" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value>=1)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<1)"></i>
+                                    <i class="fa fa-star-o" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value>=2)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<2)"></i>
+                                    <i class="fa fa-star-o" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value>=3)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<3)"></i>
+                                    <i class="fa fa-star-o" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value>=4)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<4)"></i>
+                                    <i class="fa fa-star-o" dmx-class:fa-star="(scProdReviewList.data.GetReviews[$index].review_value==5)" dmx-class:fa-star-o="(scProdReviewList.data.GetReviews[$index].review_value<5)"></i>
+                                    <!--Empty star-->
+                                </div>
+                            </div>
+                            <!--Comments---------------------------------------->
+                            <div class="client-comment">
+                                <p class="">{{content.scProdReviewList.data.GetReviews[$index].review_comment}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </section>
 <!-- Product Section End -->
+<script>
+    const 
+  slider = document.getElementById('slider'), 
+  value = document.getElementById('sliderValue'),
+  emoji = document.getElementById('emoji');
+
+slider.addEventListener('input', ()=>{
+  
+  number = slider.value;
+  value.innerHTML = number;
+  console.log(number);
+  
+ 
+  if(number <= 1){
+    emojiVal = "😞";
+  }
+  if(number > 1 && number <= 2){
+    emojiVal = "😕";
+  }
+  if(number > 2 && number <= 3){
+    emojiVal = "😊";
+  }
+//   if(number > 45 && number <= 55){
+//     emojiVal = "🤔";
+//   }
+//   if(number > 55 && number <= 70){
+//     emojiVal = "🙂";
+//   }
+  if(number > 3 && number <= 4){
+    emojiVal = "😵‍💫";
+  }
+  if(number > 4){
+    emojiVal = "😍";
+  }
+
+  
+  emoji.innerHTML = emojiVal;
+})
+</script>

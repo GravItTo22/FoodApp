@@ -6,10 +6,10 @@
         "name": "id"
       }
     ],
-    "$_PARAM": [
+    "$_SESSION": [
       {
         "type": "text",
-        "name": "id"
+        "name": "sessionLogin"
       }
     ]
   },

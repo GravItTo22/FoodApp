@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "rest_id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": {
+            "name": "GetReviews",
+            "module": "dbupdater",
+            "action": "custom",
+            "options": {
+              "connection": "ClientApp",
+              "sql": {
+                "query": "select rrr.id as rest_review_id, rrr.review_value, rrr.review_comment, rrr.review_reply, rrr.created_on::text, rrr.updated_on::text, mc.fname, mc.lname \nfrom r_rest_review rrr \nleft join m_customer mc on (mc.id=rrr.user_id)\nwhere rrr.rest_id = @rest_id and rrr.status=1;",
+                "params": [
+                  {
+                    "name": "@rest_id",
+                    "value": "{{$_GET.rest_id}}",
+                    "test": "9"
+                  }
+                ]
+              }
+            },
+            "output": true,
+            "meta": [
+              {
+                "name": "prod_review_id",
+                "type": "number"
+              },
+              {
+                "name": "review_value",
+                "type": "number"
+              },
+              {
+                "name": "review_comment",
+                "type": "text"
+              },
+              {
+                "name": "created_on",
+                "type": "text"
+              },
+              {
+                "name": "updated_on",
+                "type": "text"
+              },
+              {
+                "name": "fname",
+                "type": "text"
+              },
+              {
+                "name": "lname",
+                "type": "text"
+              }
+            ],
+            "outputType": "array"
+          }
+        },
+        "catch": {
+          "steps": {
+            "name": "Resp",
+            "module": "core",
+            "action": "response",
+            "options": {
+              "status": 403,
+              "data": "Suspicious Activity"
+            },
+            "output": true
+          }
+        }
+      }
+    }
+  }
+}

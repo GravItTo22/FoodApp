@@ -1,0 +1,421 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "logintoken"
+      },
+      {
+        "type": "text",
+        "name": "promocode"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetVerify",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "t_user_log",
+                      "column": "user_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "t_user_log"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "t_user_log.login_token",
+                        "field": "t_user_log.login_token",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_GET.logintoken}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_token",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_token"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "t_user_log.login_from",
+                        "field": "t_user_log.login_from",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{'Android'}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_from",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_from"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_GET.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.logintoken}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{'Android'}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "user_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetVerify.user_id}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 200
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "GetCode",
+                      "module": "dbconnector",
+                      "action": "single",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [
+                            {
+                              "table": "applied_promo_code",
+                              "column": "id"
+                            },
+                            {
+                              "table": "applied_promo_code",
+                              "column": "promo_id"
+                            },
+                            {
+                              "table": "applied_promo_code",
+                              "column": "promo_code"
+                            },
+                            {
+                              "table": "applied_promo_code",
+                              "column": "applied_date"
+                            },
+                            {
+                              "table": "pc",
+                              "column": "promo_name"
+                            },
+                            {
+                              "table": "pc",
+                              "column": "amt_or_percent"
+                            },
+                            {
+                              "table": "pc",
+                              "column": "promo_amt"
+                            },
+                            {
+                              "table": "pc",
+                              "column": "promo_per"
+                            }
+                          ],
+                          "table": {
+                            "name": "applied_promo_code"
+                          },
+                          "primary": "id",
+                          "joins": [
+                            {
+                              "table": "promo_code",
+                              "column": "*",
+                              "alias": "pc",
+                              "type": "LEFT",
+                              "clauses": {
+                                "condition": "AND",
+                                "rules": [
+                                  {
+                                    "table": "pc",
+                                    "column": "id",
+                                    "operator": "equal",
+                                    "value": {
+                                      "table": "applied_promo_code",
+                                      "column": "promo_id"
+                                    },
+                                    "operation": "="
+                                  }
+                                ]
+                              },
+                              "primary": "id"
+                            }
+                          ],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "pc.start_date",
+                                "field": "pc.start_date",
+                                "type": "datetime",
+                                "operator": "less",
+                                "value": "{{NOW}}",
+                                "data": {
+                                  "table": "pc",
+                                  "column": "start_date",
+                                  "type": "datetime",
+                                  "columnObj": {
+                                    "type": "timestamp",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "start_date"
+                                  }
+                                },
+                                "operation": "<"
+                              },
+                              {
+                                "id": "pc.end_date",
+                                "field": "pc.end_date",
+                                "type": "datetime",
+                                "operator": "greater_or_equal",
+                                "value": "{{NOW}}",
+                                "data": {
+                                  "table": "pc",
+                                  "column": "end_date",
+                                  "type": "datetime",
+                                  "columnObj": {
+                                    "type": "timestamp",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "end_date"
+                                  }
+                                },
+                                "operation": ">="
+                              },
+                              {
+                                "id": "pc.status",
+                                "field": "pc.status",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{1}}",
+                                "data": {
+                                  "table": "pc",
+                                  "column": "status",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "integer",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "status"
+                                  }
+                                },
+                                "operation": "="
+                              },
+                              {
+                                "id": "applied_promo_code.promo_code",
+                                "field": "applied_promo_code.promo_code",
+                                "type": "string",
+                                "operator": "equal",
+                                "value": "{{$_GET.promocode}}",
+                                "data": {
+                                  "table": "applied_promo_code",
+                                  "column": "promo_code",
+                                  "type": "text",
+                                  "columnObj": {
+                                    "type": "string",
+                                    "maxLength": -5,
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "promo_code"
+                                  }
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "query": "SELECT applied_promo_code.id, applied_promo_code.promo_id, applied_promo_code.promo_code, applied_promo_code.applied_date, pc.promo_name, pc.amt_or_percent, pc.promo_amt, pc.promo_per\nFROM applied_promo_code\nLEFT JOIN promo_code AS pc ON (pc.id = applied_promo_code.promo_id)\nWHERE pc.start_date < :P1 /* {{NOW}} */ AND pc.end_date >= :P2 /* {{NOW}} */ AND pc.status = :P3 /* {{1}} */ AND applied_promo_code.promo_code = :P4 /* {{$_GET.promocode}} */",
+                          "params": [
+                            {
+                              "operator": "less",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{NOW}}"
+                            },
+                            {
+                              "operator": "greater_or_equal",
+                              "type": "expression",
+                              "name": ":P2",
+                              "value": "{{NOW}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P3",
+                              "value": "{{1}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P4",
+                              "value": "{{$_GET.promocode}}"
+                            }
+                          ]
+                        }
+                      },
+                      "output": true,
+                      "meta": [
+                        {
+                          "type": "number",
+                          "name": "id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "promo_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "promo_code"
+                        },
+                        {
+                          "type": "datetime",
+                          "name": "applied_date"
+                        },
+                        {
+                          "type": "text",
+                          "name": "promo_name"
+                        },
+                        {
+                          "type": "text",
+                          "name": "amt_or_percent"
+                        },
+                        {
+                          "type": "text",
+                          "name": "promo_amt"
+                        },
+                        {
+                          "type": "text",
+                          "name": "promo_per"
+                        }
+                      ],
+                      "outputType": "object"
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Unauthorized User"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

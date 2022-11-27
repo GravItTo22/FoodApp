@@ -93,7 +93,7 @@
         "module": "core",
         "action": "setvalue",
         "options": {
-          "value": "{{UUID}}"
+          "value": "{{UUID.md5(123456).substr(1, 10).uppercase()}}"
         },
         "meta": [],
         "outputType": "text"

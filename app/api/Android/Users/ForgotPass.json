@@ -39,6 +39,10 @@
                           {
                             "table": "m_customer",
                             "column": "mobile"
+                          },
+                          {
+                            "table": "m_customer",
+                            "column": "fname"
                           }
                         ],
                         "table": {
@@ -119,7 +123,7 @@
                           "conditional": null,
                           "valid": true
                         },
-                        "query": "SELECT id, mobile\nFROM m_customer\nWHERE mobile = :P1 /* {{$_POST.Mobile}} */ AND status = :P2 /* {{1}} */ AND user_type_id = :P3 /* {{6}} */",
+                        "query": "SELECT id, mobile, fname\nFROM m_customer\nWHERE mobile = :P1 /* {{$_POST.Mobile}} */ AND status = :P2 /* {{1}} */ AND user_type_id = :P3 /* {{6}} */",
                         "params": [
                           {
                             "operator": "equal",
@@ -151,6 +155,10 @@
                       {
                         "type": "text",
                         "name": "mobile"
+                      },
+                      {
+                        "type": "text",
+                        "name": "fname"
                       }
                     ],
                     "outputType": "object"
@@ -172,7 +180,7 @@
                             },
                             "meta": [],
                             "outputType": "text",
-                            "output": true
+                            "output": false
                           },
                           {
                             "name": "ValidUpto",
@@ -288,6 +296,24 @@
                             },
                             "meta": [],
                             "outputType": "text",
+                            "output": true
+                          },
+                          {
+                            "name": "apiSMS",
+                            "module": "api",
+                            "action": "send",
+                            "options": {
+                              "url": "http://43.252.88.230/index.php/smsapi/httpapi/",
+                              "params": {
+                                "secret": "{{'T2LWEAPBr3f5sra267Ds'}}",
+                                "sender": "{{'CLOWKP'}}",
+                                "tempid": "{{1007827874034725200}}",
+                                "receiver": "{{CheckUser.mobile}}",
+                                "route": "{{'TA'}}",
+                                "msgtype": "{{3}}",
+                                "sms": "{{'Dear '+CheckUser.fname+',\\\\r\\\\n'+OTP+' is your OTP Code\\\\r\\\\nFrom CLOWKPRO'}}"
+                              }
+                            },
                             "output": true
                           }
                         ]

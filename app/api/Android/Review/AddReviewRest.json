@@ -1,0 +1,823 @@
+{
+  "meta": {
+    "options": {
+      "linkedForm": "ReviewForm"
+    },
+    "$_GET": [
+      {
+        "type": "number",
+        "name": "rest_id"
+      },
+      {
+        "type": "number",
+        "name": "rest_id"
+      }
+    ],
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "rest_id"
+      },
+      {
+        "type": "text",
+        "name": "slider"
+      },
+      {
+        "type": "text",
+        "name": "review"
+      },
+      {
+        "type": "text",
+        "name": "logintoken"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetVerify",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "t_user_log",
+                      "column": "user_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "t_user_log"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "t_user_log.login_token",
+                        "field": "t_user_log.login_token",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_POST.logintoken}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_token",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_token"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "t_user_log.login_from",
+                        "field": "t_user_log.login_from",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{'Android'}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_from",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_from"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_POST.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */\nORDER BY id DESC",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_POST.logintoken}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{'Android'}}"
+                    }
+                  ],
+                  "orders": [
+                    {
+                      "table": "t_user_log",
+                      "column": "id",
+                      "direction": "DESC"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "user_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetVerify.user_id}}",
+                "then": {
+                  "steps": {
+                    "name": "",
+                    "module": "core",
+                    "action": "condition",
+                    "options": {
+                      "if": "{{$_POST.rest_id&&$_POST.slider}}",
+                      "then": {
+                        "steps": [
+                          {
+                            "name": "VerifyRest",
+                            "module": "dbconnector",
+                            "action": "single",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "SELECT",
+                                "columns": [
+                                  {
+                                    "table": "r_order_details",
+                                    "column": "id",
+                                    "alias": "CountId",
+                                    "aggregate": "COUNT"
+                                  }
+                                ],
+                                "table": {
+                                  "name": "r_order_details"
+                                },
+                                "primary": "id",
+                                "joins": [
+                                  {
+                                    "table": "m_product",
+                                    "column": "*",
+                                    "alias": "mp",
+                                    "type": "LEFT",
+                                    "clauses": {
+                                      "condition": "AND",
+                                      "rules": [
+                                        {
+                                          "table": "mp",
+                                          "column": "id",
+                                          "operator": "equal",
+                                          "value": {
+                                            "table": "r_order_details",
+                                            "column": "prod_id"
+                                          },
+                                          "operation": "="
+                                        }
+                                      ]
+                                    },
+                                    "primary": "id"
+                                  }
+                                ],
+                                "query": "SELECT COUNT(r_order_details.id) AS CountId\nFROM r_order_details\nLEFT JOIN m_product AS mp ON (mp.id = r_order_details.prod_id)\nWHERE r_order_details.user_id = :P1 /* {{GetVerify.user_id}} */ AND r_order_details.order_status BETWEEN 5 AND 6 AND mp.rest_id = :P2 /* {{$_POST.rest_id}} */",
+                                "params": [
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P1",
+                                    "value": "{{GetVerify.user_id}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P2",
+                                    "value": "{{$_POST.rest_id}}"
+                                  }
+                                ],
+                                "groupBy": [],
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "r_order_details.user_id",
+                                      "field": "r_order_details.user_id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{GetVerify.user_id}}",
+                                      "data": {
+                                        "table": "r_order_details",
+                                        "column": "user_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "reference",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "references": "id",
+                                          "inTable": "m_customer",
+                                          "referenceType": "integer",
+                                          "onUpdate": "NO ACTION",
+                                          "onDelete": "NO ACTION",
+                                          "name": "user_id"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "id": "r_order_details.order_status",
+                                      "field": "r_order_details.order_status",
+                                      "type": "double",
+                                      "operator": "between",
+                                      "value": [
+                                        5,
+                                        6
+                                      ],
+                                      "data": {
+                                        "table": "r_order_details",
+                                        "column": "order_status",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "integer",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "name": "order_status"
+                                        }
+                                      },
+                                      "operation": "BETWEEN"
+                                    },
+                                    {
+                                      "id": "mp.rest_id",
+                                      "field": "mp.rest_id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{$_POST.rest_id}}",
+                                      "data": {
+                                        "table": "mp",
+                                        "column": "rest_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "reference",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "references": "id",
+                                          "inTable": "m_restaurant",
+                                          "referenceType": "integer",
+                                          "onUpdate": "NO ACTION",
+                                          "onDelete": "NO ACTION",
+                                          "name": "rest_id"
+                                        }
+                                      },
+                                      "operation": "="
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                }
+                              }
+                            },
+                            "output": false,
+                            "meta": [
+                              {
+                                "type": "number",
+                                "name": "CountId"
+                              }
+                            ],
+                            "outputType": "object"
+                          },
+                          {
+                            "name": "",
+                            "module": "core",
+                            "action": "condition",
+                            "options": {
+                              "if": "{{(VerifyRest.CountId>=1)}}",
+                              "then": {
+                                "steps": [
+                                  {
+                                    "name": "ReviewCheck",
+                                    "module": "dbconnector",
+                                    "action": "single",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "type": "SELECT",
+                                        "columns": [
+                                          {
+                                            "table": "r_rest_review",
+                                            "column": "id"
+                                          },
+                                          {
+                                            "table": "r_rest_review",
+                                            "column": "review_value"
+                                          },
+                                          {
+                                            "table": "r_rest_review",
+                                            "column": "review_comment"
+                                          },
+                                          {
+                                            "table": "r_rest_review",
+                                            "column": "previous_comment"
+                                          },
+                                          {
+                                            "table": "r_rest_review",
+                                            "column": "review_reply"
+                                          }
+                                        ],
+                                        "table": {
+                                          "name": "r_rest_review"
+                                        },
+                                        "primary": "id",
+                                        "joins": [],
+                                        "query": "SELECT id, review_value, review_comment, previous_comment, review_reply\nFROM r_rest_review\nWHERE user_id = :P1 /* {{GetVerify.user_id}} */ AND rest_id = :P2 /* {{$_POST.rest_id}} */",
+                                        "params": [
+                                          {
+                                            "operator": "equal",
+                                            "type": "expression",
+                                            "name": ":P1",
+                                            "value": "{{GetVerify.user_id}}"
+                                          },
+                                          {
+                                            "operator": "equal",
+                                            "type": "expression",
+                                            "name": ":P2",
+                                            "value": "{{$_POST.rest_id}}"
+                                          }
+                                        ],
+                                        "wheres": {
+                                          "condition": "AND",
+                                          "rules": [
+                                            {
+                                              "id": "r_rest_review.user_id",
+                                              "field": "r_rest_review.user_id",
+                                              "type": "double",
+                                              "operator": "equal",
+                                              "value": "{{GetVerify.user_id}}",
+                                              "data": {
+                                                "table": "r_rest_review",
+                                                "column": "user_id",
+                                                "type": "number",
+                                                "columnObj": {
+                                                  "type": "integer",
+                                                  "primary": false,
+                                                  "unique": false,
+                                                  "nullable": true,
+                                                  "name": "user_id"
+                                                }
+                                              },
+                                              "operation": "="
+                                            },
+                                            {
+                                              "id": "r_rest_review.rest_id",
+                                              "field": "r_rest_review.rest_id",
+                                              "type": "double",
+                                              "operator": "equal",
+                                              "value": "{{$_POST.rest_id}}",
+                                              "data": {
+                                                "table": "r_rest_review",
+                                                "column": "rest_id",
+                                                "type": "number",
+                                                "columnObj": {
+                                                  "type": "integer",
+                                                  "primary": false,
+                                                  "unique": false,
+                                                  "nullable": true,
+                                                  "name": "rest_id"
+                                                }
+                                              },
+                                              "operation": "="
+                                            }
+                                          ],
+                                          "conditional": null,
+                                          "valid": true
+                                        }
+                                      }
+                                    },
+                                    "output": false,
+                                    "meta": [
+                                      {
+                                        "type": "number",
+                                        "name": "id"
+                                      },
+                                      {
+                                        "type": "number",
+                                        "name": "review_value"
+                                      },
+                                      {
+                                        "type": "text",
+                                        "name": "review_comment"
+                                      },
+                                      {
+                                        "type": "text",
+                                        "name": "previous_comment"
+                                      },
+                                      {
+                                        "type": "text",
+                                        "name": "review_reply"
+                                      }
+                                    ],
+                                    "outputType": "object"
+                                  },
+                                  {
+                                    "name": "",
+                                    "module": "core",
+                                    "action": "condition",
+                                    "options": {
+                                      "if": "{{ReviewCheck.id}}",
+                                      "then": {
+                                        "steps": [
+                                          {
+                                            "name": "status",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": 200
+                                            },
+                                            "meta": [],
+                                            "output": true,
+                                            "outputType": "text"
+                                          },
+                                          {
+                                            "name": "message",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "Your review for this restaurant is updated, soon it would be live."
+                                            },
+                                            "meta": [],
+                                            "output": true,
+                                            "outputType": "text"
+                                          },
+                                          {
+                                            "name": "RestReviewUp",
+                                            "module": "dbupdater",
+                                            "action": "update",
+                                            "options": {
+                                              "connection": "ClientApp",
+                                              "sql": {
+                                                "type": "update",
+                                                "values": [
+                                                  {
+                                                    "table": "r_rest_review",
+                                                    "column": "review_value",
+                                                    "type": "number",
+                                                    "value": "{{$_POST.slider}}"
+                                                  },
+                                                  {
+                                                    "table": "r_rest_review",
+                                                    "column": "review_comment",
+                                                    "type": "text",
+                                                    "value": "{{$_POST.review}}"
+                                                  },
+                                                  {
+                                                    "table": "r_rest_review",
+                                                    "column": "previous_comment",
+                                                    "type": "text",
+                                                    "value": "{{ReviewCheck.review_comment+' / '+ReviewCheck.previous_comment}}"
+                                                  },
+                                                  {
+                                                    "table": "r_rest_review",
+                                                    "column": "status",
+                                                    "type": "number",
+                                                    "value": "{{0}}"
+                                                  },
+                                                  {
+                                                    "table": "r_rest_review",
+                                                    "column": "updated_on",
+                                                    "type": "datetime",
+                                                    "value": "{{NOW}}"
+                                                  }
+                                                ],
+                                                "table": "r_rest_review",
+                                                "wheres": {
+                                                  "condition": "AND",
+                                                  "rules": [
+                                                    {
+                                                      "id": "id",
+                                                      "field": "id",
+                                                      "type": "double",
+                                                      "operator": "equal",
+                                                      "value": "{{ReviewCheck.id}}",
+                                                      "data": {
+                                                        "column": "id"
+                                                      },
+                                                      "operation": "="
+                                                    }
+                                                  ],
+                                                  "conditional": null,
+                                                  "valid": true
+                                                },
+                                                "returning": "id",
+                                                "query": "UPDATE r_rest_review\nSET review_value = :P1 /* {{$_POST.slider}} */, review_comment = :P2 /* {{$_POST.review}} */, previous_comment = :P3 /* {{ReviewCheck.review_comment+' / '+ReviewCheck.previous_comment}} */, status = :P4 /* {{0}} */, updated_on = :P5 /* {{NOW}} */\nWHERE id = :P6 /* {{ReviewCheck.id}} */",
+                                                "params": [
+                                                  {
+                                                    "name": ":P1",
+                                                    "type": "expression",
+                                                    "value": "{{$_POST.slider}}"
+                                                  },
+                                                  {
+                                                    "name": ":P2",
+                                                    "type": "expression",
+                                                    "value": "{{$_POST.review}}"
+                                                  },
+                                                  {
+                                                    "name": ":P3",
+                                                    "type": "expression",
+                                                    "value": "{{ReviewCheck.review_comment+' / '+ReviewCheck.previous_comment}}"
+                                                  },
+                                                  {
+                                                    "name": ":P4",
+                                                    "type": "expression",
+                                                    "value": "{{0}}"
+                                                  },
+                                                  {
+                                                    "name": ":P5",
+                                                    "type": "expression",
+                                                    "value": "{{NOW}}"
+                                                  },
+                                                  {
+                                                    "operator": "equal",
+                                                    "type": "expression",
+                                                    "name": ":P6",
+                                                    "value": "{{ReviewCheck.id}}"
+                                                  }
+                                                ]
+                                              }
+                                            },
+                                            "meta": [
+                                              {
+                                                "name": "affected",
+                                                "type": "number"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      "else": {
+                                        "steps": [
+                                          {
+                                            "name": "status",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": 200
+                                            },
+                                            "meta": [],
+                                            "output": true,
+                                            "outputType": "text"
+                                          },
+                                          {
+                                            "name": "message",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "Your review for this restaurant is submitted, soon it would be live."
+                                            },
+                                            "meta": [],
+                                            "output": true,
+                                            "outputType": "text"
+                                          },
+                                          {
+                                            "name": "RestReviewAdd",
+                                            "module": "dbupdater",
+                                            "action": "insert",
+                                            "options": {
+                                              "connection": "ClientApp",
+                                              "sql": {
+                                                "type": "insert",
+                                                "values": [
+                                                  {
+                                                    "table": "r_rest_review",
+                                                    "column": "user_id",
+                                                    "type": "number",
+                                                    "value": "{{GetVerify.user_id}}"
+                                                  },
+                                                  {
+                                                    "table": "r_rest_review",
+                                                    "column": "rest_id",
+                                                    "type": "number",
+                                                    "value": "{{$_POST.rest_id}}"
+                                                  },
+                                                  {
+                                                    "table": "r_rest_review",
+                                                    "column": "review_value",
+                                                    "type": "number",
+                                                    "value": "{{$_POST.slider}}"
+                                                  },
+                                                  {
+                                                    "table": "r_rest_review",
+                                                    "column": "review_comment",
+                                                    "type": "text",
+                                                    "value": "{{$_POST.review}}"
+                                                  },
+                                                  {
+                                                    "table": "r_rest_review",
+                                                    "column": "status",
+                                                    "type": "number",
+                                                    "value": "{{0}}"
+                                                  },
+                                                  {
+                                                    "table": "r_rest_review",
+                                                    "column": "created_on",
+                                                    "type": "datetime",
+                                                    "value": "{{NOW}}"
+                                                  }
+                                                ],
+                                                "table": "r_rest_review",
+                                                "returning": "id",
+                                                "query": "INSERT INTO r_rest_review\n(user_id, rest_id, review_value, review_comment, status, created_on) VALUES (:P1 /* {{GetVerify.user_id}} */, :P2 /* {{$_POST.rest_id}} */, :P3 /* {{$_POST.slider}} */, :P4 /* {{$_POST.review}} */, :P5 /* {{0}} */, :P6 /* {{NOW}} */)",
+                                                "params": [
+                                                  {
+                                                    "name": ":P1",
+                                                    "type": "expression",
+                                                    "value": "{{GetVerify.user_id}}"
+                                                  },
+                                                  {
+                                                    "name": ":P2",
+                                                    "type": "expression",
+                                                    "value": "{{$_POST.rest_id}}"
+                                                  },
+                                                  {
+                                                    "name": ":P3",
+                                                    "type": "expression",
+                                                    "value": "{{$_POST.slider}}"
+                                                  },
+                                                  {
+                                                    "name": ":P4",
+                                                    "type": "expression",
+                                                    "value": "{{$_POST.review}}"
+                                                  },
+                                                  {
+                                                    "name": ":P5",
+                                                    "type": "expression",
+                                                    "value": "{{0}}"
+                                                  },
+                                                  {
+                                                    "name": ":P6",
+                                                    "type": "expression",
+                                                    "value": "{{NOW}}"
+                                                  }
+                                                ]
+                                              }
+                                            },
+                                            "meta": [
+                                              {
+                                                "name": "identity",
+                                                "type": "text"
+                                              },
+                                              {
+                                                "name": "affected",
+                                                "type": "number"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "outputType": "boolean"
+                                  }
+                                ]
+                              },
+                              "else": {
+                                "steps": [
+                                  {
+                                    "name": "status",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": 400
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  },
+                                  {
+                                    "name": "message",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": "Not eligible to review the Restaurant"
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  }
+                                ]
+                              }
+                            },
+                            "outputType": "boolean"
+                          }
+                        ]
+                      },
+                      "else": {
+                        "steps": [
+                          {
+                            "name": "status",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": 400
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          },
+                          {
+                            "name": "message",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": "All fields are mandatary"
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          }
+                        ]
+                      }
+                    },
+                    "outputType": "boolean"
+                  }
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Unauthorized User"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

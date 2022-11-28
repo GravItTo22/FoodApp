@@ -1,0 +1,248 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "p_id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "Review",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "r_prod_review",
+                      "column": "review_value",
+                      "alias": "avg_prod_review",
+                      "aggregate": "AVG"
+                    }
+                  ],
+                  "table": {
+                    "name": "r_prod_review"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "groupBy": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "r_prod_review.prod_id",
+                        "field": "r_prod_review.prod_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{$_GET.p_id}}",
+                        "data": {
+                          "table": "r_prod_review",
+                          "column": "prod_id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "integer",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "prod_id"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "r_prod_review.status",
+                        "field": "r_prod_review.status",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{1}}",
+                        "data": {
+                          "table": "r_prod_review",
+                          "column": "status",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "integer",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "status"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT AVG(review_value) AS avg_prod_review\nFROM r_prod_review\nWHERE prod_id = :P1 /* {{$_GET.p_id}} */ AND status = :P2 /* {{1}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.p_id}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{1}}"
+                    }
+                  ]
+                }
+              },
+              "output": true,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "avg_prod_review"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{Review.avg_prod_review}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 200
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "GetReviews",
+                      "module": "dbupdater",
+                      "action": "custom",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "query": "select rpr.id as prod_review_id, rpr.review_value, rpr.review_comment, rpr.review_reply, rpr.created_on::text, rpr.updated_on::text, mc.fname, mc.lname \nfrom r_prod_review rpr \nleft join m_customer mc on (mc.id=rpr.user_id)\nwhere rpr.prod_id = @pid and rpr.status=1;",
+                          "params": [
+                            {
+                              "name": "@pid",
+                              "value": "{{$_GET.p_id}}",
+                              "test": "22"
+                            }
+                          ]
+                        }
+                      },
+                      "output": true,
+                      "meta": [
+                        {
+                          "name": "prod_review_id",
+                          "type": "number"
+                        },
+                        {
+                          "name": "review_value",
+                          "type": "number"
+                        },
+                        {
+                          "name": "review_comment",
+                          "type": "text"
+                        },
+                        {
+                          "name": "review_reply",
+                          "type": "text"
+                        },
+                        {
+                          "name": "created_on",
+                          "type": "text"
+                        },
+                        {
+                          "name": "updated_on",
+                          "type": "text"
+                        },
+                        {
+                          "name": "fname",
+                          "type": "text"
+                        },
+                        {
+                          "name": "lname",
+                          "type": "text"
+                        }
+                      ],
+                      "outputType": "array"
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "No Review Found"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 200
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,301 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "logintoken"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetVerify",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "t_user_log",
+                      "column": "user_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "t_user_log"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "t_user_log.login_token",
+                        "field": "t_user_log.login_token",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_GET.logintoken}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_token",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_token"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "t_user_log.login_from",
+                        "field": "t_user_log.login_from",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{'Android'}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_from",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_from"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_GET.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.logintoken}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{'Android'}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "user_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetVerify.user_id}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 200
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "OrderList",
+                      "module": "dbupdater",
+                      "action": "custom",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "query": "select ro.id, ro.order_id, ro.total_amt, ro.discount, ro.delevery_amt, ro.user_name, ro.address, ro.mobile, ro.pin, ro.dist, ro.state, \nro.wallet_bal, ro.created_on, ro.updated_on, ro.order_id, ro.status, \n\t(select array_to_json(array_agg(row_to_json(q))) from (\n\t\tselect rod.prod_id as p_id, mp.prod_name_en as prod_name, mr.id as rest_id, mr.shop_name_en as shop_name, mr.shop_logo, mr.address as shop_address\n\t\tfrom r_order_details rod \n\t\tleft join m_product mp on (mp.id=rod.prod_id)\n\t\tleft join m_restaurant mr on (mr.id=mp.rest_id)\n\t\twhere rod.order_table_id=ro.id\n\t\t) q) as product \nfrom r_order ro \nwhere ro.user_id = @user_id;",
+                          "params": [
+                            {
+                              "name": "@user_id",
+                              "value": "{{GetVerify.user_id}}",
+                              "test": "82"
+                            }
+                          ]
+                        }
+                      },
+                      "output": true,
+                      "meta": [
+                        {
+                          "name": "id",
+                          "type": "number"
+                        },
+                        {
+                          "name": "order_id",
+                          "type": "text"
+                        },
+                        {
+                          "name": "total_amt",
+                          "type": "text"
+                        },
+                        {
+                          "name": "discount",
+                          "type": "text"
+                        },
+                        {
+                          "name": "delevery_amt",
+                          "type": "text"
+                        },
+                        {
+                          "name": "user_name",
+                          "type": "text"
+                        },
+                        {
+                          "name": "address",
+                          "type": "text"
+                        },
+                        {
+                          "name": "mobile",
+                          "type": "text"
+                        },
+                        {
+                          "name": "pin",
+                          "type": "text"
+                        },
+                        {
+                          "name": "dist",
+                          "type": "text"
+                        },
+                        {
+                          "name": "state",
+                          "type": "text"
+                        },
+                        {
+                          "name": "wallet_bal",
+                          "type": "text"
+                        },
+                        {
+                          "name": "created_on",
+                          "type": "text"
+                        },
+                        {
+                          "name": "updated_on",
+                          "type": "text"
+                        },
+                        {
+                          "name": "status",
+                          "type": "number"
+                        },
+                        {
+                          "name": "product",
+                          "type": "array",
+                          "sub": [
+                            {
+                              "name": "p_id",
+                              "type": "number"
+                            },
+                            {
+                              "name": "prod_name",
+                              "type": "text"
+                            },
+                            {
+                              "name": "rest_id",
+                              "type": "number"
+                            },
+                            {
+                              "name": "shop_name",
+                              "type": "text"
+                            },
+                            {
+                              "name": "shop_address",
+                              "type": "text"
+                            }
+                          ]
+                        }
+                      ],
+                      "outputType": "array"
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Unauthorized User"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

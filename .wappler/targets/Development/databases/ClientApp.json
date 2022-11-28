@@ -2647,6 +2647,15 @@
               "unique": false,
               "nullable": true
             }
+          },
+          "review_reply": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
           }
         }
       },

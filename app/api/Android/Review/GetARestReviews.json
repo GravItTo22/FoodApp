@@ -1,0 +1,248 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "rest_id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "Review",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "r_rest_review",
+                      "column": "review_value",
+                      "alias": "avg_rest_review",
+                      "aggregate": "AVG"
+                    }
+                  ],
+                  "table": {
+                    "name": "r_rest_review"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "groupBy": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "r_rest_review.rest_id",
+                        "field": "r_rest_review.rest_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{$_GET.rest_id}}",
+                        "data": {
+                          "table": "r_rest_review",
+                          "column": "rest_id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "integer",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "rest_id"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "r_rest_review.status",
+                        "field": "r_rest_review.status",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{1}}",
+                        "data": {
+                          "table": "r_rest_review",
+                          "column": "status",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "integer",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "status"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT AVG(review_value) AS avg_rest_review\nFROM r_rest_review\nWHERE rest_id = :P1 /* {{$_GET.rest_id}} */ AND status = :P2 /* {{1}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.rest_id}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{1}}"
+                    }
+                  ]
+                }
+              },
+              "output": true,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "avg_rest_review"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{Review.avg_rest_review}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 200
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "GetReviews",
+                      "module": "dbupdater",
+                      "action": "custom",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "query": "select rrr.id as rest_review_id, rrr.review_value, rrr.review_comment, rrr.review_reply, rrr.created_on::text, rrr.updated_on::text, mc.fname, mc.lname \nfrom r_rest_review rrr \nleft join m_customer mc on (mc.id=rrr.user_id)\nwhere rrr.rest_id = @rest_id and rrr.status=1;",
+                          "params": [
+                            {
+                              "name": "@rest_id",
+                              "value": "{{$_GET.rest_id}}",
+                              "test": "9"
+                            }
+                          ]
+                        }
+                      },
+                      "output": true,
+                      "meta": [
+                        {
+                          "name": "rest_review_id",
+                          "type": "number"
+                        },
+                        {
+                          "name": "review_value",
+                          "type": "number"
+                        },
+                        {
+                          "name": "review_comment",
+                          "type": "text"
+                        },
+                        {
+                          "name": "review_reply",
+                          "type": "text"
+                        },
+                        {
+                          "name": "created_on",
+                          "type": "text"
+                        },
+                        {
+                          "name": "updated_on",
+                          "type": "text"
+                        },
+                        {
+                          "name": "fname",
+                          "type": "text"
+                        },
+                        {
+                          "name": "lname",
+                          "type": "text"
+                        }
+                      ],
+                      "outputType": "array"
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "No Reviews Yet"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

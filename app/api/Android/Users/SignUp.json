@@ -611,6 +611,24 @@
                                     "meta": [],
                                     "outputType": "text",
                                     "output": true
+                                  },
+                                  {
+                                    "name": "SMSapi",
+                                    "module": "api",
+                                    "action": "send",
+                                    "options": {
+                                      "url": "http://43.252.88.230/index.php/smsapi/httpapi/",
+                                      "params": {
+                                        "secret": "{{'T2LWEAPBr3f5sra267Ds'}}",
+                                        "sender": "{{'CLOWKP'}}",
+                                        "tempid": "{{1007077113824347500}}",
+                                        "receiver": "{{$_POST.Mobile}}",
+                                        "route": "{{'TA'}}",
+                                        "msgtype": "{{3}}",
+                                        "sms": "{{'Dear '+$_POST.FName+', Your Reg. is successful and auto generated password is '+Password+'\\\\r\\\\nFrom CLOWKPRO'}}"
+                                      }
+                                    },
+                                    "output": true
                                   }
                                 ]
                               },

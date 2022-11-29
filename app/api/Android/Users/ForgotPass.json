@@ -303,16 +303,7 @@
                             "module": "api",
                             "action": "send",
                             "options": {
-                              "url": "http://43.252.88.230/index.php/smsapi/httpapi/",
-                              "params": {
-                                "secret": "{{'T2LWEAPBr3f5sra267Ds'}}",
-                                "sender": "{{'CLOWKP'}}",
-                                "tempid": "{{1007827874034725200}}",
-                                "receiver": "{{CheckUser.mobile}}",
-                                "route": "{{'TA'}}",
-                                "msgtype": "{{3}}",
-                                "sms": "{{'Dear '+CheckUser.fname+',\\\\r\\\\n'+OTP+' is your OTP Code\\\\r\\\\nFrom CLOWKPRO'}}"
-                              }
+                              "url": "{{'http://43.252.88.230/index.php/smsapi/httpapi/?secret=T2LWEAPBr3f5sra267Ds&sender=CLOWKP&tempid=1007827874034725193&receiver='+CheckUser.mobile+'&route=TA&msgtype=3&sms=Dear '+CheckUser.fname+', '+OTP+' is your OTP Code From CLOWKPRO'}}"
                             },
                             "output": true
                           }

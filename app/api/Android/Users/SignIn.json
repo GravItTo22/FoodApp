@@ -137,8 +137,11 @@
                         "id": "m_customer.user_type_id",
                         "field": "m_customer.user_type_id",
                         "type": "double",
-                        "operator": "equal",
-                        "value": "{{6}}",
+                        "operator": "between",
+                        "value": [
+                          4,
+                          6
+                        ],
                         "data": {
                           "table": "m_customer",
                           "column": "user_type_id",
@@ -156,13 +159,13 @@
                             "name": "user_type_id"
                           }
                         },
-                        "operation": "="
+                        "operation": "BETWEEN"
                       }
                     ],
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT salt, user_type_id\nFROM m_customer\nWHERE mobile = :P1 /* {{$_POST.Mobile}} */ AND status = 1 AND blank1 = :P2 /* {{$_POST.Password}} */ AND user_type_id = :P3 /* {{6}} */",
+                  "query": "SELECT salt, user_type_id\nFROM m_customer\nWHERE mobile = :P1 /* {{$_POST.Mobile}} */ AND status = 1 AND blank1 = :P2 /* {{$_POST.Password}} */ AND user_type_id BETWEEN 4 AND 6",
                   "params": [
                     {
                       "operator": "equal",
@@ -175,12 +178,6 @@
                       "type": "expression",
                       "name": ":P2",
                       "value": "{{$_POST.Password}}"
-                    },
-                    {
-                      "operator": "equal",
-                      "type": "expression",
-                      "name": ":P3",
-                      "value": "{{6}}"
                     }
                   ]
                 }
@@ -302,6 +299,10 @@
                             {
                               "table": "m_customer",
                               "column": "wallet_bal"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "user_type_id"
                             }
                           ],
                           "table": {
@@ -337,8 +338,11 @@
                                 "id": "m_customer.user_type_id",
                                 "field": "m_customer.user_type_id",
                                 "type": "double",
-                                "operator": "equal",
-                                "value": "{{6}}",
+                                "operator": "between",
+                                "value": [
+                                  "{{4}}",
+                                  "{{6}}"
+                                ],
                                 "data": {
                                   "table": "m_customer",
                                   "column": "user_type_id",
@@ -356,13 +360,13 @@
                                     "name": "user_type_id"
                                   }
                                 },
-                                "operation": "="
+                                "operation": "BETWEEN"
                               }
                             ],
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT fname, lname, mobile, watsapp_no, customer_email, address, pin, ps, district, state, wallet_bal\nFROM m_customer\nWHERE id = :P1 /* {{identity}} */ AND user_type_id = :P2 /* {{6}} */",
+                          "query": "SELECT fname, lname, mobile, watsapp_no, customer_email, address, pin, ps, district, state, wallet_bal, user_type_id\nFROM m_customer\nWHERE id = :P1 /* {{identity}} */ AND user_type_id BETWEEN :P2 /* {{4}} */ AND :P3 /* {{6}} */",
                           "params": [
                             {
                               "operator": "equal",
@@ -371,9 +375,15 @@
                               "value": "{{identity}}"
                             },
                             {
-                              "operator": "equal",
+                              "operator": "between",
                               "type": "expression",
                               "name": ":P2",
+                              "value": "{{4}}"
+                            },
+                            {
+                              "operator": "between",
+                              "type": "expression",
+                              "name": ":P3",
                               "value": "{{6}}"
                             }
                           ]
@@ -424,6 +434,10 @@
                         {
                           "type": "text",
                           "name": "wallet_bal"
+                        },
+                        {
+                          "type": "number",
+                          "name": "user_type_id"
                         }
                       ],
                       "outputType": "object"

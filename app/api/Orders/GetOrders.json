@@ -35,7 +35,7 @@
           "options": {
             "connection": "ClientApp",
             "sql": {
-              "query": "select ro.id, ro.order_id, ro.total_amt, ro.discount, ro.delevery_amt, ro.user_name, ro.address, ro.mobile, ro.pin, ro.dist, ro.state, \nro.wallet_bal, ro.created_on, ro.updated_on, ro.order_id, ro.status, \n\t(select array_to_json(array_agg(row_to_json(q))) from (\n\t\tselect rod.prod_id as p_id, mp.prod_name_en as prod_name, mr.id as rest_id, mr.shop_name_en as shop_name, mr.shop_logo, mr.address as shop_address\n\t\tfrom r_order_details rod \n\t\tleft join m_product mp on (mp.id=rod.prod_id)\n\t\tleft join m_restaurant mr on (mr.id=mp.rest_id)\n\t\twhere rod.order_table_id=ro.id\n\t\t) q) as product \nfrom r_order ro \nwhere ro.user_id = @user_id;",
+              "query": "select ro.id, ro.order_id, ro.total_amt, ro.discount, ro.delevery_amt, ro.user_name, ro.address, ro.mobile, ro.pin, ro.dist, ro.state, \nro.wallet_bal, ro.created_on, ro.updated_on, ro.order_id, ro.status, \n\t(select array_to_json(array_agg(row_to_json(q))) from (\n\t\tselect rod.prod_id as p_id, mp.prod_name_en as prod_name, mr.id as rest_id, mr.shop_name_en as shop_name, mr.shop_logo, mr.address as shop_address\n\t\tfrom r_order_details rod \n\t\tleft join m_product mp on (mp.id=rod.prod_id)\n\t\tleft join m_restaurant mr on (mr.id=mp.rest_id)\n\t\twhere rod.order_table_id=ro.id\n\t\t) q) as product \nfrom r_order ro \nwhere ro.user_id = @user_id order by ro.id desc;",
               "params": [
                 {
                   "name": "@user_id",

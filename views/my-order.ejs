@@ -59,7 +59,7 @@
                             <small class="text-black-50">39 mints</small>
                         </div>
                         <div class="col-md-3 col-4">
-                            <a dmx-bind:href="'/order-details/'+content.dvOrderList.data[$index].product[0].rest_id" class="text-primary"><small>
+                            <a dmx-bind:href="'/order-details/'+content.dvOrderList.data[$index].product[0].id" class="text-primary"><small>
                                     View Order
                                 </small></a><br /><small class="text-black-50">Items: {{content.dvOrderList.data[$index].product.length}}</small><br />
                             <small class="text-black-50">Total: <i class="fa fa-rupee"></i>{{content.dvOrderList.data[$index].total_amt.toNumber()+content.dvOrderList.data[$index].delevery_amt.toNumber()-content.dvOrderList.data[$index].discount.toNumber()}}</small>

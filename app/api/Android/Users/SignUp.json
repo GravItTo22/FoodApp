@@ -618,7 +618,7 @@
                                     "action": "send",
                                     "options": {
                                       "url": "http://43.252.88.230/index.php/smsapi/httpapi/",
-                                      "params": {
+                                      "data": {
                                         "secret": "{{'T2LWEAPBr3f5sra267Ds'}}",
                                         "sender": "{{'CLOWKP'}}",
                                         "tempid": "{{1007077113824347500}}",

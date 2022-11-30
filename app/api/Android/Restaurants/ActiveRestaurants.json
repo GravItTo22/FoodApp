@@ -269,7 +269,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_en as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY random() LIMIT @limit;",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_en as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl, \ncoalesce((select avg(rrr.review_value) from r_rest_review rrr where rrr.rest_id = mr.id and rrr.review_value is not null),0) as avg_review\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY mr.id desc LIMIT @limit;",
                                               "params": [
                                                 {
                                                   "name": "@limit",
@@ -314,6 +314,10 @@
                                             {
                                               "name": "count_rest_wl",
                                               "type": "number"
+                                            },
+                                            {
+                                              "name": "avg_review",
+                                              "type": "text"
                                             }
                                           ],
                                           "outputType": "array"
@@ -336,7 +340,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_bn as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY random() LIMIT @limit;",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_bn as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl, \ncoalesce((select avg(rrr.review_value) from r_rest_review rrr where rrr.rest_id = mr.id and rrr.review_value is not null),0) as avg_review\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY mr.id desc LIMIT @limit;",
                                               "params": [
                                                 {
                                                   "name": "@limit",
@@ -381,6 +385,10 @@
                                             {
                                               "name": "count_rest_wl",
                                               "type": "number"
+                                            },
+                                            {
+                                              "name": "avg_review",
+                                              "type": "text"
                                             }
                                           ],
                                           "outputType": "array"
@@ -403,7 +411,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_hin as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY random() LIMIT @limit;",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_hin as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl, \ncoalesce((select avg(rrr.review_value) from r_rest_review rrr where rrr.rest_id = mr.id and rrr.review_value is not null),0) as avg_review\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY mr.id desc LIMIT @limit;",
                                               "params": [
                                                 {
                                                   "name": "@limit",
@@ -448,6 +456,10 @@
                                             {
                                               "name": "count_rest_wl",
                                               "type": "number"
+                                            },
+                                            {
+                                              "name": "avg_review",
+                                              "type": "text"
                                             }
                                           ],
                                           "outputType": "array"
@@ -474,7 +486,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_en as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY random() ;",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_en as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl, \ncoalesce((select avg(rrr.review_value) from r_rest_review rrr where rrr.rest_id = mr.id and rrr.review_value is not null),0) as avg_review\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY mr.id desc;",
                                               "params": [
                                                 {
                                                   "name": "@market",
@@ -514,6 +526,10 @@
                                             {
                                               "name": "count_rest_wl",
                                               "type": "number"
+                                            },
+                                            {
+                                              "name": "avg_review",
+                                              "type": "text"
                                             }
                                           ],
                                           "outputType": "array"
@@ -536,7 +552,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_hin as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY random() ;",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_hin as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl, \ncoalesce((select avg(rrr.review_value) from r_rest_review rrr where rrr.rest_id = mr.id and rrr.review_value is not null),0) as avg_review\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY mr.id desc;",
                                               "params": [
                                                 {
                                                   "name": "@market",
@@ -576,6 +592,10 @@
                                             {
                                               "name": "count_rest_wl",
                                               "type": "number"
+                                            },
+                                            {
+                                              "name": "avg_review",
+                                              "type": "text"
                                             }
                                           ],
                                           "outputType": "array"
@@ -598,7 +618,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_bn as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY random() ;",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_bn as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl, \ncoalesce((select avg(rrr.review_value) from r_rest_review rrr where rrr.rest_id = mr.id and rrr.review_value is not null),0) as avg_review\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY mr.id desc",
                                               "params": [
                                                 {
                                                   "name": "@market",
@@ -638,6 +658,10 @@
                                             {
                                               "name": "count_rest_wl",
                                               "type": "number"
+                                            },
+                                            {
+                                              "name": "avg_review",
+                                              "type": "text"
                                             }
                                           ],
                                           "outputType": "array"
@@ -675,7 +699,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_en as shop_name, mr.shop_logo, mr.address,\n coalesce((select rwr.rest_id where rwr.rest_id is not null),0) as count_rest_wl\nFROM m_restaurant mr \nleft join r_wishlist_rest rwr on (mr.id=rwr.rest_id and rwr.user_id = @user_id) \nWHERE market_id = @market ORDER BY random() LIMIT @limit;",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_en as shop_name, mr.shop_logo, mr.address, \ncoalesce((select avg(rrr.review_value) from r_rest_review rrr where rrr.rest_id = mr.id and rrr.review_value is not null),0) as avg_review\nFROM m_restaurant mr  \nWHERE market_id = @market ORDER BY mr.id desc LIMIT @limit;",
                                               "params": [
                                                 {
                                                   "name": "@limit",
@@ -686,11 +710,6 @@
                                                   "name": "@market",
                                                   "value": "{{$_GET.market}}",
                                                   "test": "1"
-                                                },
-                                                {
-                                                  "name": "@user_id",
-                                                  "value": "{{80}}",
-                                                  "test": "82"
                                                 }
                                               ]
                                             }
@@ -718,8 +737,8 @@
                                               "type": "text"
                                             },
                                             {
-                                              "name": "count_rest_wl",
-                                              "type": "number"
+                                              "name": "avg_review",
+                                              "type": "text"
                                             }
                                           ],
                                           "outputType": "array"
@@ -742,7 +761,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT id as rest_id, gen_shop_id, shop_name_bn as shop_name, shop_logo, address FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_bn as shop_name, mr.shop_logo, mr.address, \ncoalesce((select avg(rrr.review_value) from r_rest_review rrr where rrr.rest_id = mr.id and rrr.review_value is not null),0) as avg_review\nFROM m_restaurant mr  \nWHERE market_id = @market ORDER BY mr.id desc LIMIT @limit;",
                                               "params": [
                                                 {
                                                   "name": "@limit",
@@ -777,6 +796,10 @@
                                             },
                                             {
                                               "name": "address",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "avg_review",
                                               "type": "text"
                                             }
                                           ],
@@ -800,7 +823,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT id as rest_id, gen_shop_id, shop_name_hin as shop_name, shop_logo, address FROM m_restaurant mr WHERE market_id = @market ORDER BY random() LIMIT @limit",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_hin as shop_name, mr.shop_logo, mr.address, \ncoalesce((select avg(rrr.review_value) from r_rest_review rrr where rrr.rest_id = mr.id and rrr.review_value is not null),0) as avg_review\nFROM m_restaurant mr  \nWHERE market_id = @market ORDER BY mr.id desc LIMIT @limit;",
                                               "params": [
                                                 {
                                                   "name": "@limit",
@@ -835,6 +858,10 @@
                                             },
                                             {
                                               "name": "address",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "avg_review",
                                               "type": "text"
                                             }
                                           ],
@@ -862,7 +889,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT id as rest_id, gen_shop_id, shop_name_en as shop_name, shop_logo, address FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_en as shop_name, mr.shop_logo, mr.address, \ncoalesce((select avg(rrr.review_value) from r_rest_review rrr where rrr.rest_id = mr.id and rrr.review_value is not null),0) as avg_review\nFROM m_restaurant mr  \nWHERE market_id = @market ORDER BY mr.id desc;",
                                               "params": [
                                                 {
                                                   "name": "@market",
@@ -892,6 +919,10 @@
                                             },
                                             {
                                               "name": "address",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "avg_review",
                                               "type": "text"
                                             }
                                           ],
@@ -915,7 +946,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT id as rest_id, gen_shop_id, shop_name_hin as shop_name, shop_logo, address FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_hin as shop_name, mr.shop_logo, mr.address, \ncoalesce((select avg(rrr.review_value) from r_rest_review rrr where rrr.rest_id = mr.id and rrr.review_value is not null),0) as avg_review\nFROM m_restaurant mr  \nWHERE market_id = @market ORDER BY mr.id desc;",
                                               "params": [
                                                 {
                                                   "name": "@market",
@@ -945,6 +976,10 @@
                                             },
                                             {
                                               "name": "address",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "avg_review",
                                               "type": "text"
                                             }
                                           ],
@@ -968,7 +1003,7 @@
                                           "options": {
                                             "connection": "ClientApp",
                                             "sql": {
-                                              "query": "SELECT id as rest_id, gen_shop_id, shop_name_bn as shop_name, shop_logo, address FROM m_restaurant mr WHERE market_id = @market ORDER BY random()",
+                                              "query": "SELECT mr.id as rest_id, mr.gen_shop_id, mr.shop_name_en as shop_name, mr.shop_logo, mr.address, \ncoalesce((select avg(rrr.review_value) from r_rest_review rrr where rrr.rest_id = mr.id and rrr.review_value is not null),0) as avg_review\nFROM m_restaurant mr  \nWHERE market_id = @market ORDER BY mr.id desc;",
                                               "params": [
                                                 {
                                                   "name": "@market",
@@ -998,6 +1033,10 @@
                                             },
                                             {
                                               "name": "address",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "avg_review",
                                               "type": "text"
                                             }
                                           ],

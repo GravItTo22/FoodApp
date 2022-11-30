@@ -300,12 +300,12 @@
                                                 "options": {
                                                   "connection": "ClientApp",
                                                   "sql": {
-                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, \nmp.prod_desc_en as prod_description, mp.prod_img1, mr.shop_name_en as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id from r_wishlist rw where rw.prod_id is not null and mp.id=rw.prod_id and rw.user_id=@user_id),0) as count_wl,\ncoalesce((select rc.prod_id from r_cart rc where rc.prod_id is not null and mp.id=rc.prod_id and rc.user_id=@user_id),0) as count_cart\nfrom r_order_details rod \nJOIN m_product mp ON rod.prod_id = mp.id \nJOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status\nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_en \nORDER BY COUNT(rod.prod_id) DESC LIMIT @limit;",
+                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, \nmp.prod_desc_en as prod_description, mp.prod_img1, mr.shop_name_en as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id from r_wishlist rw where rw.prod_id is not null and mp.id=rw.prod_id and rw.user_id=@user_id),0) as count_wl,\ncoalesce((select rc.prod_id from r_cart rc where rc.prod_id is not null and mp.id=rc.prod_id and rc.user_id=@user_id),0) as count_cart, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review \nfrom r_order_details rod \nJOIN m_product mp ON rod.prod_id = mp.id \nJOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status\nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_en \nORDER BY COUNT(rod.prod_id) DESC LIMIT @limit;",
                                                     "params": [
                                                       {
                                                         "name": "@order_status",
-                                                        "value": "{{6}}",
-                                                        "test": "6"
+                                                        "value": "{{5}}",
+                                                        "test": "5"
                                                       },
                                                       {
                                                         "name": "@market",
@@ -397,6 +397,18 @@
                                                         "type": "text"
                                                       }
                                                     ]
+                                                  },
+                                                  {
+                                                    "name": "count_wl",
+                                                    "type": "number"
+                                                  },
+                                                  {
+                                                    "name": "count_cart",
+                                                    "type": "number"
+                                                  },
+                                                  {
+                                                    "name": "avg_review",
+                                                    "type": "text"
                                                   }
                                                 ],
                                                 "outputType": "array"
@@ -419,12 +431,12 @@
                                                 "options": {
                                                   "connection": "ClientApp",
                                                   "sql": {
-                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, \nmp.prod_desc_bn as prod_description, mp.prod_img1, mr.shop_name_bn as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id from r_wishlist rw where rw.prod_id is not null and mp.id=rw.prod_id and rw.user_id=@user_id),0) as count_wl,\ncoalesce((select rc.prod_id from r_cart rc where rc.prod_id is not null and mp.id=rc.prod_id and rc.user_id=@user_id),0) as count_cart\nfrom r_order_details rod \nJOIN m_product mp ON rod.prod_id = mp.id \nJOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status\nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_bn \nORDER BY COUNT(rod.prod_id) DESC LIMIT @limit;",
+                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, \nmp.prod_desc_bn as prod_description, mp.prod_img1, mr.shop_name_bn as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id from r_wishlist rw where rw.prod_id is not null and mp.id=rw.prod_id and rw.user_id=@user_id),0) as count_wl,\ncoalesce((select rc.prod_id from r_cart rc where rc.prod_id is not null and mp.id=rc.prod_id and rc.user_id=@user_id),0) as count_cart, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review \nfrom r_order_details rod \nJOIN m_product mp ON rod.prod_id = mp.id \nJOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status\nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_bn \nORDER BY COUNT(rod.prod_id) DESC LIMIT @limit;",
                                                     "params": [
                                                       {
                                                         "name": "@order_status",
-                                                        "value": "{{6}}",
-                                                        "test": "6"
+                                                        "value": "{{5}}",
+                                                        "test": "5"
                                                       },
                                                       {
                                                         "name": "@market",
@@ -516,6 +528,18 @@
                                                         "type": "text"
                                                       }
                                                     ]
+                                                  },
+                                                  {
+                                                    "name": "count_wl",
+                                                    "type": "number"
+                                                  },
+                                                  {
+                                                    "name": "count_cart",
+                                                    "type": "number"
+                                                  },
+                                                  {
+                                                    "name": "avg_review",
+                                                    "type": "text"
                                                   }
                                                 ],
                                                 "outputType": "array"
@@ -538,12 +562,12 @@
                                                 "options": {
                                                   "connection": "ClientApp",
                                                   "sql": {
-                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, \nmp.prod_desc_hin as prod_description, mp.prod_img1, mr.shop_name_hin as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id from r_wishlist rw where rw.prod_id is not null and mp.id=rw.prod_id and rw.user_id=@user_id),0) as count_wl,\ncoalesce((select rc.prod_id from r_cart rc where rc.prod_id is not null and mp.id=rc.prod_id and rc.user_id=@user_id),0) as count_cart\nfrom r_order_details rod \nJOIN m_product mp ON rod.prod_id = mp.id \nJOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status\nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_hin \nORDER BY COUNT(rod.prod_id) DESC LIMIT @limit;",
+                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, \nmp.prod_desc_hin as prod_description, mp.prod_img1, mr.shop_name_hin as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id from r_wishlist rw where rw.prod_id is not null and mp.id=rw.prod_id and rw.user_id=@user_id),0) as count_wl,\ncoalesce((select rc.prod_id from r_cart rc where rc.prod_id is not null and mp.id=rc.prod_id and rc.user_id=@user_id),0) as count_cart, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review \nfrom r_order_details rod \nJOIN m_product mp ON rod.prod_id = mp.id \nJOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status\nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_hin \nORDER BY COUNT(rod.prod_id) DESC LIMIT @limit;",
                                                     "params": [
                                                       {
                                                         "name": "@order_status",
-                                                        "value": "{{6}}",
-                                                        "test": "6"
+                                                        "value": "{{5}}",
+                                                        "test": "5"
                                                       },
                                                       {
                                                         "name": "@market",
@@ -635,6 +659,18 @@
                                                         "type": "text"
                                                       }
                                                     ]
+                                                  },
+                                                  {
+                                                    "name": "count_wl",
+                                                    "type": "number"
+                                                  },
+                                                  {
+                                                    "name": "count_cart",
+                                                    "type": "number"
+                                                  },
+                                                  {
+                                                    "name": "avg_review",
+                                                    "type": "text"
                                                   }
                                                 ],
                                                 "outputType": "array"
@@ -661,12 +697,12 @@
                                                 "options": {
                                                   "connection": "ClientApp",
                                                   "sql": {
-                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, \nmp.prod_desc_en as prod_description, mp.prod_img1, mr.shop_name_en as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id from r_wishlist rw where rw.prod_id is not null and mp.id=rw.prod_id and rw.user_id=@user_id),0) as count_wl,\ncoalesce((select rc.prod_id from r_cart rc where rc.prod_id is not null and mp.id=rc.prod_id and rc.user_id=@user_id),0) as count_cart\nfrom r_order_details rod \nJOIN m_product mp ON rod.prod_id = mp.id \nJOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status\nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_en \nORDER BY COUNT(rod.prod_id) DESC;",
+                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, \nmp.prod_desc_en as prod_description, mp.prod_img1, mr.shop_name_en as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id from r_wishlist rw where rw.prod_id is not null and mp.id=rw.prod_id and rw.user_id=@user_id),0) as count_wl,\ncoalesce((select rc.prod_id from r_cart rc where rc.prod_id is not null and mp.id=rc.prod_id and rc.user_id=@user_id),0) as count_cart, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review \nfrom r_order_details rod \nJOIN m_product mp ON rod.prod_id = mp.id \nJOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status\nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_en \nORDER BY COUNT(rod.prod_id) DESC;",
                                                     "params": [
                                                       {
                                                         "name": "@order_status",
-                                                        "value": "{{6}}",
-                                                        "test": "6"
+                                                        "value": "{{5}}",
+                                                        "test": "5"
                                                       },
                                                       {
                                                         "name": "@market",
@@ -753,6 +789,18 @@
                                                         "type": "text"
                                                       }
                                                     ]
+                                                  },
+                                                  {
+                                                    "name": "count_wl",
+                                                    "type": "number"
+                                                  },
+                                                  {
+                                                    "name": "count_cart",
+                                                    "type": "number"
+                                                  },
+                                                  {
+                                                    "name": "avg_review",
+                                                    "type": "text"
                                                   }
                                                 ],
                                                 "outputType": "array"
@@ -775,12 +823,12 @@
                                                 "options": {
                                                   "connection": "ClientApp",
                                                   "sql": {
-                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, \nmp.prod_desc_bn as prod_description, mp.prod_img1, mr.shop_name_bn as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id from r_wishlist rw where rw.prod_id is not null and mp.id=rw.prod_id and rw.user_id=@user_id),0) as count_wl,\ncoalesce((select rc.prod_id from r_cart rc where rc.prod_id is not null and mp.id=rc.prod_id and rc.user_id=@user_id),0) as count_cart\nfrom r_order_details rod \nJOIN m_product mp ON rod.prod_id = mp.id \nJOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status\nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_bn \nORDER BY COUNT(rod.prod_id) DESC;",
+                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, \nmp.prod_desc_bn as prod_description, mp.prod_img1, mr.shop_name_bn as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id from r_wishlist rw where rw.prod_id is not null and mp.id=rw.prod_id and rw.user_id=@user_id),0) as count_wl,\ncoalesce((select rc.prod_id from r_cart rc where rc.prod_id is not null and mp.id=rc.prod_id and rc.user_id=@user_id),0) as count_cart, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review \nfrom r_order_details rod \nJOIN m_product mp ON rod.prod_id = mp.id \nJOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status\nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_bn \nORDER BY COUNT(rod.prod_id) DESC;",
                                                     "params": [
                                                       {
                                                         "name": "@order_status",
-                                                        "value": "{{6}}",
-                                                        "test": "6"
+                                                        "value": "{{5}}",
+                                                        "test": "5"
                                                       },
                                                       {
                                                         "name": "@market",
@@ -867,6 +915,18 @@
                                                         "type": "text"
                                                       }
                                                     ]
+                                                  },
+                                                  {
+                                                    "name": "count_wl",
+                                                    "type": "number"
+                                                  },
+                                                  {
+                                                    "name": "count_cart",
+                                                    "type": "number"
+                                                  },
+                                                  {
+                                                    "name": "avg_review",
+                                                    "type": "text"
                                                   }
                                                 ],
                                                 "outputType": "array"
@@ -889,12 +949,12 @@
                                                 "options": {
                                                   "connection": "ClientApp",
                                                   "sql": {
-                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, \nmp.prod_desc_hin as prod_description, mp.prod_img1, mr.shop_name_hin as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id from r_wishlist rw where rw.prod_id is not null and mp.id=rw.prod_id and rw.user_id=@user_id),0) as count_wl,\ncoalesce((select rc.prod_id from r_cart rc where rc.prod_id is not null and mp.id=rc.prod_id and rc.user_id=@user_id),0) as count_cart\nfrom r_order_details rod \nJOIN m_product mp ON rod.prod_id = mp.id \nJOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status\nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_hin \nORDER BY COUNT(rod.prod_id) DESC;",
+                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, \nmp.prod_desc_hin as prod_description, mp.prod_img1, mr.shop_name_hin as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id from r_wishlist rw where rw.prod_id is not null and mp.id=rw.prod_id and rw.user_id=@user_id),0) as count_wl,\ncoalesce((select rc.prod_id from r_cart rc where rc.prod_id is not null and mp.id=rc.prod_id and rc.user_id=@user_id),0) as count_cart, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review \nfrom r_order_details rod \nJOIN m_product mp ON rod.prod_id = mp.id \nJOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status\nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_hin \nORDER BY COUNT(rod.prod_id) DESC;",
                                                     "params": [
                                                       {
                                                         "name": "@order_status",
-                                                        "value": "{{6}}",
-                                                        "test": "6"
+                                                        "value": "{{5}}",
+                                                        "test": "5"
                                                       },
                                                       {
                                                         "name": "@market",
@@ -981,6 +1041,18 @@
                                                         "type": "text"
                                                       }
                                                     ]
+                                                  },
+                                                  {
+                                                    "name": "count_wl",
+                                                    "type": "number"
+                                                  },
+                                                  {
+                                                    "name": "count_cart",
+                                                    "type": "number"
+                                                  },
+                                                  {
+                                                    "name": "avg_review",
+                                                    "type": "text"
                                                   }
                                                 ],
                                                 "outputType": "array"
@@ -1018,12 +1090,12 @@
                                                 "options": {
                                                   "connection": "ClientApp",
                                                   "sql": {
-                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, \nmp.prod_desc_en as prod_description, mp.prod_img1, mr.shop_name_en as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nfrom r_order_details rod JOIN m_product mp ON rod.prod_id = mp.id JOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status \nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_en \nORDER BY COUNT(rod.prod_id) DESC LIMIT @limit;",
+                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, \nmp.prod_desc_en as prod_description, mp.prod_img1, mr.shop_name_en as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review \nfrom r_order_details rod JOIN m_product mp ON rod.prod_id = mp.id JOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status \nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_en \nORDER BY COUNT(rod.prod_id) DESC LIMIT @limit;",
                                                     "params": [
                                                       {
                                                         "name": "@order_status",
-                                                        "value": "{{6}}",
-                                                        "test": "6"
+                                                        "value": "{{5}}",
+                                                        "test": "5"
                                                       },
                                                       {
                                                         "name": "@market",
@@ -1132,12 +1204,12 @@
                                                 "options": {
                                                   "connection": "ClientApp",
                                                   "sql": {
-                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, \nmp.prod_desc_bn as prod_description, mp.prod_img1, mr.shop_name_bn as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nfrom r_order_details rod JOIN m_product mp ON rod.prod_id = mp.id JOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status \nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_bn \nORDER BY COUNT(rod.prod_id) DESC LIMIT @limit;",
+                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, \nmp.prod_desc_bn as prod_description, mp.prod_img1, mr.shop_name_bn as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review \nfrom r_order_details rod JOIN m_product mp ON rod.prod_id = mp.id JOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status \nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_bn \nORDER BY COUNT(rod.prod_id) DESC LIMIT @limit;",
                                                     "params": [
                                                       {
                                                         "name": "@order_status",
-                                                        "value": "{{6}}",
-                                                        "test": "6"
+                                                        "value": "{{5}}",
+                                                        "test": "5"
                                                       },
                                                       {
                                                         "name": "@market",
@@ -1224,6 +1296,10 @@
                                                         "type": "text"
                                                       }
                                                     ]
+                                                  },
+                                                  {
+                                                    "name": "avg_review",
+                                                    "type": "text"
                                                   }
                                                 ],
                                                 "outputType": "array"
@@ -1246,12 +1322,12 @@
                                                 "options": {
                                                   "connection": "ClientApp",
                                                   "sql": {
-                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, \nmp.prod_desc_hin as prod_description, mp.prod_img1, mr.shop_name_hin as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nfrom r_order_details rod JOIN m_product mp ON rod.prod_id = mp.id JOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status \nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_hin \nORDER BY COUNT(rod.prod_id) DESC LIMIT @limit;",
+                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, \nmp.prod_desc_hin as prod_description, mp.prod_img1, mr.shop_name_hin as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review \nfrom r_order_details rod JOIN m_product mp ON rod.prod_id = mp.id JOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status \nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_hin \nORDER BY COUNT(rod.prod_id) DESC LIMIT @limit;",
                                                     "params": [
                                                       {
                                                         "name": "@order_status",
-                                                        "value": "{{6}}",
-                                                        "test": "6"
+                                                        "value": "{{5}}",
+                                                        "test": "5"
                                                       },
                                                       {
                                                         "name": "@market",
@@ -1338,6 +1414,10 @@
                                                         "type": "text"
                                                       }
                                                     ]
+                                                  },
+                                                  {
+                                                    "name": "avg_review",
+                                                    "type": "text"
                                                   }
                                                 ],
                                                 "outputType": "array"
@@ -1364,12 +1444,12 @@
                                                 "options": {
                                                   "connection": "ClientApp",
                                                   "sql": {
-                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, \nmp.prod_desc_en as prod_description, mp.prod_img1, mr.shop_name_en as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nfrom r_order_details rod JOIN m_product mp ON rod.prod_id = mp.id JOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status \nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_en \nORDER BY COUNT(rod.prod_id) DESC;",
+                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, \nmp.prod_desc_en as prod_description, mp.prod_img1, mr.shop_name_en as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review \nfrom r_order_details rod JOIN m_product mp ON rod.prod_id = mp.id JOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status \nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_en \nORDER BY COUNT(rod.prod_id) DESC;",
                                                     "params": [
                                                       {
                                                         "name": "@order_status",
-                                                        "value": "{{6}}",
-                                                        "test": "6"
+                                                        "value": "{{5}}",
+                                                        "test": "5"
                                                       },
                                                       {
                                                         "name": "@market",
@@ -1451,6 +1531,10 @@
                                                         "type": "text"
                                                       }
                                                     ]
+                                                  },
+                                                  {
+                                                    "name": "avg_review",
+                                                    "type": "text"
                                                   }
                                                 ],
                                                 "outputType": "array"
@@ -1473,12 +1557,12 @@
                                                 "options": {
                                                   "connection": "ClientApp",
                                                   "sql": {
-                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, \nmp.prod_desc_bn as prod_description, mp.prod_img1, mr.shop_name_bn as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nfrom r_order_details rod JOIN m_product mp ON rod.prod_id = mp.id JOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status \nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_bn \nORDER BY COUNT(rod.prod_id) DESC;",
+                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, \nmp.prod_desc_bn as prod_description, mp.prod_img1, mr.shop_name_bn as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review \nfrom r_order_details rod JOIN m_product mp ON rod.prod_id = mp.id JOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status \nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_bn \nORDER BY COUNT(rod.prod_id) DESC;",
                                                     "params": [
                                                       {
                                                         "name": "@order_status",
-                                                        "value": "{{6}}",
-                                                        "test": "6"
+                                                        "value": "{{5}}",
+                                                        "test": "5"
                                                       },
                                                       {
                                                         "name": "@market",
@@ -1560,6 +1644,10 @@
                                                         "type": "text"
                                                       }
                                                     ]
+                                                  },
+                                                  {
+                                                    "name": "avg_review",
+                                                    "type": "text"
                                                   }
                                                 ],
                                                 "outputType": "array"
@@ -1582,12 +1670,12 @@
                                                 "options": {
                                                   "connection": "ClientApp",
                                                   "sql": {
-                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, \nmp.prod_desc_hin as prod_description, mp.prod_img1, mr.shop_name_hin as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nfrom r_order_details rod JOIN m_product mp ON rod.prod_id = mp.id JOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status \nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_hin \nORDER BY COUNT(rod.prod_id) DESC;",
+                                                    "query": "select COUNT(rod.prod_id) as repeat_times, mp.id as p_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, \nmp.prod_desc_hin as prod_description, mp.prod_img1, mr.shop_name_hin as shop_name, \n(select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, \nrpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review \nfrom r_order_details rod JOIN m_product mp ON rod.prod_id = mp.id JOIN m_restaurant mr ON mp.rest_id = mr.id \nwhere rod.order_status = @order_status AND mp.market_id = @market AND mp.status=@prod_status \nAND rod.created_on::date >= (NOW()::date- INTERVAL '25 DAY') \nGROUP BY rod.prod_id, mp.id, mr.shop_name_hin \nORDER BY COUNT(rod.prod_id) DESC;",
                                                     "params": [
                                                       {
                                                         "name": "@order_status",
-                                                        "value": "{{6}}",
-                                                        "test": "6"
+                                                        "value": "{{5}}",
+                                                        "test": "5"
                                                       },
                                                       {
                                                         "name": "@market",
@@ -1669,6 +1757,10 @@
                                                         "type": "text"
                                                       }
                                                     ]
+                                                  },
+                                                  {
+                                                    "name": "avg_review",
+                                                    "type": "text"
                                                   }
                                                 ],
                                                 "outputType": "array"

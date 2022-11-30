@@ -263,7 +263,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, mp.prod_desc_en as prod_description, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_en as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id where rw.prod_id is not null),0) as count_wl,\ncoalesce((select rc.prod_id where rc.prod_id is not null),0) as count_cart FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id)\nleft join r_wishlist rw on (mp.id=rw.prod_id and rw.user_id=@user_id) \nleft join r_cart rc on (mp.id=rc.prod_id and rc.user_id=@user_id)  WHERE mp.status=1 AND mr.status = 1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
+                                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, mp.prod_desc_en as prod_description, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_en as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id where rw.prod_id is not null),0) as count_wl,\ncoalesce((select rc.prod_id where rc.prod_id is not null),0) as count_cart, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id)\nleft join r_wishlist rw on (mp.id=rw.prod_id and rw.user_id=@user_id) \nleft join r_cart rc on (mp.id=rc.prod_id and rc.user_id=@user_id)  WHERE mp.status=1 AND mr.status = 1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
                                         "params": [
                                           {
                                             "name": "@market",
@@ -273,11 +273,12 @@
                                           {
                                             "name": "@p_id",
                                             "value": "{{$_GET.p_id}}",
-                                            "test": "10"
+                                            "test": "18"
                                           },
                                           {
                                             "name": "@user_id",
-                                            "value": "1"
+                                            "value": "{{GetVerify.user_id}}",
+                                            "test": "82"
                                           }
                                         ]
                                       }
@@ -361,6 +362,18 @@
                                             "type": "text"
                                           }
                                         ]
+                                      },
+                                      {
+                                        "name": "count_wl",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "count_cart",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "avg_review",
+                                        "type": "text"
                                       }
                                     ],
                                     "outputType": "array"
@@ -383,7 +396,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, mp.prod_desc_bn as prod_description, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_bn as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id where rw.prod_id is not null),0) as count_wl,\ncoalesce((select rc.prod_id where rc.prod_id is not null),0) as count_cart FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id)\nleft join r_wishlist rw on (mp.id=rw.prod_id and rw.user_id=@user_id) \nleft join r_cart rc on (mp.id=rc.prod_id and rc.user_id=@user_id)  WHERE mp.status=1 AND mr.status = 1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
+                                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, mp.prod_desc_bn as prod_description, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_bn as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id where rw.prod_id is not null),0) as count_wl,\ncoalesce((select rc.prod_id where rc.prod_id is not null),0) as count_cart, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id)\nleft join r_wishlist rw on (mp.id=rw.prod_id and rw.user_id=@user_id) \nleft join r_cart rc on (mp.id=rc.prod_id and rc.user_id=@user_id)  WHERE mp.status=1 AND mr.status = 1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
                                         "params": [
                                           {
                                             "name": "@market",
@@ -393,7 +406,7 @@
                                           {
                                             "name": "@p_id",
                                             "value": "{{$_GET.p_id}}",
-                                            "test": "10"
+                                            "test": "18"
                                           },
                                           {
                                             "name": "@user_id",
@@ -490,6 +503,10 @@
                                       {
                                         "name": "count_cart",
                                         "type": "number"
+                                      },
+                                      {
+                                        "name": "avg_review",
+                                        "type": "text"
                                       }
                                     ],
                                     "outputType": "array"
@@ -512,7 +529,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, mp.prod_desc_hin as prod_description, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_hin as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id where rw.prod_id is not null),0) as count_wl,\ncoalesce((select rc.prod_id where rc.prod_id is not null),0) as count_cart FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id)\nleft join r_wishlist rw on (mp.id=rw.prod_id and rw.user_id=@user_id) \nleft join r_cart rc on (mp.id=rc.prod_id and rc.user_id=@user_id)  WHERE mp.status=1 AND mr.status = 1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
+                                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, mp.prod_desc_hin as prod_description, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_hin as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select rw.prod_id where rw.prod_id is not null),0) as count_wl,\ncoalesce((select rc.prod_id where rc.prod_id is not null),0) as count_cart, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id)\nleft join r_wishlist rw on (mp.id=rw.prod_id and rw.user_id=@user_id) \nleft join r_cart rc on (mp.id=rc.prod_id and rc.user_id=@user_id)  WHERE mp.status=1 AND mr.status = 1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
                                         "params": [
                                           {
                                             "name": "@market",
@@ -522,7 +539,7 @@
                                           {
                                             "name": "@p_id",
                                             "value": "{{$_GET.p_id}}",
-                                            "test": "10"
+                                            "test": "18"
                                           },
                                           {
                                             "name": "@user_id",
@@ -619,6 +636,10 @@
                                       {
                                         "name": "count_cart",
                                         "type": "number"
+                                      },
+                                      {
+                                        "name": "avg_review",
+                                        "type": "text"
                                       }
                                     ],
                                     "outputType": "array"
@@ -645,7 +666,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, mp.prod_desc_en as prod_description, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_en as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mr.status = 1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
+                                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en as prod_name, mp.prod_desc_en as prod_description, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_en as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mr.status = 1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
                                         "params": [
                                           {
                                             "name": "@market",
@@ -655,7 +676,7 @@
                                           {
                                             "name": "@p_id",
                                             "value": "{{$_GET.p_id}}",
-                                            "test": "10"
+                                            "test": "18"
                                           }
                                         ]
                                       }
@@ -739,6 +760,10 @@
                                             "type": "text"
                                           }
                                         ]
+                                      },
+                                      {
+                                        "name": "avg_review",
+                                        "type": "text"
                                       }
                                     ],
                                     "outputType": "array"
@@ -761,7 +786,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, mp.prod_desc_bn as prod_description, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_bn as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mr.status = 1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
+                                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_bn as prod_name, mp.prod_desc_bn as prod_description, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_bn as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mr.status = 1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
                                         "params": [
                                           {
                                             "name": "@market",
@@ -771,7 +796,7 @@
                                           {
                                             "name": "@p_id",
                                             "value": "{{$_GET.p_id}}",
-                                            "test": "10"
+                                            "test": "18"
                                           }
                                         ]
                                       }
@@ -855,6 +880,10 @@
                                             "type": "text"
                                           }
                                         ]
+                                      },
+                                      {
+                                        "name": "avg_review",
+                                        "type": "text"
                                       }
                                     ],
                                     "outputType": "array"
@@ -877,7 +906,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, mp.prod_desc_hin as prod_description, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_hin as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mr.status = 1AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
+                                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_hin as prod_name, mp.prod_desc_hin as prod_description, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_hin as shop_name, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price, \ncoalesce((select avg(rpr.review_value) from r_prod_review rpr where rpr.prod_id = mp.id and rpr.review_value is not null),0) as avg_review FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mr.status = 1AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
                                         "params": [
                                           {
                                             "name": "@market",
@@ -887,7 +916,7 @@
                                           {
                                             "name": "@p_id",
                                             "value": "{{$_GET.p_id}}",
-                                            "test": "10"
+                                            "test": "18"
                                           }
                                         ]
                                       }
@@ -971,6 +1000,10 @@
                                             "type": "text"
                                           }
                                         ]
+                                      },
+                                      {
+                                        "name": "avg_review",
+                                        "type": "text"
                                       }
                                     ],
                                     "outputType": "array"

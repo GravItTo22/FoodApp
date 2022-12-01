@@ -30,8 +30,7 @@
                   "columns": [
                     {
                       "table": "t_user_log",
-                      "column": "id",
-                      "aggregate": ""
+                      "column": "user_id"
                     }
                   ],
                   "table": {
@@ -62,18 +61,52 @@
                           }
                         },
                         "operation": "="
+                      },
+                      {
+                        "id": "t_user_log.login_from",
+                        "field": "t_user_log.login_from",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{'Android'}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_from",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_from"
+                          }
+                        },
+                        "operation": "="
                       }
                     ],
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_GET.logintoken}} */",
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_GET.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */\nORDER BY id DESC",
                   "params": [
                     {
                       "operator": "equal",
                       "type": "expression",
                       "name": ":P1",
                       "value": "{{$_GET.logintoken}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{'Android'}}"
+                    }
+                  ],
+                  "orders": [
+                    {
+                      "table": "t_user_log",
+                      "column": "id",
+                      "direction": "DESC"
                     }
                   ]
                 }
@@ -82,7 +115,7 @@
               "meta": [
                 {
                   "type": "number",
-                  "name": "id"
+                  "name": "user_id"
                 }
               ],
               "outputType": "object"
@@ -92,7 +125,7 @@
               "module": "core",
               "action": "condition",
               "options": {
-                "if": "{{GetVerify.id}}",
+                "if": "{{GetVerify.user_id}}",
                 "then": {
                   "steps": [
                     {
@@ -127,19 +160,13 @@
                           },
                           "primary": "id",
                           "joins": [],
-                          "query": "SELECT COUNT(id) AS Cart_Items\nFROM r_cart\nWHERE user_id = :P1 /* {{GetVerify.id}} */ OR ip_address = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
+                          "query": "SELECT COUNT(id) AS Cart_Items\nFROM r_cart\nWHERE user_id = :P1 /* {{GetVerify.user_id}} */",
                           "params": [
                             {
                               "operator": "equal",
                               "type": "expression",
                               "name": ":P1",
-                              "value": "{{GetVerify.id}}"
-                            },
-                            {
-                              "operator": "equal",
-                              "type": "expression",
-                              "name": ":P2",
-                              "value": "{{$_SERVER.REMOTE_ADDR}}"
+                              "value": "{{GetVerify.user_id}}"
                             }
                           ],
                           "groupBy": [],
@@ -151,7 +178,7 @@
                                 "field": "r_cart.user_id",
                                 "type": "double",
                                 "operator": "equal",
-                                "value": "{{GetVerify.id}}",
+                                "value": "{{GetVerify.user_id}}",
                                 "data": {
                                   "table": "r_cart",
                                   "column": "user_id",
@@ -161,33 +188,12 @@
                                     "primary": false,
                                     "unique": false,
                                     "nullable": true,
+                                    "referenceType": "integer",
+                                    "name": "user_id",
                                     "references": "id",
                                     "inTable": "m_customer",
-                                    "referenceType": "integer",
                                     "onUpdate": "NO ACTION",
-                                    "onDelete": "NO ACTION",
-                                    "name": "user_id"
-                                  }
-                                },
-                                "operation": "="
-                              },
-                              {
-                                "id": "r_cart.ip_address",
-                                "field": "r_cart.ip_address",
-                                "type": "string",
-                                "operator": "equal",
-                                "value": "{{$_SERVER.REMOTE_ADDR}}",
-                                "data": {
-                                  "table": "r_cart",
-                                  "column": "ip_address",
-                                  "type": "text",
-                                  "columnObj": {
-                                    "type": "string",
-                                    "maxLength": -5,
-                                    "primary": false,
-                                    "unique": false,
-                                    "nullable": true,
-                                    "name": "ip_address"
+                                    "onDelete": "NO ACTION"
                                   }
                                 },
                                 "operation": "="
@@ -237,7 +243,7 @@
                                 "field": "r_wishlist.user_id",
                                 "type": "double",
                                 "operator": "equal",
-                                "value": "{{GetVerify.id}}",
+                                "value": "{{GetVerify.user_id}}",
                                 "data": {
                                   "table": "r_wishlist",
                                   "column": "user_id",
@@ -251,45 +257,18 @@
                                   }
                                 },
                                 "operation": "="
-                              },
-                              {
-                                "id": "r_wishlist.ips",
-                                "field": "r_wishlist.ips",
-                                "type": "string",
-                                "operator": "equal",
-                                "value": "{{$_SERVER.REMOTE_ADDR}}",
-                                "data": {
-                                  "table": "r_wishlist",
-                                  "column": "ips",
-                                  "type": "text",
-                                  "columnObj": {
-                                    "type": "string",
-                                    "maxLength": -5,
-                                    "primary": false,
-                                    "unique": false,
-                                    "nullable": true,
-                                    "name": "ips"
-                                  }
-                                },
-                                "operation": "="
                               }
                             ],
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT COUNT(id) AS WishlistItems\nFROM r_wishlist\nWHERE user_id = :P1 /* {{GetVerify.id}} */ OR ips = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
+                          "query": "SELECT COUNT(id) AS WishlistItems\nFROM r_wishlist\nWHERE user_id = :P1 /* {{GetVerify.user_id}} */",
                           "params": [
                             {
                               "operator": "equal",
                               "type": "expression",
                               "name": ":P1",
-                              "value": "{{GetVerify.id}}"
-                            },
-                            {
-                              "operator": "equal",
-                              "type": "expression",
-                              "name": ":P2",
-                              "value": "{{$_SERVER.REMOTE_ADDR}}"
+                              "value": "{{GetVerify.user_id}}"
                             }
                           ]
                         }
@@ -330,7 +309,7 @@
                                 "field": "m_customer.id",
                                 "type": "double",
                                 "operator": "equal",
-                                "value": "{{GetVerify.id}}",
+                                "value": "{{GetVerify.user_id}}",
                                 "data": {
                                   "table": "m_customer",
                                   "column": "id",
@@ -370,13 +349,13 @@
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT wallet_bal\nFROM m_customer\nWHERE id = :P1 /* {{GetVerify.id}} */ AND status = :P2 /* {{1}} */",
+                          "query": "SELECT wallet_bal\nFROM m_customer\nWHERE id = :P1 /* {{GetVerify.user_id}} */ AND status = :P2 /* {{1}} */",
                           "params": [
                             {
                               "operator": "equal",
                               "type": "expression",
                               "name": ":P1",
-                              "value": "{{GetVerify.id}}"
+                              "value": "{{GetVerify.user_id}}"
                             },
                             {
                               "operator": "equal",

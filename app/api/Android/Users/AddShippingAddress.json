@@ -1,0 +1,714 @@
+{
+  "meta": {
+    "options": {
+      "linkedFile": "/views/place-order.ejs",
+      "linkedForm": "scformShippingAddress"
+    },
+    "$_POST": [
+      {
+        "type": "text",
+        "fieldName": "ShippingId",
+        "name": "ShippingId"
+      },
+      {
+        "type": "number",
+        "fieldName": "mobile",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            },
+            "core:number": {}
+          }
+        },
+        "name": "mobile"
+      },
+      {
+        "type": "number",
+        "fieldName": "pincode",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            },
+            "core:number": {}
+          }
+        },
+        "name": "pincode"
+      },
+      {
+        "type": "text",
+        "fieldName": "name",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "name"
+      },
+      {
+        "type": "text",
+        "fieldName": "Email",
+        "name": "Email"
+      },
+      {
+        "type": "text",
+        "fieldName": "address",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "address"
+      },
+      {
+        "type": "text",
+        "fieldName": "district",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "district"
+      },
+      {
+        "type": "text",
+        "name": "logintoken"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetVerify",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "t_user_log",
+                      "column": "user_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "t_user_log"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "t_user_log.login_token",
+                        "field": "t_user_log.login_token",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_POST.logintoken}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_token",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_token"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "t_user_log.login_from",
+                        "field": "t_user_log.login_from",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{'Android'}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_from",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_from"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "orders": [
+                    {
+                      "table": "t_user_log",
+                      "column": "id",
+                      "direction": "DESC"
+                    }
+                  ],
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_POST.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */\nORDER BY id DESC",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_POST.logintoken}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{'Android'}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "user_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetVerify.user_id}}",
+                "then": {
+                  "steps": {
+                    "name": "",
+                    "module": "core",
+                    "action": "condition",
+                    "options": {
+                      "if": "{{$_POST.ShippingId}}",
+                      "then": {
+                        "steps": [
+                          {
+                            "name": "upShippingAddress",
+                            "module": "dbupdater",
+                            "action": "update",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "update",
+                                "values": [
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "status",
+                                    "type": "number",
+                                    "value": "{{1}}"
+                                  }
+                                ],
+                                "table": "r_shipping_add",
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "c_id",
+                                      "field": "c_id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{GetVerify.user_id}}",
+                                      "data": {
+                                        "column": "c_id"
+                                      },
+                                      "operation": "="
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                },
+                                "returning": "id",
+                                "query": "UPDATE r_shipping_add\nSET status = :P1 /* {{1}} */\nWHERE c_id = :P2 /* {{GetVerify.user_id}} */",
+                                "params": [
+                                  {
+                                    "name": ":P1",
+                                    "type": "expression",
+                                    "value": "{{1}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P2",
+                                    "value": "{{GetVerify.user_id}}"
+                                  }
+                                ]
+                              }
+                            },
+                            "meta": [
+                              {
+                                "name": "affected",
+                                "type": "number"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "upShippingAddress",
+                            "module": "dbupdater",
+                            "action": "update",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "update",
+                                "values": [
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "mobile",
+                                    "type": "text",
+                                    "value": "{{$_POST.mobile}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "address1",
+                                    "type": "text",
+                                    "value": "{{$_POST.address}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "email_id",
+                                    "type": "text",
+                                    "value": "{{$_POST.Email}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "district",
+                                    "type": "text",
+                                    "value": "{{$_POST.district}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "pin",
+                                    "type": "text",
+                                    "value": "{{$_POST.pincode}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "status",
+                                    "type": "number",
+                                    "value": "{{2}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "full_name",
+                                    "type": "text",
+                                    "value": "{{$_POST.name}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "updated_on",
+                                    "type": "datetime",
+                                    "value": "{{NOW}}"
+                                  }
+                                ],
+                                "table": "r_shipping_add",
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "id",
+                                      "field": "id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{$_POST.ShippingId}}",
+                                      "data": {
+                                        "column": "id"
+                                      },
+                                      "operation": "="
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                },
+                                "returning": "id",
+                                "query": "UPDATE r_shipping_add\nSET mobile = :P1 /* {{$_POST.mobile}} */, address1 = :P2 /* {{$_POST.address}} */, email_id = :P3 /* {{$_POST.Email}} */, district = :P4 /* {{$_POST.district}} */, pin = :P5 /* {{$_POST.pincode}} */, status = :P6 /* {{2}} */, full_name = :P7 /* {{$_POST.name}} */, updated_on = :P8 /* {{NOW}} */\nWHERE id = :P9 /* {{$_POST.ShippingId}} */",
+                                "params": [
+                                  {
+                                    "name": ":P1",
+                                    "type": "expression",
+                                    "value": "{{$_POST.mobile}}"
+                                  },
+                                  {
+                                    "name": ":P2",
+                                    "type": "expression",
+                                    "value": "{{$_POST.address}}"
+                                  },
+                                  {
+                                    "name": ":P3",
+                                    "type": "expression",
+                                    "value": "{{$_POST.Email}}"
+                                  },
+                                  {
+                                    "name": ":P4",
+                                    "type": "expression",
+                                    "value": "{{$_POST.district}}"
+                                  },
+                                  {
+                                    "name": ":P5",
+                                    "type": "expression",
+                                    "value": "{{$_POST.pincode}}"
+                                  },
+                                  {
+                                    "name": ":P6",
+                                    "type": "expression",
+                                    "value": "{{2}}"
+                                  },
+                                  {
+                                    "name": ":P7",
+                                    "type": "expression",
+                                    "value": "{{$_POST.name}}"
+                                  },
+                                  {
+                                    "name": ":P8",
+                                    "type": "expression",
+                                    "value": "{{NOW}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P9",
+                                    "value": "{{$_POST.ShippingId}}"
+                                  }
+                                ]
+                              }
+                            },
+                            "meta": [
+                              {
+                                "name": "affected",
+                                "type": "number"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Resp",
+                            "module": "core",
+                            "action": "response",
+                            "options": {
+                              "status": 200,
+                              "data": "Shipping Address Updated Successfully"
+                            },
+                            "output": true
+                          }
+                        ]
+                      },
+                      "else": {
+                        "steps": [
+                          {
+                            "name": "upShippingAddress",
+                            "module": "dbupdater",
+                            "action": "update",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "update",
+                                "values": [
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "status",
+                                    "type": "number",
+                                    "value": "{{1}}"
+                                  }
+                                ],
+                                "table": "r_shipping_add",
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "c_id",
+                                      "field": "c_id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{GetVerify.user_id}}",
+                                      "data": {
+                                        "column": "c_id"
+                                      },
+                                      "operation": "="
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                },
+                                "returning": "id",
+                                "query": "UPDATE r_shipping_add\nSET status = :P1 /* {{1}} */\nWHERE c_id = :P2 /* {{GetVerify.user_id}} */",
+                                "params": [
+                                  {
+                                    "name": ":P1",
+                                    "type": "expression",
+                                    "value": "{{1}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P2",
+                                    "value": "{{GetVerify.user_id}}"
+                                  }
+                                ]
+                              }
+                            },
+                            "meta": [
+                              {
+                                "name": "affected",
+                                "type": "number"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "AddShippingAddress",
+                            "module": "dbupdater",
+                            "action": "insert",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "insert",
+                                "values": [
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "c_id",
+                                    "type": "number",
+                                    "value": "{{GetVerify.user_id}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "mobile",
+                                    "type": "text",
+                                    "value": "{{$_POST.mobile}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "address1",
+                                    "type": "text",
+                                    "value": "{{$_POST.address}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "email_id",
+                                    "type": "text",
+                                    "value": "{{$_POST.Email}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "district",
+                                    "type": "text",
+                                    "value": "{{$_POST.district}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "state",
+                                    "type": "text",
+                                    "value": "{{'Assam'}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "country",
+                                    "type": "text",
+                                    "value": "{{'India'}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "pin",
+                                    "type": "text",
+                                    "value": "{{$_POST.pincode}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "status",
+                                    "type": "number",
+                                    "value": "{{2}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "full_name",
+                                    "type": "text",
+                                    "value": "{{$_POST.name}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "created_by",
+                                    "type": "number",
+                                    "value": "{{GetVerify.user_id}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "created_on",
+                                    "type": "datetime",
+                                    "value": "{{NOW}}"
+                                  }
+                                ],
+                                "table": "r_shipping_add",
+                                "returning": "id",
+                                "query": "INSERT INTO r_shipping_add\n(c_id, mobile, address1, email_id, district, state, country, pin, status, full_name, created_by, created_on) VALUES (:P1 /* {{GetVerify.user_id}} */, :P2 /* {{$_POST.mobile}} */, :P3 /* {{$_POST.address}} */, :P4 /* {{$_POST.Email}} */, :P5 /* {{$_POST.district}} */, :P6 /* {{'Assam'}} */, :P7 /* {{'India'}} */, :P8 /* {{$_POST.pincode}} */, :P9 /* {{2}} */, :P10 /* {{$_POST.name}} */, :P11 /* {{GetVerify.user_id}} */, :P12 /* {{NOW}} */)",
+                                "params": [
+                                  {
+                                    "name": ":P1",
+                                    "type": "expression",
+                                    "value": "{{GetVerify.user_id}}"
+                                  },
+                                  {
+                                    "name": ":P2",
+                                    "type": "expression",
+                                    "value": "{{$_POST.mobile}}"
+                                  },
+                                  {
+                                    "name": ":P3",
+                                    "type": "expression",
+                                    "value": "{{$_POST.address}}"
+                                  },
+                                  {
+                                    "name": ":P4",
+                                    "type": "expression",
+                                    "value": "{{$_POST.Email}}"
+                                  },
+                                  {
+                                    "name": ":P5",
+                                    "type": "expression",
+                                    "value": "{{$_POST.district}}"
+                                  },
+                                  {
+                                    "name": ":P6",
+                                    "type": "expression",
+                                    "value": "{{'Assam'}}"
+                                  },
+                                  {
+                                    "name": ":P7",
+                                    "type": "expression",
+                                    "value": "{{'India'}}"
+                                  },
+                                  {
+                                    "name": ":P8",
+                                    "type": "expression",
+                                    "value": "{{$_POST.pincode}}"
+                                  },
+                                  {
+                                    "name": ":P9",
+                                    "type": "expression",
+                                    "value": "{{2}}"
+                                  },
+                                  {
+                                    "name": ":P10",
+                                    "type": "expression",
+                                    "value": "{{$_POST.name}}"
+                                  },
+                                  {
+                                    "name": ":P11",
+                                    "type": "expression",
+                                    "value": "{{GetVerify.user_id}}"
+                                  },
+                                  {
+                                    "name": ":P12",
+                                    "type": "expression",
+                                    "value": "{{NOW}}"
+                                  }
+                                ]
+                              }
+                            },
+                            "meta": [
+                              {
+                                "name": "identity",
+                                "type": "text"
+                              },
+                              {
+                                "name": "affected",
+                                "type": "number"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Resp",
+                            "module": "core",
+                            "action": "response",
+                            "options": {
+                              "status": 200,
+                              "data": "Shipping Address Added Successfully"
+                            },
+                            "output": true
+                          }
+                        ]
+                      }
+                    },
+                    "outputType": "boolean"
+                  }
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Unauthorized User"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

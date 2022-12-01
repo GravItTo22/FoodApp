@@ -120,18 +120,49 @@
                           }
                         },
                         "operation": "="
+                      },
+                      {
+                        "id": "m_customer.user_type_id",
+                        "field": "m_customer.user_type_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{6}}",
+                        "data": {
+                          "table": "m_customer",
+                          "column": "user_type_id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "reference",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "references": "id",
+                            "inTable": "m_user_type",
+                            "referenceType": "integer",
+                            "onUpdate": "NO ACTION",
+                            "onDelete": "NO ACTION",
+                            "name": "user_type_id"
+                          }
+                        },
+                        "operation": "="
                       }
                     ],
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT salt, user_type_id\nFROM m_customer\nWHERE mobile = :P1 /* {{$_POST.Mobile}} */ AND status = 1",
+                  "query": "SELECT salt, user_type_id\nFROM m_customer\nWHERE mobile = :P1 /* {{$_POST.Mobile}} */ AND status = 1 AND user_type_id = :P2 /* {{6}} */",
                   "params": [
                     {
                       "operator": "equal",
                       "type": "expression",
                       "name": ":P1",
                       "value": "{{$_POST.Mobile}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{6}}"
                     }
                   ]
                 }

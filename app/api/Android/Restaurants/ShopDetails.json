@@ -188,6 +188,21 @@
                                   {
                                     "table": "rsi",
                                     "column": "cover_image"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "blank1",
+                                    "alias": "geo_loc"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "blank2",
+                                    "alias": "deliv_time"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "blank3",
+                                    "alias": "deliv_charge"
                                   }
                                 ],
                                 "table": {
@@ -271,7 +286,7 @@
                                   "conditional": null,
                                   "valid": true
                                 },
-                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_hin AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
+                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_hin AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image, m_restaurant.blank1 AS geo_loc, m_restaurant.blank2 AS deliv_time, m_restaurant.blank3 AS deliv_charge\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
                                 "params": [
                                   {
                                     "operator": "equal",
@@ -317,6 +332,18 @@
                               {
                                 "type": "text",
                                 "name": "cover_image"
+                              },
+                              {
+                                "type": "text",
+                                "name": "geo_loc"
+                              },
+                              {
+                                "type": "text",
+                                "name": "deliv_time"
+                              },
+                              {
+                                "type": "text",
+                                "name": "deliv_charge"
                               }
                             ],
                             "outputType": "object",
@@ -371,6 +398,21 @@
                                   {
                                     "table": "rsi",
                                     "column": "cover_image"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "blank1",
+                                    "alias": "geo_loc"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "blank2",
+                                    "alias": "deliv_time"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "blank3",
+                                    "alias": "deliv_charge"
                                   }
                                 ],
                                 "table": {
@@ -454,7 +496,7 @@
                                   "conditional": null,
                                   "valid": true
                                 },
-                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_bn AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
+                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_bn AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image, m_restaurant.blank1 AS geo_loc, m_restaurant.blank2 AS deliv_time, m_restaurant.blank3 AS deliv_charge\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
                                 "params": [
                                   {
                                     "operator": "equal",
@@ -500,6 +542,18 @@
                               {
                                 "type": "text",
                                 "name": "cover_image"
+                              },
+                              {
+                                "type": "text",
+                                "name": "geo_loc"
+                              },
+                              {
+                                "type": "text",
+                                "name": "deliv_time"
+                              },
+                              {
+                                "type": "text",
+                                "name": "deliv_charge"
                               }
                             ],
                             "outputType": "object",
@@ -554,6 +608,21 @@
                                   {
                                     "table": "rsi",
                                     "column": "cover_image"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "blank1",
+                                    "alias": "geo_loc"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "blank2",
+                                    "alias": "deliv_time"
+                                  },
+                                  {
+                                    "table": "m_restaurant",
+                                    "column": "blank3",
+                                    "alias": "deliv_charge"
                                   }
                                 ],
                                 "table": {
@@ -637,7 +706,7 @@
                                   "conditional": null,
                                   "valid": true
                                 },
-                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_en AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
+                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_en AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image, m_restaurant.blank1 AS geo_loc, m_restaurant.blank2 AS deliv_time, m_restaurant.blank3 AS deliv_charge\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
                                 "params": [
                                   {
                                     "operator": "equal",
@@ -683,6 +752,18 @@
                               {
                                 "type": "text",
                                 "name": "cover_image"
+                              },
+                              {
+                                "type": "text",
+                                "name": "geo_loc"
+                              },
+                              {
+                                "type": "text",
+                                "name": "deliv_time"
+                              },
+                              {
+                                "type": "text",
+                                "name": "deliv_charge"
                               }
                             ],
                             "outputType": "object",

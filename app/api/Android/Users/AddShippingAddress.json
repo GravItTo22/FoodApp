@@ -14,12 +14,7 @@
         "type": "number",
         "fieldName": "mobile",
         "options": {
-          "rules": {
-            "core:required": {
-              "param": ""
-            },
-            "core:number": {}
-          }
+          "rules": {}
         },
         "name": "mobile"
       },
@@ -27,12 +22,7 @@
         "type": "number",
         "fieldName": "pincode",
         "options": {
-          "rules": {
-            "core:required": {
-              "param": ""
-            },
-            "core:number": {}
-          }
+          "rules": {}
         },
         "name": "pincode"
       },
@@ -40,11 +30,7 @@
         "type": "text",
         "fieldName": "name",
         "options": {
-          "rules": {
-            "core:required": {
-              "param": ""
-            }
-          }
+          "rules": {}
         },
         "name": "name"
       },
@@ -57,11 +43,7 @@
         "type": "text",
         "fieldName": "address",
         "options": {
-          "rules": {
-            "core:required": {
-              "param": ""
-            }
-          }
+          "rules": {}
         },
         "name": "address"
       },
@@ -69,11 +51,7 @@
         "type": "text",
         "fieldName": "district",
         "options": {
-          "rules": {
-            "core:required": {
-              "param": ""
-            }
-          }
+          "rules": {}
         },
         "name": "district"
       },
@@ -403,14 +381,26 @@
                             ]
                           },
                           {
-                            "name": "Resp",
+                            "name": "status",
                             "module": "core",
-                            "action": "response",
+                            "action": "setvalue",
                             "options": {
-                              "status": 200,
-                              "data": "Shipping Address Updated Successfully"
+                              "value": 200
                             },
-                            "output": true
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          },
+                          {
+                            "name": "message",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": "Shipping Address Updated Successfully"
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
                           }
                         ]
                       },
@@ -636,14 +626,26 @@
                             ]
                           },
                           {
-                            "name": "Resp",
+                            "name": "status",
                             "module": "core",
-                            "action": "response",
+                            "action": "setvalue",
                             "options": {
-                              "status": 200,
-                              "data": "Shipping Address Added Successfully"
+                              "value": 200
                             },
-                            "output": true
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          },
+                          {
+                            "name": "message",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": "Shipping Address Added Successfully"
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
                           }
                         ]
                       }

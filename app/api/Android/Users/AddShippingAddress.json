@@ -141,8 +141,7 @@
                     {
                       "table": "t_user_log",
                       "column": "id",
-                      "direction": "DESC",
-                      "recid": 1
+                      "direction": "DESC"
                     }
                   ],
                   "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_POST.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */\nORDER BY id DESC",

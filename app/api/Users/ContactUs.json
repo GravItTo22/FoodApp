@@ -1,0 +1,219 @@
+{
+  "meta": {
+    "options": {
+      "linkedFile": "/views/contact.ejs",
+      "linkedForm": "scformContact"
+    },
+    "$_POST": [
+      {
+        "type": "text",
+        "fieldName": "Name",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "Name"
+      },
+      {
+        "type": "text",
+        "fieldName": "EmailId",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "EmailId"
+      },
+      {
+        "type": "text",
+        "fieldName": "Mobile",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "Mobile"
+      },
+      {
+        "type": "text",
+        "fieldName": "Subject",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "Subject"
+      },
+      {
+        "type": "text",
+        "fieldName": "Message",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "Message"
+      },
+      {
+        "type": "text",
+        "name": "ip"
+      }
+    ],
+    "$_SERVER": [
+      {
+        "type": "text",
+        "name": "REMOTE_ADDR"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": {
+            "name": "AddMessage",
+            "module": "dbupdater",
+            "action": "insert",
+            "options": {
+              "connection": "ClientApp",
+              "sql": {
+                "type": "insert",
+                "values": [
+                  {
+                    "table": "m_contact_us",
+                    "column": "user_name",
+                    "type": "text",
+                    "value": "{{$_POST.Name}}"
+                  },
+                  {
+                    "table": "m_contact_us",
+                    "column": "user_mobile",
+                    "type": "text",
+                    "value": "{{$_POST.Mobile}}"
+                  },
+                  {
+                    "table": "m_contact_us",
+                    "column": "user_email",
+                    "type": "text",
+                    "value": "{{$_POST.EmailId}}"
+                  },
+                  {
+                    "table": "m_contact_us",
+                    "column": "msg_subject",
+                    "type": "text",
+                    "value": "{{$_POST.Subject}}"
+                  },
+                  {
+                    "table": "m_contact_us",
+                    "column": "message",
+                    "type": "text",
+                    "value": "{{$_POST.Message}}"
+                  },
+                  {
+                    "table": "m_contact_us",
+                    "column": "ip",
+                    "type": "text",
+                    "value": "{{$_SERVER.REMOTE_ADDR}}"
+                  },
+                  {
+                    "table": "m_contact_us",
+                    "column": "status",
+                    "type": "number",
+                    "value": "{{0}}"
+                  },
+                  {
+                    "table": "m_contact_us",
+                    "column": "created_on",
+                    "type": "datetime",
+                    "value": "{{NOW}}"
+                  }
+                ],
+                "table": "m_contact_us",
+                "returning": "id",
+                "query": "INSERT INTO m_contact_us\n(user_name, user_mobile, user_email, msg_subject, message, ip, status, created_on) VALUES (:P1 /* {{$_POST.Name}} */, :P2 /* {{$_POST.Mobile}} */, :P3 /* {{$_POST.EmailId}} */, :P4 /* {{$_POST.Subject}} */, :P5 /* {{$_POST.Message}} */, :P6 /* {{$_SERVER.REMOTE_ADDR}} */, :P7 /* {{0}} */, :P8 /* {{NOW}} */)",
+                "params": [
+                  {
+                    "name": ":P1",
+                    "type": "expression",
+                    "value": "{{$_POST.Name}}"
+                  },
+                  {
+                    "name": ":P2",
+                    "type": "expression",
+                    "value": "{{$_POST.Mobile}}"
+                  },
+                  {
+                    "name": ":P3",
+                    "type": "expression",
+                    "value": "{{$_POST.EmailId}}"
+                  },
+                  {
+                    "name": ":P4",
+                    "type": "expression",
+                    "value": "{{$_POST.Subject}}"
+                  },
+                  {
+                    "name": ":P5",
+                    "type": "expression",
+                    "value": "{{$_POST.Message}}"
+                  },
+                  {
+                    "name": ":P6",
+                    "type": "expression",
+                    "value": "{{$_SERVER.REMOTE_ADDR}}"
+                  },
+                  {
+                    "name": ":P7",
+                    "type": "expression",
+                    "value": "{{0}}"
+                  },
+                  {
+                    "name": ":P8",
+                    "type": "expression",
+                    "value": "{{NOW}}"
+                  }
+                ]
+              }
+            },
+            "meta": [
+              {
+                "name": "identity",
+                "type": "text"
+              },
+              {
+                "name": "affected",
+                "type": "number"
+              }
+            ]
+          }
+        },
+        "catch": {
+          "steps": {
+            "name": "Resp",
+            "module": "core",
+            "action": "response",
+            "options": {
+              "status": 403,
+              "data": "Suspicious Activity"
+            },
+            "output": true
+          }
+        }
+      }
+    }
+  }
+}

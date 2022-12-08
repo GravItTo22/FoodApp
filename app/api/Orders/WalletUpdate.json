@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "wallet_bal"
+      },
+      {
+        "type": "number",
+        "name": "id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "update",
+      "module": "dbupdater",
+      "action": "update",
+      "options": {
+        "connection": "ClientApp",
+        "sql": {
+          "type": "update",
+          "values": [
+            {
+              "table": "m_customer",
+              "column": "wallet_bal",
+              "type": "text",
+              "value": "{{$_POST.wallet_bal}}"
+            }
+          ],
+          "table": "m_customer",
+          "wheres": {
+            "condition": "AND",
+            "rules": [
+              {
+                "id": "id",
+                "type": "double",
+                "operator": "equal",
+                "value": "{{$_POST.id}}",
+                "data": {
+                  "column": "id"
+                },
+                "operation": "="
+              }
+            ]
+          },
+          "returning": "id",
+          "query": "UPDATE m_customer\nSET wallet_bal = :P1 /* {{$_POST.wallet_bal}} */\nWHERE id = :P2 /* {{$_POST.id}} */",
+          "params": [
+            {
+              "name": ":P1",
+              "type": "expression",
+              "value": "{{$_POST.wallet_bal}}"
+            },
+            {
+              "operator": "equal",
+              "type": "expression",
+              "name": ":P2",
+              "value": "{{$_POST.id}}"
+            }
+          ]
+        }
+      },
+      "meta": [
+        {
+          "name": "affected",
+          "type": "number"
+        }
+      ]
+    }
+  }
+}

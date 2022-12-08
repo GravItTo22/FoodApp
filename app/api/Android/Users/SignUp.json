@@ -65,6 +65,18 @@
           "rules": {}
         },
         "name": "Address"
+      },
+      {
+        "type": "text",
+        "name": "latitude"
+      },
+      {
+        "type": "text",
+        "name": "longitude"
+      },
+      {
+        "type": "text",
+        "name": "latitude"
       }
     ],
     "$_SERVER": [
@@ -520,11 +532,25 @@
                                             "column": "created_on",
                                             "type": "datetime",
                                             "value": "{{NOW}}"
+                                          },
+                                          {
+                                            "table": "r_shipping_add",
+                                            "column": "blank1",
+                                            "type": "text",
+                                            "value": "{{$_POST.latitude}}",
+                                            "condition": "{{$_POST.latitude}}"
+                                          },
+                                          {
+                                            "table": "r_shipping_add",
+                                            "column": "blank2",
+                                            "type": "text",
+                                            "value": "{{$_POST.longitude}}",
+                                            "condition": "{{$_POST.longitude}}"
                                           }
                                         ],
                                         "table": "r_shipping_add",
                                         "returning": "id",
-                                        "query": "INSERT INTO r_shipping_add\n(c_id, mobile, address1, district, state, country, pin, status, created_by, created_on) VALUES (:P1 /* {{AddUsers.identity}} */, :P2 /* {{$_POST.Mobile}} */, :P3 /* {{$_POST.Address}} */, :P4 /* {{$_POST.District}} */, :P5 /* {{'Assam'}} */, :P6 /* {{'India'}} */, :P7 /* {{$_POST.PIN}} */, :P8 /* {{2}} */, :P9 /* {{AddUsers.identity}} */, :P10 /* {{NOW}} */)",
+                                        "query": "INSERT INTO r_shipping_add\n(c_id, mobile, address1, district, state, country, pin, status, created_by, created_on, blank1, blank2) VALUES (:P1 /* {{AddUsers.identity}} */, :P2 /* {{$_POST.Mobile}} */, :P3 /* {{$_POST.Address}} */, :P4 /* {{$_POST.District}} */, :P5 /* {{'Assam'}} */, :P6 /* {{'India'}} */, :P7 /* {{$_POST.PIN}} */, :P8 /* {{2}} */, :P9 /* {{AddUsers.identity}} */, :P10 /* {{NOW}} */, :P11 /* {{$_POST.latitude}} */, :P12 /* {{$_POST.longitude}} */)",
                                         "params": [
                                           {
                                             "name": ":P1",
@@ -575,6 +601,16 @@
                                             "name": ":P10",
                                             "type": "expression",
                                             "value": "{{NOW}}"
+                                          },
+                                          {
+                                            "name": ":P11",
+                                            "type": "expression",
+                                            "value": "{{$_POST.latitude}}"
+                                          },
+                                          {
+                                            "name": ":P12",
+                                            "type": "expression",
+                                            "value": "{{$_POST.longitude}}"
                                           }
                                         ]
                                       }

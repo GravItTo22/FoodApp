@@ -1,0 +1,50 @@
+<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="restCountries" appConnect="local" components="{dmxBootstrap5TableGenerator:{}}" -->
+<meta name="ac:route" content="/restCountries">
+<dmx-serverconnect id="scRC" url="/api/Test/RestAPICountries"></dmx-serverconnect>
+<dmx-serverconnect id="scTable" url="/api/Test/TableData"></dmx-serverconnect>
+<dmx-serverconnect id="scPostalCode" url="/api/Test/PostalCode" dmx-param:pin="content.text1.value" noload></dmx-serverconnect>
+<div class="container my-5">
+    <div class="row">
+        <div class="col my-3">
+            <input id="text1" name="pin" type="text" class="form-control" dmx-on:change="scPostalCode.load({pin: value})">
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>District</th>
+                    </tr>
+                </thead>
+                <tbody dmx-generator="bs5table" is="dmx-repeat" dmx-bind:repeat="content.scPostalCode.data.PostOffices" id="tableRepeat2">
+                    <tr>
+                        <th>{{content.scPostalCode.data.PostOffices[$index].Name}}</th>
+                        <th>{{content.scPostalCode.data.PostOffices[$index].District}}</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="table-responsive my-5">
+        <table class="table table-striped table-bordered table-hover table-sm">
+            <thead>
+                <tr>
+                    <th>Language name</th>
+                    <th>Language code</th>
+                    <th>Status</th>
+                    <th>Created on</th>
+                </tr>
+            </thead>
+            <tbody is="dmx-repeat" dmx-generator="bs5table" dmx-bind:repeat="scTable.data.GetData.data" id="tableRepeat1">
+                <tr>
+                    <td dmx-text="language_name"></td>
+                    <td dmx-text="language_code"></td>
+                    <td dmx-text="status"></td>
+                    <td dmx-text="created_on"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- {{scRC.data.Countries}} -->
+</div>
+<!-- New Wappler Page -->

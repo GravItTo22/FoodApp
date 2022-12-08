@@ -58,6 +58,14 @@
       {
         "type": "text",
         "name": "logintoken"
+      },
+      {
+        "type": "text",
+        "name": "latitude"
+      },
+      {
+        "type": "text",
+        "name": "longitude"
       }
     ]
   },
@@ -300,6 +308,20 @@
                                     "column": "updated_on",
                                     "type": "datetime",
                                     "value": "{{NOW}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "blank1",
+                                    "type": "text",
+                                    "value": "{{$_POST.latitude}}",
+                                    "condition": "{{$_POST.latitude}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "blank2",
+                                    "type": "text",
+                                    "value": "{{$_POST.longitude}}",
+                                    "condition": "{{$_POST.longitude}}"
                                   }
                                 ],
                                 "table": "r_shipping_add",
@@ -322,7 +344,7 @@
                                   "valid": true
                                 },
                                 "returning": "id",
-                                "query": "UPDATE r_shipping_add\nSET mobile = :P1 /* {{$_POST.mobile}} */, address1 = :P2 /* {{$_POST.address}} */, email_id = :P3 /* {{$_POST.Email}} */, district = :P4 /* {{$_POST.district}} */, pin = :P5 /* {{$_POST.pincode}} */, status = :P6 /* {{2}} */, full_name = :P7 /* {{$_POST.name}} */, updated_on = :P8 /* {{NOW}} */\nWHERE id = :P9 /* {{$_POST.ShippingId}} */",
+                                "query": "UPDATE r_shipping_add\nSET mobile = :P1 /* {{$_POST.mobile}} */, address1 = :P2 /* {{$_POST.address}} */, email_id = :P3 /* {{$_POST.Email}} */, district = :P4 /* {{$_POST.district}} */, pin = :P5 /* {{$_POST.pincode}} */, status = :P6 /* {{2}} */, full_name = :P7 /* {{$_POST.name}} */, updated_on = :P8 /* {{NOW}} */, blank1 = :P9 /* {{$_POST.latitude}} */, blank2 = :P10 /* {{$_POST.longitude}} */\nWHERE id = :P11 /* {{$_POST.ShippingId}} */",
                                 "params": [
                                   {
                                     "name": ":P1",
@@ -365,9 +387,19 @@
                                     "value": "{{NOW}}"
                                   },
                                   {
+                                    "name": ":P9",
+                                    "type": "expression",
+                                    "value": "{{$_POST.latitude}}"
+                                  },
+                                  {
+                                    "name": ":P10",
+                                    "type": "expression",
+                                    "value": "{{$_POST.longitude}}"
+                                  },
+                                  {
                                     "operator": "equal",
                                     "type": "expression",
-                                    "name": ":P9",
+                                    "name": ":P11",
                                     "value": "{{$_POST.ShippingId}}"
                                   }
                                 ]

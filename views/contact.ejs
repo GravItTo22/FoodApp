@@ -81,7 +81,7 @@
                 </div>
             </div>
         </div>
-        <form action="#" id="scformContact">
+        <form action="/api/Users/ContactUs" id="scformContact" is="dmx-serverconnect-form" method="post" dmx-on:success="notifMain.success('Message sent successfully, we will contact you soon.');scformContact.reset(true)" dmx-on:unauthorized="notifMain.danger('Failed to send message')" dmx-on:forbidden="notifMain.danger('Failed to send message')" dmx-on:error="notifMain.danger('Failed to send message')">
             <div class="row">
                 <div class="col-lg-6 col-md-6">
                     <input class="form-control" type="text" placeholder="Your name" name="Name" required="">
@@ -93,10 +93,10 @@
                     <input class="form-control" type="text" placeholder="Your Mobile" name="Mobile" required="">
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    <input class="form-control" type="text" placeholder="Type Subject/ Purpose" name="subject" required="">
+                    <input class="form-control" type="text" placeholder="Type Subject/ Purpose" name="Subject" required="">
                 </div>
                 <div class="col-lg-12 text-center">
-                    <textarea class="form-control" placeholder="Your message" name="message" required=""></textarea>
+                    <textarea class="form-control" placeholder="Your message" name="Message" required=""></textarea>
                     <button type="submit" class="site-btn">SEND MESSAGE</button>
                 </div>
             </div>

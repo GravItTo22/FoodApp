@@ -150,205 +150,296 @@
                       "options": {
                         "if": "{{($_GET.lang=='HIN')}}",
                         "then": {
-                          "steps": {
-                            "name": "GetShops",
-                            "module": "dbconnector",
-                            "action": "single",
-                            "options": {
-                              "connection": "ClientApp",
-                              "sql": {
-                                "type": "SELECT",
-                                "columns": [
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "id",
-                                    "alias": "rest_id"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "cat_type_id"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "gen_shop_id"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "shop_name_hin",
-                                    "alias": "shop_name"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "shop_logo"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "address"
-                                  },
-                                  {
-                                    "table": "rsi",
-                                    "column": "cover_image"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "blank1",
-                                    "alias": "geo_loc"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "blank2",
-                                    "alias": "deliv_time"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "blank3",
-                                    "alias": "deliv_charge"
-                                  }
-                                ],
-                                "table": {
-                                  "name": "m_restaurant"
-                                },
-                                "primary": "id",
-                                "joins": [
-                                  {
-                                    "table": "rest_sliding_img",
-                                    "column": "*",
-                                    "alias": "rsi",
-                                    "type": "LEFT",
-                                    "clauses": {
-                                      "condition": "AND",
-                                      "rules": [
-                                        {
-                                          "table": "rsi",
-                                          "column": "rest_id",
-                                          "operator": "equal",
-                                          "value": {
-                                            "table": "m_restaurant",
-                                            "column": "id"
-                                          },
-                                          "operation": "="
-                                        }
-                                      ]
-                                    },
-                                    "primary": "id"
-                                  }
-                                ],
-                                "wheres": {
-                                  "condition": "AND",
-                                  "rules": [
+                          "steps": [
+                            {
+                              "name": "GetShops",
+                              "module": "dbconnector",
+                              "action": "single",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "SELECT",
+                                  "columns": [
                                     {
-                                      "id": "m_restaurant.id",
-                                      "field": "m_restaurant.id",
-                                      "type": "double",
-                                      "operator": "equal",
-                                      "value": "{{$_GET.rest_id}}",
-                                      "data": {
-                                        "table": "m_restaurant",
-                                        "column": "id",
-                                        "type": "number",
-                                        "columnObj": {
-                                          "type": "increments",
-                                          "default": "",
-                                          "primary": true,
-                                          "unique": true,
-                                          "nullable": false,
-                                          "name": "id"
-                                        }
-                                      },
-                                      "operation": "="
+                                      "table": "m_restaurant",
+                                      "column": "id",
+                                      "alias": "rest_id"
                                     },
                                     {
-                                      "id": "m_restaurant.market_id",
-                                      "field": "m_restaurant.market_id",
-                                      "type": "double",
-                                      "operator": "equal",
-                                      "value": "{{$_GET.market}}",
-                                      "data": {
-                                        "table": "m_restaurant",
-                                        "column": "market_id",
-                                        "type": "number",
-                                        "columnObj": {
-                                          "type": "reference",
-                                          "primary": false,
-                                          "unique": false,
-                                          "nullable": true,
-                                          "references": "id",
-                                          "inTable": "m_market",
-                                          "referenceType": "integer",
-                                          "onUpdate": "NO ACTION",
-                                          "onDelete": "NO ACTION",
-                                          "name": "market_id"
-                                        }
-                                      },
-                                      "operation": "="
+                                      "table": "m_restaurant",
+                                      "column": "cat_type_id"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "gen_shop_id"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "shop_name_hin",
+                                      "alias": "shop_name"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "shop_logo"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "address"
+                                    },
+                                    {
+                                      "table": "rsi",
+                                      "column": "cover_image"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "blank1",
+                                      "alias": "geo_loc"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "blank2",
+                                      "alias": "deliv_time"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "blank3",
+                                      "alias": "deliv_charge"
                                     }
                                   ],
-                                  "conditional": null,
-                                  "valid": true
-                                },
-                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_hin AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image, m_restaurant.blank1 AS geo_loc, m_restaurant.blank2 AS deliv_time, m_restaurant.blank3 AS deliv_charge\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
-                                "params": [
-                                  {
-                                    "operator": "equal",
-                                    "type": "expression",
-                                    "name": ":P1",
-                                    "value": "{{$_GET.rest_id}}"
+                                  "table": {
+                                    "name": "m_restaurant"
                                   },
-                                  {
-                                    "operator": "equal",
-                                    "type": "expression",
-                                    "name": ":P2",
-                                    "value": "{{$_GET.market}}"
-                                  }
-                                ]
-                              }
+                                  "primary": "id",
+                                  "joins": [
+                                    {
+                                      "table": "rest_sliding_img",
+                                      "column": "*",
+                                      "alias": "rsi",
+                                      "type": "LEFT",
+                                      "clauses": {
+                                        "condition": "AND",
+                                        "rules": [
+                                          {
+                                            "table": "rsi",
+                                            "column": "rest_id",
+                                            "operator": "equal",
+                                            "value": {
+                                              "table": "m_restaurant",
+                                              "column": "id"
+                                            },
+                                            "operation": "="
+                                          }
+                                        ]
+                                      },
+                                      "primary": "id"
+                                    }
+                                  ],
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "m_restaurant.id",
+                                        "field": "m_restaurant.id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{$_GET.rest_id}}",
+                                        "data": {
+                                          "table": "m_restaurant",
+                                          "column": "id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "increments",
+                                            "default": "",
+                                            "primary": true,
+                                            "unique": true,
+                                            "nullable": false,
+                                            "name": "id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      },
+                                      {
+                                        "id": "m_restaurant.market_id",
+                                        "field": "m_restaurant.market_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{$_GET.market}}",
+                                        "data": {
+                                          "table": "m_restaurant",
+                                          "column": "market_id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "reference",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "references": "id",
+                                            "inTable": "m_market",
+                                            "referenceType": "integer",
+                                            "onUpdate": "NO ACTION",
+                                            "onDelete": "NO ACTION",
+                                            "name": "market_id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_hin AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image, m_restaurant.blank1 AS geo_loc, m_restaurant.blank2 AS deliv_time, m_restaurant.blank3 AS deliv_charge\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
+                                  "params": [
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P1",
+                                      "value": "{{$_GET.rest_id}}"
+                                    },
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P2",
+                                      "value": "{{$_GET.market}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "output": true,
+                              "meta": [
+                                {
+                                  "type": "number",
+                                  "name": "rest_id"
+                                },
+                                {
+                                  "type": "number",
+                                  "name": "cat_type_id"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "gen_shop_id"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "shop_name"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "shop_logo"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "address"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "cover_image"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "geo_loc"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "deliv_time"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "deliv_charge"
+                                }
+                              ],
+                              "outputType": "object",
+                              "type": "dbconnector_single"
                             },
-                            "output": true,
-                            "meta": [
-                              {
-                                "type": "number",
-                                "name": "rest_id"
+                            {
+                              "name": "GetReview",
+                              "module": "dbconnector",
+                              "action": "single",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "SELECT",
+                                  "columns": [
+                                    {
+                                      "table": "r_rest_review",
+                                      "column": "review_value",
+                                      "alias": "avg_review",
+                                      "aggregate": "AVG"
+                                    }
+                                  ],
+                                  "table": {
+                                    "name": "r_rest_review"
+                                  },
+                                  "primary": "id",
+                                  "joins": [],
+                                  "groupBy": [],
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "r_rest_review.rest_id",
+                                        "field": "r_rest_review.rest_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{$_GET.rest_id}}",
+                                        "data": {
+                                          "table": "r_rest_review",
+                                          "column": "rest_id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "integer",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "rest_id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      },
+                                      {
+                                        "id": "r_rest_review.status",
+                                        "field": "r_rest_review.status",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": 1,
+                                        "data": {
+                                          "table": "r_rest_review",
+                                          "column": "status",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "integer",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "status"
+                                          }
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "query": "SELECT AVG(review_value) AS avg_review\nFROM r_rest_review\nWHERE rest_id = :P1 /* {{$_GET.rest_id}} */ AND status = 1",
+                                  "params": [
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P1",
+                                      "value": "{{$_GET.rest_id}}"
+                                    }
+                                  ]
+                                }
                               },
-                              {
-                                "type": "number",
-                                "name": "cat_type_id"
-                              },
-                              {
-                                "type": "text",
-                                "name": "gen_shop_id"
-                              },
-                              {
-                                "type": "text",
-                                "name": "shop_name"
-                              },
-                              {
-                                "type": "text",
-                                "name": "shop_logo"
-                              },
-                              {
-                                "type": "text",
-                                "name": "address"
-                              },
-                              {
-                                "type": "text",
-                                "name": "cover_image"
-                              },
-                              {
-                                "type": "text",
-                                "name": "geo_loc"
-                              },
-                              {
-                                "type": "text",
-                                "name": "deliv_time"
-                              },
-                              {
-                                "type": "text",
-                                "name": "deliv_charge"
-                              }
-                            ],
-                            "outputType": "object",
-                            "type": "dbconnector_single"
-                          }
+                              "output": true,
+                              "meta": [
+                                {
+                                  "type": "number",
+                                  "name": "avg_review"
+                                }
+                              ],
+                              "outputType": "object"
+                            }
+                          ]
                         }
                       },
                       "outputType": "boolean"
@@ -360,205 +451,296 @@
                       "options": {
                         "if": "{{($_GET.lang=='BN')}}",
                         "then": {
-                          "steps": {
-                            "name": "GetShops",
-                            "module": "dbconnector",
-                            "action": "single",
-                            "options": {
-                              "connection": "ClientApp",
-                              "sql": {
-                                "type": "SELECT",
-                                "columns": [
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "id",
-                                    "alias": "rest_id"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "cat_type_id"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "gen_shop_id"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "shop_name_bn",
-                                    "alias": "shop_name"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "shop_logo"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "address"
-                                  },
-                                  {
-                                    "table": "rsi",
-                                    "column": "cover_image"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "blank1",
-                                    "alias": "geo_loc"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "blank2",
-                                    "alias": "deliv_time"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "blank3",
-                                    "alias": "deliv_charge"
-                                  }
-                                ],
-                                "table": {
-                                  "name": "m_restaurant"
-                                },
-                                "primary": "id",
-                                "joins": [
-                                  {
-                                    "table": "rest_sliding_img",
-                                    "column": "*",
-                                    "alias": "rsi",
-                                    "type": "LEFT",
-                                    "clauses": {
-                                      "condition": "AND",
-                                      "rules": [
-                                        {
-                                          "table": "rsi",
-                                          "column": "rest_id",
-                                          "operator": "equal",
-                                          "value": {
-                                            "table": "m_restaurant",
-                                            "column": "id"
-                                          },
-                                          "operation": "="
-                                        }
-                                      ]
-                                    },
-                                    "primary": "id"
-                                  }
-                                ],
-                                "wheres": {
-                                  "condition": "AND",
-                                  "rules": [
+                          "steps": [
+                            {
+                              "name": "GetShops",
+                              "module": "dbconnector",
+                              "action": "single",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "SELECT",
+                                  "columns": [
                                     {
-                                      "id": "m_restaurant.id",
-                                      "field": "m_restaurant.id",
-                                      "type": "double",
-                                      "operator": "equal",
-                                      "value": "{{$_GET.rest_id}}",
-                                      "data": {
-                                        "table": "m_restaurant",
-                                        "column": "id",
-                                        "type": "number",
-                                        "columnObj": {
-                                          "type": "increments",
-                                          "default": "",
-                                          "primary": true,
-                                          "unique": true,
-                                          "nullable": false,
-                                          "name": "id"
-                                        }
-                                      },
-                                      "operation": "="
+                                      "table": "m_restaurant",
+                                      "column": "id",
+                                      "alias": "rest_id"
                                     },
                                     {
-                                      "id": "m_restaurant.market_id",
-                                      "field": "m_restaurant.market_id",
-                                      "type": "double",
-                                      "operator": "equal",
-                                      "value": "{{$_GET.market}}",
-                                      "data": {
-                                        "table": "m_restaurant",
-                                        "column": "market_id",
-                                        "type": "number",
-                                        "columnObj": {
-                                          "type": "reference",
-                                          "primary": false,
-                                          "unique": false,
-                                          "nullable": true,
-                                          "references": "id",
-                                          "inTable": "m_market",
-                                          "referenceType": "integer",
-                                          "onUpdate": "NO ACTION",
-                                          "onDelete": "NO ACTION",
-                                          "name": "market_id"
-                                        }
-                                      },
-                                      "operation": "="
+                                      "table": "m_restaurant",
+                                      "column": "cat_type_id"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "gen_shop_id"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "shop_name_bn",
+                                      "alias": "shop_name"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "shop_logo"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "address"
+                                    },
+                                    {
+                                      "table": "rsi",
+                                      "column": "cover_image"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "blank1",
+                                      "alias": "geo_loc"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "blank2",
+                                      "alias": "deliv_time"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "blank3",
+                                      "alias": "deliv_charge"
                                     }
                                   ],
-                                  "conditional": null,
-                                  "valid": true
-                                },
-                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_bn AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image, m_restaurant.blank1 AS geo_loc, m_restaurant.blank2 AS deliv_time, m_restaurant.blank3 AS deliv_charge\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
-                                "params": [
-                                  {
-                                    "operator": "equal",
-                                    "type": "expression",
-                                    "name": ":P1",
-                                    "value": "{{$_GET.rest_id}}"
+                                  "table": {
+                                    "name": "m_restaurant"
                                   },
-                                  {
-                                    "operator": "equal",
-                                    "type": "expression",
-                                    "name": ":P2",
-                                    "value": "{{$_GET.market}}"
-                                  }
-                                ]
-                              }
+                                  "primary": "id",
+                                  "joins": [
+                                    {
+                                      "table": "rest_sliding_img",
+                                      "column": "*",
+                                      "alias": "rsi",
+                                      "type": "LEFT",
+                                      "clauses": {
+                                        "condition": "AND",
+                                        "rules": [
+                                          {
+                                            "table": "rsi",
+                                            "column": "rest_id",
+                                            "operator": "equal",
+                                            "value": {
+                                              "table": "m_restaurant",
+                                              "column": "id"
+                                            },
+                                            "operation": "="
+                                          }
+                                        ]
+                                      },
+                                      "primary": "id"
+                                    }
+                                  ],
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "m_restaurant.id",
+                                        "field": "m_restaurant.id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{$_GET.rest_id}}",
+                                        "data": {
+                                          "table": "m_restaurant",
+                                          "column": "id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "increments",
+                                            "default": "",
+                                            "primary": true,
+                                            "unique": true,
+                                            "nullable": false,
+                                            "name": "id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      },
+                                      {
+                                        "id": "m_restaurant.market_id",
+                                        "field": "m_restaurant.market_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{$_GET.market}}",
+                                        "data": {
+                                          "table": "m_restaurant",
+                                          "column": "market_id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "reference",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "references": "id",
+                                            "inTable": "m_market",
+                                            "referenceType": "integer",
+                                            "onUpdate": "NO ACTION",
+                                            "onDelete": "NO ACTION",
+                                            "name": "market_id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_bn AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image, m_restaurant.blank1 AS geo_loc, m_restaurant.blank2 AS deliv_time, m_restaurant.blank3 AS deliv_charge\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
+                                  "params": [
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P1",
+                                      "value": "{{$_GET.rest_id}}"
+                                    },
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P2",
+                                      "value": "{{$_GET.market}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "output": true,
+                              "meta": [
+                                {
+                                  "type": "number",
+                                  "name": "rest_id"
+                                },
+                                {
+                                  "type": "number",
+                                  "name": "cat_type_id"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "gen_shop_id"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "shop_name"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "shop_logo"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "address"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "cover_image"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "geo_loc"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "deliv_time"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "deliv_charge"
+                                }
+                              ],
+                              "outputType": "object",
+                              "type": "dbconnector_single"
                             },
-                            "output": true,
-                            "meta": [
-                              {
-                                "type": "number",
-                                "name": "rest_id"
+                            {
+                              "name": "GetReview",
+                              "module": "dbconnector",
+                              "action": "single",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "SELECT",
+                                  "columns": [
+                                    {
+                                      "table": "r_rest_review",
+                                      "column": "review_value",
+                                      "alias": "avg_review",
+                                      "aggregate": "AVG"
+                                    }
+                                  ],
+                                  "table": {
+                                    "name": "r_rest_review"
+                                  },
+                                  "primary": "id",
+                                  "joins": [],
+                                  "groupBy": [],
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "r_rest_review.rest_id",
+                                        "field": "r_rest_review.rest_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{$_GET.rest_id}}",
+                                        "data": {
+                                          "table": "r_rest_review",
+                                          "column": "rest_id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "integer",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "rest_id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      },
+                                      {
+                                        "id": "r_rest_review.status",
+                                        "field": "r_rest_review.status",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": 1,
+                                        "data": {
+                                          "table": "r_rest_review",
+                                          "column": "status",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "integer",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "status"
+                                          }
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "query": "SELECT AVG(review_value) AS avg_review\nFROM r_rest_review\nWHERE rest_id = :P1 /* {{$_GET.rest_id}} */ AND status = 1",
+                                  "params": [
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P1",
+                                      "value": "{{$_GET.rest_id}}"
+                                    }
+                                  ]
+                                }
                               },
-                              {
-                                "type": "number",
-                                "name": "cat_type_id"
-                              },
-                              {
-                                "type": "text",
-                                "name": "gen_shop_id"
-                              },
-                              {
-                                "type": "text",
-                                "name": "shop_name"
-                              },
-                              {
-                                "type": "text",
-                                "name": "shop_logo"
-                              },
-                              {
-                                "type": "text",
-                                "name": "address"
-                              },
-                              {
-                                "type": "text",
-                                "name": "cover_image"
-                              },
-                              {
-                                "type": "text",
-                                "name": "geo_loc"
-                              },
-                              {
-                                "type": "text",
-                                "name": "deliv_time"
-                              },
-                              {
-                                "type": "text",
-                                "name": "deliv_charge"
-                              }
-                            ],
-                            "outputType": "object",
-                            "type": "dbconnector_single"
-                          }
+                              "output": true,
+                              "meta": [
+                                {
+                                  "type": "number",
+                                  "name": "avg_review"
+                                }
+                              ],
+                              "outputType": "object"
+                            }
+                          ]
                         }
                       },
                       "outputType": "boolean"
@@ -570,205 +752,296 @@
                       "options": {
                         "if": "{{($_GET.lang=='EN')}}",
                         "then": {
-                          "steps": {
-                            "name": "GetShops",
-                            "module": "dbconnector",
-                            "action": "single",
-                            "options": {
-                              "connection": "ClientApp",
-                              "sql": {
-                                "type": "SELECT",
-                                "columns": [
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "id",
-                                    "alias": "rest_id"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "cat_type_id"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "gen_shop_id"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "shop_name_en",
-                                    "alias": "shop_name"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "shop_logo"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "address"
-                                  },
-                                  {
-                                    "table": "rsi",
-                                    "column": "cover_image"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "blank1",
-                                    "alias": "geo_loc"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "blank2",
-                                    "alias": "deliv_time"
-                                  },
-                                  {
-                                    "table": "m_restaurant",
-                                    "column": "blank3",
-                                    "alias": "deliv_charge"
-                                  }
-                                ],
-                                "table": {
-                                  "name": "m_restaurant"
-                                },
-                                "primary": "id",
-                                "joins": [
-                                  {
-                                    "table": "rest_sliding_img",
-                                    "column": "*",
-                                    "alias": "rsi",
-                                    "type": "LEFT",
-                                    "clauses": {
-                                      "condition": "AND",
-                                      "rules": [
-                                        {
-                                          "table": "rsi",
-                                          "column": "rest_id",
-                                          "operator": "equal",
-                                          "value": {
-                                            "table": "m_restaurant",
-                                            "column": "id"
-                                          },
-                                          "operation": "="
-                                        }
-                                      ]
-                                    },
-                                    "primary": "id"
-                                  }
-                                ],
-                                "wheres": {
-                                  "condition": "AND",
-                                  "rules": [
+                          "steps": [
+                            {
+                              "name": "GetShops",
+                              "module": "dbconnector",
+                              "action": "single",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "SELECT",
+                                  "columns": [
                                     {
-                                      "id": "m_restaurant.id",
-                                      "field": "m_restaurant.id",
-                                      "type": "double",
-                                      "operator": "equal",
-                                      "value": "{{$_GET.rest_id}}",
-                                      "data": {
-                                        "table": "m_restaurant",
-                                        "column": "id",
-                                        "type": "number",
-                                        "columnObj": {
-                                          "type": "increments",
-                                          "default": "",
-                                          "primary": true,
-                                          "unique": true,
-                                          "nullable": false,
-                                          "name": "id"
-                                        }
-                                      },
-                                      "operation": "="
+                                      "table": "m_restaurant",
+                                      "column": "id",
+                                      "alias": "rest_id"
                                     },
                                     {
-                                      "id": "m_restaurant.market_id",
-                                      "field": "m_restaurant.market_id",
-                                      "type": "double",
-                                      "operator": "equal",
-                                      "value": "{{$_GET.market}}",
-                                      "data": {
-                                        "table": "m_restaurant",
-                                        "column": "market_id",
-                                        "type": "number",
-                                        "columnObj": {
-                                          "type": "reference",
-                                          "primary": false,
-                                          "unique": false,
-                                          "nullable": true,
-                                          "references": "id",
-                                          "inTable": "m_market",
-                                          "referenceType": "integer",
-                                          "onUpdate": "NO ACTION",
-                                          "onDelete": "NO ACTION",
-                                          "name": "market_id"
-                                        }
-                                      },
-                                      "operation": "="
+                                      "table": "m_restaurant",
+                                      "column": "cat_type_id"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "gen_shop_id"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "shop_name_en",
+                                      "alias": "shop_name"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "shop_logo"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "address"
+                                    },
+                                    {
+                                      "table": "rsi",
+                                      "column": "cover_image"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "blank1",
+                                      "alias": "geo_loc"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "blank2",
+                                      "alias": "deliv_time"
+                                    },
+                                    {
+                                      "table": "m_restaurant",
+                                      "column": "blank3",
+                                      "alias": "deliv_charge"
                                     }
                                   ],
-                                  "conditional": null,
-                                  "valid": true
-                                },
-                                "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_en AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image, m_restaurant.blank1 AS geo_loc, m_restaurant.blank2 AS deliv_time, m_restaurant.blank3 AS deliv_charge\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
-                                "params": [
-                                  {
-                                    "operator": "equal",
-                                    "type": "expression",
-                                    "name": ":P1",
-                                    "value": "{{$_GET.rest_id}}"
+                                  "table": {
+                                    "name": "m_restaurant"
                                   },
-                                  {
-                                    "operator": "equal",
-                                    "type": "expression",
-                                    "name": ":P2",
-                                    "value": "{{$_GET.market}}"
-                                  }
-                                ]
-                              }
+                                  "primary": "id",
+                                  "joins": [
+                                    {
+                                      "table": "rest_sliding_img",
+                                      "column": "*",
+                                      "alias": "rsi",
+                                      "type": "LEFT",
+                                      "clauses": {
+                                        "condition": "AND",
+                                        "rules": [
+                                          {
+                                            "table": "rsi",
+                                            "column": "rest_id",
+                                            "operator": "equal",
+                                            "value": {
+                                              "table": "m_restaurant",
+                                              "column": "id"
+                                            },
+                                            "operation": "="
+                                          }
+                                        ]
+                                      },
+                                      "primary": "id"
+                                    }
+                                  ],
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "m_restaurant.id",
+                                        "field": "m_restaurant.id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{$_GET.rest_id}}",
+                                        "data": {
+                                          "table": "m_restaurant",
+                                          "column": "id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "increments",
+                                            "default": "",
+                                            "primary": true,
+                                            "unique": true,
+                                            "nullable": false,
+                                            "name": "id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      },
+                                      {
+                                        "id": "m_restaurant.market_id",
+                                        "field": "m_restaurant.market_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{$_GET.market}}",
+                                        "data": {
+                                          "table": "m_restaurant",
+                                          "column": "market_id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "reference",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "references": "id",
+                                            "inTable": "m_market",
+                                            "referenceType": "integer",
+                                            "onUpdate": "NO ACTION",
+                                            "onDelete": "NO ACTION",
+                                            "name": "market_id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "query": "SELECT m_restaurant.id AS rest_id, m_restaurant.cat_type_id, m_restaurant.gen_shop_id, m_restaurant.shop_name_en AS shop_name, m_restaurant.shop_logo, m_restaurant.address, rsi.cover_image, m_restaurant.blank1 AS geo_loc, m_restaurant.blank2 AS deliv_time, m_restaurant.blank3 AS deliv_charge\nFROM m_restaurant\nLEFT JOIN rest_sliding_img AS rsi ON (rsi.rest_id = m_restaurant.id)\nWHERE m_restaurant.id = :P1 /* {{$_GET.rest_id}} */ AND m_restaurant.market_id = :P2 /* {{$_GET.market}} */",
+                                  "params": [
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P1",
+                                      "value": "{{$_GET.rest_id}}"
+                                    },
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P2",
+                                      "value": "{{$_GET.market}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "output": true,
+                              "meta": [
+                                {
+                                  "type": "number",
+                                  "name": "rest_id"
+                                },
+                                {
+                                  "type": "number",
+                                  "name": "cat_type_id"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "gen_shop_id"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "shop_name"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "shop_logo"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "address"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "cover_image"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "geo_loc"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "deliv_time"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "deliv_charge"
+                                }
+                              ],
+                              "outputType": "object",
+                              "type": "dbconnector_single"
                             },
-                            "output": true,
-                            "meta": [
-                              {
-                                "type": "number",
-                                "name": "rest_id"
+                            {
+                              "name": "GetReview",
+                              "module": "dbconnector",
+                              "action": "single",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "SELECT",
+                                  "columns": [
+                                    {
+                                      "table": "r_rest_review",
+                                      "column": "review_value",
+                                      "alias": "avg_review",
+                                      "aggregate": "AVG"
+                                    }
+                                  ],
+                                  "table": {
+                                    "name": "r_rest_review"
+                                  },
+                                  "primary": "id",
+                                  "joins": [],
+                                  "groupBy": [],
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "r_rest_review.rest_id",
+                                        "field": "r_rest_review.rest_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{$_GET.rest_id}}",
+                                        "data": {
+                                          "table": "r_rest_review",
+                                          "column": "rest_id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "integer",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "rest_id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      },
+                                      {
+                                        "id": "r_rest_review.status",
+                                        "field": "r_rest_review.status",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": 1,
+                                        "data": {
+                                          "table": "r_rest_review",
+                                          "column": "status",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "integer",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "status"
+                                          }
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "query": "SELECT AVG(review_value) AS avg_review\nFROM r_rest_review\nWHERE rest_id = :P1 /* {{$_GET.rest_id}} */ AND status = 1",
+                                  "params": [
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P1",
+                                      "value": "{{$_GET.rest_id}}"
+                                    }
+                                  ]
+                                }
                               },
-                              {
-                                "type": "number",
-                                "name": "cat_type_id"
-                              },
-                              {
-                                "type": "text",
-                                "name": "gen_shop_id"
-                              },
-                              {
-                                "type": "text",
-                                "name": "shop_name"
-                              },
-                              {
-                                "type": "text",
-                                "name": "shop_logo"
-                              },
-                              {
-                                "type": "text",
-                                "name": "address"
-                              },
-                              {
-                                "type": "text",
-                                "name": "cover_image"
-                              },
-                              {
-                                "type": "text",
-                                "name": "geo_loc"
-                              },
-                              {
-                                "type": "text",
-                                "name": "deliv_time"
-                              },
-                              {
-                                "type": "text",
-                                "name": "deliv_charge"
-                              }
-                            ],
-                            "outputType": "object",
-                            "type": "dbconnector_single"
-                          }
+                              "output": true,
+                              "meta": [
+                                {
+                                  "type": "number",
+                                  "name": "avg_review"
+                                }
+                              ],
+                              "outputType": "object"
+                            }
+                          ]
                         }
                       },
                       "outputType": "boolean"

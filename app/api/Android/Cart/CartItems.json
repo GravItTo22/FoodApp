@@ -8,6 +8,10 @@
       {
         "type": "text",
         "name": "lang"
+      },
+      {
+        "type": "text",
+        "name": "market"
       }
     ],
     "$_SESSION": [
@@ -251,6 +255,102 @@
                                         }
                                       ],
                                       "outputType": "array"
+                                    },
+                                    {
+                                      "name": "CalculateDistance",
+                                      "module": "dbupdater",
+                                      "action": "custom",
+                                      "options": {
+                                        "connection": "ClientApp",
+                                        "sql": {
+                                          "query": "SELECT rsa.blank1, rsa.blank2, (select msc1.base_charge from public.m_shipping_charge msc1 where msc1.market_id=@market and msc1.status=1), (select msc2.add_charge_per_km from public.m_shipping_charge msc2 where msc2.market_id=@market and msc2.status=1),\nSQRT(POW(69.1 * (rsa.blank1::float - (select msc.office_lat::float from public.m_shipping_charge msc where msc.market_id=@market and msc.status=1)), 2) + POW(69.1 * ((select msc.office_long::float from public.m_shipping_charge msc where msc.market_id=@market and msc.status=1) - rsa.blank2::float) * COS(rsa.blank1::float / 57.3), 2)) AS distance\nFROM r_shipping_add rsa \nwhere rsa.c_id =@user and rsa.status = @active_address order by rsa.id desc limit 1;",
+                                          "params": [
+                                            {
+                                              "name": "@user",
+                                              "value": "{{GetUser.user_id}}",
+                                              "test": "82"
+                                            },
+                                            {
+                                              "name": "@active_address",
+                                              "value": "{{2}}",
+                                              "test": "2"
+                                            },
+                                            {
+                                              "name": "@market",
+                                              "value": "{{$_GET.market}}",
+                                              "test": "1"
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "output": false,
+                                      "meta": [
+                                        {
+                                          "name": "blank1",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "blank2",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "base_charge",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "add_charge_per_km",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "distance",
+                                          "type": "number"
+                                        }
+                                      ],
+                                      "outputType": "array"
+                                    },
+                                    {
+                                      "name": "BaseCharge",
+                                      "module": "core",
+                                      "action": "setvalue",
+                                      "options": {
+                                        "value": "{{CalculateDistance[0].base_charge}}"
+                                      },
+                                      "meta": [],
+                                      "outputType": "text",
+                                      "output": true
+                                    },
+                                    {
+                                      "name": "ChargePerKM",
+                                      "module": "core",
+                                      "action": "setvalue",
+                                      "options": {
+                                        "value": "{{CalculateDistance[0].add_charge_per_km}}"
+                                      },
+                                      "meta": [],
+                                      "outputType": "text",
+                                      "output": true
+                                    },
+                                    {
+                                      "name": "DistanceInKm",
+                                      "module": "core",
+                                      "action": "setvalue",
+                                      "options": {
+                                        "value": "{{CalculateDistance[0].distance}}"
+                                      },
+                                      "meta": [],
+                                      "outputType": "text",
+                                      "output": true
+                                    },
+                                    {
+                                      "name": "ShippingCharge",
+                                      "module": "core",
+                                      "action": "setvalue",
+                                      "options": {
+                                        "value": "{{CalculateDistance[0].base_charge.toNumber()+(CalculateDistance[0].add_charge_per_km.toNumber()*CalculateDistance[0].distance.toNumber())}}"
+                                      },
+                                      "meta": [],
+                                      "outputType": "text",
+                                      "output": true
                                     },
                                     {
                                       "name": "",

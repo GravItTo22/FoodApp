@@ -268,7 +268,7 @@
                                             {
                                               "name": "@user",
                                               "value": "{{GetUser.user_id}}",
-                                              "test": "82"
+                                              "test": "84"
                                             },
                                             {
                                               "name": "@active_address",
@@ -309,48 +309,109 @@
                                       "outputType": "array"
                                     },
                                     {
-                                      "name": "BaseCharge",
+                                      "name": "",
                                       "module": "core",
-                                      "action": "setvalue",
+                                      "action": "condition",
                                       "options": {
-                                        "value": "{{CalculateDistance[0].base_charge}}"
+                                        "if": "{{CalculateDistance}}",
+                                        "then": {
+                                          "steps": [
+                                            {
+                                              "name": "BaseCharge",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "{{CalculateDistance[0].base_charge}}"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text",
+                                              "output": true
+                                            },
+                                            {
+                                              "name": "ChargePerKM",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "{{CalculateDistance[0].add_charge_per_km}}"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text",
+                                              "output": true
+                                            },
+                                            {
+                                              "name": "DistanceInKm",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "{{CalculateDistance[0].distance}}"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text",
+                                              "output": true
+                                            },
+                                            {
+                                              "name": "ShippingCharge",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "{{CalculateDistance[0].base_charge.toNumber()+(CalculateDistance[0].add_charge_per_km.toNumber()*CalculateDistance[0].distance.toNumber())}}"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text",
+                                              "output": true
+                                            }
+                                          ]
+                                        },
+                                        "else": {
+                                          "steps": [
+                                            {
+                                              "name": "BaseCharge",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "0\n"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text",
+                                              "output": true
+                                            },
+                                            {
+                                              "name": "ChargePerKM",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "0\n"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text",
+                                              "output": true
+                                            },
+                                            {
+                                              "name": "DistanceInKm",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "0\n"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text",
+                                              "output": true
+                                            },
+                                            {
+                                              "name": "ShippingCharge",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": 50
+                                              },
+                                              "meta": [],
+                                              "outputType": "text",
+                                              "output": true
+                                            }
+                                          ]
+                                        }
                                       },
-                                      "meta": [],
-                                      "outputType": "text",
-                                      "output": true
-                                    },
-                                    {
-                                      "name": "ChargePerKM",
-                                      "module": "core",
-                                      "action": "setvalue",
-                                      "options": {
-                                        "value": "{{CalculateDistance[0].add_charge_per_km}}"
-                                      },
-                                      "meta": [],
-                                      "outputType": "text",
-                                      "output": true
-                                    },
-                                    {
-                                      "name": "DistanceInKm",
-                                      "module": "core",
-                                      "action": "setvalue",
-                                      "options": {
-                                        "value": "{{CalculateDistance[0].distance}}"
-                                      },
-                                      "meta": [],
-                                      "outputType": "text",
-                                      "output": true
-                                    },
-                                    {
-                                      "name": "ShippingCharge",
-                                      "module": "core",
-                                      "action": "setvalue",
-                                      "options": {
-                                        "value": "{{CalculateDistance[0].base_charge.toNumber()+(CalculateDistance[0].add_charge_per_km.toNumber()*CalculateDistance[0].distance.toNumber())}}"
-                                      },
-                                      "meta": [],
-                                      "outputType": "text",
-                                      "output": true
+                                      "outputType": "boolean"
                                     },
                                     {
                                       "name": "",

@@ -146,7 +146,7 @@
                       "options": {
                         "connection": "ClientApp",
                         "sql": {
-                          "query": "select rod.id, rod.prod_id as p_id, rod.price_id, rod.prod_qty, rod.each_unit_price, rod.each_net_amt, rod.order_status, rod.created_on, rod.updated_on, \nmp.prod_id, mp.prod_name_en as prod_name, mp.prod_mark_id, mp.prod_img1, mr.shop_name_en as shop_name, rpt.quantity as howmuch, rpt.q_unit, rpt.mrp \nfrom r_order_details rod \nleft join m_product mp on (mp.id = rod.prod_id)\nleft join m_restaurant mr on (mr.id = mp.rest_id)\nleft join r_price_table rpt on (rpt.id = rod.price_id)\nwhere rod.user_id = @user_id and rod.order_table_id = @order_id;",
+                          "query": "select rod.id, rod.prod_id as p_id, rod.price_id, rod.prod_qty, rod.each_unit_price, rod.each_net_amt, rod.order_status, rod.created_on::text, rod.updated_on::text, \nmp.prod_id, mp.prod_name_en as prod_name, mp.prod_mark_id, mp.prod_img1, mr.shop_name_en as shop_name, rpt.quantity as howmuch, rpt.q_unit, rpt.mrp \nfrom r_order_details rod \nleft join m_product mp on (mp.id = rod.prod_id)\nleft join m_restaurant mr on (mr.id = mp.rest_id)\nleft join r_price_table rpt on (rpt.id = rod.price_id)\nwhere rod.user_id = @user_id and rod.order_table_id = @order_id;",
                           "params": [
                             {
                               "name": "@user_id",

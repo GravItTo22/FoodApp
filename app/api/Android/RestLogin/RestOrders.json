@@ -387,93 +387,198 @@
                               "outputType": "text"
                             },
                             {
-                              "name": "GetOrders",
-                              "module": "dbupdater",
-                              "action": "custom",
+                              "name": "",
+                              "module": "core",
+                              "action": "condition",
                               "options": {
-                                "connection": "ClientApp",
-                                "sql": {
-                                  "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address, ro.pin, ro.dist, ro.state, ro.status as order_status, ro.payment_status, ro.created_on::text, ro.updated_on::text, mp.rest_id \nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nwhere mp.rest_id = @rest_id and ro.status=@order_status and ro.created_on::text between @fromdate and @todate group by ro.id, mp.rest_id order by ro.id desc;",
-                                  "params": [
-                                    {
-                                      "name": "@rest_id",
-                                      "value": "{{$_GET.rest_id}}",
-                                      "test": "9"
+                                "if": "{{$_GET.order_status==0}}",
+                                "then": {
+                                  "steps": {
+                                    "name": "GetOrders",
+                                    "module": "dbupdater",
+                                    "action": "custom",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address, ro.pin, ro.dist, ro.state, ro.status as order_status, ro.payment_status, ro.created_on::text, ro.updated_on::text, mp.rest_id, count(rod.id) as items \nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nwhere mp.rest_id = @rest_id and ro.status between 1 and 6 and ro.created_on::text between @fromdate and @todate group by ro.id, mp.rest_id order by ro.id desc;",
+                                        "params": [
+                                          {
+                                            "name": "@rest_id",
+                                            "value": "{{$_GET.rest_id}}",
+                                            "test": "9"
+                                          },
+                                          {
+                                            "name": "@fromdate",
+                                            "value": "{{$_GET.from_date+' 00:00:00'}}",
+                                            "test": "2022-11-29 00:00:00"
+                                          },
+                                          {
+                                            "name": "@todate",
+                                            "value": "{{$_GET.to_date+' 23:59:59'}}",
+                                            "test": "2022-12-10 23:59:59"
+                                          }
+                                        ]
+                                      }
                                     },
-                                    {
-                                      "name": "@order_status",
-                                      "value": "{{$_GET.order_status}}",
-                                      "test": "5"
+                                    "output": true,
+                                    "meta": [
+                                      {
+                                        "name": "id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "order_id",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "user_id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "user_name",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "address",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "pin",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "dist",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "state",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "order_status",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "payment_status",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "created_on",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "updated_on",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "rest_id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "items",
+                                        "type": "text"
+                                      }
+                                    ],
+                                    "outputType": "array"
+                                  }
+                                },
+                                "else": {
+                                  "steps": {
+                                    "name": "GetOrders",
+                                    "module": "dbupdater",
+                                    "action": "custom",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address, ro.pin, ro.dist, ro.state, ro.status as order_status, ro.payment_status, ro.created_on::text, ro.updated_on::text, mp.rest_id, count(rod.id) as items \nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nwhere mp.rest_id = @rest_id and ro.status=@order_status and ro.created_on::text between @fromdate and @todate group by ro.id, mp.rest_id order by ro.id desc;",
+                                        "params": [
+                                          {
+                                            "name": "@rest_id",
+                                            "value": "{{$_GET.rest_id}}",
+                                            "test": "9"
+                                          },
+                                          {
+                                            "name": "@order_status",
+                                            "value": "{{$_GET.order_status}}",
+                                            "test": "1"
+                                          },
+                                          {
+                                            "name": "@fromdate",
+                                            "value": "{{$_GET.from_date+' 00:00:00'}}",
+                                            "test": "2022-11-29 00:00:00"
+                                          },
+                                          {
+                                            "name": "@todate",
+                                            "value": "{{$_GET.to_date+' 23:59:59'}}",
+                                            "test": "2022-12-10 23:59:59"
+                                          }
+                                        ]
+                                      }
                                     },
-                                    {
-                                      "name": "@fromdate",
-                                      "value": "{{$_GET.from_date+' 00:00:00'}}",
-                                      "test": "2022-11-29 00:00:00"
-                                    },
-                                    {
-                                      "name": "@todate",
-                                      "value": "{{$_GET.to_date+' 23:59:59'}}",
-                                      "test": "2022-12-01 23:59:59"
-                                    }
-                                  ]
+                                    "output": true,
+                                    "meta": [
+                                      {
+                                        "name": "id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "order_id",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "user_id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "user_name",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "address",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "pin",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "dist",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "state",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "order_status",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "payment_status",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "created_on",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "updated_on",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "rest_id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "items",
+                                        "type": "text"
+                                      }
+                                    ],
+                                    "outputType": "array"
+                                  }
                                 }
                               },
-                              "output": true,
-                              "meta": [
-                                {
-                                  "name": "id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "order_id",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "user_id",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "user_name",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "address",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "pin",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "dist",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "state",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "order_status",
-                                  "type": "number"
-                                },
-                                {
-                                  "name": "payment_status",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "created_on",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "updated_on",
-                                  "type": "text"
-                                },
-                                {
-                                  "name": "rest_id",
-                                  "type": "number"
-                                }
-                              ],
-                              "outputType": "array"
+                              "outputType": "boolean"
                             }
                           ]
                         },

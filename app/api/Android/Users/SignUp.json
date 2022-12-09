@@ -331,11 +331,17 @@
                                     "column": "blank1",
                                     "type": "text",
                                     "value": "{{Password}}"
+                                  },
+                                  {
+                                    "table": "m_customer",
+                                    "column": "blank2",
+                                    "type": "text",
+                                    "value": "{{0}}"
                                   }
                                 ],
                                 "table": "m_customer",
                                 "returning": "id",
-                                "query": "INSERT INTO m_customer\n(user_type_id, fname, lname, mobile, is_watsapp, watsapp_no, customer_email, user_password, salt, address, pin, district, state, country, wallet_bal, ip_address, signup_via, status, created_by, created_on, blank1) VALUES (:P1 /* {{6}} */, :P2 /* {{$_POST.FName}} */, :P3 /* {{$_POST.LName}} */, :P4 /* {{$_POST.Mobile}} */, :P5 /* {{$_POST.is_whatsapp}} */, :P6 /* {{($_POST.is_whatsapp=='Yes')?$_POST.Mobile:''}} */, :P7 /* {{$_POST.EmailId}} */, :P8 /* {{Password.sha256(NOW)}} */, :P9 /* {{NOW}} */, :P10 /* {{$_POST.Address}} */, :P11 /* {{$_POST.PIN}} */, :P12 /* {{$_POST.District}} */, :P13 /* {{'Assam'}} */, :P14 /* {{'India'}} */, :P15 /* {{0}} */, :P16 /* {{$_SERVER.REMOTE_ADDR}} */, :P17 /* {{'Android'}} */, :P18 /* {{1}} */, :P19 /* {{1}} */, :P20 /* {{NOW}} */, :P21 /* {{Password}} */)",
+                                "query": "INSERT INTO m_customer\n(user_type_id, fname, lname, mobile, is_watsapp, watsapp_no, customer_email, user_password, salt, address, pin, district, state, country, wallet_bal, ip_address, signup_via, status, created_by, created_on, blank1, blank2) VALUES (:P1 /* {{6}} */, :P2 /* {{$_POST.FName}} */, :P3 /* {{$_POST.LName}} */, :P4 /* {{$_POST.Mobile}} */, :P5 /* {{$_POST.is_whatsapp}} */, :P6 /* {{($_POST.is_whatsapp=='Yes')?$_POST.Mobile:''}} */, :P7 /* {{$_POST.EmailId}} */, :P8 /* {{Password.sha256(NOW)}} */, :P9 /* {{NOW}} */, :P10 /* {{$_POST.Address}} */, :P11 /* {{$_POST.PIN}} */, :P12 /* {{$_POST.District}} */, :P13 /* {{'Assam'}} */, :P14 /* {{'India'}} */, :P15 /* {{0}} */, :P16 /* {{$_SERVER.REMOTE_ADDR}} */, :P17 /* {{'Android'}} */, :P18 /* {{1}} */, :P19 /* {{1}} */, :P20 /* {{NOW}} */, :P21 /* {{Password}} */, :P22 /* {{0}} */)",
                                 "params": [
                                   {
                                     "name": ":P1",
@@ -441,6 +447,11 @@
                                     "name": ":P21",
                                     "type": "expression",
                                     "value": "{{Password}}"
+                                  },
+                                  {
+                                    "name": ":P22",
+                                    "type": "expression",
+                                    "value": "{{0}}"
                                   }
                                 ]
                               }

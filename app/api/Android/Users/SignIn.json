@@ -303,6 +303,11 @@
                             {
                               "table": "m_customer",
                               "column": "user_type_id"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "blank2",
+                              "alias": "rest_id"
                             }
                           ],
                           "table": {
@@ -366,7 +371,7 @@
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT fname, lname, mobile, watsapp_no, customer_email, address, pin, ps, district, state, wallet_bal, user_type_id\nFROM m_customer\nWHERE id = :P1 /* {{identity}} */ AND user_type_id BETWEEN :P2 /* {{4}} */ AND :P3 /* {{6}} */",
+                          "query": "SELECT fname, lname, mobile, watsapp_no, customer_email, address, pin, ps, district, state, wallet_bal, user_type_id, blank2 AS rest_id\nFROM m_customer\nWHERE id = :P1 /* {{identity}} */ AND user_type_id BETWEEN :P2 /* {{4}} */ AND :P3 /* {{6}} */",
                           "params": [
                             {
                               "operator": "equal",
@@ -438,6 +443,10 @@
                         {
                           "type": "number",
                           "name": "user_type_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "rest_id"
                         }
                       ],
                       "outputType": "object"

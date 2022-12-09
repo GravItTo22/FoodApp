@@ -286,8 +286,11 @@
                                 "id": "r_order.status",
                                 "field": "r_order.status",
                                 "type": "double",
-                                "operator": "equal",
-                                "value": "{{$_GET.order_status}}",
+                                "operator": "between",
+                                "value": [
+                                  "{{1}}",
+                                  "{{6}}"
+                                ],
                                 "data": {
                                   "table": "r_order",
                                   "column": "status",
@@ -300,7 +303,7 @@
                                     "name": "status"
                                   }
                                 },
-                                "operation": "="
+                                "operation": "BETWEEN"
                               },
                               {
                                 "id": "r_order.created_on",
@@ -329,7 +332,7 @@
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT COUNT(r_order.id) AS CountId\nFROM r_order\nLEFT JOIN r_order_details AS rod ON (rod.order_table_id = r_order.id) INNER JOIN m_product AS mp ON (mp.id = rod.prod_id)\nWHERE mp.rest_id = :P1 /* {{$_GET.rest_id}} */ AND r_order.status = :P2 /* {{$_GET.order_status}} */ AND r_order.created_on BETWEEN :P3 /* {{$_GET.from_date+' 00:00:00'}} */ AND :P4 /* {{$_GET.to_date+' 23:59:59'}} */",
+                          "query": "SELECT COUNT(r_order.id) AS CountId\nFROM r_order\nLEFT JOIN r_order_details AS rod ON (rod.order_table_id = r_order.id) INNER JOIN m_product AS mp ON (mp.id = rod.prod_id)\nWHERE mp.rest_id = :P1 /* {{$_GET.rest_id}} */ AND r_order.status BETWEEN :P2 /* {{1}} */ AND :P3 /* {{6}} */ AND r_order.created_on BETWEEN :P4 /* {{$_GET.from_date+' 00:00:00'}} */ AND :P5 /* {{$_GET.to_date+' 23:59:59'}} */",
                           "params": [
                             {
                               "operator": "equal",
@@ -338,21 +341,27 @@
                               "value": "{{$_GET.rest_id}}"
                             },
                             {
-                              "operator": "equal",
+                              "operator": "between",
                               "type": "expression",
                               "name": ":P2",
-                              "value": "{{$_GET.order_status}}"
+                              "value": "{{1}}"
                             },
                             {
                               "operator": "between",
                               "type": "expression",
                               "name": ":P3",
-                              "value": "{{$_GET.from_date+' 00:00:00'}}"
+                              "value": "{{6}}"
                             },
                             {
                               "operator": "between",
                               "type": "expression",
                               "name": ":P4",
+                              "value": "{{$_GET.from_date+' 00:00:00'}}"
+                            },
+                            {
+                              "operator": "between",
+                              "type": "expression",
+                              "name": ":P5",
                               "value": "{{$_GET.to_date+' 23:59:59'}}"
                             }
                           ]

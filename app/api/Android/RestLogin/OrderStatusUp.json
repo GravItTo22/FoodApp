@@ -276,8 +276,8 @@
                                 "type": "double",
                                 "operator": "between",
                                 "value": [
-                                  "{{1}}",
-                                  "{{6}}"
+                                  "{{2}}",
+                                  "{{4}}"
                                 ],
                                 "data": {
                                   "table": "r_order",
@@ -297,7 +297,7 @@
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT COUNT(r_order.id) AS CountId\nFROM r_order\nLEFT JOIN r_order_details AS rod ON (rod.order_table_id = r_order.id) INNER JOIN m_product AS mp ON (mp.id = rod.prod_id)\nWHERE r_order.id = :P1 /* {{$_GET.order_id}} */ AND r_order.status BETWEEN :P2 /* {{1}} */ AND :P3 /* {{6}} */",
+                          "query": "SELECT COUNT(r_order.id) AS CountId\nFROM r_order\nLEFT JOIN r_order_details AS rod ON (rod.order_table_id = r_order.id) INNER JOIN m_product AS mp ON (mp.id = rod.prod_id)\nWHERE r_order.id = :P1 /* {{$_GET.order_id}} */ AND r_order.status BETWEEN :P2 /* {{2}} */ AND :P3 /* {{4}} */",
                           "params": [
                             {
                               "operator": "equal",
@@ -309,13 +309,13 @@
                               "operator": "between",
                               "type": "expression",
                               "name": ":P2",
-                              "value": "{{1}}"
+                              "value": "{{2}}"
                             },
                             {
                               "operator": "between",
                               "type": "expression",
                               "name": ":P3",
-                              "value": "{{6}}"
+                              "value": "{{4}}"
                             }
                           ]
                         }

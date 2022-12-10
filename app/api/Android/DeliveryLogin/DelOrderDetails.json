@@ -1,0 +1,472 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "order_id"
+      },
+      {
+        "type": "text",
+        "name": "logintoken"
+      },
+      {
+        "type": "text",
+        "name": "rest_id"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetVerify",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "t_user_log",
+                      "column": "user_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "t_user_log"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "t_user_log.login_token",
+                        "field": "t_user_log.login_token",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_GET.logintoken}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_token",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_token"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "t_user_log.login_from",
+                        "field": "t_user_log.login_from",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{'Android'}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_from",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_from"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "orders": [
+                    {
+                      "table": "t_user_log",
+                      "column": "id",
+                      "direction": "DESC",
+                      "recid": 1
+                    }
+                  ],
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_GET.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */\nORDER BY id DESC",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.logintoken}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{'Android'}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "user_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetVerify.user_id}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "CheckOrders",
+                      "module": "dbconnector",
+                      "action": "single",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [
+                            {
+                              "table": "r_order_details",
+                              "column": "id",
+                              "alias": "CountId",
+                              "aggregate": "COUNT"
+                            }
+                          ],
+                          "table": {
+                            "name": "r_order_details"
+                          },
+                          "primary": "id",
+                          "joins": [
+                            {
+                              "table": "m_product",
+                              "column": "*",
+                              "alias": "mp",
+                              "type": "INNER",
+                              "clauses": {
+                                "condition": "AND",
+                                "rules": [
+                                  {
+                                    "table": "mp",
+                                    "column": "id",
+                                    "operator": "equal",
+                                    "value": {
+                                      "table": "r_order_details",
+                                      "column": "prod_id"
+                                    },
+                                    "operation": "="
+                                  }
+                                ]
+                              },
+                              "primary": "id"
+                            }
+                          ],
+                          "orders": [],
+                          "query": "SELECT COUNT(r_order_details.id) AS CountId\nFROM r_order_details\nINNER JOIN m_product AS mp ON (mp.id = r_order_details.prod_id)\nWHERE r_order_details.order_table_id = :P1 /* {{$_GET.order_id}} */ AND mp.rest_id = :P2 /* {{$_GET.rest_id}} */",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{$_GET.order_id}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P2",
+                              "value": "{{$_GET.rest_id}}"
+                            }
+                          ],
+                          "groupBy": [],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "r_order_details.order_table_id",
+                                "field": "r_order_details.order_table_id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{$_GET.order_id}}",
+                                "data": {
+                                  "table": "r_order_details",
+                                  "column": "order_table_id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "reference",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "references": "id",
+                                    "inTable": "r_order",
+                                    "referenceType": "integer",
+                                    "onUpdate": "NO ACTION",
+                                    "onDelete": "NO ACTION",
+                                    "name": "order_table_id"
+                                  }
+                                },
+                                "operation": "="
+                              },
+                              {
+                                "id": "mp.rest_id",
+                                "field": "mp.rest_id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{$_GET.rest_id}}",
+                                "data": {
+                                  "table": "mp",
+                                  "column": "rest_id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "reference",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "references": "id",
+                                    "inTable": "m_restaurant",
+                                    "referenceType": "integer",
+                                    "onUpdate": "NO ACTION",
+                                    "onDelete": "NO ACTION",
+                                    "name": "rest_id"
+                                  }
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          }
+                        }
+                      },
+                      "output": false,
+                      "meta": [
+                        {
+                          "type": "number",
+                          "name": "CountId"
+                        }
+                      ],
+                      "outputType": "object"
+                    },
+                    {
+                      "name": "",
+                      "module": "core",
+                      "action": "condition",
+                      "options": {
+                        "if": "{{CheckOrders.CountId>0}}",
+                        "then": {
+                          "steps": [
+                            {
+                              "name": "status",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": 200
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "OrderedProducts",
+                              "module": "dbupdater",
+                              "action": "custom",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "query": "select rod.id as order_details_id, rod.order_table_id as order_id, rod.prod_id as p_id, rod.price_id, rod.order_status, rod.created_on::text, rod.updated_on::text, \nmp.prod_id, mp.prod_name_en as prod_name, mp.prod_mark_id, mp.prod_img1, rod.prod_qty, rod.each_unit_price as amount, rod.each_net_amt as net_amount, rpt.quantity as howmuch, rpt.q_unit, rpt.mrp\nfrom r_order_details rod \nleft join m_product mp on (mp.id = rod.prod_id)\nleft join r_price_table rpt on (rpt.id = rod.price_id)\nwhere mp.rest_id = @rest_id and rod.order_table_id = @order_id;",
+                                  "params": [
+                                    {
+                                      "name": "@rest_id",
+                                      "value": "{{$_GET.rest_id}}",
+                                      "test": "9"
+                                    },
+                                    {
+                                      "name": "@order_id",
+                                      "value": "{{$_GET.order_id}}",
+                                      "test": "17"
+                                    }
+                                  ]
+                                }
+                              },
+                              "output": true,
+                              "meta": [
+                                {
+                                  "name": "order_details_id",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "order_id",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "p_id",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "price_id",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "order_status",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "created_on",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "updated_on",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "prod_id",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "prod_name",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "prod_mark_id",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "prod_img1",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "prod_qty",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "amount",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "net_amount",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "howmuch",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "q_unit",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "mrp",
+                                  "type": "text"
+                                }
+                              ],
+                              "outputType": "array"
+                            }
+                          ]
+                        },
+                        "else": {
+                          "steps": [
+                            {
+                              "name": "status",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": 400
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "message",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "No Record Found"
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            }
+                          ]
+                        }
+                      },
+                      "outputType": "boolean"
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Unauthorized User"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

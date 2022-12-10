@@ -288,7 +288,7 @@
                               "options": {
                                 "connection": "ClientApp",
                                 "sql": {
-                                  "query": "select rod.id, rod.prod_id as p_id, rod.price_id, rod.prod_qty, rod.order_status, rod.created_on::text, rod.updated_on::text, \nmp.prod_id, mp.prod_name_en as prod_name, mp.prod_mark_id, mp.prod_img1, rpt.quantity as howmuch, rpt.q_unit, rpt.mrp, rpt.purchase_price,  (rod.prod_qty::int4*rpt.purchase_price::float) as net_amt\nfrom r_order_details rod \nleft join m_product mp on (mp.id = rod.prod_id)\nleft join r_price_table rpt on (rpt.id = rod.price_id)\nwhere mp.rest_id = @rest_id and rod.order_table_id = @order_id;",
+                                  "query": "select rod.id as order_details_id, rod.order_table_id as order_id, rod.prod_id as p_id, rod.price_id, rod.prod_qty, rod.order_status, rod.created_on::text, rod.updated_on::text, \nmp.prod_id, mp.prod_name_en as prod_name, mp.prod_mark_id, mp.prod_img1, rpt.quantity as howmuch, rpt.q_unit, rpt.mrp, rpt.purchase_price,  (rod.prod_qty::int4*rpt.purchase_price::float) as net_amt\nfrom r_order_details rod \nleft join m_product mp on (mp.id = rod.prod_id)\nleft join r_price_table rpt on (rpt.id = rod.price_id)\nwhere mp.rest_id = @rest_id and rod.order_table_id = @order_id;",
                                   "params": [
                                     {
                                       "name": "@rest_id",
@@ -306,7 +306,11 @@
                               "output": true,
                               "meta": [
                                 {
-                                  "name": "id",
+                                  "name": "order_details_id",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "order_id",
                                   "type": "number"
                                 },
                                 {

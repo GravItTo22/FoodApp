@@ -1689,6 +1689,11 @@
           }
         }
       },
+      "m_shipping_charge": {
+        "db": {
+          "schema": "public"
+        }
+      },
       "m_sliding_image": {
         "db": {
           "schema": "public"
@@ -2100,6 +2105,15 @@
               "unique": false,
               "nullable": true
             }
+          },
+          "cart_purchase": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
           }
         }
       },
@@ -2336,6 +2350,15 @@
               "unique": false,
               "nullable": true
             }
+          },
+          "payment_status": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
           }
         }
       },
@@ -2355,67 +2378,47 @@
           },
           "order_table_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "r_order",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "prod_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "m_product",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "price_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "r_price_table",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "cart_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "r_cart",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "user_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "m_customer",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "prod_qty": {
@@ -2578,6 +2581,24 @@
           "deleted_on": {
             "db": {
               "type": "timestamp",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "payment_status": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "purchase_price": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
               "primary": false,
               "unique": false,
               "nullable": true

@@ -224,6 +224,11 @@
                             },
                             {
                               "table": "price",
+                              "column": "purchase_price",
+                              "alias": "purchase"
+                            },
+                            {
+                              "table": "price",
                               "column": "product_tax"
                             }
                           ],
@@ -344,7 +349,7 @@
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT m_product.id, m_product.market_id, m_product.rest_id, m_product.category_id, m_product.brand_id, m_product.slab_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_desc_en, m_product.prod_desc_bn, m_product.prod_desc_hin, price.id AS price_id, price.quantity, price.q_unit, price.mrp, price.selling_price AS price, price.product_tax\nFROM m_product\nLEFT JOIN r_price_table AS price ON (price.prod_id = m_product.id)\nWHERE m_product.id = :P1 /* {{$_POST.p_id}} */ AND m_product.status = :P2 /* {{1}} */ AND price.id = :P3 /* {{$_POST.price_id}} */ AND price.status = :P4 /* {{1}} */",
+                          "query": "SELECT m_product.id, m_product.market_id, m_product.rest_id, m_product.category_id, m_product.brand_id, m_product.slab_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_desc_en, m_product.prod_desc_bn, m_product.prod_desc_hin, price.id AS price_id, price.quantity, price.q_unit, price.mrp, price.selling_price AS price, price.purchase_price AS purchase, price.product_tax\nFROM m_product\nLEFT JOIN r_price_table AS price ON (price.prod_id = m_product.id)\nWHERE m_product.id = :P1 /* {{$_POST.p_id}} */ AND m_product.status = :P2 /* {{1}} */ AND price.id = :P3 /* {{$_POST.price_id}} */ AND price.status = :P4 /* {{1}} */",
                           "params": [
                             {
                               "operator": "equal",
@@ -450,6 +455,10 @@
                         {
                           "type": "text",
                           "name": "price"
+                        },
+                        {
+                          "type": "text",
+                          "name": "purchase"
                         },
                         {
                           "type": "text",
@@ -641,11 +650,23 @@
                                               "column": "ip_address",
                                               "type": "text",
                                               "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                            },
+                                            {
+                                              "table": "r_cart",
+                                              "column": "cart_purchase",
+                                              "type": "text",
+                                              "value": "{{GetProduct.purchase.toNumber()*$_POST.quantity.toNumber()}}"
+                                            },
+                                            {
+                                              "table": "r_cart",
+                                              "column": "cart_mrp",
+                                              "type": "text",
+                                              "value": "{{GetProduct.mrp}}"
                                             }
                                           ],
                                           "table": "r_cart",
                                           "returning": "id",
-                                          "query": "INSERT INTO r_cart\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, created_by, created_on, ip_address) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetVerify.user_id}} */, :P4 /* {{GetProduct.price}} */, :P5 /* {{$_POST.quantity}} */, :P6 /* {{GetProduct.price.toNumber()*$_POST.quantity.toNumber()}} */, :P7 /* {{GetVerify.user_id}} */, :P8 /* {{NOW}} */, :P9 /* {{$_SERVER.REMOTE_ADDR}} */)",
+                                          "query": "INSERT INTO r_cart\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, created_by, created_on, ip_address, cart_purchase, cart_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetVerify.user_id}} */, :P4 /* {{GetProduct.price}} */, :P5 /* {{$_POST.quantity}} */, :P6 /* {{GetProduct.price.toNumber()*$_POST.quantity.toNumber()}} */, :P7 /* {{GetVerify.user_id}} */, :P8 /* {{NOW}} */, :P9 /* {{$_SERVER.REMOTE_ADDR}} */, :P10 /* {{GetProduct.purchase.toNumber()*$_POST.quantity.toNumber()}} */, :P11 /* {{GetProduct.mrp}} */)",
                                           "params": [
                                             {
                                               "name": ":P1",
@@ -691,6 +712,16 @@
                                               "name": ":P9",
                                               "type": "expression",
                                               "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                            },
+                                            {
+                                              "name": ":P10",
+                                              "type": "expression",
+                                              "value": "{{GetProduct.purchase.toNumber()*$_POST.quantity.toNumber()}}"
+                                            },
+                                            {
+                                              "name": ":P11",
+                                              "type": "expression",
+                                              "value": "{{GetProduct.mrp}}"
                                             }
                                           ]
                                         }
@@ -799,6 +830,10 @@
                                         },
                                         {
                                           "name": "price",
+                                          "type": "text"
+                                        },
+                                        {
+                                          "name": "purchase",
                                           "type": "text"
                                         },
                                         {

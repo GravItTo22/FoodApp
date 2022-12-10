@@ -76,6 +76,10 @@
               {
                 "table": "rpt",
                 "column": "mrp"
+              },
+              {
+                "table": "rpt",
+                "column": "purchase_price"
               }
             ],
             "table": {
@@ -106,7 +110,7 @@
                 "primary": "id"
               }
             ],
-            "query": "SELECT m_product.prod_id, m_product.prod_name_en, rpt.selling_price AS price, rpt.mrp\nFROM m_product\nLEFT JOIN r_price_table AS rpt ON (rpt.prod_id = m_product.id)\nWHERE m_product.id = :P1 /* {{$_GET.p_id}} */ AND rpt.id = :P2 /* {{$_GET.price_id}} */",
+            "query": "SELECT m_product.prod_id, m_product.prod_name_en, rpt.selling_price AS price, rpt.mrp, rpt.purchase_price\nFROM m_product\nLEFT JOIN r_price_table AS rpt ON (rpt.prod_id = m_product.id)\nWHERE m_product.id = :P1 /* {{$_GET.p_id}} */ AND rpt.id = :P2 /* {{$_GET.price_id}} */",
             "params": [
               {
                 "operator": "equal",
@@ -189,6 +193,10 @@
           {
             "type": "text",
             "name": "mrp"
+          },
+          {
+            "type": "text",
+            "name": "purchase_price"
           }
         ],
         "outputType": "object"
@@ -424,6 +432,17 @@
                         "output": true
                       },
                       {
+                        "name": "NewPurchasePrice",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "{{GetProduct.purchase_price.toNumber()*NewQty.toNumber()}}"
+                        },
+                        "meta": [],
+                        "outputType": "text",
+                        "output": true
+                      },
+                      {
                         "name": "UpCart",
                         "module": "dbupdater",
                         "action": "update",
@@ -479,6 +498,12 @@
                                 "column": "ip_address",
                                 "type": "text",
                                 "value": "{{$_SERVER.REMOTE_ADDR}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "cart_purchase",
+                                "type": "text",
+                                "value": "{{NewPurchasePrice}}"
                               }
                             ],
                             "table": "r_cart",
@@ -501,7 +526,7 @@
                               "valid": true
                             },
                             "returning": "id",
-                            "query": "UPDATE r_cart\nSET user_id = :P1 /* {{identity}} */, price_id = :P2 /* {{$_POST.price_id}} */, prod_unit_price = :P3 /* {{GetProduct.price}} */, cart_mrp = :P4 /* {{GetProduct.mrp}} */, prod_qty = :P5 /* {{NewQty}} */, total_price = :P6 /* {{NewTotalPrice}} */, updated_on = :P7 /* {{NOW}} */, ip_address = :P8 /* {{$_SERVER.REMOTE_ADDR}} */\nWHERE id = :P9 /* {{GetCartProd.cart_id}} */",
+                            "query": "UPDATE r_cart\nSET user_id = :P1 /* {{identity}} */, price_id = :P2 /* {{$_POST.price_id}} */, prod_unit_price = :P3 /* {{GetProduct.price}} */, cart_mrp = :P4 /* {{GetProduct.mrp}} */, prod_qty = :P5 /* {{NewQty}} */, total_price = :P6 /* {{NewTotalPrice}} */, updated_on = :P7 /* {{NOW}} */, ip_address = :P8 /* {{$_SERVER.REMOTE_ADDR}} */, cart_purchase = :P9 /* {{NewPurchasePrice}} */\nWHERE id = :P10 /* {{GetCartProd.cart_id}} */",
                             "params": [
                               {
                                 "name": ":P1",
@@ -544,9 +569,14 @@
                                 "value": "{{$_SERVER.REMOTE_ADDR}}"
                               },
                               {
+                                "name": ":P9",
+                                "type": "expression",
+                                "value": "{{NewPurchasePrice}}"
+                              },
+                              {
                                 "operator": "equal",
                                 "type": "expression",
-                                "name": ":P9",
+                                "name": ":P10",
                                 "value": "{{GetCartProd.cart_id}}"
                               }
                             ]
@@ -637,6 +667,10 @@
                       {
                         "table": "r_cart",
                         "column": "total_price"
+                      },
+                      {
+                        "table": "r_cart",
+                        "column": "cart_purchase"
                       }
                     ],
                     "table": {
@@ -722,7 +756,7 @@
                       "conditional": null,
                       "valid": true
                     },
-                    "query": "SELECT id AS cart_id, prod_qty, total_price\nFROM r_cart\nWHERE prod_id = :P1 /* {{$_GET.p_id}} */ AND price_id = :P2 /* {{$_GET.price_id}} */ AND ip_address = :P3 /* {{$_SERVER.REMOTE_ADDR}} */",
+                    "query": "SELECT id AS cart_id, prod_qty, total_price, cart_purchase\nFROM r_cart\nWHERE prod_id = :P1 /* {{$_GET.p_id}} */ AND price_id = :P2 /* {{$_GET.price_id}} */ AND ip_address = :P3 /* {{$_SERVER.REMOTE_ADDR}} */",
                     "params": [
                       {
                         "operator": "equal",
@@ -758,6 +792,10 @@
                   {
                     "type": "text",
                     "name": "total_price"
+                  },
+                  {
+                    "type": "text",
+                    "name": "cart_purchase"
                   }
                 ],
                 "outputType": "object"
@@ -787,6 +825,17 @@
                         "action": "setvalue",
                         "options": {
                           "value": "{{GetProduct.price.toNumber()*NewQty.toNumber()}}"
+                        },
+                        "meta": [],
+                        "outputType": "text",
+                        "output": true
+                      },
+                      {
+                        "name": "NewPurchasePrice",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "{{GetProduct.purchase_price.toNumber()*NewQty.toNumber()}}"
                         },
                         "meta": [],
                         "outputType": "text",
@@ -842,6 +891,12 @@
                                 "column": "ip_address",
                                 "type": "text",
                                 "value": "{{$_SERVER.REMOTE_ADDR}}"
+                              },
+                              {
+                                "table": "r_cart",
+                                "column": "cart_purchase",
+                                "type": "text",
+                                "value": "{{NewPurchasePrice}}"
                               }
                             ],
                             "table": "r_cart",
@@ -864,7 +919,7 @@
                               "valid": true
                             },
                             "returning": "id",
-                            "query": "UPDATE r_cart\nSET price_id = :P1 /* {{$_POST.price_id}} */, prod_unit_price = :P2 /* {{GetProduct.price}} */, cart_mrp = :P3 /* {{GetProduct.mrp}} */, prod_qty = :P4 /* {{NewQty}} */, total_price = :P5 /* {{NewTotalPrice}} */, updated_on = :P6 /* {{NOW}} */, ip_address = :P7 /* {{$_SERVER.REMOTE_ADDR}} */\nWHERE id = :P8 /* {{GetCartProd.cart_id}} */",
+                            "query": "UPDATE r_cart\nSET price_id = :P1 /* {{$_POST.price_id}} */, prod_unit_price = :P2 /* {{GetProduct.price}} */, cart_mrp = :P3 /* {{GetProduct.mrp}} */, prod_qty = :P4 /* {{NewQty}} */, total_price = :P5 /* {{NewTotalPrice}} */, updated_on = :P6 /* {{NOW}} */, ip_address = :P7 /* {{$_SERVER.REMOTE_ADDR}} */, cart_purchase = :P8 /* {{NewPurchasePrice}} */\nWHERE id = :P9 /* {{GetCartProd.cart_id}} */",
                             "params": [
                               {
                                 "name": ":P1",
@@ -902,9 +957,14 @@
                                 "value": "{{$_SERVER.REMOTE_ADDR}}"
                               },
                               {
+                                "name": ":P8",
+                                "type": "expression",
+                                "value": "{{NewPurchasePrice}}"
+                              },
+                              {
                                 "operator": "equal",
                                 "type": "expression",
-                                "name": ":P8",
+                                "name": ":P9",
                                 "value": "{{GetCartProd.cart_id}}"
                               }
                             ]

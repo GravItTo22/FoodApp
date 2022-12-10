@@ -350,6 +350,10 @@
               {
                 "table": "r_cart",
                 "column": "cart_mrp"
+              },
+              {
+                "table": "r_cart",
+                "column": "cart_purchase"
               }
             ],
             "table": {
@@ -410,7 +414,7 @@
               "conditional": null,
               "valid": true
             },
-            "query": "SELECT id, prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, cart_mrp\nFROM r_cart\nWHERE user_id = :P1 /* {{identity}} */ OR ip_address = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
+            "query": "SELECT id, prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, cart_mrp, cart_purchase\nFROM r_cart\nWHERE user_id = :P1 /* {{identity}} */ OR ip_address = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
             "params": [
               {
                 "operator": "equal",
@@ -460,6 +464,10 @@
           {
             "type": "text",
             "name": "cart_mrp"
+          },
+          {
+            "type": "text",
+            "name": "cart_purchase"
           }
         ],
         "outputType": "array"
@@ -842,11 +850,17 @@
                         "column": "created_on",
                         "type": "datetime",
                         "value": "{{NOW}}"
+                      },
+                      {
+                        "table": "r_order_details",
+                        "column": "purchase_price",
+                        "type": "text",
+                        "value": "{{GetCartItems[$index].cart_purchase}}"
                       }
                     ],
                     "table": "r_order_details",
                     "returning": "id",
-                    "query": "INSERT INTO r_order_details\n(order_table_id, prod_id, price_id, cart_id, user_id, prod_qty, each_unit_price, each_net_amt, order_status, created_by, created_on) VALUES (:P1 /* {{AddOrder.identity}} */, :P2 /* {{GetCartItems[$index].prod_id}} */, :P3 /* {{GetCartItems[$index].price_id}} */, :P4 /* {{GetCartItems[$index].id}} */, :P5 /* {{identity}} */, :P6 /* {{GetCartItems[$index].prod_qty}} */, :P7 /* {{GetCartItems[$index].prod_unit_price}} */, :P8 /* {{GetCartItems[$index].total_price}} */, :P9 /* {{1}} */, :P10 /* {{identity}} */, :P11 /* {{NOW}} */)",
+                    "query": "INSERT INTO r_order_details\n(order_table_id, prod_id, price_id, cart_id, user_id, prod_qty, each_unit_price, each_net_amt, order_status, created_by, created_on, purchase_price) VALUES (:P1 /* {{AddOrder.identity}} */, :P2 /* {{GetCartItems[$index].prod_id}} */, :P3 /* {{GetCartItems[$index].price_id}} */, :P4 /* {{GetCartItems[$index].id}} */, :P5 /* {{identity}} */, :P6 /* {{GetCartItems[$index].prod_qty}} */, :P7 /* {{GetCartItems[$index].prod_unit_price}} */, :P8 /* {{GetCartItems[$index].total_price}} */, :P9 /* {{1}} */, :P10 /* {{identity}} */, :P11 /* {{NOW}} */, :P12 /* {{GetCartItems[$index].cart_purchase}} */)",
                     "params": [
                       {
                         "name": ":P1",
@@ -902,6 +916,11 @@
                         "name": ":P11",
                         "type": "expression",
                         "value": "{{NOW}}"
+                      },
+                      {
+                        "name": ":P12",
+                        "type": "expression",
+                        "value": "{{GetCartItems[$index].cart_purchase}}"
                       }
                     ]
                   }
@@ -1032,6 +1051,10 @@
           },
           {
             "name": "cart_mrp",
+            "type": "text"
+          },
+          {
+            "name": "cart_purchase",
             "type": "text"
           }
         ],

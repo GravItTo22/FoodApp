@@ -14,6 +14,12 @@
         "name": "items_no"
       }
     ],
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "cart_purchase"
+      }
+    ],
     "$_SESSION": [
       {
         "type": "text",
@@ -52,6 +58,10 @@
                     {
                       "table": "r_price_table",
                       "column": "mrp"
+                    },
+                    {
+                      "table": "r_price_table",
+                      "column": "purchase_price"
                     }
                   ],
                   "table": {
@@ -132,7 +142,7 @@
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT selling_price AS price, mrp\nFROM r_price_table\nWHERE id = :P1 /* {{$_GET.price_id}} */ AND prod_id = :P2 /* {{$_GET.p_id}} */ AND status = 1",
+                  "query": "SELECT selling_price AS price, mrp, purchase_price\nFROM r_price_table\nWHERE id = :P1 /* {{$_GET.price_id}} */ AND prod_id = :P2 /* {{$_GET.p_id}} */ AND status = 1",
                   "params": [
                     {
                       "operator": "equal",
@@ -149,7 +159,7 @@
                   ]
                 }
               },
-              "output": true,
+              "output": false,
               "meta": [
                 {
                   "type": "text",
@@ -158,6 +168,10 @@
                 {
                   "type": "text",
                   "name": "mrp"
+                },
+                {
+                  "type": "text",
+                  "name": "purchase_price"
                 }
               ],
               "outputType": "object"
@@ -172,6 +186,16 @@
               "meta": [],
               "outputType": "text",
               "output": true
+            },
+            {
+              "name": "purchase",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "{{GetProdPrice.purchase_price.toNumber()*$_GET.items_no.toNumber()}}"
+              },
+              "meta": [],
+              "outputType": "text"
             },
             {
               "name": "UpProdPrice",
@@ -223,6 +247,12 @@
                       "column": "cart_mrp",
                       "type": "text",
                       "value": "{{GetProdPrice.mrp}}"
+                    },
+                    {
+                      "table": "r_cart",
+                      "column": "cart_purchase",
+                      "type": "text",
+                      "value": "{{purchase}}"
                     }
                   ],
                   "table": "r_cart",
@@ -273,7 +303,7 @@
                     "valid": true
                   },
                   "returning": "id",
-                  "query": "UPDATE r_cart\nSET price_id = :P1 /* {{$_GET.price_id}} */, prod_unit_price = :P2 /* {{GetProdPrice.price}} */, prod_qty = :P3 /* {{$_GET.items_no}} */, total_price = :P4 /* {{Total}} */, updated_on = :P5 /* {{NOW}} */, ip_address = :P6 /* {{$_SERVER.REMOTE_ADDR}} */, cart_mrp = :P7 /* {{GetProdPrice.mrp}} */\nWHERE prod_id = :P8 /* {{$_GET.p_id}} */ AND (user_id = :P9 /* {{$_SESSION.sessionLogin}} */ OR ip_address = :P10 /* {{$_SERVER.REMOTE_ADDR}} */)",
+                  "query": "UPDATE r_cart\nSET price_id = :P1 /* {{$_GET.price_id}} */, prod_unit_price = :P2 /* {{GetProdPrice.price}} */, prod_qty = :P3 /* {{$_GET.items_no}} */, total_price = :P4 /* {{Total}} */, updated_on = :P5 /* {{NOW}} */, ip_address = :P6 /* {{$_SERVER.REMOTE_ADDR}} */, cart_mrp = :P7 /* {{GetProdPrice.mrp}} */, cart_purchase = :P8 /* {{purchase}} */\nWHERE prod_id = :P9 /* {{$_GET.p_id}} */ AND (user_id = :P10 /* {{$_SESSION.sessionLogin}} */ OR ip_address = :P11 /* {{$_SERVER.REMOTE_ADDR}} */)",
                   "params": [
                     {
                       "name": ":P1",
@@ -311,21 +341,26 @@
                       "value": "{{GetProdPrice.mrp}}"
                     },
                     {
-                      "operator": "equal",
-                      "type": "expression",
                       "name": ":P8",
-                      "value": "{{$_GET.p_id}}"
+                      "type": "expression",
+                      "value": "{{purchase}}"
                     },
                     {
                       "operator": "equal",
                       "type": "expression",
                       "name": ":P9",
-                      "value": "{{$_SESSION.sessionLogin}}"
+                      "value": "{{$_GET.p_id}}"
                     },
                     {
                       "operator": "equal",
                       "type": "expression",
                       "name": ":P10",
+                      "value": "{{$_SESSION.sessionLogin}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P11",
                       "value": "{{$_SERVER.REMOTE_ADDR}}"
                     }
                   ]

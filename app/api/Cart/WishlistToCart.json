@@ -141,6 +141,10 @@
                     {
                       "table": "price",
                       "column": "product_tax"
+                    },
+                    {
+                      "table": "price",
+                      "column": "purchase_price"
                     }
                   ],
                   "table": {
@@ -240,7 +244,7 @@
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT m_product.id, m_product.market_id, m_product.rest_id, m_product.category_id, m_product.brand_id, m_product.slab_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_desc_en, m_product.prod_desc_bn, m_product.prod_desc_hin, price.id AS price_id, price.quantity, price.q_unit, price.mrp, price.selling_price, price.product_tax\nFROM m_product\nLEFT JOIN r_price_table AS price ON (price.prod_id = m_product.id)\nWHERE m_product.prod_id = :P1 /* {{$_GET.product_id}} */ AND m_product.status = 1 AND price.id = :P2 /* {{$_GET.price}} */",
+                  "query": "SELECT m_product.id, m_product.market_id, m_product.rest_id, m_product.category_id, m_product.brand_id, m_product.slab_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_desc_en, m_product.prod_desc_bn, m_product.prod_desc_hin, price.id AS price_id, price.quantity, price.q_unit, price.mrp, price.selling_price, price.product_tax, price.purchase_price\nFROM m_product\nLEFT JOIN r_price_table AS price ON (price.prod_id = m_product.id)\nWHERE m_product.prod_id = :P1 /* {{$_GET.product_id}} */ AND m_product.status = 1 AND price.id = :P2 /* {{$_GET.price}} */",
                   "params": [
                     {
                       "operator": "equal",
@@ -338,6 +342,10 @@
                 {
                   "type": "text",
                   "name": "product_tax"
+                },
+                {
+                  "type": "text",
+                  "name": "purchase_price"
                 }
               ],
               "outputType": "object"
@@ -557,11 +565,17 @@
                               "column": "cart_mrp",
                               "type": "text",
                               "value": "{{GetProduct.mrp}}"
+                            },
+                            {
+                              "table": "r_cart",
+                              "column": "cart_purchase",
+                              "type": "text",
+                              "value": "{{GetProduct.purchase_price}}"
                             }
                           ],
                           "table": "r_cart",
                           "returning": "id",
-                          "query": "INSERT INTO r_cart\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, created_by, created_on, ip_address, cart_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{identity}} */, :P4 /* {{GetProduct.selling_price}} */, :P5 /* {{1}} */, :P6 /* {{GetProduct.selling_price.toNumber()}} */, :P7 /* {{identity?identity:''}} */, :P8 /* {{NOW}} */, :P9 /* {{$_SERVER.REMOTE_ADDR}} */, :P10 /* {{GetProduct.mrp}} */)",
+                          "query": "INSERT INTO r_cart\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, created_by, created_on, ip_address, cart_mrp, cart_purchase) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{identity}} */, :P4 /* {{GetProduct.selling_price}} */, :P5 /* {{1}} */, :P6 /* {{GetProduct.selling_price.toNumber()}} */, :P7 /* {{identity?identity:''}} */, :P8 /* {{NOW}} */, :P9 /* {{$_SERVER.REMOTE_ADDR}} */, :P10 /* {{GetProduct.mrp}} */, :P11 /* {{GetProduct.purchase_price}} */)",
                           "params": [
                             {
                               "name": ":P1",
@@ -612,6 +626,11 @@
                               "name": ":P10",
                               "type": "expression",
                               "value": "{{GetProduct.mrp}}"
+                            },
+                            {
+                              "name": ":P11",
+                              "type": "expression",
+                              "value": "{{GetProduct.purchase_price}}"
                             }
                           ]
                         }
@@ -888,6 +907,10 @@
                     {
                       "table": "price",
                       "column": "product_tax"
+                    },
+                    {
+                      "table": "price",
+                      "column": "purchase_price"
                     }
                   ],
                   "table": {
@@ -987,7 +1010,7 @@
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT m_product.id, m_product.market_id, m_product.rest_id, m_product.category_id, m_product.brand_id, m_product.slab_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_desc_en, m_product.prod_desc_bn, m_product.prod_desc_hin, price.id AS price_id, price.quantity, price.q_unit, price.mrp, price.selling_price, price.product_tax\nFROM m_product\nLEFT JOIN r_price_table AS price ON (price.prod_id = m_product.id)\nWHERE m_product.prod_id = :P1 /* {{$_GET.product_id}} */ AND m_product.status = 1 AND price.id = :P2 /* {{$_GET.price}} */",
+                  "query": "SELECT m_product.id, m_product.market_id, m_product.rest_id, m_product.category_id, m_product.brand_id, m_product.slab_id, m_product.prod_mark_id, m_product.prod_occurance_id, m_product.prod_name_en, m_product.prod_name_bn, m_product.prod_name_hin, m_product.prod_desc_en, m_product.prod_desc_bn, m_product.prod_desc_hin, price.id AS price_id, price.quantity, price.q_unit, price.mrp, price.selling_price, price.product_tax, price.purchase_price\nFROM m_product\nLEFT JOIN r_price_table AS price ON (price.prod_id = m_product.id)\nWHERE m_product.prod_id = :P1 /* {{$_GET.product_id}} */ AND m_product.status = 1 AND price.id = :P2 /* {{$_GET.price}} */",
                   "params": [
                     {
                       "operator": "equal",
@@ -1085,6 +1108,10 @@
                 {
                   "type": "text",
                   "name": "product_tax"
+                },
+                {
+                  "type": "text",
+                  "name": "purchase_price"
                 }
               ],
               "outputType": "object"
@@ -1291,11 +1318,17 @@
                               "column": "cart_mrp",
                               "type": "text",
                               "value": "{{GetProduct.mrp}}"
+                            },
+                            {
+                              "table": "r_cart",
+                              "column": "cart_purchase",
+                              "type": "text",
+                              "value": "{{GetProduct.purchase_price}}"
                             }
                           ],
                           "table": "r_cart",
                           "returning": "id",
-                          "query": "INSERT INTO r_cart\n(prod_id, price_id, prod_unit_price, prod_qty, total_price, created_on, ip_address, cart_mrp) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetProduct.selling_price}} */, :P4 /* {{1}} */, :P5 /* {{GetProduct.selling_price.toNumber()}} */, :P6 /* {{NOW}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetProduct.mrp}} */)",
+                          "query": "INSERT INTO r_cart\n(prod_id, price_id, prod_unit_price, prod_qty, total_price, created_on, ip_address, cart_mrp, cart_purchase) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetProduct.selling_price}} */, :P4 /* {{1}} */, :P5 /* {{GetProduct.selling_price.toNumber()}} */, :P6 /* {{NOW}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetProduct.mrp}} */, :P9 /* {{GetProduct.purchase_price}} */)",
                           "params": [
                             {
                               "name": ":P1",
@@ -1336,6 +1369,11 @@
                               "name": ":P8",
                               "type": "expression",
                               "value": "{{GetProduct.mrp}}"
+                            },
+                            {
+                              "name": ":P9",
+                              "type": "expression",
+                              "value": "{{GetProduct.purchase_price}}"
                             }
                           ]
                         }

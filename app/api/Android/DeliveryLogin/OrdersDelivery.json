@@ -355,7 +355,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address, ro.pin, ro.dist, ro.state, ro.status as order_status, ro.payment_status, \nro.created_on::text, ro.updated_on::text, count(rod.id) as items, ((ro.total_amt::float+ro.delevery_amt::float)-ro.discount::float) as net_amount, mr.id as rest_id, mr.shop_name_en, mr.address \nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nleft join m_restaurant mr on (mr.id = mp.rest_id)\nwhere ro.status=@order_status and ro.order_assigned_to = @user_id and ro.created_on::text between @fromdate and @todate \ngroup by ro.id, mr.id order by ro.id desc;",
+                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address as user_address, ro.pin as user_pin, ro.dist as user_dist, ro.state as user_state, ro.status as order_status, ro.payment_status, \nro.created_on::text, ro.updated_on::text, count(rod.id) as items, ((ro.total_amt::float+ro.delevery_amt::float)-ro.discount::float) as net_amount, mr.id as rest_id, mr.shop_name_en as shop_name, mr.address as shop_address\nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nleft join m_restaurant mr on (mr.id = mp.rest_id)\nwhere ro.status=@order_status and ro.order_assigned_to = @user_id and ro.created_on::text between @fromdate and @todate \ngroup by ro.id, mr.id order by ro.id desc;",
                                         "params": [
                                           {
                                             "name": "@user_id",
@@ -399,19 +399,19 @@
                                         "type": "text"
                                       },
                                       {
-                                        "name": "address",
+                                        "name": "user_address",
                                         "type": "text"
                                       },
                                       {
-                                        "name": "pin",
+                                        "name": "user_pin",
                                         "type": "text"
                                       },
                                       {
-                                        "name": "dist",
+                                        "name": "user_dist",
                                         "type": "text"
                                       },
                                       {
-                                        "name": "state",
+                                        "name": "user_state",
                                         "type": "text"
                                       },
                                       {
@@ -443,7 +443,11 @@
                                         "type": "number"
                                       },
                                       {
-                                        "name": "shop_name_en",
+                                        "name": "shop_name",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_address",
                                         "type": "text"
                                       }
                                     ],
@@ -458,7 +462,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address, ro.pin, ro.dist, ro.state, ro.status as order_status, ro.payment_status, \nro.created_on::text, ro.updated_on::text, count(rod.id) as items, ((ro.total_amt::float+ro.delevery_amt::float)-ro.discount::float) as net_amount, mr.id as rest_id, mr.shop_name_en, mr.address \nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nleft join m_restaurant mr on (mr.id = mp.rest_id)\nwhere ro.status BETWEEN 3 and 6 and ro.order_assigned_to = @user_id and ro.created_on::text between @fromdate and @todate \ngroup by ro.id, mr.id order by ro.id desc;",
+                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address as user_address, ro.pin as user_pin, ro.dist as user_dist, ro.state as user_state, ro.status as order_status, ro.payment_status, \nro.created_on::text, ro.updated_on::text, count(rod.id) as items, ((ro.total_amt::float+ro.delevery_amt::float)-ro.discount::float) as net_amount, mr.id as rest_id, mr.shop_name_en as shop_name, mr.address as shop_address\nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nleft join m_restaurant mr on (mr.id = mp.rest_id)\nwhere ro.status BETWEEN 3 and 6 and ro.order_assigned_to = @user_id and ro.created_on::text between @fromdate and @todate \ngroup by ro.id, mr.id order by ro.id desc;",
                                         "params": [
                                           {
                                             "name": "@user_id",
@@ -497,19 +501,19 @@
                                         "type": "text"
                                       },
                                       {
-                                        "name": "address",
+                                        "name": "user_address",
                                         "type": "text"
                                       },
                                       {
-                                        "name": "pin",
+                                        "name": "user_pin",
                                         "type": "text"
                                       },
                                       {
-                                        "name": "dist",
+                                        "name": "user_dist",
                                         "type": "text"
                                       },
                                       {
-                                        "name": "state",
+                                        "name": "user_state",
                                         "type": "text"
                                       },
                                       {
@@ -541,7 +545,11 @@
                                         "type": "number"
                                       },
                                       {
-                                        "name": "shop_name_en",
+                                        "name": "shop_name",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "shop_address",
                                         "type": "text"
                                       }
                                     ],

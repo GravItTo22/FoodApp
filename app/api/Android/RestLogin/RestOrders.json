@@ -400,7 +400,7 @@
                               "module": "core",
                               "action": "condition",
                               "options": {
-                                "if": "{{$_GET.order_status==0}}",
+                                "if": "{{$_GET.order_status!=0}}",
                                 "then": {
                                   "steps": {
                                     "name": "GetOrders",
@@ -409,12 +409,17 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address, ro.pin, ro.dist, ro.state, ro.status as order_status, ro.payment_status, ro.created_on::text, ro.updated_on::text, mp.rest_id, count(rod.id) as items \nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nwhere mp.rest_id = @rest_id and ro.status between 1 and 6 and ro.created_on::text between @fromdate and @todate group by ro.id, mp.rest_id order by ro.id desc;",
+                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address, ro.pin, ro.dist, ro.state, ro.status as order_status, ro.payment_status, ro.created_on::text, ro.updated_on::text, mp.rest_id, count(rod.id) as items \nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nwhere mp.rest_id = @rest_id and ro.status=@order_status and ro.created_on::text between @fromdate and @todate group by ro.id, mp.rest_id order by ro.id desc;",
                                         "params": [
                                           {
                                             "name": "@rest_id",
                                             "value": "{{$_GET.rest_id}}",
                                             "test": "9"
+                                          },
+                                          {
+                                            "name": "@order_status",
+                                            "value": "{{$_GET.order_status}}",
+                                            "test": "1"
                                           },
                                           {
                                             "name": "@fromdate",
@@ -499,17 +504,12 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address, ro.pin, ro.dist, ro.state, ro.status as order_status, ro.payment_status, ro.created_on::text, ro.updated_on::text, mp.rest_id, count(rod.id) as items \nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nwhere mp.rest_id = @rest_id and ro.status=@order_status and ro.created_on::text between @fromdate and @todate group by ro.id, mp.rest_id order by ro.id desc;",
+                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address, ro.pin, ro.dist, ro.state, ro.status as order_status, ro.payment_status, ro.created_on::text, ro.updated_on::text, mp.rest_id, count(rod.id) as items \nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nwhere mp.rest_id = @rest_id and ro.status between 1 and 6 and ro.created_on::text between @fromdate and @todate group by ro.id, mp.rest_id order by ro.id desc;",
                                         "params": [
                                           {
                                             "name": "@rest_id",
                                             "value": "{{$_GET.rest_id}}",
                                             "test": "9"
-                                          },
-                                          {
-                                            "name": "@order_status",
-                                            "value": "{{$_GET.order_status}}",
-                                            "test": "1"
                                           },
                                           {
                                             "name": "@fromdate",

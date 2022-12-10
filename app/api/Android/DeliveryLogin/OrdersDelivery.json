@@ -355,7 +355,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address as user_address, ro.pin as user_pin, ro.dist as user_dist, ro.state as user_state, ro.status as order_status, ro.payment_status, \nro.created_on::text, ro.updated_on::text, count(rod.id) as items, ro.total_amt, ro.discount, ro.delevery_amt, ro.wallet_bal as wallet_amt, ((ro.total_amt::float+ro.delevery_amt::float)-ro.discount::float) as net_amount, mr.id as rest_id, mr.shop_name_en as shop_name, mr.address as shop_address\nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nleft join m_restaurant mr on (mr.id = mp.rest_id)\nwhere ro.status=@order_status and ro.order_assigned_to = @user_id and ro.created_on::text between @fromdate and @todate \ngroup by ro.id, mr.id order by ro.id desc;",
+                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address as user_address, ro.pin as user_pin, ro.dist as user_dist, ro.state as user_state, ro.mobile as user_mobile, ro.whatsapp, ro.status as order_status, ro.payment_status, \nro.created_on::text, ro.updated_on::text, count(rod.id) as items, ro.total_amt, ro.discount, ro.delevery_amt, ro.wallet_bal as wallet_amt, ((ro.total_amt::float+ro.delevery_amt::float)-ro.discount::float) as net_amount, mr.id as rest_id, mr.shop_name_en as shop_name, mr.address as shop_address\nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nleft join m_restaurant mr on (mr.id = mp.rest_id)\nwhere ro.status=@order_status and ro.order_assigned_to = @user_id and ro.created_on::text between @fromdate and @todate \ngroup by ro.id, mr.id order by ro.id desc;",
                                         "params": [
                                           {
                                             "name": "@user_id",
@@ -365,7 +365,7 @@
                                           {
                                             "name": "@order_status",
                                             "value": "{{$_GET.order_status}}",
-                                            "test": "3"
+                                            "test": "4"
                                           },
                                           {
                                             "name": "@fromdate",
@@ -412,6 +412,14 @@
                                       },
                                       {
                                         "name": "user_state",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "user_mobile",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "whatsapp",
                                         "type": "text"
                                       },
                                       {
@@ -456,7 +464,7 @@
                                       },
                                       {
                                         "name": "rest_id",
-                                        "type": "number"
+                                        "type": "text"
                                       },
                                       {
                                         "name": "shop_name",
@@ -478,7 +486,7 @@
                                     "options": {
                                       "connection": "ClientApp",
                                       "sql": {
-                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address as user_address, ro.pin as user_pin, ro.dist as user_dist, ro.state as user_state, ro.status as order_status, ro.payment_status, \nro.created_on::text, ro.updated_on::text, count(rod.id) as items, ro.total_amt, ro.discount, ro.delevery_amt, ro.wallet_bal as wallet_amt, ((ro.total_amt::float+ro.delevery_amt::float)-ro.discount::float) as net_amount, mr.id as rest_id, mr.shop_name_en as shop_name, mr.address as shop_address\nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nleft join m_restaurant mr on (mr.id = mp.rest_id)\nwhere ro.status BETWEEN 3 and 6 and ro.order_assigned_to = @user_id and ro.created_on::text between @fromdate and @todate \ngroup by ro.id, mr.id order by ro.id desc;",
+                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address as user_address, ro.pin as user_pin, ro.dist as user_dist, ro.state as user_state, ro.mobile as user_mobile, ro.whatsapp, ro.status as order_status, ro.payment_status, \nro.created_on::text, ro.updated_on::text, count(rod.id) as items, ro.total_amt, ro.discount, ro.delevery_amt, ro.wallet_bal as wallet_amt, ((ro.total_amt::float+ro.delevery_amt::float)-ro.discount::float) as net_amount, mr.id as rest_id, mr.shop_name_en as shop_name, mr.address as shop_address\nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nleft join m_restaurant mr on (mr.id = mp.rest_id)\nwhere ro.status BETWEEN 3 and 6 and ro.order_assigned_to = @user_id and ro.created_on::text between @fromdate and @todate \ngroup by ro.id, mr.id order by ro.id desc;",
                                         "params": [
                                           {
                                             "name": "@user_id",
@@ -530,6 +538,14 @@
                                       },
                                       {
                                         "name": "user_state",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "user_mobile",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "whatsapp",
                                         "type": "text"
                                       },
                                       {

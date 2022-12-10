@@ -1,0 +1,647 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "logintoken"
+      },
+      {
+        "type": "text",
+        "name": "order_status"
+      },
+      {
+        "type": "text",
+        "name": "from_date"
+      },
+      {
+        "type": "text",
+        "name": "to_date"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetVerify",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "t_user_log",
+                      "column": "user_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "t_user_log"
+                  },
+                  "primary": "id",
+                  "joins": [
+                    {
+                      "table": "m_customer",
+                      "column": "*",
+                      "alias": "mc",
+                      "type": "LEFT",
+                      "clauses": {
+                        "condition": "AND",
+                        "rules": [
+                          {
+                            "table": "mc",
+                            "column": "id",
+                            "operator": "equal",
+                            "value": {
+                              "table": "t_user_log",
+                              "column": "user_id"
+                            },
+                            "operation": "="
+                          }
+                        ]
+                      },
+                      "primary": "id"
+                    }
+                  ],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "t_user_log.login_token",
+                        "field": "t_user_log.login_token",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_GET.logintoken}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_token",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_token"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "t_user_log.login_from",
+                        "field": "t_user_log.login_from",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{'Android'}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_from",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_from"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "mc.user_type_id",
+                        "field": "mc.user_type_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{5}}",
+                        "data": {
+                          "table": "mc",
+                          "column": "user_type_id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "reference",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "references": "id",
+                            "inTable": "m_user_type",
+                            "referenceType": "integer",
+                            "onUpdate": "NO ACTION",
+                            "onDelete": "NO ACTION",
+                            "name": "user_type_id"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT t_user_log.user_id\nFROM t_user_log\nLEFT JOIN m_customer AS mc ON (mc.id = t_user_log.user_id)\nWHERE t_user_log.login_token = :P1 /* {{$_GET.logintoken}} */ AND t_user_log.login_from = :P2 /* {{'Android'}} */ AND mc.user_type_id = :P3 /* {{5}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.logintoken}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{'Android'}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P3",
+                      "value": "{{5}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "user_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetVerify.user_id}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "CountOrders",
+                      "module": "dbconnector",
+                      "action": "single",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [
+                            {
+                              "table": "r_order",
+                              "column": "id",
+                              "alias": "CountId",
+                              "aggregate": "COUNT"
+                            }
+                          ],
+                          "table": {
+                            "name": "r_order"
+                          },
+                          "primary": "id",
+                          "joins": [],
+                          "groupBy": [],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "r_order.status",
+                                "field": "r_order.status",
+                                "type": "double",
+                                "operator": "between",
+                                "value": [
+                                  "{{3}}",
+                                  "{{6}}"
+                                ],
+                                "data": {
+                                  "table": "r_order",
+                                  "column": "status",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "integer",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "status"
+                                  }
+                                },
+                                "operation": "BETWEEN"
+                              },
+                              {
+                                "id": "r_order.created_on",
+                                "field": "r_order.created_on",
+                                "type": "datetime",
+                                "operator": "between",
+                                "value": [
+                                  "{{$_GET.from_date+' 00:00:00'}}",
+                                  "{{$_GET.to_date+' 23:59:59'}}"
+                                ],
+                                "data": {
+                                  "table": "r_order",
+                                  "column": "created_on",
+                                  "type": "datetime",
+                                  "columnObj": {
+                                    "type": "timestamp",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "created_on"
+                                  }
+                                },
+                                "operation": "BETWEEN"
+                              },
+                              {
+                                "id": "r_order.order_assigned_to",
+                                "field": "r_order.order_assigned_to",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{GetVerify.user_id}}",
+                                "data": {
+                                  "table": "r_order",
+                                  "column": "order_assigned_to",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "integer",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "order_assigned_to"
+                                  }
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "query": "SELECT COUNT(id) AS CountId\nFROM r_order\nWHERE status BETWEEN :P1 /* {{3}} */ AND :P2 /* {{6}} */ AND created_on BETWEEN :P3 /* {{$_GET.from_date+' 00:00:00'}} */ AND :P4 /* {{$_GET.to_date+' 23:59:59'}} */ AND order_assigned_to = :P5 /* {{GetVerify.user_id}} */",
+                          "params": [
+                            {
+                              "operator": "between",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{3}}"
+                            },
+                            {
+                              "operator": "between",
+                              "type": "expression",
+                              "name": ":P2",
+                              "value": "{{6}}"
+                            },
+                            {
+                              "operator": "between",
+                              "type": "expression",
+                              "name": ":P3",
+                              "value": "{{$_GET.from_date+' 00:00:00'}}"
+                            },
+                            {
+                              "operator": "between",
+                              "type": "expression",
+                              "name": ":P4",
+                              "value": "{{$_GET.to_date+' 23:59:59'}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P5",
+                              "value": "{{GetVerify.user_id}}"
+                            }
+                          ]
+                        }
+                      },
+                      "output": false,
+                      "meta": [
+                        {
+                          "type": "number",
+                          "name": "CountId"
+                        }
+                      ],
+                      "outputType": "object"
+                    },
+                    {
+                      "name": "",
+                      "module": "core",
+                      "action": "condition",
+                      "options": {
+                        "if": "{{CountOrders.CountId>0}}",
+                        "then": {
+                          "steps": [
+                            {
+                              "name": "status",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": 200
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "",
+                              "module": "core",
+                              "action": "condition",
+                              "options": {
+                                "if": "{{$_GET.order_status!=0}}",
+                                "then": {
+                                  "steps": {
+                                    "name": "GetOrders",
+                                    "module": "dbupdater",
+                                    "action": "custom",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address, ro.pin, ro.dist, ro.state, ro.status as order_status, ro.payment_status, \nro.created_on::text, ro.updated_on::text, count(rod.id) as items, ((ro.total_amt::float+ro.delevery_amt::float)-ro.discount::float) as net_amount, mr.id as rest_id, mr.shop_name_en, mr.address \nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nleft join m_restaurant mr on (mr.id = mp.rest_id)\nwhere ro.status=@order_status and ro.order_assigned_to = @user_id and ro.created_on::text between @fromdate and @todate \ngroup by ro.id, mr.id order by ro.id desc;",
+                                        "params": [
+                                          {
+                                            "name": "@user_id",
+                                            "value": "{{GetVerify.user_id}}",
+                                            "test": "92"
+                                          },
+                                          {
+                                            "name": "@order_status",
+                                            "value": "{{$_GET.order_status}}",
+                                            "test": "3"
+                                          },
+                                          {
+                                            "name": "@fromdate",
+                                            "value": "{{$_GET.from_date+' 00:00:00'}}",
+                                            "test": "2022-11-29 00:00:00"
+                                          },
+                                          {
+                                            "name": "@todate",
+                                            "value": "{{$_GET.to_date+' 23:59:59'}}",
+                                            "test": "2022-12-10 23:59:59"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "output": true,
+                                    "meta": [
+                                      {
+                                        "name": "id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "order_id",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "user_id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "user_name",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "address",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "pin",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "dist",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "state",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "order_status",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "payment_status",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "created_on",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "updated_on",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "items",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "net_amount",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "rest_id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "shop_name_en",
+                                        "type": "text"
+                                      }
+                                    ],
+                                    "outputType": "array"
+                                  }
+                                },
+                                "else": {
+                                  "steps": {
+                                    "name": "GetOrders",
+                                    "module": "dbupdater",
+                                    "action": "custom",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "query": "select ro.id, ro.order_id, ro.user_id, ro.user_name, ro.address, ro.pin, ro.dist, ro.state, ro.status as order_status, ro.payment_status, \nro.created_on::text, ro.updated_on::text, count(rod.id) as items, ((ro.total_amt::float+ro.delevery_amt::float)-ro.discount::float) as net_amount, mr.id as rest_id, mr.shop_name_en, mr.address \nfrom r_order ro\nleft join r_order_details rod on (rod.order_table_id=ro.id)\nleft join m_product mp on (mp.id = rod.prod_id)\nleft join m_restaurant mr on (mr.id = mp.rest_id)\nwhere ro.status BETWEEN 3 and 6 and ro.order_assigned_to = @user_id and ro.created_on::text between @fromdate and @todate \ngroup by ro.id, mr.id order by ro.id desc;",
+                                        "params": [
+                                          {
+                                            "name": "@user_id",
+                                            "value": "{{GetVerify.user_id}}",
+                                            "test": "92"
+                                          },
+                                          {
+                                            "name": "@fromdate",
+                                            "value": "{{$_GET.from_date+' 00:00:00'}}",
+                                            "test": "2022-11-29 00:00:00"
+                                          },
+                                          {
+                                            "name": "@todate",
+                                            "value": "{{$_GET.to_date+' 23:59:59'}}",
+                                            "test": "2022-12-10 23:59:59"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "output": true,
+                                    "meta": [
+                                      {
+                                        "name": "id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "order_id",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "user_id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "user_name",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "address",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "pin",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "dist",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "state",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "order_status",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "payment_status",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "created_on",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "updated_on",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "items",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "net_amount",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "rest_id",
+                                        "type": "number"
+                                      },
+                                      {
+                                        "name": "shop_name_en",
+                                        "type": "text"
+                                      }
+                                    ],
+                                    "outputType": "array"
+                                  }
+                                }
+                              },
+                              "outputType": "boolean"
+                            }
+                          ]
+                        },
+                        "else": {
+                          "steps": [
+                            {
+                              "name": "status",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": 400
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "message",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "No Record Found!"
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            }
+                          ]
+                        }
+                      },
+                      "outputType": "boolean"
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Unauthorized User"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

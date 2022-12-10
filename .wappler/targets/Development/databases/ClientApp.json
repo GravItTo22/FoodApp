@@ -1122,93 +1122,65 @@
           },
           "market_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "m_market",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "rest_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "m_restaurant",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "category_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "m_category",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "brand_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "m_brand",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "slab_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "r_slab",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "prod_mark_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "m_prod_mark",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "prod_occurance_id": {
             "db": {
-              "type": "reference",
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true,
-              "references": "id",
-              "inTable": "m_prod_occurance",
-              "referenceType": "integer",
-              "onUpdate": "NO ACTION",
-              "onDelete": "NO ACTION"
+              "referenceType": "integer"
             }
           },
           "prod_name_en": {
@@ -2355,6 +2327,14 @@
             "db": {
               "type": "string",
               "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "order_assigned_to": {
+            "db": {
+              "type": "integer",
               "primary": false,
               "unique": false,
               "nullable": true

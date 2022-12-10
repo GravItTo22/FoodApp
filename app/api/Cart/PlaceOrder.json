@@ -657,11 +657,17 @@
                 "column": "status",
                 "type": "number",
                 "value": "{{1}}"
+              },
+              {
+                "table": "r_order",
+                "column": "payment_status",
+                "type": "text",
+                "value": "{{'COD'}}"
               }
             ],
             "table": "r_order",
             "returning": "id",
-            "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, wallet_bal, created_by, created_on, status) VALUES (:P1 /* {{OrderId}} */, :P2 /* {{identity}} */, :P3 /* {{$_POST.inp_product_total_amt}} */, :P4 /* {{$_POST.inp_PromoCodeAmt}} */, :P5 /* {{$_POST.inp_shipping_charge}} */, :P6 /* {{GetUserDetails.fname+' '+GetUserDetails.lname}} */, :P7 /* {{GetUserDetails.address}} */, :P8 /* {{GetUserDetails.mobile}} */, :P9 /* {{GetUserDetails.watsapp_no}} */, :P10 /* {{GetUserDetails.pin}} */, :P11 /* {{GetUserDetails.ps}} */, :P12 /* {{GetUserDetails.district}} */, :P13 /* {{GetUserDetails.state}} */, :P14 /* {{GetUserDetails.country}} */, :P15 /* {{$_POST.inp_wallet_amt}} */, :P16 /* {{identity}} */, :P17 /* {{NOW}} */, :P18 /* {{1}} */)",
+            "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, wallet_bal, created_by, created_on, status, payment_status) VALUES (:P1 /* {{OrderId}} */, :P2 /* {{identity}} */, :P3 /* {{$_POST.inp_product_total_amt}} */, :P4 /* {{$_POST.inp_PromoCodeAmt}} */, :P5 /* {{$_POST.inp_shipping_charge}} */, :P6 /* {{GetUserDetails.fname+' '+GetUserDetails.lname}} */, :P7 /* {{GetUserDetails.address}} */, :P8 /* {{GetUserDetails.mobile}} */, :P9 /* {{GetUserDetails.watsapp_no}} */, :P10 /* {{GetUserDetails.pin}} */, :P11 /* {{GetUserDetails.ps}} */, :P12 /* {{GetUserDetails.district}} */, :P13 /* {{GetUserDetails.state}} */, :P14 /* {{GetUserDetails.country}} */, :P15 /* {{$_POST.inp_wallet_amt}} */, :P16 /* {{identity}} */, :P17 /* {{NOW}} */, :P18 /* {{1}} */, :P19 /* {{'COD'}} */)",
             "params": [
               {
                 "name": ":P1",
@@ -752,6 +758,11 @@
                 "name": ":P18",
                 "type": "expression",
                 "value": "{{1}}"
+              },
+              {
+                "name": ":P19",
+                "type": "expression",
+                "value": "{{'COD'}}"
               }
             ]
           }

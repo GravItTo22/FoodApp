@@ -377,6 +377,12 @@
                                       "column": "status",
                                       "type": "number",
                                       "value": "{{$_GET.order_status}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "updated_on",
+                                      "type": "datetime",
+                                      "value": "{{NOW}}"
                                     }
                                   ],
                                   "table": "r_order",
@@ -399,7 +405,7 @@
                                     "valid": true
                                   },
                                   "returning": "id",
-                                  "query": "UPDATE r_order\nSET status = :P1 /* {{$_GET.order_status}} */\nWHERE id = :P2 /* {{$_GET.order_id}} */",
+                                  "query": "UPDATE r_order\nSET status = :P1 /* {{$_GET.order_status}} */, updated_on = :P2 /* {{NOW}} */\nWHERE id = :P3 /* {{$_GET.order_id}} */",
                                   "params": [
                                     {
                                       "name": ":P1",
@@ -407,9 +413,14 @@
                                       "value": "{{$_GET.order_status}}"
                                     },
                                     {
+                                      "name": ":P2",
+                                      "type": "expression",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
                                       "operator": "equal",
                                       "type": "expression",
-                                      "name": ":P2",
+                                      "name": ":P3",
                                       "value": "{{$_GET.order_id}}"
                                     }
                                   ]
@@ -436,6 +447,12 @@
                                       "column": "order_status",
                                       "type": "number",
                                       "value": "{{$_GET.order_status}}"
+                                    },
+                                    {
+                                      "table": "r_order_details",
+                                      "column": "updated_on",
+                                      "type": "datetime",
+                                      "value": "{{NOW}}"
                                     }
                                   ],
                                   "table": "r_order_details",
@@ -458,7 +475,7 @@
                                     "valid": true
                                   },
                                   "returning": "id",
-                                  "query": "UPDATE r_order_details\nSET order_status = :P1 /* {{$_GET.order_status}} */\nWHERE order_table_id = :P2 /* {{$_GET.order_id}} */",
+                                  "query": "UPDATE r_order_details\nSET order_status = :P1 /* {{$_GET.order_status}} */, updated_on = :P2 /* {{NOW}} */\nWHERE order_table_id = :P3 /* {{$_GET.order_id}} */",
                                   "params": [
                                     {
                                       "name": ":P1",
@@ -466,9 +483,14 @@
                                       "value": "{{$_GET.order_status}}"
                                     },
                                     {
+                                      "name": ":P2",
+                                      "type": "expression",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
                                       "operator": "equal",
                                       "type": "expression",
-                                      "name": ":P2",
+                                      "name": ":P3",
                                       "value": "{{$_GET.order_id}}"
                                     }
                                   ]

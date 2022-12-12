@@ -2,7 +2,7 @@
   "meta": {
     "$_GET": [
       {
-        "type": "text",
+        "type": "number",
         "name": "order_id"
       },
       {
@@ -16,6 +16,24 @@
       {
         "type": "number",
         "name": "order_id"
+      },
+      {
+        "type": "text",
+        "name": "latitude"
+      },
+      {
+        "type": "text",
+        "name": "longitude"
+      }
+    ],
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "longitude"
+      },
+      {
+        "type": "text",
+        "name": "latitude"
       }
     ]
   },
@@ -194,9 +212,13 @@
                           "columns": [
                             {
                               "table": "r_order",
-                              "column": "id",
-                              "alias": "CountId",
-                              "aggregate": "COUNT"
+                              "column": "user_id",
+                              "alias": "customer_id"
+                            },
+                            {
+                              "table": "r_order",
+                              "column": "order_assigned_to",
+                              "alias": "delivery_id"
                             }
                           ],
                           "table": {
@@ -249,7 +271,6 @@
                               "primary": "id"
                             }
                           ],
-                          "groupBy": [],
                           "wheres": {
                             "condition": "AND",
                             "rules": [
@@ -301,7 +322,7 @@
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT COUNT(r_order.id) AS CountId\nFROM r_order\nLEFT JOIN r_order_details AS rod ON (rod.order_table_id = r_order.id) INNER JOIN m_product AS mp ON (mp.id = rod.prod_id)\nWHERE r_order.id = :P1 /* {{$_GET.order_id}} */ AND r_order.status BETWEEN :P2 /* {{1}} */ AND :P3 /* {{3}} */",
+                          "query": "SELECT r_order.user_id AS customer_id, r_order.order_assigned_to AS delivery_id\nFROM r_order\nLEFT JOIN r_order_details AS rod ON (rod.order_table_id = r_order.id) INNER JOIN m_product AS mp ON (mp.id = rod.prod_id)\nWHERE r_order.id = :P1 /* {{$_GET.order_id}} */ AND r_order.status BETWEEN :P2 /* {{1}} */ AND :P3 /* {{3}} */",
                           "params": [
                             {
                               "operator": "equal",
@@ -328,7 +349,11 @@
                       "meta": [
                         {
                           "type": "number",
-                          "name": "CountId"
+                          "name": "customer_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "delivery_id"
                         }
                       ],
                       "outputType": "object"
@@ -338,7 +363,7 @@
                       "module": "core",
                       "action": "condition",
                       "options": {
-                        "if": "{{CountOrders.CountId>0}}",
+                        "if": "{{CountOrders.customer_id}}",
                         "then": {
                           "steps": [
                             {
@@ -497,6 +522,111 @@
                                 }
                               },
                               "meta": [
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "TrackOrderLocation",
+                              "module": "dbupdater",
+                              "action": "insert",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "insert",
+                                  "values": [
+                                    {
+                                      "table": "r_order_track",
+                                      "column": "order_id",
+                                      "type": "number",
+                                      "value": "{{$_GET.order_id}}"
+                                    },
+                                    {
+                                      "table": "r_order_track",
+                                      "column": "user_id",
+                                      "type": "number",
+                                      "value": "{{CountOrders.customer_id}}"
+                                    },
+                                    {
+                                      "table": "r_order_track",
+                                      "column": "delivery_id",
+                                      "type": "number",
+                                      "value": "{{CountOrders.delivery_id}}"
+                                    },
+                                    {
+                                      "table": "r_order_track",
+                                      "column": "longitude",
+                                      "type": "text",
+                                      "value": "{{$_POST.longitude}}"
+                                    },
+                                    {
+                                      "table": "r_order_track",
+                                      "column": "latitude",
+                                      "type": "text",
+                                      "value": "{{$_POST.latitude}}"
+                                    },
+                                    {
+                                      "table": "r_order_track",
+                                      "column": "status",
+                                      "type": "number",
+                                      "value": "{{$_GET.order_status}}"
+                                    },
+                                    {
+                                      "table": "r_order_track",
+                                      "column": "created_on",
+                                      "type": "datetime",
+                                      "value": "{{NOW}}"
+                                    }
+                                  ],
+                                  "table": "r_order_track",
+                                  "returning": "id",
+                                  "query": "INSERT INTO r_order_track\n(order_id, user_id, delivery_id, longitude, latitude, status, created_on) VALUES (:P1 /* {{$_GET.order_id}} */, :P2 /* {{CountOrders.customer_id}} */, :P3 /* {{CountOrders.delivery_id}} */, :P4 /* {{$_POST.longitude}} */, :P5 /* {{$_POST.latitude}} */, :P6 /* {{$_GET.order_status}} */, :P7 /* {{NOW}} */)",
+                                  "params": [
+                                    {
+                                      "name": ":P1",
+                                      "type": "expression",
+                                      "value": "{{$_GET.order_id}}"
+                                    },
+                                    {
+                                      "name": ":P2",
+                                      "type": "expression",
+                                      "value": "{{CountOrders.customer_id}}"
+                                    },
+                                    {
+                                      "name": ":P3",
+                                      "type": "expression",
+                                      "value": "{{CountOrders.delivery_id}}"
+                                    },
+                                    {
+                                      "name": ":P4",
+                                      "type": "expression",
+                                      "value": "{{$_POST.longitude}}"
+                                    },
+                                    {
+                                      "name": ":P5",
+                                      "type": "expression",
+                                      "value": "{{$_POST.latitude}}"
+                                    },
+                                    {
+                                      "name": ":P6",
+                                      "type": "expression",
+                                      "value": "{{$_GET.order_status}}"
+                                    },
+                                    {
+                                      "name": ":P7",
+                                      "type": "expression",
+                                      "value": "{{NOW}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "identity",
+                                  "type": "text"
+                                },
                                 {
                                   "name": "affected",
                                   "type": "number"

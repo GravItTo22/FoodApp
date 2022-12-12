@@ -210,1095 +210,1093 @@
                       "options": {
                         "if": "{{CountCart.id}}",
                         "then": {
-                          "steps": [
-                            {
-                              "name": "status",
-                              "module": "core",
-                              "action": "setvalue",
-                              "options": {
-                                "value": 200
-                              },
-                              "meta": [],
-                              "output": true,
-                              "outputType": "text"
-                            },
-                            {
-                              "name": "",
-                              "module": "core",
-                              "action": "condition",
-                              "options": {
-                                "if": "{{$_GET.lang}}",
-                                "then": {
-                                  "steps": [
-                                    {
-                                      "name": "CartSumAmt",
-                                      "module": "dbupdater",
-                                      "action": "custom",
-                                      "options": {
-                                        "connection": "ClientApp",
-                                        "sql": {
-                                          "query": "SELECT SUM(rc.total_price::float) as total_amt\nFROM r_cart rc\nWHERE rc.user_id = @user",
-                                          "params": [
-                                            {
-                                              "name": "@user",
-                                              "value": "{{GetUser.user_id}}",
-                                              "test": "82"
-                                            }
-                                          ]
-                                        }
-                                      },
-                                      "output": true,
-                                      "meta": [
-                                        {
-                                          "name": "total_amt",
-                                          "type": "number"
-                                        }
-                                      ],
-                                      "outputType": "array"
+                          "steps": {
+                            "name": "",
+                            "module": "core",
+                            "action": "condition",
+                            "options": {
+                              "if": "{{$_GET.lang}}",
+                              "then": {
+                                "steps": [
+                                  {
+                                    "name": "status",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": 200
                                     },
-                                    {
-                                      "name": "CalculateDistance",
-                                      "module": "dbupdater",
-                                      "action": "custom",
-                                      "options": {
-                                        "connection": "ClientApp",
-                                        "sql": {
-                                          "query": "SELECT rsa.blank1, rsa.blank2, (select msc1.base_charge from public.m_shipping_charge msc1 where msc1.market_id=@market and msc1.status=1), (select msc2.add_charge_per_km from public.m_shipping_charge msc2 where msc2.market_id=@market and msc2.status=1),\nSQRT(POW(69.1 * (rsa.blank1::float - (select msc.office_lat::float from public.m_shipping_charge msc where msc.market_id=@market and msc.status=1)), 2) + POW(69.1 * ((select msc.office_long::float from public.m_shipping_charge msc where msc.market_id=@market and msc.status=1) - rsa.blank2::float) * COS(rsa.blank1::float / 57.3), 2)) AS distance\nFROM r_shipping_add rsa \nwhere rsa.c_id =@user and rsa.status = @active_address order by rsa.id desc limit 1;",
-                                          "params": [
-                                            {
-                                              "name": "@user",
-                                              "value": "{{GetUser.user_id}}",
-                                              "test": "84"
-                                            },
-                                            {
-                                              "name": "@active_address",
-                                              "value": "{{2}}",
-                                              "test": "2"
-                                            },
-                                            {
-                                              "name": "@market",
-                                              "value": "{{$_GET.market}}",
-                                              "test": "1"
-                                            }
-                                          ]
-                                        }
-                                      },
-                                      "output": false,
-                                      "meta": [
-                                        {
-                                          "name": "blank1",
-                                          "type": "text"
-                                        },
-                                        {
-                                          "name": "blank2",
-                                          "type": "text"
-                                        },
-                                        {
-                                          "name": "base_charge",
-                                          "type": "text"
-                                        },
-                                        {
-                                          "name": "add_charge_per_km",
-                                          "type": "text"
-                                        },
-                                        {
-                                          "name": "distance",
-                                          "type": "number"
-                                        }
-                                      ],
-                                      "outputType": "array"
-                                    },
-                                    {
-                                      "name": "",
-                                      "module": "core",
-                                      "action": "condition",
-                                      "options": {
-                                        "if": "{{CalculateDistance}}",
-                                        "then": {
-                                          "steps": [
-                                            {
-                                              "name": "BaseCharge",
-                                              "module": "core",
-                                              "action": "setvalue",
-                                              "options": {
-                                                "value": "{{CalculateDistance[0].base_charge}}"
-                                              },
-                                              "meta": [],
-                                              "outputType": "text",
-                                              "output": true
-                                            },
-                                            {
-                                              "name": "ChargePerKM",
-                                              "module": "core",
-                                              "action": "setvalue",
-                                              "options": {
-                                                "value": "{{CalculateDistance[0].add_charge_per_km}}"
-                                              },
-                                              "meta": [],
-                                              "outputType": "text",
-                                              "output": true
-                                            },
-                                            {
-                                              "name": "DistanceInKm",
-                                              "module": "core",
-                                              "action": "setvalue",
-                                              "options": {
-                                                "value": "{{CalculateDistance[0].distance}}"
-                                              },
-                                              "meta": [],
-                                              "outputType": "text",
-                                              "output": true
-                                            },
-                                            {
-                                              "name": "ShippingCharge",
-                                              "module": "core",
-                                              "action": "setvalue",
-                                              "options": {
-                                                "value": "{{CalculateDistance[0].base_charge.toNumber()+(CalculateDistance[0].add_charge_per_km.toNumber()*CalculateDistance[0].distance.toNumber())}}"
-                                              },
-                                              "meta": [],
-                                              "outputType": "text",
-                                              "output": true
-                                            }
-                                          ]
-                                        },
-                                        "else": {
-                                          "steps": [
-                                            {
-                                              "name": "BaseCharge",
-                                              "module": "core",
-                                              "action": "setvalue",
-                                              "options": {
-                                                "value": "0\n"
-                                              },
-                                              "meta": [],
-                                              "outputType": "text",
-                                              "output": true
-                                            },
-                                            {
-                                              "name": "ChargePerKM",
-                                              "module": "core",
-                                              "action": "setvalue",
-                                              "options": {
-                                                "value": "0\n"
-                                              },
-                                              "meta": [],
-                                              "outputType": "text",
-                                              "output": true
-                                            },
-                                            {
-                                              "name": "DistanceInKm",
-                                              "module": "core",
-                                              "action": "setvalue",
-                                              "options": {
-                                                "value": "0\n"
-                                              },
-                                              "meta": [],
-                                              "outputType": "text",
-                                              "output": true
-                                            },
-                                            {
-                                              "name": "ShippingCharge",
-                                              "module": "core",
-                                              "action": "setvalue",
-                                              "options": {
-                                                "value": 50
-                                              },
-                                              "meta": [],
-                                              "outputType": "text",
-                                              "output": true
-                                            }
-                                          ]
-                                        }
-                                      },
-                                      "outputType": "boolean"
-                                    },
-                                    {
-                                      "name": "",
-                                      "module": "core",
-                                      "action": "condition",
-                                      "options": {
-                                        "if": "{{($_GET.lang=='EN')}}",
-                                        "then": {
-                                          "steps": {
-                                            "name": "GetCartItems",
-                                            "module": "dbupdater",
-                                            "action": "custom",
-                                            "options": {
-                                              "connection": "ClientApp",
-                                              "sql": {
-                                                "query": "SELECT rc.id, rc.prod_id, rc.price_id, rc.user_id, rc.prod_unit_price, rc.cart_mrp, rc.prod_qty, rc.total_price, mp.prod_name_en as prod_name, mp.prod_desc_en as prod_description, mp.prod_img1, mp.prod_mark_id, mr.shop_name_en as shop_name, mp.rest_id, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_cart rc\nLEFT JOIN m_product AS mp ON (mp.id = rc.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rc.user_id = @user ORDER BY rc.id DESC",
-                                                "params": [
-                                                  {
-                                                    "name": "@user",
-                                                    "value": "{{GetUser.user_id}}",
-                                                    "test": "38"
-                                                  }
-                                                ]
-                                              }
-                                            },
-                                            "output": true,
-                                            "meta": [
-                                              {
-                                                "name": "id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "prod_id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "price_id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "user_id",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_unit_price",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "cart_mrp",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_qty",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "total_price",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_name_en",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_name_bn",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_name_hin",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_desc_en",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_desc_bn",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_desc_hin",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_img1",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_mark_id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "shop_name_en",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "shop_name_bn",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "shop_name_hin",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "rest_id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "price",
-                                                "type": "array",
-                                                "sub": [
-                                                  {
-                                                    "name": "price_ids",
-                                                    "type": "number"
-                                                  },
-                                                  {
-                                                    "name": "quantity",
-                                                    "type": "text"
-                                                  },
-                                                  {
-                                                    "name": "q_unit",
-                                                    "type": "text"
-                                                  },
-                                                  {
-                                                    "name": "mrp",
-                                                    "type": "text"
-                                                  },
-                                                  {
-                                                    "name": "price",
-                                                    "type": "text"
-                                                  },
-                                                  {
-                                                    "name": "product_tax",
-                                                    "type": "text"
-                                                  }
-                                                ]
-                                              }
-                                            ],
-                                            "outputType": "array"
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  },
+                                  {
+                                    "name": "CartSumAmt",
+                                    "module": "dbupdater",
+                                    "action": "custom",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "query": "SELECT SUM(rc.total_price::float) as total_amt\nFROM r_cart rc\nWHERE rc.user_id = @user",
+                                        "params": [
+                                          {
+                                            "name": "@user",
+                                            "value": "{{GetUser.user_id}}",
+                                            "test": "82"
                                           }
-                                        }
-                                      },
-                                      "outputType": "boolean"
+                                        ]
+                                      }
                                     },
-                                    {
-                                      "name": "",
-                                      "module": "core",
-                                      "action": "condition",
-                                      "options": {
-                                        "if": "{{($_GET.lang=='BN')}}",
-                                        "then": {
-                                          "steps": {
-                                            "name": "GetCartItems",
-                                            "module": "dbupdater",
-                                            "action": "custom",
-                                            "options": {
-                                              "connection": "ClientApp",
-                                              "sql": {
-                                                "query": "SELECT rc.id, rc.prod_id, rc.price_id, rc.user_id, rc.prod_unit_price, rc.cart_mrp, rc.prod_qty, rc.total_price, mp.prod_name_bn as prod_name, mp.prod_desc_bn as prod_description, mp.prod_img1, mp.prod_mark_id, mr.shop_name_bn as shop_name, mp.rest_id, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_cart rc\nLEFT JOIN m_product AS mp ON (mp.id = rc.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rc.user_id = @user ORDER BY rc.id DESC",
-                                                "params": [
-                                                  {
-                                                    "name": "@user",
-                                                    "value": "{{GetUser.user_id}}",
-                                                    "test": "38"
-                                                  }
-                                                ]
-                                              }
-                                            },
-                                            "output": true,
-                                            "meta": [
-                                              {
-                                                "name": "id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "prod_id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "price_id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "user_id",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_unit_price",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "cart_mrp",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_qty",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "total_price",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_name_en",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_name_bn",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_name_hin",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_desc_en",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_desc_bn",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_desc_hin",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_img1",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_mark_id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "shop_name_en",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "shop_name_bn",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "shop_name_hin",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "rest_id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "price",
-                                                "type": "array",
-                                                "sub": [
-                                                  {
-                                                    "name": "price_ids",
-                                                    "type": "number"
-                                                  },
-                                                  {
-                                                    "name": "quantity",
-                                                    "type": "text"
-                                                  },
-                                                  {
-                                                    "name": "q_unit",
-                                                    "type": "text"
-                                                  },
-                                                  {
-                                                    "name": "mrp",
-                                                    "type": "text"
-                                                  },
-                                                  {
-                                                    "name": "price",
-                                                    "type": "text"
-                                                  },
-                                                  {
-                                                    "name": "product_tax",
-                                                    "type": "text"
-                                                  }
-                                                ]
-                                              }
-                                            ],
-                                            "outputType": "array"
+                                    "output": true,
+                                    "meta": [
+                                      {
+                                        "name": "total_amt",
+                                        "type": "number"
+                                      }
+                                    ],
+                                    "outputType": "array"
+                                  },
+                                  {
+                                    "name": "CalculateDistance",
+                                    "module": "dbupdater",
+                                    "action": "custom",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "query": "SELECT rsa.blank1, rsa.blank2, (select msc1.base_charge from public.m_shipping_charge msc1 where msc1.market_id=@market and msc1.status=1), (select msc2.add_charge_per_km from public.m_shipping_charge msc2 where msc2.market_id=@market and msc2.status=1),\nSQRT(POW(69.1 * (rsa.blank1::float - (select msc.office_lat::float from public.m_shipping_charge msc where msc.market_id=@market and msc.status=1)), 2) + POW(69.1 * ((select msc.office_long::float from public.m_shipping_charge msc where msc.market_id=@market and msc.status=1) - rsa.blank2::float) * COS(rsa.blank1::float / 57.3), 2)) AS distance\nFROM r_shipping_add rsa \nwhere rsa.c_id =@user and rsa.status = @active_address order by rsa.id desc limit 1;",
+                                        "params": [
+                                          {
+                                            "name": "@user",
+                                            "value": "{{GetUser.user_id}}",
+                                            "test": "84"
+                                          },
+                                          {
+                                            "name": "@active_address",
+                                            "value": "{{2}}",
+                                            "test": "2"
+                                          },
+                                          {
+                                            "name": "@market",
+                                            "value": "{{$_GET.market}}",
+                                            "test": "1"
                                           }
-                                        }
-                                      },
-                                      "outputType": "boolean"
+                                        ]
+                                      }
                                     },
-                                    {
-                                      "name": "",
-                                      "module": "core",
-                                      "action": "condition",
-                                      "options": {
-                                        "if": "{{($_GET.lang=='HIN')}}",
-                                        "then": {
-                                          "steps": {
-                                            "name": "GetCartItems",
-                                            "module": "dbupdater",
-                                            "action": "custom",
+                                    "output": false,
+                                    "meta": [
+                                      {
+                                        "name": "blank1",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "blank2",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "base_charge",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "add_charge_per_km",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "distance",
+                                        "type": "number"
+                                      }
+                                    ],
+                                    "outputType": "array"
+                                  },
+                                  {
+                                    "name": "",
+                                    "module": "core",
+                                    "action": "condition",
+                                    "options": {
+                                      "if": "{{CalculateDistance}}",
+                                      "then": {
+                                        "steps": [
+                                          {
+                                            "name": "BaseCharge",
+                                            "module": "core",
+                                            "action": "setvalue",
                                             "options": {
-                                              "connection": "ClientApp",
-                                              "sql": {
-                                                "query": "SELECT rc.id, rc.prod_id, rc.price_id, rc.user_id, rc.prod_unit_price, rc.cart_mrp, rc.prod_qty, rc.total_price, mp.prod_name_hin as prod_name, mp.prod_desc_hin as prod_description, mp.prod_img1, mp.prod_mark_id, mr.shop_name_hin as shop_name, mp.rest_id, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_cart rc\nLEFT JOIN m_product AS mp ON (mp.id = rc.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rc.user_id = @user ORDER BY rc.id DESC",
-                                                "params": [
-                                                  {
-                                                    "name": "@user",
-                                                    "value": "{{GetUser.user_id}}",
-                                                    "test": "38"
-                                                  }
-                                                ]
-                                              }
+                                              "value": "{{CalculateDistance[0].base_charge}}"
                                             },
-                                            "output": true,
-                                            "meta": [
-                                              {
-                                                "name": "id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "prod_id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "price_id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "user_id",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_unit_price",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "cart_mrp",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_qty",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "total_price",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_name_en",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_name_bn",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_name_hin",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_desc_en",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_desc_bn",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_desc_hin",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_img1",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "prod_mark_id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "shop_name_en",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "shop_name_bn",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "shop_name_hin",
-                                                "type": "text"
-                                              },
-                                              {
-                                                "name": "rest_id",
-                                                "type": "number"
-                                              },
-                                              {
-                                                "name": "price",
-                                                "type": "array",
-                                                "sub": [
-                                                  {
-                                                    "name": "price_ids",
-                                                    "type": "number"
-                                                  },
-                                                  {
-                                                    "name": "quantity",
-                                                    "type": "text"
-                                                  },
-                                                  {
-                                                    "name": "q_unit",
-                                                    "type": "text"
-                                                  },
-                                                  {
-                                                    "name": "mrp",
-                                                    "type": "text"
-                                                  },
-                                                  {
-                                                    "name": "price",
-                                                    "type": "text"
-                                                  },
-                                                  {
-                                                    "name": "product_tax",
-                                                    "type": "text"
-                                                  }
-                                                ]
-                                              }
-                                            ],
-                                            "outputType": "array"
+                                            "meta": [],
+                                            "outputType": "text",
+                                            "output": true
+                                          },
+                                          {
+                                            "name": "ChargePerKM",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "{{CalculateDistance[0].add_charge_per_km}}"
+                                            },
+                                            "meta": [],
+                                            "outputType": "text",
+                                            "output": true
+                                          },
+                                          {
+                                            "name": "DistanceInKm",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "{{CalculateDistance[0].distance}}"
+                                            },
+                                            "meta": [],
+                                            "outputType": "text",
+                                            "output": true
+                                          },
+                                          {
+                                            "name": "ShippingCharge",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "{{CalculateDistance[0].base_charge.toNumber()+(CalculateDistance[0].add_charge_per_km.toNumber()*CalculateDistance[0].distance.toNumber())}}"
+                                            },
+                                            "meta": [],
+                                            "outputType": "text",
+                                            "output": true
                                           }
-                                        }
+                                        ]
                                       },
-                                      "outputType": "boolean"
+                                      "else": {
+                                        "steps": [
+                                          {
+                                            "name": "BaseCharge",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "0\n"
+                                            },
+                                            "meta": [],
+                                            "outputType": "text",
+                                            "output": true
+                                          },
+                                          {
+                                            "name": "ChargePerKM",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "0\n"
+                                            },
+                                            "meta": [],
+                                            "outputType": "text",
+                                            "output": true
+                                          },
+                                          {
+                                            "name": "DistanceInKm",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "0\n"
+                                            },
+                                            "meta": [],
+                                            "outputType": "text",
+                                            "output": true
+                                          },
+                                          {
+                                            "name": "ShippingCharge",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": 50
+                                            },
+                                            "meta": [],
+                                            "outputType": "text",
+                                            "output": true
+                                          }
+                                        ]
+                                      }
                                     },
-                                    {
-                                      "name": "GetNewUser",
-                                      "module": "dbconnector",
-                                      "action": "single",
-                                      "options": {
-                                        "connection": "ClientApp",
-                                        "sql": {
-                                          "type": "SELECT",
-                                          "columns": [
+                                    "outputType": "boolean"
+                                  },
+                                  {
+                                    "name": "",
+                                    "module": "core",
+                                    "action": "condition",
+                                    "options": {
+                                      "if": "{{($_GET.lang=='EN')}}",
+                                      "then": {
+                                        "steps": {
+                                          "name": "GetCartItems",
+                                          "module": "dbupdater",
+                                          "action": "custom",
+                                          "options": {
+                                            "connection": "ClientApp",
+                                            "sql": {
+                                              "query": "SELECT rc.id, rc.prod_id, rc.price_id, rc.user_id, rc.prod_unit_price, rc.cart_mrp, rc.prod_qty, rc.total_price, mp.prod_name_en as prod_name, mp.prod_desc_en as prod_description, mp.prod_img1, mp.prod_mark_id, mr.shop_name_en as shop_name, mp.rest_id, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_cart rc\nLEFT JOIN m_product AS mp ON (mp.id = rc.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rc.user_id = @user ORDER BY rc.id DESC",
+                                              "params": [
+                                                {
+                                                  "name": "@user",
+                                                  "value": "{{GetUser.user_id}}",
+                                                  "test": "38"
+                                                }
+                                              ]
+                                            }
+                                          },
+                                          "output": true,
+                                          "meta": [
                                             {
-                                              "table": "r_order",
-                                              "column": "id",
-                                              "alias": "CountNewCust",
-                                              "aggregate": "COUNT"
+                                              "name": "id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "price_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "user_id",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_unit_price",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "cart_mrp",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_qty",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "total_price",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_name_en",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_name_bn",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_name_hin",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_desc_en",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_desc_bn",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_desc_hin",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_img1",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_mark_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "shop_name_en",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "shop_name_bn",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "shop_name_hin",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "rest_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "price",
+                                              "type": "array",
+                                              "sub": [
+                                                {
+                                                  "name": "price_ids",
+                                                  "type": "number"
+                                                },
+                                                {
+                                                  "name": "quantity",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "q_unit",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "mrp",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "price",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "product_tax",
+                                                  "type": "text"
+                                                }
+                                              ]
                                             }
                                           ],
-                                          "table": {
-                                            "name": "r_order"
-                                          },
-                                          "primary": "id",
-                                          "joins": [],
-                                          "groupBy": [],
-                                          "wheres": {
-                                            "condition": "AND",
-                                            "rules": [
-                                              {
-                                                "id": "r_order.user_id",
-                                                "field": "r_order.user_id",
-                                                "type": "double",
-                                                "operator": "equal",
-                                                "value": "{{identity}}",
-                                                "data": {
-                                                  "table": "r_order",
-                                                  "column": "user_id",
-                                                  "type": "number",
-                                                  "columnObj": {
-                                                    "type": "reference",
-                                                    "primary": false,
-                                                    "unique": false,
-                                                    "nullable": true,
-                                                    "references": "id",
-                                                    "inTable": "m_customer",
-                                                    "referenceType": "integer",
-                                                    "onUpdate": "NO ACTION",
-                                                    "onDelete": "NO ACTION",
-                                                    "name": "user_id"
-                                                  }
-                                                },
-                                                "operation": "="
-                                              }
-                                            ],
-                                            "conditional": null,
-                                            "valid": true
-                                          },
-                                          "query": "SELECT COUNT(id) AS CountNewCust\nFROM r_order\nWHERE user_id = :P1 /* {{identity}} */",
-                                          "params": [
-                                            {
-                                              "operator": "equal",
-                                              "type": "expression",
-                                              "name": ":P1",
-                                              "value": "{{identity}}"
-                                            }
-                                          ]
+                                          "outputType": "array"
                                         }
-                                      },
-                                      "output": false,
-                                      "meta": [
-                                        {
-                                          "type": "number",
-                                          "name": "CountNewCust"
-                                        }
-                                      ],
-                                      "outputType": "object"
+                                      }
                                     },
-                                    {
-                                      "name": "",
-                                      "module": "core",
-                                      "action": "condition",
-                                      "options": {
-                                        "if": "{{GetNewUser.CountNewCust<1}}",
-                                        "then": {
-                                          "steps": [
+                                    "outputType": "boolean"
+                                  },
+                                  {
+                                    "name": "",
+                                    "module": "core",
+                                    "action": "condition",
+                                    "options": {
+                                      "if": "{{($_GET.lang=='BN')}}",
+                                      "then": {
+                                        "steps": {
+                                          "name": "GetCartItems",
+                                          "module": "dbupdater",
+                                          "action": "custom",
+                                          "options": {
+                                            "connection": "ClientApp",
+                                            "sql": {
+                                              "query": "SELECT rc.id, rc.prod_id, rc.price_id, rc.user_id, rc.prod_unit_price, rc.cart_mrp, rc.prod_qty, rc.total_price, mp.prod_name_bn as prod_name, mp.prod_desc_bn as prod_description, mp.prod_img1, mp.prod_mark_id, mr.shop_name_bn as shop_name, mp.rest_id, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_cart rc\nLEFT JOIN m_product AS mp ON (mp.id = rc.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rc.user_id = @user ORDER BY rc.id DESC",
+                                              "params": [
+                                                {
+                                                  "name": "@user",
+                                                  "value": "{{GetUser.user_id}}",
+                                                  "test": "38"
+                                                }
+                                              ]
+                                            }
+                                          },
+                                          "output": true,
+                                          "meta": [
                                             {
-                                              "name": "Apply",
-                                              "module": "core",
-                                              "action": "setvalue",
-                                              "options": {
-                                                "value": "Yes"
-                                              },
-                                              "meta": [],
-                                              "output": true,
-                                              "outputType": "text"
+                                              "name": "id",
+                                              "type": "number"
                                             },
                                             {
-                                              "name": "NewUserCode",
-                                              "module": "dbconnector",
-                                              "action": "single",
-                                              "options": {
-                                                "connection": "ClientApp",
-                                                "sql": {
-                                                  "type": "SELECT",
-                                                  "columns": [
-                                                    {
-                                                      "table": "promo_code",
-                                                      "column": "id"
-                                                    },
-                                                    {
-                                                      "table": "promo_code",
-                                                      "column": "promo_name"
-                                                    },
-                                                    {
-                                                      "table": "promo_code",
-                                                      "column": "promo_code"
-                                                    },
-                                                    {
-                                                      "table": "promo_code",
-                                                      "column": "amt_or_percent"
-                                                    },
-                                                    {
-                                                      "table": "promo_code",
-                                                      "column": "promo_amt"
-                                                    },
-                                                    {
-                                                      "table": "promo_code",
-                                                      "column": "promo_per"
-                                                    },
-                                                    {
-                                                      "table": "promo_code",
-                                                      "column": "cashback_amt_or_per"
-                                                    },
-                                                    {
-                                                      "table": "promo_code",
-                                                      "column": "cashback_amt"
-                                                    },
-                                                    {
-                                                      "table": "promo_code",
-                                                      "column": "cashback_per"
-                                                    }
-                                                  ],
-                                                  "table": {
-                                                    "name": "promo_code"
-                                                  },
-                                                  "joins": [],
-                                                  "primary": "id",
-                                                  "query": "SELECT id, promo_name, promo_code, amt_or_percent, promo_amt, promo_per, cashback_amt_or_per, cashback_amt, cashback_per\nFROM promo_code\nWHERE auto_apply = :P1 /* {{'Yes'}} */ AND status = :P2 /* {{1}} */ AND start_date < :P3 /* {{NOW}} */ AND end_date >= :P4 /* {{NOW}} */ AND (allotted_for = :P5 /* {{'All'}} */ OR user_id = :P6 /* {{GetUser.user_id}} */)",
-                                                  "params": [
-                                                    {
-                                                      "operator": "equal",
-                                                      "type": "expression",
-                                                      "name": ":P1",
-                                                      "value": "{{'Yes'}}"
-                                                    },
-                                                    {
-                                                      "operator": "equal",
-                                                      "type": "expression",
-                                                      "name": ":P2",
-                                                      "value": "{{1}}"
-                                                    },
-                                                    {
-                                                      "operator": "less",
-                                                      "type": "expression",
-                                                      "name": ":P3",
-                                                      "value": "{{NOW}}"
-                                                    },
-                                                    {
-                                                      "operator": "greater_or_equal",
-                                                      "type": "expression",
-                                                      "name": ":P4",
-                                                      "value": "{{NOW}}"
-                                                    },
-                                                    {
-                                                      "operator": "equal",
-                                                      "type": "expression",
-                                                      "name": ":P5",
-                                                      "value": "{{'All'}}"
-                                                    },
-                                                    {
-                                                      "operator": "equal",
-                                                      "type": "expression",
-                                                      "name": ":P6",
-                                                      "value": "{{GetUser.user_id}}"
-                                                    }
-                                                  ],
-                                                  "wheres": {
-                                                    "condition": "AND",
-                                                    "rules": [
-                                                      {
-                                                        "id": "promo_code.auto_apply",
-                                                        "field": "promo_code.auto_apply",
-                                                        "type": "string",
-                                                        "operator": "equal",
-                                                        "value": "{{'Yes'}}",
-                                                        "data": {
-                                                          "table": "promo_code",
-                                                          "column": "auto_apply",
-                                                          "type": "text",
-                                                          "columnObj": {
-                                                            "type": "string",
-                                                            "maxLength": -5,
-                                                            "primary": false,
-                                                            "unique": false,
-                                                            "nullable": true,
-                                                            "name": "auto_apply"
-                                                          }
-                                                        },
-                                                        "operation": "="
-                                                      },
-                                                      {
-                                                        "id": "promo_code.status",
-                                                        "field": "promo_code.status",
-                                                        "type": "double",
-                                                        "operator": "equal",
-                                                        "value": "{{1}}",
-                                                        "data": {
-                                                          "table": "promo_code",
-                                                          "column": "status",
-                                                          "type": "number",
-                                                          "columnObj": {
-                                                            "type": "integer",
-                                                            "primary": false,
-                                                            "unique": false,
-                                                            "nullable": true,
-                                                            "name": "status"
-                                                          }
-                                                        },
-                                                        "operation": "="
-                                                      },
-                                                      {
-                                                        "id": "promo_code.start_date",
-                                                        "field": "promo_code.start_date",
-                                                        "type": "datetime",
-                                                        "operator": "less",
-                                                        "value": "{{NOW}}",
-                                                        "data": {
-                                                          "table": "promo_code",
-                                                          "column": "start_date",
-                                                          "type": "datetime",
-                                                          "columnObj": {
-                                                            "type": "timestamp",
-                                                            "primary": false,
-                                                            "unique": false,
-                                                            "nullable": true,
-                                                            "name": "start_date"
-                                                          }
-                                                        },
-                                                        "operation": "<"
-                                                      },
-                                                      {
-                                                        "id": "promo_code.end_date",
-                                                        "field": "promo_code.end_date",
-                                                        "type": "datetime",
-                                                        "operator": "greater_or_equal",
-                                                        "value": "{{NOW}}",
-                                                        "data": {
-                                                          "table": "promo_code",
-                                                          "column": "end_date",
-                                                          "type": "datetime",
-                                                          "columnObj": {
-                                                            "type": "timestamp",
-                                                            "primary": false,
-                                                            "unique": false,
-                                                            "nullable": true,
-                                                            "name": "end_date"
-                                                          }
-                                                        },
-                                                        "operation": ">="
-                                                      },
-                                                      {
-                                                        "condition": "OR",
-                                                        "rules": [
-                                                          {
-                                                            "id": "promo_code.allotted_for",
-                                                            "field": "promo_code.allotted_for",
-                                                            "type": "string",
-                                                            "operator": "equal",
-                                                            "value": "{{'All'}}",
-                                                            "data": {
-                                                              "table": "promo_code",
-                                                              "column": "allotted_for",
-                                                              "type": "text",
-                                                              "columnObj": {
-                                                                "type": "string",
-                                                                "maxLength": -5,
-                                                                "primary": false,
-                                                                "unique": false,
-                                                                "nullable": true,
-                                                                "name": "allotted_for"
-                                                              }
-                                                            },
-                                                            "operation": "="
-                                                          },
-                                                          {
-                                                            "id": "promo_code.user_id",
-                                                            "field": "promo_code.user_id",
-                                                            "type": "double",
-                                                            "operator": "equal",
-                                                            "value": "{{GetUser.user_id}}",
-                                                            "data": {
-                                                              "table": "promo_code",
-                                                              "column": "user_id",
-                                                              "type": "number",
-                                                              "columnObj": {
-                                                                "type": "integer",
-                                                                "primary": false,
-                                                                "unique": false,
-                                                                "nullable": true,
-                                                                "name": "user_id"
-                                                              }
-                                                            },
-                                                            "operation": "="
-                                                          }
-                                                        ],
-                                                        "conditional": null
-                                                      }
-                                                    ],
-                                                    "conditional": null,
-                                                    "valid": true
-                                                  }
+                                              "name": "prod_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "price_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "user_id",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_unit_price",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "cart_mrp",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_qty",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "total_price",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_name_en",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_name_bn",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_name_hin",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_desc_en",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_desc_bn",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_desc_hin",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_img1",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_mark_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "shop_name_en",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "shop_name_bn",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "shop_name_hin",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "rest_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "price",
+                                              "type": "array",
+                                              "sub": [
+                                                {
+                                                  "name": "price_ids",
+                                                  "type": "number"
+                                                },
+                                                {
+                                                  "name": "quantity",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "q_unit",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "mrp",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "price",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "product_tax",
+                                                  "type": "text"
+                                                }
+                                              ]
+                                            }
+                                          ],
+                                          "outputType": "array"
+                                        }
+                                      }
+                                    },
+                                    "outputType": "boolean"
+                                  },
+                                  {
+                                    "name": "",
+                                    "module": "core",
+                                    "action": "condition",
+                                    "options": {
+                                      "if": "{{($_GET.lang=='HIN')}}",
+                                      "then": {
+                                        "steps": {
+                                          "name": "GetCartItems",
+                                          "module": "dbupdater",
+                                          "action": "custom",
+                                          "options": {
+                                            "connection": "ClientApp",
+                                            "sql": {
+                                              "query": "SELECT rc.id, rc.prod_id, rc.price_id, rc.user_id, rc.prod_unit_price, rc.cart_mrp, rc.prod_qty, rc.total_price, mp.prod_name_hin as prod_name, mp.prod_desc_hin as prod_description, mp.prod_img1, mp.prod_mark_id, mr.shop_name_hin as shop_name, mp.rest_id, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_cart rc\nLEFT JOIN m_product AS mp ON (mp.id = rc.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rc.user_id = @user ORDER BY rc.id DESC",
+                                              "params": [
+                                                {
+                                                  "name": "@user",
+                                                  "value": "{{GetUser.user_id}}",
+                                                  "test": "38"
+                                                }
+                                              ]
+                                            }
+                                          },
+                                          "output": true,
+                                          "meta": [
+                                            {
+                                              "name": "id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "prod_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "price_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "user_id",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_unit_price",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "cart_mrp",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_qty",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "total_price",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_name_en",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_name_bn",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_name_hin",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_desc_en",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_desc_bn",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_desc_hin",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_img1",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "prod_mark_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "shop_name_en",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "shop_name_bn",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "shop_name_hin",
+                                              "type": "text"
+                                            },
+                                            {
+                                              "name": "rest_id",
+                                              "type": "number"
+                                            },
+                                            {
+                                              "name": "price",
+                                              "type": "array",
+                                              "sub": [
+                                                {
+                                                  "name": "price_ids",
+                                                  "type": "number"
+                                                },
+                                                {
+                                                  "name": "quantity",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "q_unit",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "mrp",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "price",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "product_tax",
+                                                  "type": "text"
+                                                }
+                                              ]
+                                            }
+                                          ],
+                                          "outputType": "array"
+                                        }
+                                      }
+                                    },
+                                    "outputType": "boolean"
+                                  },
+                                  {
+                                    "name": "GetNewUser",
+                                    "module": "dbconnector",
+                                    "action": "single",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "type": "SELECT",
+                                        "columns": [
+                                          {
+                                            "table": "r_order",
+                                            "column": "id",
+                                            "alias": "CountNewCust",
+                                            "aggregate": "COUNT"
+                                          }
+                                        ],
+                                        "table": {
+                                          "name": "r_order"
+                                        },
+                                        "primary": "id",
+                                        "joins": [],
+                                        "groupBy": [],
+                                        "wheres": {
+                                          "condition": "AND",
+                                          "rules": [
+                                            {
+                                              "id": "r_order.user_id",
+                                              "field": "r_order.user_id",
+                                              "type": "double",
+                                              "operator": "equal",
+                                              "value": "{{identity}}",
+                                              "data": {
+                                                "table": "r_order",
+                                                "column": "user_id",
+                                                "type": "number",
+                                                "columnObj": {
+                                                  "type": "reference",
+                                                  "primary": false,
+                                                  "unique": false,
+                                                  "nullable": true,
+                                                  "references": "id",
+                                                  "inTable": "m_customer",
+                                                  "referenceType": "integer",
+                                                  "onUpdate": "NO ACTION",
+                                                  "onDelete": "NO ACTION",
+                                                  "name": "user_id"
                                                 }
                                               },
-                                              "output": true,
-                                              "meta": [
-                                                {
-                                                  "type": "number",
-                                                  "name": "id"
-                                                },
-                                                {
-                                                  "type": "text",
-                                                  "name": "promo_name"
-                                                },
-                                                {
-                                                  "type": "text",
+                                              "operation": "="
+                                            }
+                                          ],
+                                          "conditional": null,
+                                          "valid": true
+                                        },
+                                        "query": "SELECT COUNT(id) AS CountNewCust\nFROM r_order\nWHERE user_id = :P1 /* {{identity}} */",
+                                        "params": [
+                                          {
+                                            "operator": "equal",
+                                            "type": "expression",
+                                            "name": ":P1",
+                                            "value": "{{identity}}"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "output": false,
+                                    "meta": [
+                                      {
+                                        "type": "number",
+                                        "name": "CountNewCust"
+                                      }
+                                    ],
+                                    "outputType": "object"
+                                  },
+                                  {
+                                    "name": "",
+                                    "module": "core",
+                                    "action": "condition",
+                                    "options": {
+                                      "if": "{{GetNewUser.CountNewCust<1}}",
+                                      "then": {
+                                        "steps": [
+                                          {
+                                            "name": "Apply",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "Yes"
+                                            },
+                                            "meta": [],
+                                            "output": true,
+                                            "outputType": "text"
+                                          },
+                                          {
+                                            "name": "NewUserCode",
+                                            "module": "dbconnector",
+                                            "action": "single",
+                                            "options": {
+                                              "connection": "ClientApp",
+                                              "sql": {
+                                                "type": "SELECT",
+                                                "columns": [
+                                                  {
+                                                    "table": "promo_code",
+                                                    "column": "id"
+                                                  },
+                                                  {
+                                                    "table": "promo_code",
+                                                    "column": "promo_name"
+                                                  },
+                                                  {
+                                                    "table": "promo_code",
+                                                    "column": "promo_code"
+                                                  },
+                                                  {
+                                                    "table": "promo_code",
+                                                    "column": "amt_or_percent"
+                                                  },
+                                                  {
+                                                    "table": "promo_code",
+                                                    "column": "promo_amt"
+                                                  },
+                                                  {
+                                                    "table": "promo_code",
+                                                    "column": "promo_per"
+                                                  },
+                                                  {
+                                                    "table": "promo_code",
+                                                    "column": "cashback_amt_or_per"
+                                                  },
+                                                  {
+                                                    "table": "promo_code",
+                                                    "column": "cashback_amt"
+                                                  },
+                                                  {
+                                                    "table": "promo_code",
+                                                    "column": "cashback_per"
+                                                  }
+                                                ],
+                                                "table": {
                                                   "name": "promo_code"
                                                 },
-                                                {
-                                                  "type": "text",
-                                                  "name": "amt_or_percent"
-                                                },
-                                                {
-                                                  "type": "text",
-                                                  "name": "promo_amt"
-                                                },
-                                                {
-                                                  "type": "text",
-                                                  "name": "promo_per"
-                                                },
-                                                {
-                                                  "type": "text",
-                                                  "name": "cashback_amt_or_per"
-                                                },
-                                                {
-                                                  "type": "text",
-                                                  "name": "cashback_amt"
-                                                },
-                                                {
-                                                  "type": "text",
-                                                  "name": "cashback_per"
+                                                "joins": [],
+                                                "primary": "id",
+                                                "query": "SELECT id, promo_name, promo_code, amt_or_percent, promo_amt, promo_per, cashback_amt_or_per, cashback_amt, cashback_per\nFROM promo_code\nWHERE auto_apply = :P1 /* {{'Yes'}} */ AND status = :P2 /* {{1}} */ AND start_date < :P3 /* {{NOW}} */ AND end_date >= :P4 /* {{NOW}} */ AND (allotted_for = :P5 /* {{'All'}} */ OR user_id = :P6 /* {{GetUser.user_id}} */)",
+                                                "params": [
+                                                  {
+                                                    "operator": "equal",
+                                                    "type": "expression",
+                                                    "name": ":P1",
+                                                    "value": "{{'Yes'}}"
+                                                  },
+                                                  {
+                                                    "operator": "equal",
+                                                    "type": "expression",
+                                                    "name": ":P2",
+                                                    "value": "{{1}}"
+                                                  },
+                                                  {
+                                                    "operator": "less",
+                                                    "type": "expression",
+                                                    "name": ":P3",
+                                                    "value": "{{NOW}}"
+                                                  },
+                                                  {
+                                                    "operator": "greater_or_equal",
+                                                    "type": "expression",
+                                                    "name": ":P4",
+                                                    "value": "{{NOW}}"
+                                                  },
+                                                  {
+                                                    "operator": "equal",
+                                                    "type": "expression",
+                                                    "name": ":P5",
+                                                    "value": "{{'All'}}"
+                                                  },
+                                                  {
+                                                    "operator": "equal",
+                                                    "type": "expression",
+                                                    "name": ":P6",
+                                                    "value": "{{GetUser.user_id}}"
+                                                  }
+                                                ],
+                                                "wheres": {
+                                                  "condition": "AND",
+                                                  "rules": [
+                                                    {
+                                                      "id": "promo_code.auto_apply",
+                                                      "field": "promo_code.auto_apply",
+                                                      "type": "string",
+                                                      "operator": "equal",
+                                                      "value": "{{'Yes'}}",
+                                                      "data": {
+                                                        "table": "promo_code",
+                                                        "column": "auto_apply",
+                                                        "type": "text",
+                                                        "columnObj": {
+                                                          "type": "string",
+                                                          "maxLength": -5,
+                                                          "primary": false,
+                                                          "unique": false,
+                                                          "nullable": true,
+                                                          "name": "auto_apply"
+                                                        }
+                                                      },
+                                                      "operation": "="
+                                                    },
+                                                    {
+                                                      "id": "promo_code.status",
+                                                      "field": "promo_code.status",
+                                                      "type": "double",
+                                                      "operator": "equal",
+                                                      "value": "{{1}}",
+                                                      "data": {
+                                                        "table": "promo_code",
+                                                        "column": "status",
+                                                        "type": "number",
+                                                        "columnObj": {
+                                                          "type": "integer",
+                                                          "primary": false,
+                                                          "unique": false,
+                                                          "nullable": true,
+                                                          "name": "status"
+                                                        }
+                                                      },
+                                                      "operation": "="
+                                                    },
+                                                    {
+                                                      "id": "promo_code.start_date",
+                                                      "field": "promo_code.start_date",
+                                                      "type": "datetime",
+                                                      "operator": "less",
+                                                      "value": "{{NOW}}",
+                                                      "data": {
+                                                        "table": "promo_code",
+                                                        "column": "start_date",
+                                                        "type": "datetime",
+                                                        "columnObj": {
+                                                          "type": "timestamp",
+                                                          "primary": false,
+                                                          "unique": false,
+                                                          "nullable": true,
+                                                          "name": "start_date"
+                                                        }
+                                                      },
+                                                      "operation": "<"
+                                                    },
+                                                    {
+                                                      "id": "promo_code.end_date",
+                                                      "field": "promo_code.end_date",
+                                                      "type": "datetime",
+                                                      "operator": "greater_or_equal",
+                                                      "value": "{{NOW}}",
+                                                      "data": {
+                                                        "table": "promo_code",
+                                                        "column": "end_date",
+                                                        "type": "datetime",
+                                                        "columnObj": {
+                                                          "type": "timestamp",
+                                                          "primary": false,
+                                                          "unique": false,
+                                                          "nullable": true,
+                                                          "name": "end_date"
+                                                        }
+                                                      },
+                                                      "operation": ">="
+                                                    },
+                                                    {
+                                                      "condition": "OR",
+                                                      "rules": [
+                                                        {
+                                                          "id": "promo_code.allotted_for",
+                                                          "field": "promo_code.allotted_for",
+                                                          "type": "string",
+                                                          "operator": "equal",
+                                                          "value": "{{'All'}}",
+                                                          "data": {
+                                                            "table": "promo_code",
+                                                            "column": "allotted_for",
+                                                            "type": "text",
+                                                            "columnObj": {
+                                                              "type": "string",
+                                                              "maxLength": -5,
+                                                              "primary": false,
+                                                              "unique": false,
+                                                              "nullable": true,
+                                                              "name": "allotted_for"
+                                                            }
+                                                          },
+                                                          "operation": "="
+                                                        },
+                                                        {
+                                                          "id": "promo_code.user_id",
+                                                          "field": "promo_code.user_id",
+                                                          "type": "double",
+                                                          "operator": "equal",
+                                                          "value": "{{GetUser.user_id}}",
+                                                          "data": {
+                                                            "table": "promo_code",
+                                                            "column": "user_id",
+                                                            "type": "number",
+                                                            "columnObj": {
+                                                              "type": "integer",
+                                                              "primary": false,
+                                                              "unique": false,
+                                                              "nullable": true,
+                                                              "name": "user_id"
+                                                            }
+                                                          },
+                                                          "operation": "="
+                                                        }
+                                                      ],
+                                                      "conditional": null
+                                                    }
+                                                  ],
+                                                  "conditional": null,
+                                                  "valid": true
                                                 }
-                                              ],
-                                              "outputType": "object"
+                                              }
                                             },
-                                            {
-                                              "name": "InstantDiscount",
-                                              "module": "core",
-                                              "action": "setvalue",
-                                              "options": {
-                                                "value": "{{((NewUserCode.amt_or_percent=='PER')?((CartSumAmt[0].total_amt.toNumber()*NewUserCode.promo_per.toNumber())/100):(NewUserCode.amt_or_percent=='AMT')?NewUserCode.promo_amt.toNumber():0)}}"
+                                            "output": true,
+                                            "meta": [
+                                              {
+                                                "type": "number",
+                                                "name": "id"
                                               },
-                                              "meta": [],
-                                              "output": true,
-                                              "outputType": "text"
+                                              {
+                                                "type": "text",
+                                                "name": "promo_name"
+                                              },
+                                              {
+                                                "type": "text",
+                                                "name": "promo_code"
+                                              },
+                                              {
+                                                "type": "text",
+                                                "name": "amt_or_percent"
+                                              },
+                                              {
+                                                "type": "text",
+                                                "name": "promo_amt"
+                                              },
+                                              {
+                                                "type": "text",
+                                                "name": "promo_per"
+                                              },
+                                              {
+                                                "type": "text",
+                                                "name": "cashback_amt_or_per"
+                                              },
+                                              {
+                                                "type": "text",
+                                                "name": "cashback_amt"
+                                              },
+                                              {
+                                                "type": "text",
+                                                "name": "cashback_per"
+                                              }
+                                            ],
+                                            "outputType": "object"
+                                          },
+                                          {
+                                            "name": "InstantDiscount",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "{{((NewUserCode.amt_or_percent=='PER')?((CartSumAmt[0].total_amt.toNumber()*NewUserCode.promo_per.toNumber())/100):(NewUserCode.amt_or_percent=='AMT')?NewUserCode.promo_amt.toNumber():0)}}"
                                             },
-                                            {
-                                              "name": "WalletCashback",
-                                              "module": "core",
-                                              "action": "setvalue",
-                                              "options": {
-                                                "value": "{{((NewUserCode.cashback_amt_or_per=='PER')?((CartSumAmt[0].total_amt.toNumber()*NewUserCode.cashback_per.toNumber())/100):(NewUserCode.cashback_amt_or_per=='AMT')?NewUserCode.cashback_amt.toNumber():0)}}"
-                                              },
-                                              "meta": [],
-                                              "output": true,
-                                              "outputType": "text"
-                                            }
-                                          ]
-                                        },
-                                        "else": {
-                                          "steps": [
-                                            {
-                                              "name": "Apply",
-                                              "module": "core",
-                                              "action": "setvalue",
-                                              "options": {
-                                                "value": "No"
-                                              },
-                                              "meta": [],
-                                              "output": true,
-                                              "outputType": "text"
+                                            "meta": [],
+                                            "output": true,
+                                            "outputType": "text"
+                                          },
+                                          {
+                                            "name": "WalletCashback",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "{{((NewUserCode.cashback_amt_or_per=='PER')?((CartSumAmt[0].total_amt.toNumber()*NewUserCode.cashback_per.toNumber())/100):(NewUserCode.cashback_amt_or_per=='AMT')?NewUserCode.cashback_amt.toNumber():0)}}"
                                             },
-                                            {
-                                              "name": "InstantDiscount",
-                                              "module": "core",
-                                              "action": "setvalue",
-                                              "options": {
-                                                "value": "0\n"
-                                              },
-                                              "meta": [],
-                                              "output": true,
-                                              "outputType": "text"
-                                            },
-                                            {
-                                              "name": "WalletCashback",
-                                              "module": "core",
-                                              "action": "setvalue",
-                                              "options": {
-                                                "value": "0\n"
-                                              },
-                                              "meta": [],
-                                              "output": true,
-                                              "outputType": "text"
-                                            }
-                                          ]
-                                        }
+                                            "meta": [],
+                                            "output": true,
+                                            "outputType": "text"
+                                          }
+                                        ]
                                       },
-                                      "outputType": "boolean"
-                                    }
-                                  ]
-                                },
-                                "else": {
-                                  "steps": [
-                                    {
-                                      "name": "status",
-                                      "module": "core",
-                                      "action": "setvalue",
-                                      "options": {
-                                        "value": 400
-                                      },
-                                      "meta": [],
-                                      "output": true,
-                                      "outputType": "text"
+                                      "else": {
+                                        "steps": [
+                                          {
+                                            "name": "Apply",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "No"
+                                            },
+                                            "meta": [],
+                                            "output": true,
+                                            "outputType": "text"
+                                          },
+                                          {
+                                            "name": "InstantDiscount",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "0\n"
+                                            },
+                                            "meta": [],
+                                            "output": true,
+                                            "outputType": "text"
+                                          },
+                                          {
+                                            "name": "WalletCashback",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "0\n"
+                                            },
+                                            "meta": [],
+                                            "output": true,
+                                            "outputType": "text"
+                                          }
+                                        ]
+                                      }
                                     },
-                                    {
-                                      "name": "message",
-                                      "module": "core",
-                                      "action": "setvalue",
-                                      "options": {
-                                        "value": "Please select a correct language"
-                                      },
-                                      "meta": [],
-                                      "output": true,
-                                      "outputType": "text"
-                                    }
-                                  ]
-                                }
+                                    "outputType": "boolean"
+                                  }
+                                ]
                               },
-                              "outputType": "boolean"
-                            }
-                          ]
+                              "else": {
+                                "steps": [
+                                  {
+                                    "name": "status",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": 400
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  },
+                                  {
+                                    "name": "message",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": "Please select a correct language"
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  }
+                                ]
+                              }
+                            },
+                            "outputType": "boolean"
+                          }
                         },
                         "else": {
                           "steps": [

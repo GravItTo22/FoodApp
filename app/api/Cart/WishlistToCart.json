@@ -540,7 +540,7 @@
                               "table": "r_cart",
                               "column": "total_price",
                               "type": "text",
-                              "value": "{{GetProduct.selling_price.toNumber()}}"
+                              "value": "{{GetProduct.selling_price}}"
                             },
                             {
                               "table": "r_cart",
@@ -575,7 +575,7 @@
                           ],
                           "table": "r_cart",
                           "returning": "id",
-                          "query": "INSERT INTO r_cart\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, created_by, created_on, ip_address, cart_mrp, cart_purchase) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{identity}} */, :P4 /* {{GetProduct.selling_price}} */, :P5 /* {{1}} */, :P6 /* {{GetProduct.selling_price.toNumber()}} */, :P7 /* {{identity?identity:''}} */, :P8 /* {{NOW}} */, :P9 /* {{$_SERVER.REMOTE_ADDR}} */, :P10 /* {{GetProduct.mrp}} */, :P11 /* {{GetProduct.purchase_price}} */)",
+                          "query": "INSERT INTO r_cart\n(prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, created_by, created_on, ip_address, cart_mrp, cart_purchase) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{identity}} */, :P4 /* {{GetProduct.selling_price}} */, :P5 /* {{1}} */, :P6 /* {{GetProduct.selling_price}} */, :P7 /* {{identity?identity:''}} */, :P8 /* {{NOW}} */, :P9 /* {{$_SERVER.REMOTE_ADDR}} */, :P10 /* {{GetProduct.mrp}} */, :P11 /* {{GetProduct.purchase_price}} */)",
                           "params": [
                             {
                               "name": ":P1",
@@ -605,7 +605,7 @@
                             {
                               "name": ":P6",
                               "type": "expression",
-                              "value": "{{GetProduct.selling_price.toNumber()}}"
+                              "value": "{{GetProduct.selling_price}}"
                             },
                             {
                               "name": ":P7",
@@ -1299,7 +1299,7 @@
                               "table": "r_cart",
                               "column": "total_price",
                               "type": "text",
-                              "value": "{{GetProduct.selling_price.toNumber()}}"
+                              "value": "{{GetProduct.selling_price}}"
                             },
                             {
                               "table": "r_cart",
@@ -1328,7 +1328,7 @@
                           ],
                           "table": "r_cart",
                           "returning": "id",
-                          "query": "INSERT INTO r_cart\n(prod_id, price_id, prod_unit_price, prod_qty, total_price, created_on, ip_address, cart_mrp, cart_purchase) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetProduct.selling_price}} */, :P4 /* {{1}} */, :P5 /* {{GetProduct.selling_price.toNumber()}} */, :P6 /* {{NOW}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetProduct.mrp}} */, :P9 /* {{GetProduct.purchase_price}} */)",
+                          "query": "INSERT INTO r_cart\n(prod_id, price_id, prod_unit_price, prod_qty, total_price, created_on, ip_address, cart_mrp, cart_purchase) VALUES (:P1 /* {{GetProduct.id}} */, :P2 /* {{GetProduct.price_id}} */, :P3 /* {{GetProduct.selling_price}} */, :P4 /* {{1}} */, :P5 /* {{GetProduct.selling_price}} */, :P6 /* {{NOW}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{GetProduct.mrp}} */, :P9 /* {{GetProduct.purchase_price}} */)",
                           "params": [
                             {
                               "name": ":P1",
@@ -1353,7 +1353,7 @@
                             {
                               "name": ":P5",
                               "type": "expression",
-                              "value": "{{GetProduct.selling_price.toNumber()}}"
+                              "value": "{{GetProduct.selling_price}}"
                             },
                             {
                               "name": ":P6",

@@ -93,6 +93,11 @@
       "path": "/restCountries",
       "page": "restCountries",
       "layout": "main"
+    },
+    {
+      "path": "/cart-items",
+      "page": "cart-items",
+      "layout": "main"
     }
   ]
 }

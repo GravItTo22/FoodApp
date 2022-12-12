@@ -61,7 +61,7 @@
                                     </div>
                                     <div class="signin-form">
                                         <h2 class="form-title">SignIn</h2>
-                                        <form class="register-form" id="formLogin" is="dmx-serverconnect-form" method="post" action="/api/Users/SignIn" dmx-on:success="browser1.goto('/place-order')" dmx-on:unauthorized="varInvalidLogin.setValue(1);formLogin.reset;" dmx-on:forbidden="notifMain.danger('This user doesnot exists, please try again!')">
+                                        <form class="register-form" id="formLogin" is="dmx-serverconnect-form" method="post" action="/api/Users/SignIn" dmx-on:success="browser1.goto('/cart-items')" dmx-on:unauthorized="varInvalidLogin.setValue(1);formLogin.reset;" dmx-on:forbidden="notifMain.danger('This user doesnot exists, please try again!')">
                                             <div class="form-group">
                                                 <label for="your_mobile" style="padding:10px;"><i class="far fa-user"></i></label>
                                                 <input type="text" id="Mobile" name="Mobile" required="true" placeholder="Mobile Number" />
@@ -108,7 +108,7 @@
                                 <div class="signup-content">
                                     <div class="signup-form">
                                         <h2 class="form-title">Sign up</h2>
-                                        <form method="POST" class="register-form" id="registerForm" method="post" is="dmx-serverconnect-form" action="/api/Users/SignUp" dmx-generator="bootstrap5" dmx-form-type="horizontal" dmx-on:success="notifMain.success(crSignup.registerForm.data);scDashboardInfo.load(true);registerForm.reset();browser1.goto('/checkout')" dmx-on:forbidden="notifMain.warning(registerForm.lastError.response)" dmx-on:error="notifMain.warning(registerForm.lastError.response)" dmx-on:unauthorized="notifMain.warning(registerForm.lastError.response)" dmx-on:invalid="notifMain.warning(registerForm.lastError.response)">
+                                        <form method="POST" class="register-form" id="registerForm" method="post" is="dmx-serverconnect-form" action="/api/Users/SignUp" dmx-generator="bootstrap5" dmx-form-type="horizontal" dmx-on:success="notifMain.success(crSignup.registerForm.data);scDashboardInfo.load(true);registerForm.reset();browser1.goto('/cart-items')" dmx-on:forbidden="notifMain.warning(registerForm.lastError.response)" dmx-on:error="notifMain.warning(registerForm.lastError.response)" dmx-on:unauthorized="notifMain.warning(registerForm.lastError.response)" dmx-on:invalid="notifMain.warning(registerForm.lastError.response)">
                                             <div class="form-group">
                                                 <label for="name"><i class="fa fa-mobile fa-2x"></i></label>
                                                 <input type="number" id="MobileNo" name="Mobile" placeholder="10 digit Mobile No." required="" />

@@ -1,0 +1,169 @@
+<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="cartitems" appConnect="local" components="{dmxBootstrap5Navigation:{},dmxFormatter:{}}" -->
+<meta name="ac:route" content="/cart-items">
+<dmx-value id="varCartId" dmx-bind:value="0"></dmx-value>
+<dmx-value id="varUserId" dmx-bind:value="0"></dmx-value>
+<dmx-serverconnect id="scUseWallet" url="/api/Cart/WalletBalanceApply" dmx-param:use_wallet_amount="content.use_wallet_amount.value" noload></dmx-serverconnect>
+<dmx-serverconnect id="scCartUpdate" url="/api/Cart/UpdateCartItems" noload></dmx-serverconnect>
+<dmx-serverconnect id="scCartItems" url="/api/Cart/CartItems"></dmx-serverconnect>
+<dmx-serverconnect id="scRemoveCartItems" url="/api/Cart/RemoveCartItems" noload></dmx-serverconnect>
+<dmx-serverconnect id="scRemoveCartAddWish" url="/api/WishList/CartToWishlist" noload></dmx-serverconnect>
+<dmx-serverconnect id="scIncreaseQty" url="/api/Cart/IncreaseQty" noload></dmx-serverconnect>
+<dmx-serverconnect id="scDecreaseQty" url="/api/Cart/DecreaseQty" noload></dmx-serverconnect>
+<script is="dmx-flow" id="flowUseWalletBal" type="text/dmx-flow">{
+  condition: {
+    if: "{{content.use_wallet_amount.value}}",
+    then: {
+      steps: {
+        run: {
+          action: "{{scUseWallet.load({use_wallet_amount: content.use_wallet_amount.value})}}"
+        }
+      }
+    }
+  }
+}</script>
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="assets/img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Gravitto Cart</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/">Home</a>
+                        <span>Your Cart</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- Shoping Cart Section Begin -->
+
+<div class="container-fluid">
+    <div class="row mt-5 mx-0">
+        <!-- left side div -->
+        <div class="col-md-8 col-12 shadow">
+            <h2 class="py-4 font-weight-bold">Cart ({{scDashboardInfo.data.GetCartItems.Cart_Items}} items)</h2>
+            <div class="card p-2 mb-3" dmx-repeat:repeatcart="content.scCartItems.data.GetCartItems">
+                <div class="row">
+                    <!-- cart images div -->
+                    <div class="col-md-3 col-12">
+                        <img dmx-bind:src="'https://secure.gravitto.com'+content.scCartItems.data.GetCartItems[$index].prod_img1" class="img-fluid" dmx-bind:alt="content.scCartItems.data.GetCartItems[$index].prod_name_en">
+
+                    </div>
+                    <div class="col-md-5 col-12">
+                        <!-- product name  -->
+                        <a href="#" dmx-bind:href="'/product-details/'+content.scCartItems.data.GetCartItems[0].prod_id+'/'+content.scCartItems.data.GetCartItems[$index].prod_name_en">
+                            <h4 class="product_name text-monospace">{{varLanguage.value=='English'?content.scCartItems.data.GetCartItems[$index].prod_name_en:varLanguage.value=='Bengali'?content.scCartItems.data.GetCartItems[$index].prod_name_bn:varLanguage.value=='Hindi'?content.scCartItems.data.GetCartItems[$index].prod_name_hin:content.scCartItems.data.GetCartItems[$index].prod_name_en}}</h4>
+                        </a>
+                        <p class="mb-0 text-monospace text-primary">Seller: <a href="#" dmx-bind:href="'/shop-details/'+content.scCartItems.data.GetCartItems[$index].rest_id+'/'+content.scCartItems.data.GetCartItems[$index].shop_name_en">{{varLanguage.value=='English'?content.scCartItems.data.GetCartItems[$index].shop_name_en:varLanguage.value=='Bengali'?content.scCartItems.data.GetCartItems[$index].shop_name_bn:varLanguage.value=='Hindi'?content.scCartItems.data.GetCartItems[$index].shop_name_hin:content.scCartItems.data.GetCartItems[$index].shop_name_en}}</a></p>
+                        <p class="mb-0">Prod. Mark: {{content.scCartItems.data.GetCartItems[$index].prod_mark_id==1?'Veg':'Non-Veg'}}</p>
+                        <p class="my-2">
+                            <span class="px-2 price_money text-info alert-link text-monospace" id="itemval">{{content.scCartItems.data.GetCartItems[$index].prod_unit_price}}</span>
+                            <span class="text-muted text-monospace" style="text-decoration: line-through;">{{content.scCartItems.data.GetCartItems[$index].cart_mrp}}</span>
+                            <span class="px-2 text-danger text-monospace" dmx-show="content.scCartItems.data.GetCartItems[$index].mrp>content.scCartItems.data.GetCartItems[$index].price">{{(100-((content.scCartItems.data.GetCartItems[$index].prod_unit_price * 100) / content.scCartItems.data.GetCartItems[$index].cart_mrp)).toFixed(2)}} % off</span>
+                            <!-- 100-((content.scCartItems.data.GetCartItems[$index].price * 100) / content.scCartItems.data.GetCartItems[$index].mrp) -->
+                        </p>
+                        <!-- //remover move and price -->
+                        <div class="row">
+                            <div class="col-6 go-items">
+                                <p dmx-on:click="run({run:{action:`notifMain.success(((varLanguage.value==\'English\')?content.scCartItems.data.GetCartItems[$index].prod_name_en:(varLanguage.value==\'Bengali\')?content.scCartItems.data.GetCartItems[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scCartItems.data.GetCartItems[$index].prod_name_hin:scCartItems.data.GetCartItems[$index].prod_name_en)+\' removed from cart\');scRemoveCartItems.load({cart_id: scCartItems.data.GetCartItems[$index].id, user_id: scCartItems.data.GetCartItems[$index].user_id},true);scCartItems.load({},true);scDashboardInfo.load()`,name:'RemoveFlow'}})">
+                                    <i class="fa fa-trash mr-2"></i>Remove Item
+                                </p>
+                            </div>
+                            <div class="col-6 go-items px-0">
+                                <p dmx-on:click="run({run:{action:`scRemoveCartAddWish.load({cart_id: scCartItems.data.GetCartItems[$index].id},true);notifMain.success(((varLanguage.value==\'English\')?content.scCartItems.data.GetCartItems[$index].prod_name_en:(varLanguage.value==\'Bengali\')?content.scCartItems.data.GetCartItems[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scCartItems.data.GetCartItems[$index].prod_name_hin:scCartItems.data.GetCartItems[$index].prod_name_en)+\' moved to wishlist\');scDashboardInfo.load({});scCartItems.load({})`,name:'DelCartAddWish'}})">
+                                    <i class="fa fa-heart mr-2"></i>Move to Wish List
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <select id="selectProdPrice" dmx-bind:id="'selectProdPrice'+$index" class="form-select form-control d-block w-100 text-monospace font-weight-bold" style="font-size:12px" dmx-bind:options="scCartItems.data.GetCartItems[$index].price" optiontext="quantity+' '+q_unit+' :: '+price.toNumber().formatCurrency('₹', '.', ',', 2)+' MRP:'+.mrp.toNumber().formatCurrency('₹', '.', ',', 2)" optionvalue="price_ids" dmx-bind:value="content.scCartItems.data.GetCartItems[$index].price_id" dmx-on:change="run({run:{action:`scCartUpdate.load({p_id: scCartItems.data.GetCartItems[$index].prod_id, price_id: repeatcart[$index].selectProdPrice.value, items_no: repeatcart[$index].AddToCart.value},true);scCartItems.load({},true)`,name:'FlowPriceChange'}})">
+                        </select>
+                        <!-- quantity inc dec -->
+                        <ul class="pagination set_quantity mt-3 px-2">
+                            <li class="page-item" dmx-on:click="run({run:{action:`scDecreaseQty.load({p_id: scCartItems.data.GetCartItems[$index].prod_id, price_id: repeatcart[$index].selectProdPrice.value, qty: content.scCartItems.data.GetCartItems[$index].prod_qty});browserMain.goto(\'/cart\')`,name:'DecreaseItem'}})" id="DecreaseQty">
+                                <button class="page-link ">
+                                    <i class="fa fa-minus"></i> </button>
+                            </li>
+                            <li class="page-item">
+                                <input type="text" id="AddToCart" dmx-bind:id="'AddToCart'+$index" name="" class="page-link" dmx-bind:value="content.scCartItems.data.GetCartItems[$index].prod_qty" id="textbox">
+                            </li>
+                            <li class="page-item" dmx-on:click="run({run:{action:`scIncreaseQty.load({p_id: scCartItems.data.GetCartItems[$index].prod_id, price_id: repeatcart[$index].selectProdPrice.value, qty: content.scCartItems.data.GetCartItems[$index].prod_qty});browserMain.goto(\'/cart\')`,name:'IncreaseItem'}})" id="IncreaseQty">
+                                <button class="page-link">
+                                    <i class="fa fa-plus"></i></button>
+                            </li>
+                        </ul>
+                        <span>Total:{{content.scCartItems.data.GetCartItems[$index].total_price}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mx-0" dmx-show="content.scCartItems.data.GetCartItems.length==0">
+                <h5 class="text-center text-muted w-100">Empty Cart!</h5>
+            </div>
+        </div>
+        <!-- right side div -->
+        <div class="col-md-4 col-12 mx-auto mt-lg-0 mt-md-5">
+            <div class="right_side p-3 shadow bg-white">
+                <h2 class="product_name mb-5">The Total Amount Of</h2>
+                <div class="price_indiv d-flex justify-content-between">
+                    <p>Amount</p>
+                    <p><i class=" fa fa-rupee"></i><span id="product_total_amt">{{content.scCartItems.data.CartSumAmt[0].total_amt}}</span></p>
+                </div>
+                <input type="hidden" id="inp_product_total_amt" dmx-bind:value="content.scCartItems.data.CartSumAmt[0].total_amt">
+                <input type="hidden" id="inp_shipping_charge" dmx-bind:value="45">
+                <input type="hidden" id="inp_wallet_amt" dmx-bind:value="(content.scUseWallet.data.status == 200)?use_wallet_amount.value:0">
+                <input type="hidden" id="inp_instant_discount" dmx-bind:value="(content.scCartItems.data.NewUserCode.amt_or_percent=='PER')?(scCartItems.data.CartSumAmt[0].total_amt*content.scCartItems.data.NewUserCode.promo_per)/100:(content.scCartItems.data.NewUserCode.amt_or_percent=='AMT')?content.scCartItems.data.NewUserCode.promo_amt:0">
+                <div class="price_indiv d-flex justify-content-between mx-0">
+                    <p>Shipping Charge</p>
+                    <p>(+) <i class=" fa fa-rupee"></i><span id="shipping_charge">45</span></p>
+                </div>
+                <div class="price_indiv d-flex justify-content-between mx-0" dmx-show="content.scCartItems.data.Apply=='Yes'" dmx-hide="content.scCartItems.data.Apply=='No'">
+                    <p>Instant Discount <br /><span class="gio-font-11">(Auto Apply Promo Code: <b>{{content.scCartItems.data.NewUserCode.promo_code}}</b>)</span></p>
+                    <p>(-) <i class=" fa fa-rupee"></i><span id="instant_discount">{{(content.scCartItems.data.NewUserCode.amt_or_percent=='PER')?(scCartItems.data.CartSumAmt[0].total_amt*content.scCartItems.data.NewUserCode.promo_per)/100:(content.scCartItems.data.NewUserCode.amt_or_percent=='AMT')?content.scCartItems.data.NewUserCode.promo_amt:0}}</span></p>
+                </div>
+                <hr />
+                <div class="price_indiv d-flex justify-content-between mx-0" dmx-show="((content.scUseWallet.data.status == 200) &amp;&amp; scDashboardInfo.data.varLogin)" dmx-hide="(content.scUseWallet.data.status==400)">
+                    <p>Wallet Balance Amount</p>
+                    <p><i class=" fa fa-rupee"></i><span id="wall_bal_amt">{{(content.scUseWallet.data.status == 200)?use_wallet_amount.value:0}}</span></p>
+                </div>
+                <hr dmx-show="content.scUseWallet.data.status == 200" dmx-hide="content.scUseWallet.data.status == 400" />
+                <div class="total-amt d-flex justify-content-between font-weight-bold">
+                    <p>Grand Total Amount</p>
+                    <p><i class=" fa fa-rupee"></i><span id="total_cart_amt">{{(inp_product_total_amt.value.toNumber()+inp_shipping_charge.value.toNumber())-inp_instant_discount.value.toNumber()-inp_wallet_amt.value.toNumber()}}</span></p>
+                </div>
+                <div class="d-flex justify-content-between font-weight-bold" dmx-show="scDashboardInfo.data.varLogin&amp;&amp;(content.scCartItems.data.Apply=='Yes')" dmx-hide="content.scCartItems.data.Apply=='No'">
+                    <p>Wallet Cashback</p>
+                    <p><i class=" fa fa-rupee"></i><span id="total_cashback_amt">{{(content.scCartItems.data.NewUserCode.cashback_amt_or_per=='PER')?(scCartItems.data.CartSumAmt[0].total_amt*content.scCartItems.data.NewUserCode.cashback_per)/100:(content.scCartItems.data.NewUserCode.cashback_amt_or_per=='AMT')?content.scCartItems.data.NewUserCode.cashback_amt:0}}</span></p>
+                </div>
+                <p class="gio-font-11">(Additional Auto Apply Promo Code Cashback: <b>{{content.scCartItems.data.NewUserCode.promo_code}}</b>)</p>
+                <a href="" dmx-bind:href="scDashboardInfo.data.varLogin ? 'place-order' : 'login'"><button class="btn1 text-uppercase">Checkout</button></a>
+            </div>
+            <!-- discount code part -->
+            <div class="discount_code mt-3 shadow">
+                <div class="card">
+                    <div class="d-flex justify-content-between font-weight-bold" dmx-hide="scDashboardInfo.data.varLogin">
+                        <p>Please Login to Use Wallet Cashback, Use Wallet Balance and Instant Discount (If Any)</p>
+                    </div>
+                    <div class="card-body" dmx-show="scDashboardInfo.data.varLogin">
+                        <h5 class="text-info">Use your wallet balance (optional)</h5>
+                        <h5 class="text-danger" dmx-show="content.scUseWallet.data.status==400" dmx-hide="content.scUseWallet.data.status==200">{{content.scUseWallet.data.message}}</h5>
+                        <h6 class="text-success" dmx-show="content.scUseWallet.data.status==200" dmx-hide="content.scUseWallet.data.status==400">{{content.scUseWallet.data.message}}</h6>
+                        <div class="mt-3">
+                            <input type="text" name="" id="use_wallet_amount" class="form-control font-weight-bold" placeholder="Enter the Amount" required="">
+                        </div>
+                        <button class="btn1 btn-sm mt-3" dmx-on:click="flowUseWalletBal.run();">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+
+<!-- Shoping Cart Section End -->

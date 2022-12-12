@@ -70,5 +70,9 @@
   "restCountries.ejs": {
     "layoutPage": "main",
     "description": ""
+  },
+  "cart-items.ejs": {
+    "layoutPage": "main",
+    "description": ""
   }
 }

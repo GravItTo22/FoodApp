@@ -356,7 +356,7 @@
                           },
                           "joins": [],
                           "primary": "id",
-                          "query": "SELECT id, promo_name, promo_code, amt_or_percent, promo_amt, promo_per, cashback_amt_or_per, cashback_amt, cashback_per\nFROM promo_code\nWHERE auto_apply = :P1 /* {{'Yes'}} */ AND allotted_for = :P2 /* {{'All'}} */ AND status = :P3 /* {{1}} */ AND start_date < :P4 /* {{NOW}} */ AND end_date >= :P5 /* {{NOW}} */",
+                          "query": "SELECT id, promo_name, promo_code, amt_or_percent, promo_amt, promo_per, cashback_amt_or_per, cashback_amt, cashback_per\nFROM promo_code\nWHERE auto_apply = :P1 /* {{'Yes'}} */ AND status = :P2 /* {{1}} */ AND start_date < :P3 /* {{NOW}} */ AND end_date >= :P4 /* {{NOW}} */ AND (user_id = :P5 /* {{identity}} */ OR allotted_for = :P6 /* {{'All'}} */)",
                           "params": [
                             {
                               "operator": "equal",
@@ -368,25 +368,31 @@
                               "operator": "equal",
                               "type": "expression",
                               "name": ":P2",
-                              "value": "{{'All'}}"
-                            },
-                            {
-                              "operator": "equal",
-                              "type": "expression",
-                              "name": ":P3",
                               "value": "{{1}}"
                             },
                             {
                               "operator": "less",
                               "type": "expression",
-                              "name": ":P4",
+                              "name": ":P3",
                               "value": "{{NOW}}"
                             },
                             {
                               "operator": "greater_or_equal",
                               "type": "expression",
-                              "name": ":P5",
+                              "name": ":P4",
                               "value": "{{NOW}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P5",
+                              "value": "{{identity}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P6",
+                              "value": "{{'All'}}"
                             }
                           ],
                           "wheres": {
@@ -409,27 +415,6 @@
                                     "unique": false,
                                     "nullable": true,
                                     "name": "auto_apply"
-                                  }
-                                },
-                                "operation": "="
-                              },
-                              {
-                                "id": "promo_code.allotted_for",
-                                "field": "promo_code.allotted_for",
-                                "type": "string",
-                                "operator": "equal",
-                                "value": "{{'All'}}",
-                                "data": {
-                                  "table": "promo_code",
-                                  "column": "allotted_for",
-                                  "type": "text",
-                                  "columnObj": {
-                                    "type": "string",
-                                    "maxLength": -5,
-                                    "primary": false,
-                                    "unique": false,
-                                    "nullable": true,
-                                    "name": "allotted_for"
                                   }
                                 },
                                 "operation": "="
@@ -493,6 +478,53 @@
                                   }
                                 },
                                 "operation": ">="
+                              },
+                              {
+                                "condition": "OR",
+                                "rules": [
+                                  {
+                                    "id": "promo_code.user_id",
+                                    "field": "promo_code.user_id",
+                                    "type": "double",
+                                    "operator": "equal",
+                                    "value": "{{identity}}",
+                                    "data": {
+                                      "table": "promo_code",
+                                      "column": "user_id",
+                                      "type": "number",
+                                      "columnObj": {
+                                        "type": "integer",
+                                        "primary": false,
+                                        "unique": false,
+                                        "nullable": true,
+                                        "name": "user_id"
+                                      }
+                                    },
+                                    "operation": "="
+                                  },
+                                  {
+                                    "id": "promo_code.allotted_for",
+                                    "field": "promo_code.allotted_for",
+                                    "type": "string",
+                                    "operator": "equal",
+                                    "value": "{{'All'}}",
+                                    "data": {
+                                      "table": "promo_code",
+                                      "column": "allotted_for",
+                                      "type": "text",
+                                      "columnObj": {
+                                        "type": "string",
+                                        "maxLength": -5,
+                                        "primary": false,
+                                        "unique": false,
+                                        "nullable": true,
+                                        "name": "allotted_for"
+                                      }
+                                    },
+                                    "operation": "="
+                                  }
+                                ],
+                                "conditional": null
                               }
                             ],
                             "conditional": null,

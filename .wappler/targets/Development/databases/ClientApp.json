@@ -2366,6 +2366,14 @@
               "unique": false,
               "nullable": true
             }
+          },
+          "applied_promo_id": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
           }
         }
       },

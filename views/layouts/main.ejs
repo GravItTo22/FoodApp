@@ -275,7 +275,7 @@
                             <li><a href="wish-list"><i class="fa fa-heart"></i> <span dmx-show="(scDashboardInfo.data.GetWishlist.WishlistItems.toNumber()>0)">{{scDashboardInfo.data.GetWishlist.WishlistItems}}</span></a></li>
                             <li><a href="cart-items"><i class="fa fa-shopping-bag"></i> <span dmx-show="(scDashboardInfo.data.GetCartItems.Cart_Items.toNumber()>0)">{{scDashboardInfo.data.GetCartItems.Cart_Items}}</span></a></li>
                         </ul>
-                        <div class="header__cart__price">Wallet: <span><i class="fa fa-rupee"></i>{{scDashboardInfo.data.GetUserInfo.wallet_bal?scDashboardInfo.data.GetUserInfo.wallet_bal:0}}</span></div>
+                        <div class="header__cart__price">Wallet: <span><i class="fa fa-rupee"></i>{{scDashboardInfo.data.GetUserInfo.wallet_bal?scDashboardInfo.data.GetUserInfo.wallet_bal.toNumber().toFixed(2):0}}</span></div>
                     </div>
                 </div>
             </div>

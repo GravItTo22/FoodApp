@@ -2,7 +2,8 @@
 <meta name="ac:route" content="/cart-items">
 <dmx-value id="varCartId" dmx-bind:value="0"></dmx-value>
 <dmx-value id="varUserId" dmx-bind:value="0"></dmx-value>
-<dmx-serverconnect id="scUseWallet" url="/api/Cart/WalletBalanceApply" dmx-param:use_wallet_amount="content.use_wallet_amount.value" noload></dmx-serverconnect>
+<dmx-value id="varUserWallet" dmx-bind:value="0"></dmx-value>
+<dmx-serverconnect id="scUseWallet" url="/api/Cart/WalletBalanceApply" dmx-param:use_wallet_amount="content.use_wallet_amount.value" noload dmx-on:success="varUserWallet.setValue((content.scUseWallet.data.status == 200)?use_wallet_amount.value:0)"></dmx-serverconnect>
 <dmx-serverconnect id="scCartUpdate" url="/api/Cart/UpdateCartItems" noload></dmx-serverconnect>
 <dmx-serverconnect id="scCartItems" url="/api/Cart/CartItems"></dmx-serverconnect>
 <dmx-serverconnect id="scRemoveCartItems" url="/api/Cart/RemoveCartItems" noload></dmx-serverconnect>
@@ -98,7 +99,7 @@
                                     <i class="fa fa-plus"></i></button>
                             </li>
                         </ul>
-                        <span>Total:{{content.scCartItems.data.GetCartItems[$index].total_price}}</span>
+                        <span>Total:{{content.scCartItems.data.GetCartItems[$index].total_price.toNumber().toFixed(2)}}</span>
                     </div>
                 </div>
             </div>
@@ -112,24 +113,24 @@
                 <h2 class="product_name mb-5">The Total Amount Of</h2>
                 <div class="price_indiv d-flex justify-content-between">
                     <p>Amount</p>
-                    <p><i class=" fa fa-rupee"></i><span id="product_total_amt">{{content.scCartItems.data.CartSumAmt[0].total_amt}}</span></p>
+                    <p><i class=" fa fa-rupee"></i><span id="product_total_amt">{{content.scCartItems.data.CartSumAmt[0].total_amt.toFixed(2)}}</span></p>
                 </div>
                 <input type="hidden" id="inp_product_total_amt" dmx-bind:value="content.scCartItems.data.CartSumAmt[0].total_amt">
                 <input type="hidden" id="inp_shipping_charge" dmx-bind:value="45">
-                <input type="hidden" id="inp_wallet_amt" dmx-bind:value="(content.scUseWallet.data.status == 200)?use_wallet_amount.value:0">
-                <input type="hidden" id="inp_instant_discount" dmx-bind:value="(content.scCartItems.data.NewUserCode.amt_or_percent=='PER')?(scCartItems.data.CartSumAmt[0].total_amt*content.scCartItems.data.NewUserCode.promo_per)/100:(content.scCartItems.data.NewUserCode.amt_or_percent=='AMT')?content.scCartItems.data.NewUserCode.promo_amt:0">
+                <input type="hidden" id="inp_wallet_amt" dmx-bind:value="varUserWallet.value">
+                <input type="hidden" id="inp_instant_discount" dmx-bind:value="content.scCartItems.data.InstantDiscount">
                 <div class="price_indiv d-flex justify-content-between mx-0">
                     <p>Shipping Charge</p>
                     <p>(+) <i class=" fa fa-rupee"></i><span id="shipping_charge">45</span></p>
                 </div>
                 <div class="price_indiv d-flex justify-content-between mx-0" dmx-show="content.scCartItems.data.Apply=='Yes'" dmx-hide="content.scCartItems.data.Apply=='No'">
                     <p>Instant Discount <br /><span class="gio-font-11">(Auto Apply Promo Code: <b>{{content.scCartItems.data.NewUserCode.promo_code}}</b>)</span></p>
-                    <p>(-) <i class=" fa fa-rupee"></i><span id="instant_discount">{{(content.scCartItems.data.NewUserCode.amt_or_percent=='PER')?(scCartItems.data.CartSumAmt[0].total_amt*content.scCartItems.data.NewUserCode.promo_per)/100:(content.scCartItems.data.NewUserCode.amt_or_percent=='AMT')?content.scCartItems.data.NewUserCode.promo_amt:0}}</span></p>
+                    <p>(-) <i class=" fa fa-rupee"></i><span id="instant_discount">{{content.scCartItems.data.InstantDiscount.toFixed(2)}}</span></p>
                 </div>
                 <hr />
-                <div class="price_indiv d-flex justify-content-between mx-0" dmx-show="((content.scUseWallet.data.status == 200) &amp;&amp; scDashboardInfo.data.varLogin)" dmx-hide="(content.scUseWallet.data.status==400)">
+                <div class="price_indiv d-flex justify-content-between mx-0" dmx-show="(content.scUseWallet.data.status == 200)" dmx-hide="(content.scUseWallet.data.status==400)">
                     <p>Wallet Balance Amount</p>
-                    <p><i class=" fa fa-rupee"></i><span id="wall_bal_amt">{{(content.scUseWallet.data.status == 200)?use_wallet_amount.value:0}}</span></p>
+                    <p>(-) <i class=" fa fa-rupee"></i><span id="wall_bal_amt">{{varUserWallet.value}}</span></p>
                 </div>
                 <hr dmx-show="content.scUseWallet.data.status == 200" dmx-hide="content.scUseWallet.data.status == 400" />
                 <div class="total-amt d-flex justify-content-between font-weight-bold">
@@ -138,7 +139,7 @@
                 </div>
                 <div class="d-flex justify-content-between font-weight-bold" dmx-show="scDashboardInfo.data.varLogin&amp;&amp;(content.scCartItems.data.Apply=='Yes')" dmx-hide="content.scCartItems.data.Apply=='No'">
                     <p>Wallet Cashback</p>
-                    <p><i class=" fa fa-rupee"></i><span id="total_cashback_amt">{{(content.scCartItems.data.NewUserCode.cashback_amt_or_per=='PER')?(scCartItems.data.CartSumAmt[0].total_amt*content.scCartItems.data.NewUserCode.cashback_per)/100:(content.scCartItems.data.NewUserCode.cashback_amt_or_per=='AMT')?content.scCartItems.data.NewUserCode.cashback_amt:0}}</span></p>
+                    <p><i class=" fa fa-rupee"></i><span id="total_cashback_amt">{{content.scCartItems.data.WalletCashback.toFixed(2)}}</span></p>
                 </div>
                 <p class="gio-font-11">(Additional Auto Apply Promo Code Cashback: <b>{{content.scCartItems.data.NewUserCode.promo_code}}</b>)</p>
                 <a href="" dmx-bind:href="scDashboardInfo.data.varLogin ? 'place-order' : 'login'"><button class="btn1 text-uppercase">Checkout</button></a>
@@ -149,12 +150,11 @@
                     <div class="d-flex justify-content-between font-weight-bold" dmx-hide="scDashboardInfo.data.varLogin">
                         <p>Please Login to Use Wallet Cashback, Use Wallet Balance and Instant Discount (If Any)</p>
                     </div>
-                    <div class="card-body" dmx-show="scDashboardInfo.data.varLogin">
+                    <div class="card-body px-0" dmx-show="scDashboardInfo.data.varLogin">
                         <h5 class="text-info">Use your wallet balance (optional)</h5>
-                        <h5 class="text-danger" dmx-show="content.scUseWallet.data.status==400" dmx-hide="content.scUseWallet.data.status==200">{{content.scUseWallet.data.message}}</h5>
-                        <h6 class="text-success" dmx-show="content.scUseWallet.data.status==200" dmx-hide="content.scUseWallet.data.status==400">{{content.scUseWallet.data.message}}</h6>
+                        <h6 dmx-class:text-danger="content.scUseWallet.data.status==400" dmx-class:text-success="content.scUseWallet.data.status==200">{{content.scUseWallet.data.message}}</h6>
                         <div class="mt-3">
-                            <input type="text" name="" id="use_wallet_amount" class="form-control font-weight-bold" placeholder="Enter the Amount" required="">
+                            <input type="number" id="use_wallet_amount" class="form-control font-weight-bold" placeholder="Enter the Amount" required="">
                         </div>
                         <button class="btn1 btn-sm mt-3" dmx-on:click="flowUseWalletBal.run();">Apply</button>
                     </div>

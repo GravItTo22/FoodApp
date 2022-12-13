@@ -8,6 +8,11 @@
       {
         "type": "text",
         "fieldName": "inp_wallet_amt",
+        "options": {
+          "rules": {
+            "core:number": {}
+          }
+        },
         "name": "inp_wallet_amt"
       },
       {
@@ -1258,11 +1263,21 @@
         "outputType": "boolean"
       },
       {
+        "name": "WalletDeductAmt",
+        "module": "core",
+        "action": "setvalue",
+        "options": {
+          "value": "{{($_POST.inp_wallet_amt?$_POST.inp_wallet_amt:0)}}"
+        },
+        "meta": [],
+        "outputType": "text"
+      },
+      {
         "name": "WalletNetAmt",
         "module": "core",
         "action": "setvalue",
         "options": {
-          "value": "{{((GetUserDetails.wallet_bal.toNumber()+WalletCashback.toNumber())-$_POST.inp_wallet_amt.toNumber())}}"
+          "value": "{{((GetUserDetails.wallet_bal.toNumber()+WalletCashback.toNumber())-WalletDeductAmt.toNumber())}}"
         },
         "meta": [],
         "outputType": "text"
@@ -1471,7 +1486,7 @@
                 "table": "r_order",
                 "column": "wallet_deduct_amt",
                 "type": "text",
-                "value": "{{$_POST.inp_wallet_amt}}"
+                "value": "{{WalletDeductAmt}}"
               },
               {
                 "table": "r_order",
@@ -1489,7 +1504,7 @@
             ],
             "table": "r_order",
             "returning": "id",
-            "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, created_by, created_on, status, payment_status, ex_charge_amt, applied_promo_id, wallet_bal, wallet_cashback_amt, wallet_deduct_amt, wallet_closing_amt, order_assigned_to) VALUES (:P1 /* {{OrderId}} */, :P2 /* {{identity}} */, :P3 /* {{CartSumAmt[0].total_amt}} */, :P4 /* {{InstantDiscount}} */, :P5 /* {{ShippingCharge}} */, :P6 /* {{GetUserDetails.fname+' '+GetUserDetails.lname}} */, :P7 /* {{GetUserDetails.address}} */, :P8 /* {{GetUserDetails.mobile}} */, :P9 /* {{GetUserDetails.watsapp_no}} */, :P10 /* {{GetUserDetails.pin}} */, :P11 /* {{GetUserDetails.ps}} */, :P12 /* {{GetUserDetails.district}} */, :P13 /* {{GetUserDetails.state}} */, :P14 /* {{GetUserDetails.country}} */, :P15 /* {{identity}} */, :P16 /* {{NOW}} */, :P17 /* {{1}} */, :P18 /* {{$_POST.payment_mode}} */, :P19 /* {{OtherCharges}} */, :P20 /* {{NewUserCode.id?NewUserCode.id:0}} */, :P21 /* {{GetUserDetails.wallet_bal}} */, :P22 /* {{WalletCashback}} */, :P23 /* {{$_POST.inp_wallet_amt}} */, :P24 /* {{WalletNetAmt}} */, :P25 /* {{GetDelivery.id}} */)",
+            "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, created_by, created_on, status, payment_status, ex_charge_amt, applied_promo_id, wallet_bal, wallet_cashback_amt, wallet_deduct_amt, wallet_closing_amt, order_assigned_to) VALUES (:P1 /* {{OrderId}} */, :P2 /* {{identity}} */, :P3 /* {{CartSumAmt[0].total_amt}} */, :P4 /* {{InstantDiscount}} */, :P5 /* {{ShippingCharge}} */, :P6 /* {{GetUserDetails.fname+' '+GetUserDetails.lname}} */, :P7 /* {{GetUserDetails.address}} */, :P8 /* {{GetUserDetails.mobile}} */, :P9 /* {{GetUserDetails.watsapp_no}} */, :P10 /* {{GetUserDetails.pin}} */, :P11 /* {{GetUserDetails.ps}} */, :P12 /* {{GetUserDetails.district}} */, :P13 /* {{GetUserDetails.state}} */, :P14 /* {{GetUserDetails.country}} */, :P15 /* {{identity}} */, :P16 /* {{NOW}} */, :P17 /* {{1}} */, :P18 /* {{$_POST.payment_mode}} */, :P19 /* {{OtherCharges}} */, :P20 /* {{NewUserCode.id?NewUserCode.id:0}} */, :P21 /* {{GetUserDetails.wallet_bal}} */, :P22 /* {{WalletCashback}} */, :P23 /* {{WalletDeductAmt}} */, :P24 /* {{WalletNetAmt}} */, :P25 /* {{GetDelivery.id}} */)",
             "params": [
               {
                 "name": ":P1",
@@ -1604,7 +1619,7 @@
               {
                 "name": ":P23",
                 "type": "expression",
-                "value": "{{$_POST.inp_wallet_amt}}"
+                "value": "{{WalletDeductAmt}}"
               },
               {
                 "name": ":P24",

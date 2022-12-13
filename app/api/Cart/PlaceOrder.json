@@ -1,1076 +1,1955 @@
 {
-  "meta": {
-    "options": {
-      "linkedFile": "/views/place-order.ejs",
-      "linkedForm": "place-order"
+    "meta": {
+        "options": {
+            "linkedFile": "/views/place-order.ejs",
+            "linkedForm": "place-order"
+        },
+        "$_GET": [
+            {
+                "type": "text",
+                "name": "sort"
+            },
+            {
+                "type": "text",
+                "name": "dir"
+            }
+        ],
+        "$_POST": [
+            {
+                "type": "text",
+                "fieldName": "inp_wallet_amt",
+                "name": "inp_wallet_amt"
+            },
+            {
+                "type": "text",
+                "fieldName": "payment_mode",
+                "name": "payment_mode"
+            }
+        ]
     },
-    "$_GET": [
-      {
-        "type": "text",
-        "name": "sort"
-      },
-      {
-        "type": "text",
-        "name": "dir"
-      }
-    ],
-    "$_POST": [
-      {
-        "type": "text",
-        "fieldName": "inp_product_total_amt",
-        "name": "inp_product_total_amt"
-      },
-      {
-        "type": "text",
-        "fieldName": "inp_shipping_charge",
-        "name": "inp_shipping_charge"
-      },
-      {
-        "type": "text",
-        "fieldName": "inp_PromoCodeAmt",
-        "name": "inp_PromoCodeAmt"
-      },
-      {
-        "type": "text",
-        "fieldName": "inp_wallet_amt",
-        "name": "inp_wallet_amt"
-      },
-      {
-        "type": "array",
-        "name": "record",
-        "sub": [
-          {
-            "type": "number",
-            "name": "AddOrder"
-          },
-          {
-            "type": "number",
-            "name": "GetCartItems[$index]"
-          },
-          {
-            "type": "number",
-            "name": "identity"
-          },
-          {
-            "type": "number",
-            "name": "1"
-          },
-          {
-            "type": "datetime",
-            "name": "NOW"
-          }
-        ]
-      }
-    ]
-  },
-  "exec": {
-    "steps": [
-      {
-        "name": "",
-        "module": "auth",
-        "action": "restrict",
-        "options": {
-          "provider": "security",
-          "permissions": [
-            "write"
-          ],
-          "loginUrl": "/login",
-          "forbiddenUrl": "/403-forbidden"
-        }
-      },
-      {
-        "name": "identity",
-        "module": "auth",
-        "action": "identify",
-        "options": {
-          "provider": "security"
-        },
-        "output": false,
-        "meta": []
-      },
-      {
-        "name": "OrderId",
-        "module": "core",
-        "action": "setvalue",
-        "options": {
-          "value": "{{UUID.md5(123456).substr(1, 10).uppercase()}}"
-        },
-        "meta": [],
-        "outputType": "text"
-      },
-      {
-        "name": "GetUserDetails",
-        "module": "dbconnector",
-        "action": "single",
-        "options": {
-          "connection": "ClientApp",
-          "sql": {
-            "type": "SELECT",
-            "columns": [
-              {
-                "table": "m_customer",
-                "column": "fname"
-              },
-              {
-                "table": "m_customer",
-                "column": "lname"
-              },
-              {
-                "table": "m_customer",
-                "column": "mobile"
-              },
-              {
-                "table": "m_customer",
-                "column": "is_watsapp"
-              },
-              {
-                "table": "m_customer",
-                "column": "watsapp_no"
-              },
-              {
-                "table": "m_customer",
-                "column": "address"
-              },
-              {
-                "table": "m_customer",
-                "column": "pin"
-              },
-              {
-                "table": "m_customer",
-                "column": "ps"
-              },
-              {
-                "table": "m_customer",
-                "column": "district"
-              },
-              {
-                "table": "m_customer",
-                "column": "state"
-              },
-              {
-                "table": "m_customer",
-                "column": "country"
-              },
-              {
-                "table": "m_customer",
-                "column": "wallet_bal"
-              }
-            ],
-            "table": {
-              "name": "m_customer"
-            },
-            "primary": "id",
-            "joins": [],
-            "wheres": {
-              "condition": "AND",
-              "rules": [
-                {
-                  "id": "m_customer.id",
-                  "field": "m_customer.id",
-                  "type": "double",
-                  "operator": "equal",
-                  "value": "{{identity}}",
-                  "data": {
-                    "table": "m_customer",
-                    "column": "id",
-                    "type": "number",
-                    "columnObj": {
-                      "type": "increments",
-                      "default": "",
-                      "primary": true,
-                      "unique": true,
-                      "nullable": false,
-                      "name": "id"
-                    }
-                  },
-                  "operation": "="
-                },
-                {
-                  "id": "m_customer.status",
-                  "field": "m_customer.status",
-                  "type": "double",
-                  "operator": "equal",
-                  "value": "{{1}}",
-                  "data": {
-                    "table": "m_customer",
-                    "column": "status",
-                    "type": "number",
-                    "columnObj": {
-                      "type": "integer",
-                      "primary": false,
-                      "unique": false,
-                      "nullable": true,
-                      "name": "status"
-                    }
-                  },
-                  "operation": "="
-                },
-                {
-                  "id": "m_customer.user_type_id",
-                  "field": "m_customer.user_type_id",
-                  "type": "double",
-                  "operator": "equal",
-                  "value": "{{6}}",
-                  "data": {
-                    "table": "m_customer",
-                    "column": "user_type_id",
-                    "type": "number",
-                    "columnObj": {
-                      "type": "reference",
-                      "primary": false,
-                      "unique": false,
-                      "nullable": true,
-                      "references": "id",
-                      "inTable": "m_user_type",
-                      "referenceType": "integer",
-                      "onUpdate": "NO ACTION",
-                      "onDelete": "NO ACTION",
-                      "name": "user_type_id"
-                    }
-                  },
-                  "operation": "="
+    "exec": {
+        "steps": [
+            {
+                "name": "",
+                "module": "auth",
+                "action": "restrict",
+                "options": {
+                    "provider": "security",
+                    "permissions": [
+                        "write"
+                    ],
+                    "loginUrl": "/login",
+                    "forbiddenUrl": "/403-forbidden"
                 }
-              ],
-              "conditional": null,
-              "valid": true
             },
-            "query": "SELECT fname, lname, mobile, is_watsapp, watsapp_no, address, pin, ps, district, state, country, wallet_bal\nFROM m_customer\nWHERE id = :P1 /* {{identity}} */ AND status = :P2 /* {{1}} */ AND user_type_id = :P3 /* {{6}} */",
-            "params": [
-              {
-                "operator": "equal",
-                "type": "expression",
-                "name": ":P1",
-                "value": "{{identity}}"
-              },
-              {
-                "operator": "equal",
-                "type": "expression",
-                "name": ":P2",
-                "value": "{{1}}"
-              },
-              {
-                "operator": "equal",
-                "type": "expression",
-                "name": ":P3",
-                "value": "{{6}}"
-              }
-            ]
-          }
-        },
-        "output": false,
-        "meta": [
-          {
-            "type": "text",
-            "name": "fname"
-          },
-          {
-            "type": "text",
-            "name": "lname"
-          },
-          {
-            "type": "text",
-            "name": "mobile"
-          },
-          {
-            "type": "text",
-            "name": "is_watsapp"
-          },
-          {
-            "type": "text",
-            "name": "watsapp_no"
-          },
-          {
-            "type": "text",
-            "name": "address"
-          },
-          {
-            "type": "text",
-            "name": "pin"
-          },
-          {
-            "type": "text",
-            "name": "ps"
-          },
-          {
-            "type": "text",
-            "name": "district"
-          },
-          {
-            "type": "text",
-            "name": "state"
-          },
-          {
-            "type": "text",
-            "name": "country"
-          },
-          {
-            "type": "text",
-            "name": "wallet_bal"
-          }
-        ],
-        "outputType": "object"
-      },
-      {
-        "name": "GetCartItems",
-        "module": "dbconnector",
-        "action": "select",
-        "options": {
-          "connection": "ClientApp",
-          "sql": {
-            "type": "SELECT",
-            "columns": [
-              {
-                "table": "r_cart",
-                "column": "id"
-              },
-              {
-                "table": "r_cart",
-                "column": "prod_id"
-              },
-              {
-                "table": "r_cart",
-                "column": "price_id"
-              },
-              {
-                "table": "r_cart",
-                "column": "user_id"
-              },
-              {
-                "table": "r_cart",
-                "column": "prod_unit_price"
-              },
-              {
-                "table": "r_cart",
-                "column": "prod_qty"
-              },
-              {
-                "table": "r_cart",
-                "column": "total_price"
-              },
-              {
-                "table": "r_cart",
-                "column": "cart_mrp"
-              },
-              {
-                "table": "r_cart",
-                "column": "cart_purchase"
-              }
-            ],
-            "table": {
-              "name": "r_cart"
-            },
-            "primary": "id",
-            "joins": [],
-            "wheres": {
-              "condition": "OR",
-              "rules": [
-                {
-                  "id": "r_cart.user_id",
-                  "field": "r_cart.user_id",
-                  "type": "double",
-                  "operator": "equal",
-                  "value": "{{identity}}",
-                  "data": {
-                    "table": "r_cart",
-                    "column": "user_id",
-                    "type": "number",
-                    "columnObj": {
-                      "type": "reference",
-                      "primary": false,
-                      "unique": false,
-                      "nullable": true,
-                      "references": "id",
-                      "inTable": "m_customer",
-                      "referenceType": "integer",
-                      "onUpdate": "NO ACTION",
-                      "onDelete": "NO ACTION",
-                      "name": "user_id"
-                    }
-                  },
-                  "operation": "="
+            {
+                "name": "identity",
+                "module": "auth",
+                "action": "identify",
+                "options": {
+                    "provider": "security"
                 },
-                {
-                  "id": "r_cart.ip_address",
-                  "field": "r_cart.ip_address",
-                  "type": "string",
-                  "operator": "equal",
-                  "value": "{{$_SERVER.REMOTE_ADDR}}",
-                  "data": {
-                    "table": "r_cart",
-                    "column": "ip_address",
-                    "type": "text",
-                    "columnObj": {
-                      "type": "string",
-                      "maxLength": -5,
-                      "primary": false,
-                      "unique": false,
-                      "nullable": true,
-                      "name": "ip_address"
+                "output": false,
+                "meta": []
+            },
+            {
+                "name": "OrderId",
+                "module": "core",
+                "action": "setvalue",
+                "options": {
+                    "value": "{{UUID.md5(123456).substr(1, 10).uppercase()}}"
+                },
+                "meta": [],
+                "outputType": "text"
+            },
+            {
+                "name": "GetUserDetails",
+                "module": "dbconnector",
+                "action": "single",
+                "options": {
+                    "connection": "ClientApp",
+                    "sql": {
+                        "type": "SELECT",
+                        "columns": [
+                            {
+                                "table": "m_customer",
+                                "column": "fname"
+                            },
+                            {
+                                "table": "m_customer",
+                                "column": "lname"
+                            },
+                            {
+                                "table": "m_customer",
+                                "column": "mobile"
+                            },
+                            {
+                                "table": "m_customer",
+                                "column": "is_watsapp"
+                            },
+                            {
+                                "table": "m_customer",
+                                "column": "watsapp_no"
+                            },
+                            {
+                                "table": "m_customer",
+                                "column": "address"
+                            },
+                            {
+                                "table": "m_customer",
+                                "column": "pin"
+                            },
+                            {
+                                "table": "m_customer",
+                                "column": "ps"
+                            },
+                            {
+                                "table": "m_customer",
+                                "column": "district"
+                            },
+                            {
+                                "table": "m_customer",
+                                "column": "state"
+                            },
+                            {
+                                "table": "m_customer",
+                                "column": "country"
+                            },
+                            {
+                                "table": "m_customer",
+                                "column": "wallet_bal"
+                            }
+                        ],
+                        "table": {
+                            "name": "m_customer"
+                        },
+                        "primary": "id",
+                        "joins": [],
+                        "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                                {
+                                    "id": "m_customer.id",
+                                    "field": "m_customer.id",
+                                    "type": "double",
+                                    "operator": "equal",
+                                    "value": "{{identity}}",
+                                    "data": {
+                                        "table": "m_customer",
+                                        "column": "id",
+                                        "type": "number",
+                                        "columnObj": {
+                                            "type": "increments",
+                                            "default": "",
+                                            "primary": true,
+                                            "unique": true,
+                                            "nullable": false,
+                                            "name": "id"
+                                        }
+                                    },
+                                    "operation": "="
+                                },
+                                {
+                                    "id": "m_customer.status",
+                                    "field": "m_customer.status",
+                                    "type": "double",
+                                    "operator": "equal",
+                                    "value": "{{1}}",
+                                    "data": {
+                                        "table": "m_customer",
+                                        "column": "status",
+                                        "type": "number",
+                                        "columnObj": {
+                                            "type": "integer",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "status"
+                                        }
+                                    },
+                                    "operation": "="
+                                },
+                                {
+                                    "id": "m_customer.user_type_id",
+                                    "field": "m_customer.user_type_id",
+                                    "type": "double",
+                                    "operator": "equal",
+                                    "value": "{{6}}",
+                                    "data": {
+                                        "table": "m_customer",
+                                        "column": "user_type_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                            "type": "reference",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "references": "id",
+                                            "inTable": "m_user_type",
+                                            "referenceType": "integer",
+                                            "onUpdate": "NO ACTION",
+                                            "onDelete": "NO ACTION",
+                                            "name": "user_type_id"
+                                        }
+                                    },
+                                    "operation": "="
+                                }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                        },
+                        "query": "SELECT fname, lname, mobile, is_watsapp, watsapp_no, address, pin, ps, district, state, country, wallet_bal\nFROM m_customer\nWHERE id = :P1 /* {{identity}} */ AND status = :P2 /* {{1}} */ AND user_type_id = :P3 /* {{6}} */",
+                        "params": [
+                            {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P1",
+                                "value": "{{identity}}"
+                            },
+                            {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P2",
+                                "value": "{{1}}"
+                            },
+                            {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P3",
+                                "value": "{{6}}"
+                            }
+                        ]
                     }
-                  },
-                  "operation": "="
-                }
-              ],
-              "conditional": null,
-              "valid": true
+                },
+                "output": false,
+                "meta": [
+                    {
+                        "type": "text",
+                        "name": "fname"
+                    },
+                    {
+                        "type": "text",
+                        "name": "lname"
+                    },
+                    {
+                        "type": "text",
+                        "name": "mobile"
+                    },
+                    {
+                        "type": "text",
+                        "name": "is_watsapp"
+                    },
+                    {
+                        "type": "text",
+                        "name": "watsapp_no"
+                    },
+                    {
+                        "type": "text",
+                        "name": "address"
+                    },
+                    {
+                        "type": "text",
+                        "name": "pin"
+                    },
+                    {
+                        "type": "text",
+                        "name": "ps"
+                    },
+                    {
+                        "type": "text",
+                        "name": "district"
+                    },
+                    {
+                        "type": "text",
+                        "name": "state"
+                    },
+                    {
+                        "type": "text",
+                        "name": "country"
+                    },
+                    {
+                        "type": "text",
+                        "name": "wallet_bal"
+                    }
+                ],
+                "outputType": "object"
             },
-            "query": "SELECT id, prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, cart_mrp, cart_purchase\nFROM r_cart\nWHERE user_id = :P1 /* {{identity}} */ OR ip_address = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
-            "params": [
-              {
-                "operator": "equal",
-                "type": "expression",
-                "name": ":P1",
-                "value": "{{identity}}"
-              },
-              {
-                "operator": "equal",
-                "type": "expression",
-                "name": ":P2",
-                "value": "{{$_SERVER.REMOTE_ADDR}}"
-              }
-            ]
-          }
-        },
-        "output": false,
-        "meta": [
-          {
-            "type": "number",
-            "name": "id"
-          },
-          {
-            "type": "number",
-            "name": "prod_id"
-          },
-          {
-            "type": "number",
-            "name": "price_id"
-          },
-          {
-            "type": "number",
-            "name": "user_id"
-          },
-          {
-            "type": "text",
-            "name": "prod_unit_price"
-          },
-          {
-            "type": "text",
-            "name": "prod_qty"
-          },
-          {
-            "type": "text",
-            "name": "total_price"
-          },
-          {
-            "type": "text",
-            "name": "cart_mrp"
-          },
-          {
-            "type": "text",
-            "name": "cart_purchase"
-          }
-        ],
-        "outputType": "array"
-      },
-      {
-        "name": "WalletNetAmt",
-        "module": "core",
-        "action": "setvalue",
-        "options": {
-          "value": "{{$_POST.inp_wallet_amt.toNumber()+GetUserDetails.wallet_bal.toNumber()}}"
-        },
-        "meta": [],
-        "outputType": "text"
-      },
-      {
-        "name": "UpCustomer",
-        "module": "dbupdater",
-        "action": "update",
-        "options": {
-          "connection": "ClientApp",
-          "sql": {
-            "type": "update",
-            "values": [
-              {
-                "table": "m_customer",
-                "column": "wallet_bal",
-                "type": "text",
-                "value": "{{WalletNetAmt}}"
-              }
-            ],
-            "table": "m_customer",
-            "wheres": {
-              "condition": "AND",
-              "rules": [
-                {
-                  "id": "id",
-                  "field": "id",
-                  "type": "double",
-                  "operator": "equal",
-                  "value": "{{identity}}",
-                  "data": {
-                    "column": "id"
-                  },
-                  "operation": "="
-                }
-              ],
-              "conditional": null,
-              "valid": true
+            {
+                "name": "GetCartItems",
+                "module": "dbupdater",
+                "action": "custom",
+                "options": {
+                    "connection": "ClientApp",
+                    "sql": {
+                        "query": "SELECT rc.id, rc.prod_id, rc.price_id, rc.user_id, rc.prod_unit_price, rc.cart_mrp, rc.prod_qty, rc.total_price, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_mark_id, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, mp.rest_id, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_cart rc\nLEFT JOIN m_product AS mp ON (mp.id = rc.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rc.user_id = @user OR rc.ip_address = @ip",
+                        "params": [
+                            {
+                                "name": "@user",
+                                "value": "{{identity}}",
+                                "test": "1"
+                            },
+                            {
+                                "name": "@ip",
+                                "value": "{{$_SERVER.REMOTE_ADDR}}",
+                                "test": "::1"
+                            }
+                        ]
+                    }
+                },
+                "output": true,
+                "meta": [
+                    {
+                        "name": "id",
+                        "type": "number"
+                    },
+                    {
+                        "name": "prod_id",
+                        "type": "number"
+                    },
+                    {
+                        "name": "price_id",
+                        "type": "number"
+                    },
+                    {
+                        "name": "user_id",
+                        "type": "text"
+                    },
+                    {
+                        "name": "prod_unit_price",
+                        "type": "text"
+                    },
+                    {
+                        "name": "cart_mrp",
+                        "type": "text"
+                    },
+                    {
+                        "name": "prod_qty",
+                        "type": "text"
+                    },
+                    {
+                        "name": "total_price",
+                        "type": "text"
+                    },
+                    {
+                        "name": "prod_name_en",
+                        "type": "text"
+                    },
+                    {
+                        "name": "prod_name_bn",
+                        "type": "text"
+                    },
+                    {
+                        "name": "prod_name_hin",
+                        "type": "text"
+                    },
+                    {
+                        "name": "prod_desc_en",
+                        "type": "text"
+                    },
+                    {
+                        "name": "prod_desc_bn",
+                        "type": "text"
+                    },
+                    {
+                        "name": "prod_desc_hin",
+                        "type": "text"
+                    },
+                    {
+                        "name": "prod_img1",
+                        "type": "text"
+                    },
+                    {
+                        "name": "prod_mark_id",
+                        "type": "number"
+                    },
+                    {
+                        "name": "shop_name_en",
+                        "type": "text"
+                    },
+                    {
+                        "name": "shop_name_bn",
+                        "type": "text"
+                    },
+                    {
+                        "name": "shop_name_hin",
+                        "type": "text"
+                    },
+                    {
+                        "name": "rest_id",
+                        "type": "number"
+                    },
+                    {
+                        "name": "price",
+                        "type": "array",
+                        "sub": [
+                            {
+                                "name": "price_ids",
+                                "type": "number"
+                            },
+                            {
+                                "name": "quantity",
+                                "type": "text"
+                            },
+                            {
+                                "name": "q_unit",
+                                "type": "text"
+                            },
+                            {
+                                "name": "mrp",
+                                "type": "text"
+                            },
+                            {
+                                "name": "price",
+                                "type": "text"
+                            },
+                            {
+                                "name": "product_tax",
+                                "type": "text"
+                            }
+                        ]
+                    }
+                ],
+                "outputType": "array"
             },
-            "returning": "id",
-            "query": "UPDATE m_customer\nSET wallet_bal = :P1 /* {{WalletNetAmt}} */\nWHERE id = :P2 /* {{identity}} */",
-            "params": [
-              {
-                "name": ":P1",
-                "type": "expression",
-                "value": "{{WalletNetAmt}}"
-              },
-              {
-                "operator": "equal",
-                "type": "expression",
-                "name": ":P2",
-                "value": "{{identity}}"
-              }
-            ]
-          }
-        },
-        "meta": [
-          {
-            "name": "affected",
-            "type": "number"
-          }
-        ]
-      },
-      {
-        "name": "AddOrder",
-        "module": "dbupdater",
-        "action": "insert",
-        "options": {
-          "connection": "ClientApp",
-          "sql": {
-            "type": "insert",
-            "values": [
-              {
-                "table": "r_order",
-                "column": "order_id",
-                "type": "text",
-                "value": "{{OrderId}}"
-              },
-              {
-                "table": "r_order",
-                "column": "user_id",
-                "type": "number",
-                "value": "{{identity}}"
-              },
-              {
-                "table": "r_order",
-                "column": "total_amt",
-                "type": "text",
-                "value": "{{$_POST.inp_product_total_amt}}"
-              },
-              {
-                "table": "r_order",
-                "column": "discount",
-                "type": "text",
-                "value": "{{$_POST.inp_PromoCodeAmt}}"
-              },
-              {
-                "table": "r_order",
-                "column": "delevery_amt",
-                "type": "text",
-                "value": "{{$_POST.inp_shipping_charge}}"
-              },
-              {
-                "table": "r_order",
-                "column": "user_name",
-                "type": "text",
-                "value": "{{GetUserDetails.fname+' '+GetUserDetails.lname}}"
-              },
-              {
-                "table": "r_order",
-                "column": "address",
-                "type": "text",
-                "value": "{{GetUserDetails.address}}"
-              },
-              {
-                "table": "r_order",
-                "column": "mobile",
-                "type": "text",
-                "value": "{{GetUserDetails.mobile}}"
-              },
-              {
-                "table": "r_order",
-                "column": "whatsapp",
-                "type": "text",
-                "value": "{{GetUserDetails.watsapp_no}}"
-              },
-              {
-                "table": "r_order",
-                "column": "pin",
-                "type": "text",
-                "value": "{{GetUserDetails.pin}}"
-              },
-              {
-                "table": "r_order",
-                "column": "ps",
-                "type": "text",
-                "value": "{{GetUserDetails.ps}}"
-              },
-              {
-                "table": "r_order",
-                "column": "dist",
-                "type": "text",
-                "value": "{{GetUserDetails.district}}"
-              },
-              {
-                "table": "r_order",
-                "column": "state",
-                "type": "text",
-                "value": "{{GetUserDetails.state}}"
-              },
-              {
-                "table": "r_order",
-                "column": "country",
-                "type": "text",
-                "value": "{{GetUserDetails.country}}"
-              },
-              {
-                "table": "r_order",
-                "column": "wallet_bal",
-                "type": "text",
-                "value": "{{$_POST.inp_wallet_amt}}"
-              },
-              {
-                "table": "r_order",
-                "column": "created_by",
-                "type": "number",
-                "value": "{{identity}}"
-              },
-              {
-                "table": "r_order",
-                "column": "created_on",
-                "type": "datetime",
-                "value": "{{NOW}}"
-              },
-              {
-                "table": "r_order",
-                "column": "status",
-                "type": "number",
-                "value": "{{1}}"
-              },
-              {
-                "table": "r_order",
-                "column": "payment_status",
-                "type": "text",
-                "value": "{{'COD'}}"
-              }
-            ],
-            "table": "r_order",
-            "returning": "id",
-            "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, wallet_bal, created_by, created_on, status, payment_status) VALUES (:P1 /* {{OrderId}} */, :P2 /* {{identity}} */, :P3 /* {{$_POST.inp_product_total_amt}} */, :P4 /* {{$_POST.inp_PromoCodeAmt}} */, :P5 /* {{$_POST.inp_shipping_charge}} */, :P6 /* {{GetUserDetails.fname+' '+GetUserDetails.lname}} */, :P7 /* {{GetUserDetails.address}} */, :P8 /* {{GetUserDetails.mobile}} */, :P9 /* {{GetUserDetails.watsapp_no}} */, :P10 /* {{GetUserDetails.pin}} */, :P11 /* {{GetUserDetails.ps}} */, :P12 /* {{GetUserDetails.district}} */, :P13 /* {{GetUserDetails.state}} */, :P14 /* {{GetUserDetails.country}} */, :P15 /* {{$_POST.inp_wallet_amt}} */, :P16 /* {{identity}} */, :P17 /* {{NOW}} */, :P18 /* {{1}} */, :P19 /* {{'COD'}} */)",
-            "params": [
-              {
-                "name": ":P1",
-                "type": "expression",
-                "value": "{{OrderId}}"
-              },
-              {
-                "name": ":P2",
-                "type": "expression",
-                "value": "{{identity}}"
-              },
-              {
-                "name": ":P3",
-                "type": "expression",
-                "value": "{{$_POST.inp_product_total_amt}}"
-              },
-              {
-                "name": ":P4",
-                "type": "expression",
-                "value": "{{$_POST.inp_PromoCodeAmt}}"
-              },
-              {
-                "name": ":P5",
-                "type": "expression",
-                "value": "{{$_POST.inp_shipping_charge}}"
-              },
-              {
-                "name": ":P6",
-                "type": "expression",
-                "value": "{{GetUserDetails.fname+' '+GetUserDetails.lname}}"
-              },
-              {
-                "name": ":P7",
-                "type": "expression",
-                "value": "{{GetUserDetails.address}}"
-              },
-              {
-                "name": ":P8",
-                "type": "expression",
-                "value": "{{GetUserDetails.mobile}}"
-              },
-              {
-                "name": ":P9",
-                "type": "expression",
-                "value": "{{GetUserDetails.watsapp_no}}"
-              },
-              {
-                "name": ":P10",
-                "type": "expression",
-                "value": "{{GetUserDetails.pin}}"
-              },
-              {
-                "name": ":P11",
-                "type": "expression",
-                "value": "{{GetUserDetails.ps}}"
-              },
-              {
-                "name": ":P12",
-                "type": "expression",
-                "value": "{{GetUserDetails.district}}"
-              },
-              {
-                "name": ":P13",
-                "type": "expression",
-                "value": "{{GetUserDetails.state}}"
-              },
-              {
-                "name": ":P14",
-                "type": "expression",
-                "value": "{{GetUserDetails.country}}"
-              },
-              {
-                "name": ":P15",
-                "type": "expression",
-                "value": "{{$_POST.inp_wallet_amt}}"
-              },
-              {
-                "name": ":P16",
-                "type": "expression",
-                "value": "{{identity}}"
-              },
-              {
-                "name": ":P17",
-                "type": "expression",
-                "value": "{{NOW}}"
-              },
-              {
-                "name": ":P18",
-                "type": "expression",
-                "value": "{{1}}"
-              },
-              {
-                "name": ":P19",
-                "type": "expression",
-                "value": "{{'COD'}}"
-              }
-            ]
-          }
-        },
-        "meta": [
-          {
-            "name": "identity",
-            "type": "text"
-          },
-          {
-            "name": "affected",
-            "type": "number"
-          }
-        ]
-      },
-      {
-        "name": "repeat",
-        "module": "core",
-        "action": "repeat",
-        "options": {
-          "repeat": "{{GetCartItems}}",
-          "outputFields": [],
-          "exec": {
-            "steps": [
-              {
-                "name": "AddOrderDetails",
+            {
+                "name": "CartSumAmt",
+                "module": "dbupdater",
+                "action": "custom",
+                "options": {
+                    "connection": "ClientApp",
+                    "sql": {
+                        "query": "SELECT SUM(rc.total_price::float) as total_amt\nFROM r_cart rc\nWHERE rc.user_id = @user OR rc.ip_address = @ip",
+                        "params": [
+                            {
+                                "name": "@user",
+                                "value": "{{identity}}",
+                                "test": "1"
+                            },
+                            {
+                                "name": "@ip",
+                                "value": "{{$_SERVER.REMOTE_ADDR}}",
+                                "test": "::1"
+                            }
+                        ]
+                    }
+                },
+                "output": true,
+                "meta": [
+                    {
+                        "name": "total_amt",
+                        "type": "number"
+                    }
+                ],
+                "outputType": "array"
+            },
+            {
+                "name": "OtherCharges",
+                "module": "core",
+                "action": "setvalue",
+                "options": {
+                    "value": "{{((CartSumAmt[0].total_amt.toNumber()*6)/100)}}"
+                },
+                "meta": [],
+                "output": true,
+                "outputType": "text"
+            },
+            {
+                "name": "CountCode",
+                "module": "dbconnector",
+                "action": "single",
+                "options": {
+                    "connection": "ClientApp",
+                    "sql": {
+                        "type": "SELECT",
+                        "columns": [
+                            {
+                                "table": "promo_code",
+                                "column": "id"
+                            },
+                            {
+                                "table": "promo_code",
+                                "column": "promo_code"
+                            }
+                        ],
+                        "table": {
+                            "name": "promo_code"
+                        },
+                        "joins": [],
+                        "primary": "id",
+                        "query": "SELECT id, promo_code\nFROM promo_code\nWHERE auto_apply = :P1 /* {{'Yes'}} */ AND status = :P2 /* {{1}} */ AND start_date < :P3 /* {{NOW}} */ AND end_date >= :P4 /* {{NOW}} */ AND (user_id = :P5 /* {{identity}} */ OR allotted_for = :P6 /* {{'All'}} */)\nORDER BY id ASC",
+                        "params": [
+                            {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P1",
+                                "value": "{{'Yes'}}"
+                            },
+                            {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P2",
+                                "value": "{{1}}"
+                            },
+                            {
+                                "operator": "less",
+                                "type": "expression",
+                                "name": ":P3",
+                                "value": "{{NOW}}"
+                            },
+                            {
+                                "operator": "greater_or_equal",
+                                "type": "expression",
+                                "name": ":P4",
+                                "value": "{{NOW}}"
+                            },
+                            {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P5",
+                                "value": "{{identity}}"
+                            },
+                            {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P6",
+                                "value": "{{'All'}}"
+                            }
+                        ],
+                        "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                                {
+                                    "id": "promo_code.auto_apply",
+                                    "field": "promo_code.auto_apply",
+                                    "type": "string",
+                                    "operator": "equal",
+                                    "value": "{{'Yes'}}",
+                                    "data": {
+                                        "table": "promo_code",
+                                        "column": "auto_apply",
+                                        "type": "text",
+                                        "columnObj": {
+                                            "type": "string",
+                                            "maxLength": -5,
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "auto_apply"
+                                        }
+                                    },
+                                    "operation": "="
+                                },
+                                {
+                                    "id": "promo_code.status",
+                                    "field": "promo_code.status",
+                                    "type": "double",
+                                    "operator": "equal",
+                                    "value": "{{1}}",
+                                    "data": {
+                                        "table": "promo_code",
+                                        "column": "status",
+                                        "type": "number",
+                                        "columnObj": {
+                                            "type": "integer",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "status"
+                                        }
+                                    },
+                                    "operation": "="
+                                },
+                                {
+                                    "id": "promo_code.start_date",
+                                    "field": "promo_code.start_date",
+                                    "type": "datetime",
+                                    "operator": "less",
+                                    "value": "{{NOW}}",
+                                    "data": {
+                                        "table": "promo_code",
+                                        "column": "start_date",
+                                        "type": "datetime",
+                                        "columnObj": {
+                                            "type": "timestamp",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "start_date"
+                                        }
+                                    },
+                                    "operation": "<"
+                                },
+                                {
+                                    "id": "promo_code.end_date",
+                                    "field": "promo_code.end_date",
+                                    "type": "datetime",
+                                    "operator": "greater_or_equal",
+                                    "value": "{{NOW}}",
+                                    "data": {
+                                        "table": "promo_code",
+                                        "column": "end_date",
+                                        "type": "datetime",
+                                        "columnObj": {
+                                            "type": "timestamp",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "end_date"
+                                        }
+                                    },
+                                    "operation": ">="
+                                },
+                                {
+                                    "condition": "OR",
+                                    "rules": [
+                                        {
+                                            "id": "promo_code.user_id",
+                                            "field": "promo_code.user_id",
+                                            "type": "double",
+                                            "operator": "equal",
+                                            "value": "{{identity}}",
+                                            "data": {
+                                                "table": "promo_code",
+                                                "column": "user_id",
+                                                "type": "number",
+                                                "columnObj": {
+                                                    "type": "integer",
+                                                    "primary": false,
+                                                    "unique": false,
+                                                    "nullable": true,
+                                                    "name": "user_id"
+                                                }
+                                            },
+                                            "operation": "="
+                                        },
+                                        {
+                                            "id": "promo_code.allotted_for",
+                                            "field": "promo_code.allotted_for",
+                                            "type": "string",
+                                            "operator": "equal",
+                                            "value": "{{'All'}}",
+                                            "data": {
+                                                "table": "promo_code",
+                                                "column": "allotted_for",
+                                                "type": "text",
+                                                "columnObj": {
+                                                    "type": "string",
+                                                    "maxLength": -5,
+                                                    "primary": false,
+                                                    "unique": false,
+                                                    "nullable": true,
+                                                    "name": "allotted_for"
+                                                }
+                                            },
+                                            "operation": "="
+                                        }
+                                    ],
+                                    "conditional": null
+                                }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                        },
+                        "orders": [
+                            {
+                                "table": "promo_code",
+                                "column": "id",
+                                "direction": "ASC",
+                                "recid": 1
+                            }
+                        ]
+                    }
+                },
+                "output": false,
+                "meta": [
+                    {
+                        "type": "number",
+                        "name": "id"
+                    },
+                    {
+                        "type": "text",
+                        "name": "promo_code"
+                    }
+                ],
+                "outputType": "object"
+            },
+            {
+                "name": "GetNewUser",
+                "module": "dbconnector",
+                "action": "single",
+                "options": {
+                    "connection": "ClientApp",
+                    "sql": {
+                        "type": "SELECT",
+                        "columns": [
+                            {
+                                "table": "r_order",
+                                "column": "id",
+                                "alias": "CountNewCust",
+                                "aggregate": "COUNT"
+                            }
+                        ],
+                        "table": {
+                            "name": "r_order"
+                        },
+                        "primary": "id",
+                        "joins": [],
+                        "groupBy": [],
+                        "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                                {
+                                    "id": "r_order.user_id",
+                                    "field": "r_order.user_id",
+                                    "type": "double",
+                                    "operator": "equal",
+                                    "value": "{{identity}}",
+                                    "data": {
+                                        "table": "r_order",
+                                        "column": "user_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                            "type": "reference",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "referenceType": "integer",
+                                            "name": "user_id",
+                                            "references": "id",
+                                            "inTable": "m_customer",
+                                            "onUpdate": "NO ACTION",
+                                            "onDelete": "NO ACTION"
+                                        }
+                                    },
+                                    "operation": "="
+                                },
+                                {
+                                    "id": "r_order.applied_promo_id",
+                                    "field": "r_order.applied_promo_id",
+                                    "type": "double",
+                                    "operator": "equal",
+                                    "value": "{{CountCode.id}}",
+                                    "data": {
+                                        "table": "r_order",
+                                        "column": "applied_promo_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                            "type": "integer",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "applied_promo_id"
+                                        }
+                                    },
+                                    "operation": "="
+                                },
+                                {
+                                    "condition": "OR",
+                                    "rules": [
+                                        {
+                                            "id": "r_order.status",
+                                            "field": "r_order.status",
+                                            "type": "double",
+                                            "operator": "not_equal",
+                                            "value": "{{5}}",
+                                            "data": {
+                                                "table": "r_order",
+                                                "column": "status",
+                                                "type": "number",
+                                                "columnObj": {
+                                                    "type": "integer",
+                                                    "primary": false,
+                                                    "unique": false,
+                                                    "nullable": true,
+                                                    "name": "status"
+                                                }
+                                            },
+                                            "operation": "<>"
+                                        },
+                                        {
+                                            "id": "r_order.status",
+                                            "field": "r_order.status",
+                                            "type": "double",
+                                            "operator": "not_equal",
+                                            "value": "{{2}}",
+                                            "data": {
+                                                "table": "r_order",
+                                                "column": "status",
+                                                "type": "number",
+                                                "columnObj": {
+                                                    "type": "integer",
+                                                    "primary": false,
+                                                    "unique": false,
+                                                    "nullable": true,
+                                                    "name": "status"
+                                                }
+                                            },
+                                            "operation": "<>"
+                                        }
+                                    ],
+                                    "conditional": null
+                                }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                        },
+                        "query": "SELECT COUNT(id) AS CountNewCust\nFROM r_order\nWHERE user_id = :P1 /* {{identity}} */ AND applied_promo_id = :P2 /* {{CountCode.id}} */ AND (status <> :P3 /* {{5}} */ OR status <> :P4 /* {{2}} */)",
+                        "params": [
+                            {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P1",
+                                "value": "{{identity}}"
+                            },
+                            {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P2",
+                                "value": "{{CountCode.id}}"
+                            },
+                            {
+                                "operator": "not_equal",
+                                "type": "expression",
+                                "name": ":P3",
+                                "value": "{{5}}"
+                            },
+                            {
+                                "operator": "not_equal",
+                                "type": "expression",
+                                "name": ":P4",
+                                "value": "{{2}}"
+                            }
+                        ]
+                    }
+                },
+                "output": false,
+                "meta": [
+                    {
+                        "type": "number",
+                        "name": "CountNewCust"
+                    }
+                ],
+                "outputType": "object"
+            },
+            {
+                "name": "",
+                "module": "core",
+                "action": "condition",
+                "options": {
+                    "if": "{{GetNewUser.CountNewCust<1}}",
+                    "then": {
+                        "steps": [
+                            {
+                                "name": "Apply",
+                                "module": "core",
+                                "action": "setvalue",
+                                "options": {
+                                    "value": "Yes"
+                                },
+                                "meta": [],
+                                "output": true,
+                                "outputType": "text"
+                            },
+                            {
+                                "name": "NewUserCode",
+                                "module": "dbconnector",
+                                "action": "single",
+                                "options": {
+                                    "connection": "ClientApp",
+                                    "sql": {
+                                        "type": "SELECT",
+                                        "columns": [
+                                            {
+                                                "table": "promo_code",
+                                                "column": "id"
+                                            },
+                                            {
+                                                "table": "promo_code",
+                                                "column": "promo_name"
+                                            },
+                                            {
+                                                "table": "promo_code",
+                                                "column": "promo_code"
+                                            },
+                                            {
+                                                "table": "promo_code",
+                                                "column": "amt_or_percent"
+                                            },
+                                            {
+                                                "table": "promo_code",
+                                                "column": "promo_amt"
+                                            },
+                                            {
+                                                "table": "promo_code",
+                                                "column": "promo_per"
+                                            },
+                                            {
+                                                "table": "promo_code",
+                                                "column": "cashback_amt_or_per"
+                                            },
+                                            {
+                                                "table": "promo_code",
+                                                "column": "cashback_amt"
+                                            },
+                                            {
+                                                "table": "promo_code",
+                                                "column": "cashback_per"
+                                            }
+                                        ],
+                                        "table": {
+                                            "name": "promo_code"
+                                        },
+                                        "joins": [],
+                                        "primary": "id",
+                                        "query": "SELECT id, promo_name, promo_code, amt_or_percent, promo_amt, promo_per, cashback_amt_or_per, cashback_amt, cashback_per\nFROM promo_code\nWHERE auto_apply = :P1 /* {{'Yes'}} */ AND status = :P2 /* {{1}} */ AND start_date < :P3 /* {{NOW}} */ AND end_date >= :P4 /* {{NOW}} */ AND (user_id = :P5 /* {{identity}} */ OR allotted_for = :P6 /* {{'All'}} */)\nORDER BY id ASC",
+                                        "params": [
+                                            {
+                                                "operator": "equal",
+                                                "type": "expression",
+                                                "name": ":P1",
+                                                "value": "{{'Yes'}}"
+                                            },
+                                            {
+                                                "operator": "equal",
+                                                "type": "expression",
+                                                "name": ":P2",
+                                                "value": "{{1}}"
+                                            },
+                                            {
+                                                "operator": "less",
+                                                "type": "expression",
+                                                "name": ":P3",
+                                                "value": "{{NOW}}"
+                                            },
+                                            {
+                                                "operator": "greater_or_equal",
+                                                "type": "expression",
+                                                "name": ":P4",
+                                                "value": "{{NOW}}"
+                                            },
+                                            {
+                                                "operator": "equal",
+                                                "type": "expression",
+                                                "name": ":P5",
+                                                "value": "{{identity}}"
+                                            },
+                                            {
+                                                "operator": "equal",
+                                                "type": "expression",
+                                                "name": ":P6",
+                                                "value": "{{'All'}}"
+                                            }
+                                        ],
+                                        "wheres": {
+                                            "condition": "AND",
+                                            "rules": [
+                                                {
+                                                    "id": "promo_code.auto_apply",
+                                                    "field": "promo_code.auto_apply",
+                                                    "type": "string",
+                                                    "operator": "equal",
+                                                    "value": "{{'Yes'}}",
+                                                    "data": {
+                                                        "table": "promo_code",
+                                                        "column": "auto_apply",
+                                                        "type": "text",
+                                                        "columnObj": {
+                                                            "type": "string",
+                                                            "maxLength": -5,
+                                                            "primary": false,
+                                                            "unique": false,
+                                                            "nullable": true,
+                                                            "name": "auto_apply"
+                                                        }
+                                                    },
+                                                    "operation": "="
+                                                },
+                                                {
+                                                    "id": "promo_code.status",
+                                                    "field": "promo_code.status",
+                                                    "type": "double",
+                                                    "operator": "equal",
+                                                    "value": "{{1}}",
+                                                    "data": {
+                                                        "table": "promo_code",
+                                                        "column": "status",
+                                                        "type": "number",
+                                                        "columnObj": {
+                                                            "type": "integer",
+                                                            "primary": false,
+                                                            "unique": false,
+                                                            "nullable": true,
+                                                            "name": "status"
+                                                        }
+                                                    },
+                                                    "operation": "="
+                                                },
+                                                {
+                                                    "id": "promo_code.start_date",
+                                                    "field": "promo_code.start_date",
+                                                    "type": "datetime",
+                                                    "operator": "less",
+                                                    "value": "{{NOW}}",
+                                                    "data": {
+                                                        "table": "promo_code",
+                                                        "column": "start_date",
+                                                        "type": "datetime",
+                                                        "columnObj": {
+                                                            "type": "timestamp",
+                                                            "primary": false,
+                                                            "unique": false,
+                                                            "nullable": true,
+                                                            "name": "start_date"
+                                                        }
+                                                    },
+                                                    "operation": "<"
+                                                },
+                                                {
+                                                    "id": "promo_code.end_date",
+                                                    "field": "promo_code.end_date",
+                                                    "type": "datetime",
+                                                    "operator": "greater_or_equal",
+                                                    "value": "{{NOW}}",
+                                                    "data": {
+                                                        "table": "promo_code",
+                                                        "column": "end_date",
+                                                        "type": "datetime",
+                                                        "columnObj": {
+                                                            "type": "timestamp",
+                                                            "primary": false,
+                                                            "unique": false,
+                                                            "nullable": true,
+                                                            "name": "end_date"
+                                                        }
+                                                    },
+                                                    "operation": ">="
+                                                },
+                                                {
+                                                    "condition": "OR",
+                                                    "rules": [
+                                                        {
+                                                            "id": "promo_code.user_id",
+                                                            "field": "promo_code.user_id",
+                                                            "type": "double",
+                                                            "operator": "equal",
+                                                            "value": "{{identity}}",
+                                                            "data": {
+                                                                "table": "promo_code",
+                                                                "column": "user_id",
+                                                                "type": "number",
+                                                                "columnObj": {
+                                                                    "type": "integer",
+                                                                    "primary": false,
+                                                                    "unique": false,
+                                                                    "nullable": true,
+                                                                    "name": "user_id"
+                                                                }
+                                                            },
+                                                            "operation": "="
+                                                        },
+                                                        {
+                                                            "id": "promo_code.allotted_for",
+                                                            "field": "promo_code.allotted_for",
+                                                            "type": "string",
+                                                            "operator": "equal",
+                                                            "value": "{{'All'}}",
+                                                            "data": {
+                                                                "table": "promo_code",
+                                                                "column": "allotted_for",
+                                                                "type": "text",
+                                                                "columnObj": {
+                                                                    "type": "string",
+                                                                    "maxLength": -5,
+                                                                    "primary": false,
+                                                                    "unique": false,
+                                                                    "nullable": true,
+                                                                    "name": "allotted_for"
+                                                                }
+                                                            },
+                                                            "operation": "="
+                                                        }
+                                                    ],
+                                                    "conditional": null
+                                                }
+                                            ],
+                                            "conditional": null,
+                                            "valid": true
+                                        },
+                                        "orders": [
+                                            {
+                                                "table": "promo_code",
+                                                "column": "id",
+                                                "direction": "ASC"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "output": true,
+                                "meta": [
+                                    {
+                                        "type": "number",
+                                        "name": "id"
+                                    },
+                                    {
+                                        "type": "text",
+                                        "name": "promo_name"
+                                    },
+                                    {
+                                        "type": "text",
+                                        "name": "promo_code"
+                                    },
+                                    {
+                                        "type": "text",
+                                        "name": "amt_or_percent"
+                                    },
+                                    {
+                                        "type": "text",
+                                        "name": "promo_amt"
+                                    },
+                                    {
+                                        "type": "text",
+                                        "name": "promo_per"
+                                    },
+                                    {
+                                        "type": "text",
+                                        "name": "cashback_amt_or_per"
+                                    },
+                                    {
+                                        "type": "text",
+                                        "name": "cashback_amt"
+                                    },
+                                    {
+                                        "type": "text",
+                                        "name": "cashback_per"
+                                    }
+                                ],
+                                "outputType": "object"
+                            },
+                            {
+                                "name": "InstantDiscount",
+                                "module": "core",
+                                "action": "setvalue",
+                                "options": {
+                                    "value": "{{((NewUserCode.amt_or_percent=='PER')?((CartSumAmt[0].total_amt.toNumber()*NewUserCode.promo_per.toNumber())/100):(NewUserCode.amt_or_percent=='AMT')?NewUserCode.promo_amt.toNumber():0)}}"
+                                },
+                                "meta": [],
+                                "output": true,
+                                "outputType": "text"
+                            },
+                            {
+                                "name": "WalletCashback",
+                                "module": "core",
+                                "action": "setvalue",
+                                "options": {
+                                    "value": "{{((NewUserCode.cashback_amt_or_per=='PER')?((CartSumAmt[0].total_amt.toNumber()*NewUserCode.cashback_per.toNumber())/100):(NewUserCode.cashback_amt_or_per=='AMT')?NewUserCode.cashback_amt.toNumber():0)}}"
+                                },
+                                "meta": [],
+                                "output": true,
+                                "outputType": "text"
+                            }
+                        ]
+                    },
+                    "else": {
+                        "steps": [
+                            {
+                                "name": "Apply",
+                                "module": "core",
+                                "action": "setvalue",
+                                "options": {
+                                    "value": "No"
+                                },
+                                "meta": [],
+                                "output": true,
+                                "outputType": "text"
+                            },
+                            {
+                                "name": "InstantDiscount",
+                                "module": "core",
+                                "action": "setvalue",
+                                "options": {
+                                    "value": "0\n"
+                                },
+                                "meta": [],
+                                "output": true,
+                                "outputType": "text"
+                            },
+                            {
+                                "name": "WalletCashback",
+                                "module": "core",
+                                "action": "setvalue",
+                                "options": {
+                                    "value": "0\n"
+                                },
+                                "meta": [],
+                                "output": true,
+                                "outputType": "text"
+                            }
+                        ]
+                    }
+                },
+                "outputType": "boolean"
+            },
+            {
+                "name": "GetCartItems",
+                "module": "dbconnector",
+                "action": "select",
+                "options": {
+                    "connection": "ClientApp",
+                    "sql": {
+                        "type": "SELECT",
+                        "columns": [
+                            {
+                                "table": "r_cart",
+                                "column": "id"
+                            },
+                            {
+                                "table": "r_cart",
+                                "column": "prod_id"
+                            },
+                            {
+                                "table": "r_cart",
+                                "column": "price_id"
+                            },
+                            {
+                                "table": "r_cart",
+                                "column": "user_id"
+                            },
+                            {
+                                "table": "r_cart",
+                                "column": "prod_unit_price"
+                            },
+                            {
+                                "table": "r_cart",
+                                "column": "prod_qty"
+                            },
+                            {
+                                "table": "r_cart",
+                                "column": "total_price"
+                            },
+                            {
+                                "table": "r_cart",
+                                "column": "cart_mrp"
+                            },
+                            {
+                                "table": "r_cart",
+                                "column": "cart_purchase"
+                            }
+                        ],
+                        "table": {
+                            "name": "r_cart"
+                        },
+                        "primary": "id",
+                        "joins": [],
+                        "wheres": {
+                            "condition": "OR",
+                            "rules": [
+                                {
+                                    "id": "r_cart.user_id",
+                                    "field": "r_cart.user_id",
+                                    "type": "double",
+                                    "operator": "equal",
+                                    "value": "{{identity}}",
+                                    "data": {
+                                        "table": "r_cart",
+                                        "column": "user_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                            "type": "reference",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "references": "id",
+                                            "inTable": "m_customer",
+                                            "referenceType": "integer",
+                                            "onUpdate": "NO ACTION",
+                                            "onDelete": "NO ACTION",
+                                            "name": "user_id"
+                                        }
+                                    },
+                                    "operation": "="
+                                },
+                                {
+                                    "id": "r_cart.ip_address",
+                                    "field": "r_cart.ip_address",
+                                    "type": "string",
+                                    "operator": "equal",
+                                    "value": "{{$_SERVER.REMOTE_ADDR}}",
+                                    "data": {
+                                        "table": "r_cart",
+                                        "column": "ip_address",
+                                        "type": "text",
+                                        "columnObj": {
+                                            "type": "string",
+                                            "maxLength": -5,
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "ip_address"
+                                        }
+                                    },
+                                    "operation": "="
+                                }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                        },
+                        "query": "SELECT id, prod_id, price_id, user_id, prod_unit_price, prod_qty, total_price, cart_mrp, cart_purchase\nFROM r_cart\nWHERE user_id = :P1 /* {{identity}} */ OR ip_address = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
+                        "params": [
+                            {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P1",
+                                "value": "{{identity}}"
+                            },
+                            {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P2",
+                                "value": "{{$_SERVER.REMOTE_ADDR}}"
+                            }
+                        ]
+                    }
+                },
+                "output": false,
+                "meta": [
+                    {
+                        "type": "number",
+                        "name": "id"
+                    },
+                    {
+                        "type": "number",
+                        "name": "prod_id"
+                    },
+                    {
+                        "type": "number",
+                        "name": "price_id"
+                    },
+                    {
+                        "type": "number",
+                        "name": "user_id"
+                    },
+                    {
+                        "type": "text",
+                        "name": "prod_unit_price"
+                    },
+                    {
+                        "type": "text",
+                        "name": "prod_qty"
+                    },
+                    {
+                        "type": "text",
+                        "name": "total_price"
+                    },
+                    {
+                        "type": "text",
+                        "name": "cart_mrp"
+                    },
+                    {
+                        "type": "text",
+                        "name": "cart_purchase"
+                    }
+                ],
+                "outputType": "array"
+            },
+            {
+                "name": "WalletNetAmt",
+                "module": "core",
+                "action": "setvalue",
+                "options": {
+                    "value": "{{$_POST.inp_wallet_amt.toNumber()+GetUserDetails.wallet_bal.toNumber()}}"
+                },
+                "meta": [],
+                "outputType": "text"
+            },
+            {
+                "name": "UpCustomer",
+                "module": "dbupdater",
+                "action": "update",
+                "options": {
+                    "connection": "ClientApp",
+                    "sql": {
+                        "type": "update",
+                        "values": [
+                            {
+                                "table": "m_customer",
+                                "column": "wallet_bal",
+                                "type": "text",
+                                "value": "{{WalletNetAmt}}"
+                            }
+                        ],
+                        "table": "m_customer",
+                        "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                                {
+                                    "id": "id",
+                                    "field": "id",
+                                    "type": "double",
+                                    "operator": "equal",
+                                    "value": "{{identity}}",
+                                    "data": {
+                                        "column": "id"
+                                    },
+                                    "operation": "="
+                                }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                        },
+                        "returning": "id",
+                        "query": "UPDATE m_customer\nSET wallet_bal = :P1 /* {{WalletNetAmt}} */\nWHERE id = :P2 /* {{identity}} */",
+                        "params": [
+                            {
+                                "name": ":P1",
+                                "type": "expression",
+                                "value": "{{WalletNetAmt}}"
+                            },
+                            {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P2",
+                                "value": "{{identity}}"
+                            }
+                        ]
+                    }
+                },
+                "meta": [
+                    {
+                        "name": "affected",
+                        "type": "number"
+                    }
+                ]
+            },
+            {
+                "name": "AddOrder",
                 "module": "dbupdater",
                 "action": "insert",
                 "options": {
-                  "connection": "ClientApp",
-                  "sql": {
-                    "type": "insert",
-                    "values": [
-                      {
-                        "table": "r_order_details",
-                        "column": "order_table_id",
-                        "type": "number",
-                        "value": "{{AddOrder.identity}}"
-                      },
-                      {
-                        "table": "r_order_details",
-                        "column": "prod_id",
-                        "type": "number",
-                        "value": "{{GetCartItems[$index].prod_id}}"
-                      },
-                      {
-                        "table": "r_order_details",
-                        "column": "price_id",
-                        "type": "number",
-                        "value": "{{GetCartItems[$index].price_id}}"
-                      },
-                      {
-                        "table": "r_order_details",
-                        "column": "cart_id",
-                        "type": "number",
-                        "value": "{{GetCartItems[$index].id}}"
-                      },
-                      {
-                        "table": "r_order_details",
-                        "column": "user_id",
-                        "type": "number",
-                        "value": "{{identity}}"
-                      },
-                      {
-                        "table": "r_order_details",
-                        "column": "prod_qty",
-                        "type": "text",
-                        "value": "{{GetCartItems[$index].prod_qty}}"
-                      },
-                      {
-                        "table": "r_order_details",
-                        "column": "each_unit_price",
-                        "type": "text",
-                        "value": "{{GetCartItems[$index].prod_unit_price}}"
-                      },
-                      {
-                        "table": "r_order_details",
-                        "column": "each_net_amt",
-                        "type": "text",
-                        "value": "{{GetCartItems[$index].total_price}}"
-                      },
-                      {
-                        "table": "r_order_details",
-                        "column": "order_status",
-                        "type": "number",
-                        "value": "{{1}}"
-                      },
-                      {
-                        "table": "r_order_details",
-                        "column": "created_by",
-                        "type": "number",
-                        "value": "{{identity}}"
-                      },
-                      {
-                        "table": "r_order_details",
-                        "column": "created_on",
-                        "type": "datetime",
-                        "value": "{{NOW}}"
-                      },
-                      {
-                        "table": "r_order_details",
-                        "column": "purchase_price",
-                        "type": "text",
-                        "value": "{{GetCartItems[$index].cart_purchase}}"
-                      }
-                    ],
-                    "table": "r_order_details",
-                    "returning": "id",
-                    "query": "INSERT INTO r_order_details\n(order_table_id, prod_id, price_id, cart_id, user_id, prod_qty, each_unit_price, each_net_amt, order_status, created_by, created_on, purchase_price) VALUES (:P1 /* {{AddOrder.identity}} */, :P2 /* {{GetCartItems[$index].prod_id}} */, :P3 /* {{GetCartItems[$index].price_id}} */, :P4 /* {{GetCartItems[$index].id}} */, :P5 /* {{identity}} */, :P6 /* {{GetCartItems[$index].prod_qty}} */, :P7 /* {{GetCartItems[$index].prod_unit_price}} */, :P8 /* {{GetCartItems[$index].total_price}} */, :P9 /* {{1}} */, :P10 /* {{identity}} */, :P11 /* {{NOW}} */, :P12 /* {{GetCartItems[$index].cart_purchase}} */)",
-                    "params": [
-                      {
-                        "name": ":P1",
-                        "type": "expression",
-                        "value": "{{AddOrder.identity}}"
-                      },
-                      {
-                        "name": ":P2",
-                        "type": "expression",
-                        "value": "{{GetCartItems[$index].prod_id}}"
-                      },
-                      {
-                        "name": ":P3",
-                        "type": "expression",
-                        "value": "{{GetCartItems[$index].price_id}}"
-                      },
-                      {
-                        "name": ":P4",
-                        "type": "expression",
-                        "value": "{{GetCartItems[$index].id}}"
-                      },
-                      {
-                        "name": ":P5",
-                        "type": "expression",
-                        "value": "{{identity}}"
-                      },
-                      {
-                        "name": ":P6",
-                        "type": "expression",
-                        "value": "{{GetCartItems[$index].prod_qty}}"
-                      },
-                      {
-                        "name": ":P7",
-                        "type": "expression",
-                        "value": "{{GetCartItems[$index].prod_unit_price}}"
-                      },
-                      {
-                        "name": ":P8",
-                        "type": "expression",
-                        "value": "{{GetCartItems[$index].total_price}}"
-                      },
-                      {
-                        "name": ":P9",
-                        "type": "expression",
-                        "value": "{{1}}"
-                      },
-                      {
-                        "name": ":P10",
-                        "type": "expression",
-                        "value": "{{identity}}"
-                      },
-                      {
-                        "name": ":P11",
-                        "type": "expression",
-                        "value": "{{NOW}}"
-                      },
-                      {
-                        "name": ":P12",
-                        "type": "expression",
-                        "value": "{{GetCartItems[$index].cart_purchase}}"
-                      }
-                    ]
-                  }
+                    "connection": "ClientApp",
+                    "sql": {
+                        "type": "insert",
+                        "values": [
+                            {
+                                "table": "r_order",
+                                "column": "order_id",
+                                "type": "text",
+                                "value": "{{OrderId}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "user_id",
+                                "type": "number",
+                                "value": "{{identity}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "total_amt",
+                                "type": "text",
+                                "value": "{{$_POST.inp_product_total_amt}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "discount",
+                                "type": "text",
+                                "value": "{{$_POST.inp_PromoCodeAmt}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "delevery_amt",
+                                "type": "text",
+                                "value": "{{$_POST.inp_shipping_charge}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "user_name",
+                                "type": "text",
+                                "value": "{{GetUserDetails.fname+' '+GetUserDetails.lname}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "address",
+                                "type": "text",
+                                "value": "{{GetUserDetails.address}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "mobile",
+                                "type": "text",
+                                "value": "{{GetUserDetails.mobile}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "whatsapp",
+                                "type": "text",
+                                "value": "{{GetUserDetails.watsapp_no}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "pin",
+                                "type": "text",
+                                "value": "{{GetUserDetails.pin}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "ps",
+                                "type": "text",
+                                "value": "{{GetUserDetails.ps}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "dist",
+                                "type": "text",
+                                "value": "{{GetUserDetails.district}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "state",
+                                "type": "text",
+                                "value": "{{GetUserDetails.state}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "country",
+                                "type": "text",
+                                "value": "{{GetUserDetails.country}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "wallet_bal",
+                                "type": "text",
+                                "value": "{{$_POST.inp_wallet_amt}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "created_by",
+                                "type": "number",
+                                "value": "{{identity}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "created_on",
+                                "type": "datetime",
+                                "value": "{{NOW}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "status",
+                                "type": "number",
+                                "value": "{{1}}"
+                            },
+                            {
+                                "table": "r_order",
+                                "column": "payment_status",
+                                "type": "text",
+                                "value": "{{'COD'}}"
+                            }
+                        ],
+                        "table": "r_order",
+                        "returning": "id",
+                        "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, wallet_bal, created_by, created_on, status, payment_status) VALUES (:P1 /* {{OrderId}} */, :P2 /* {{identity}} */, :P3 /* {{$_POST.inp_product_total_amt}} */, :P4 /* {{$_POST.inp_PromoCodeAmt}} */, :P5 /* {{$_POST.inp_shipping_charge}} */, :P6 /* {{GetUserDetails.fname+' '+GetUserDetails.lname}} */, :P7 /* {{GetUserDetails.address}} */, :P8 /* {{GetUserDetails.mobile}} */, :P9 /* {{GetUserDetails.watsapp_no}} */, :P10 /* {{GetUserDetails.pin}} */, :P11 /* {{GetUserDetails.ps}} */, :P12 /* {{GetUserDetails.district}} */, :P13 /* {{GetUserDetails.state}} */, :P14 /* {{GetUserDetails.country}} */, :P15 /* {{$_POST.inp_wallet_amt}} */, :P16 /* {{identity}} */, :P17 /* {{NOW}} */, :P18 /* {{1}} */, :P19 /* {{'COD'}} */)",
+                        "params": [
+                            {
+                                "name": ":P1",
+                                "type": "expression",
+                                "value": "{{OrderId}}"
+                            },
+                            {
+                                "name": ":P2",
+                                "type": "expression",
+                                "value": "{{identity}}"
+                            },
+                            {
+                                "name": ":P3",
+                                "type": "expression",
+                                "value": "{{$_POST.inp_product_total_amt}}"
+                            },
+                            {
+                                "name": ":P4",
+                                "type": "expression",
+                                "value": "{{$_POST.inp_PromoCodeAmt}}"
+                            },
+                            {
+                                "name": ":P5",
+                                "type": "expression",
+                                "value": "{{$_POST.inp_shipping_charge}}"
+                            },
+                            {
+                                "name": ":P6",
+                                "type": "expression",
+                                "value": "{{GetUserDetails.fname+' '+GetUserDetails.lname}}"
+                            },
+                            {
+                                "name": ":P7",
+                                "type": "expression",
+                                "value": "{{GetUserDetails.address}}"
+                            },
+                            {
+                                "name": ":P8",
+                                "type": "expression",
+                                "value": "{{GetUserDetails.mobile}}"
+                            },
+                            {
+                                "name": ":P9",
+                                "type": "expression",
+                                "value": "{{GetUserDetails.watsapp_no}}"
+                            },
+                            {
+                                "name": ":P10",
+                                "type": "expression",
+                                "value": "{{GetUserDetails.pin}}"
+                            },
+                            {
+                                "name": ":P11",
+                                "type": "expression",
+                                "value": "{{GetUserDetails.ps}}"
+                            },
+                            {
+                                "name": ":P12",
+                                "type": "expression",
+                                "value": "{{GetUserDetails.district}}"
+                            },
+                            {
+                                "name": ":P13",
+                                "type": "expression",
+                                "value": "{{GetUserDetails.state}}"
+                            },
+                            {
+                                "name": ":P14",
+                                "type": "expression",
+                                "value": "{{GetUserDetails.country}}"
+                            },
+                            {
+                                "name": ":P15",
+                                "type": "expression",
+                                "value": "{{$_POST.inp_wallet_amt}}"
+                            },
+                            {
+                                "name": ":P16",
+                                "type": "expression",
+                                "value": "{{identity}}"
+                            },
+                            {
+                                "name": ":P17",
+                                "type": "expression",
+                                "value": "{{NOW}}"
+                            },
+                            {
+                                "name": ":P18",
+                                "type": "expression",
+                                "value": "{{1}}"
+                            },
+                            {
+                                "name": ":P19",
+                                "type": "expression",
+                                "value": "{{'COD'}}"
+                            }
+                        ]
+                    }
                 },
                 "meta": [
-                  {
-                    "name": "identity",
-                    "type": "text"
-                  },
-                  {
-                    "name": "affected",
-                    "type": "number"
-                  }
-                ],
-                "output": false
-              },
-              {
-                "name": "delete",
-                "module": "dbupdater",
-                "action": "delete",
-                "options": {
-                  "connection": "ClientApp",
-                  "sql": {
-                    "type": "delete",
-                    "table": "r_cart",
-                    "wheres": {
-                      "condition": "OR",
-                      "rules": [
-                        {
-                          "id": "user_id",
-                          "field": "user_id",
-                          "type": "double",
-                          "operator": "equal",
-                          "value": "{{identity}}",
-                          "data": {
-                            "column": "user_id"
-                          },
-                          "operation": "="
-                        },
-                        {
-                          "id": "ip_address",
-                          "field": "ip_address",
-                          "type": "string",
-                          "operator": "equal",
-                          "value": "{{$_SERVER.REMOTE_ADDR}}",
-                          "data": {
-                            "column": "ip_address"
-                          },
-                          "operation": "="
-                        }
-                      ],
-                      "conditional": null,
-                      "valid": true
+                    {
+                        "name": "identity",
+                        "type": "text"
                     },
-                    "returning": "id",
-                    "query": "DELETE\nFROM r_cart\nWHERE user_id = :P1 /* {{identity}} */ OR ip_address = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
-                    "params": [
-                      {
-                        "operator": "equal",
-                        "type": "expression",
-                        "name": ":P1",
-                        "value": "{{identity}}"
-                      },
-                      {
-                        "operator": "equal",
-                        "type": "expression",
-                        "name": ":P2",
-                        "value": "{{$_SERVER.REMOTE_ADDR}}"
-                      }
-                    ]
-                  }
-                },
-                "meta": [
-                  {
-                    "name": "affected",
-                    "type": "number"
-                  }
+                    {
+                        "name": "affected",
+                        "type": "number"
+                    }
                 ]
-              }
-            ]
-          }
-        },
-        "output": false,
-        "meta": [
-          {
-            "name": "$index",
-            "type": "number"
-          },
-          {
-            "name": "$number",
-            "type": "number"
-          },
-          {
-            "name": "$name",
-            "type": "text"
-          },
-          {
-            "name": "$value",
-            "type": "object"
-          },
-          {
-            "name": "id",
-            "type": "number"
-          },
-          {
-            "name": "prod_id",
-            "type": "number"
-          },
-          {
-            "name": "price_id",
-            "type": "number"
-          },
-          {
-            "name": "user_id",
-            "type": "number"
-          },
-          {
-            "name": "prod_unit_price",
-            "type": "text"
-          },
-          {
-            "name": "prod_qty",
-            "type": "text"
-          },
-          {
-            "name": "total_price",
-            "type": "text"
-          },
-          {
-            "name": "cart_mrp",
-            "type": "text"
-          },
-          {
-            "name": "cart_purchase",
-            "type": "text"
-          }
-        ],
-        "outputType": "array"
-      }
-    ]
-  }
+            },
+            {
+                "name": "repeat",
+                "module": "core",
+                "action": "repeat",
+                "options": {
+                    "repeat": "{{GetCartItems}}",
+                    "outputFields": [],
+                    "exec": {
+                        "steps": [
+                            {
+                                "name": "AddOrderDetails",
+                                "module": "dbupdater",
+                                "action": "insert",
+                                "options": {
+                                    "connection": "ClientApp",
+                                    "sql": {
+                                        "type": "insert",
+                                        "values": [
+                                            {
+                                                "table": "r_order_details",
+                                                "column": "order_table_id",
+                                                "type": "number",
+                                                "value": "{{AddOrder.identity}}"
+                                            },
+                                            {
+                                                "table": "r_order_details",
+                                                "column": "prod_id",
+                                                "type": "number",
+                                                "value": "{{GetCartItems[$index].prod_id}}"
+                                            },
+                                            {
+                                                "table": "r_order_details",
+                                                "column": "price_id",
+                                                "type": "number",
+                                                "value": "{{GetCartItems[$index].price_id}}"
+                                            },
+                                            {
+                                                "table": "r_order_details",
+                                                "column": "cart_id",
+                                                "type": "number",
+                                                "value": "{{GetCartItems[$index].id}}"
+                                            },
+                                            {
+                                                "table": "r_order_details",
+                                                "column": "user_id",
+                                                "type": "number",
+                                                "value": "{{identity}}"
+                                            },
+                                            {
+                                                "table": "r_order_details",
+                                                "column": "prod_qty",
+                                                "type": "text",
+                                                "value": "{{GetCartItems[$index].prod_qty}}"
+                                            },
+                                            {
+                                                "table": "r_order_details",
+                                                "column": "each_unit_price",
+                                                "type": "text",
+                                                "value": "{{GetCartItems[$index].prod_unit_price}}"
+                                            },
+                                            {
+                                                "table": "r_order_details",
+                                                "column": "each_net_amt",
+                                                "type": "text",
+                                                "value": "{{GetCartItems[$index].total_price}}"
+                                            },
+                                            {
+                                                "table": "r_order_details",
+                                                "column": "order_status",
+                                                "type": "number",
+                                                "value": "{{1}}"
+                                            },
+                                            {
+                                                "table": "r_order_details",
+                                                "column": "created_by",
+                                                "type": "number",
+                                                "value": "{{identity}}"
+                                            },
+                                            {
+                                                "table": "r_order_details",
+                                                "column": "created_on",
+                                                "type": "datetime",
+                                                "value": "{{NOW}}"
+                                            },
+                                            {
+                                                "table": "r_order_details",
+                                                "column": "purchase_price",
+                                                "type": "text",
+                                                "value": "{{GetCartItems[$index].cart_purchase}}"
+                                            }
+                                        ],
+                                        "table": "r_order_details",
+                                        "returning": "id",
+                                        "query": "INSERT INTO r_order_details\n(order_table_id, prod_id, price_id, cart_id, user_id, prod_qty, each_unit_price, each_net_amt, order_status, created_by, created_on, purchase_price) VALUES (:P1 /* {{AddOrder.identity}} */, :P2 /* {{GetCartItems[$index].prod_id}} */, :P3 /* {{GetCartItems[$index].price_id}} */, :P4 /* {{GetCartItems[$index].id}} */, :P5 /* {{identity}} */, :P6 /* {{GetCartItems[$index].prod_qty}} */, :P7 /* {{GetCartItems[$index].prod_unit_price}} */, :P8 /* {{GetCartItems[$index].total_price}} */, :P9 /* {{1}} */, :P10 /* {{identity}} */, :P11 /* {{NOW}} */, :P12 /* {{GetCartItems[$index].cart_purchase}} */)",
+                                        "params": [
+                                            {
+                                                "name": ":P1",
+                                                "type": "expression",
+                                                "value": "{{AddOrder.identity}}"
+                                            },
+                                            {
+                                                "name": ":P2",
+                                                "type": "expression",
+                                                "value": "{{GetCartItems[$index].prod_id}}"
+                                            },
+                                            {
+                                                "name": ":P3",
+                                                "type": "expression",
+                                                "value": "{{GetCartItems[$index].price_id}}"
+                                            },
+                                            {
+                                                "name": ":P4",
+                                                "type": "expression",
+                                                "value": "{{GetCartItems[$index].id}}"
+                                            },
+                                            {
+                                                "name": ":P5",
+                                                "type": "expression",
+                                                "value": "{{identity}}"
+                                            },
+                                            {
+                                                "name": ":P6",
+                                                "type": "expression",
+                                                "value": "{{GetCartItems[$index].prod_qty}}"
+                                            },
+                                            {
+                                                "name": ":P7",
+                                                "type": "expression",
+                                                "value": "{{GetCartItems[$index].prod_unit_price}}"
+                                            },
+                                            {
+                                                "name": ":P8",
+                                                "type": "expression",
+                                                "value": "{{GetCartItems[$index].total_price}}"
+                                            },
+                                            {
+                                                "name": ":P9",
+                                                "type": "expression",
+                                                "value": "{{1}}"
+                                            },
+                                            {
+                                                "name": ":P10",
+                                                "type": "expression",
+                                                "value": "{{identity}}"
+                                            },
+                                            {
+                                                "name": ":P11",
+                                                "type": "expression",
+                                                "value": "{{NOW}}"
+                                            },
+                                            {
+                                                "name": ":P12",
+                                                "type": "expression",
+                                                "value": "{{GetCartItems[$index].cart_purchase}}"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "meta": [
+                                    {
+                                        "name": "identity",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "name": "affected",
+                                        "type": "number"
+                                    }
+                                ],
+                                "output": false
+                            },
+                            {
+                                "name": "delete",
+                                "module": "dbupdater",
+                                "action": "delete",
+                                "options": {
+                                    "connection": "ClientApp",
+                                    "sql": {
+                                        "type": "delete",
+                                        "table": "r_cart",
+                                        "wheres": {
+                                            "condition": "OR",
+                                            "rules": [
+                                                {
+                                                    "id": "user_id",
+                                                    "field": "user_id",
+                                                    "type": "double",
+                                                    "operator": "equal",
+                                                    "value": "{{identity}}",
+                                                    "data": {
+                                                        "column": "user_id"
+                                                    },
+                                                    "operation": "="
+                                                },
+                                                {
+                                                    "id": "ip_address",
+                                                    "field": "ip_address",
+                                                    "type": "string",
+                                                    "operator": "equal",
+                                                    "value": "{{$_SERVER.REMOTE_ADDR}}",
+                                                    "data": {
+                                                        "column": "ip_address"
+                                                    },
+                                                    "operation": "="
+                                                }
+                                            ],
+                                            "conditional": null,
+                                            "valid": true
+                                        },
+                                        "returning": "id",
+                                        "query": "DELETE\nFROM r_cart\nWHERE user_id = :P1 /* {{identity}} */ OR ip_address = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
+                                        "params": [
+                                            {
+                                                "operator": "equal",
+                                                "type": "expression",
+                                                "name": ":P1",
+                                                "value": "{{identity}}"
+                                            },
+                                            {
+                                                "operator": "equal",
+                                                "type": "expression",
+                                                "name": ":P2",
+                                                "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "meta": [
+                                    {
+                                        "name": "affected",
+                                        "type": "number"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "output": false,
+                "meta": [
+                    {
+                        "name": "$index",
+                        "type": "number"
+                    },
+                    {
+                        "name": "$number",
+                        "type": "number"
+                    },
+                    {
+                        "name": "$name",
+                        "type": "text"
+                    },
+                    {
+                        "name": "$value",
+                        "type": "object"
+                    },
+                    {
+                        "name": "id",
+                        "type": "number"
+                    },
+                    {
+                        "name": "prod_id",
+                        "type": "number"
+                    },
+                    {
+                        "name": "price_id",
+                        "type": "number"
+                    },
+                    {
+                        "name": "user_id",
+                        "type": "number"
+                    },
+                    {
+                        "name": "prod_unit_price",
+                        "type": "text"
+                    },
+                    {
+                        "name": "prod_qty",
+                        "type": "text"
+                    },
+                    {
+                        "name": "total_price",
+                        "type": "text"
+                    },
+                    {
+                        "name": "cart_mrp",
+                        "type": "text"
+                    },
+                    {
+                        "name": "cart_purchase",
+                        "type": "text"
+                    }
+                ],
+                "outputType": "array"
+            }
+        ]
+    }
 }

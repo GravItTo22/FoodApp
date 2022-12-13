@@ -610,7 +610,8 @@
                                   "name": "affected",
                                   "type": "number"
                                 }
-                              ]
+                              ],
+                              "output": true
                             },
                             {
                               "name": "AddOrder",

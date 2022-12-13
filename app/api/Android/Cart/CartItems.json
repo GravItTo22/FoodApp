@@ -267,6 +267,17 @@
                                     "output": true
                                   },
                                   {
+                                    "name": "ShippingCharge",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": 50
+                                    },
+                                    "meta": [],
+                                    "outputType": "text",
+                                    "output": true
+                                  },
+                                  {
                                     "name": "CalculateDistance",
                                     "module": "dbupdater",
                                     "action": "custom",

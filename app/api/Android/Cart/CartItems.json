@@ -316,7 +316,8 @@
                                         "type": "number"
                                       }
                                     ],
-                                    "outputType": "array"
+                                    "outputType": "array",
+                                    "disabled": true
                                   },
                                   {
                                     "name": "",
@@ -421,7 +422,8 @@
                                         ]
                                       }
                                     },
-                                    "outputType": "boolean"
+                                    "outputType": "boolean",
+                                    "disabled": true
                                   },
                                   {
                                     "name": "",

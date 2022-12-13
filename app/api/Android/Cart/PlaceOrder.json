@@ -1743,6 +1743,28 @@
                                       ]
                                     },
                                     {
+                                      "name": "status",
+                                      "module": "core",
+                                      "action": "setvalue",
+                                      "options": {
+                                        "value": 200
+                                      },
+                                      "meta": [],
+                                      "output": true,
+                                      "outputType": "text"
+                                    },
+                                    {
+                                      "name": "message",
+                                      "module": "core",
+                                      "action": "setvalue",
+                                      "options": {
+                                        "value": "Order Placed Successfully"
+                                      },
+                                      "meta": [],
+                                      "output": true,
+                                      "outputType": "text"
+                                    },
+                                    {
                                       "name": "repeat",
                                       "module": "core",
                                       "action": "repeat",

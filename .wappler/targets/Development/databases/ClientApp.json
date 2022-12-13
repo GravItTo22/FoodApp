@@ -2374,6 +2374,33 @@
               "unique": false,
               "nullable": true
             }
+          },
+          "wallet_cashback_amt": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "wallet_deduct_amt": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "wallet_closing_amt": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
           }
         }
       },
@@ -4027,6 +4054,11 @@
               "nullable": true
             }
           }
+        }
+      },
+      "wallet_transactions": {
+        "db": {
+          "schema": "public"
         }
       }
     },

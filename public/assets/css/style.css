@@ -2298,8 +2298,8 @@ ol {
 .checkout__form h4 {
 	color: #1c1c1c;
 	font-weight: 700;
-	border-bottom: 1px solid #e1e1e1;
-	padding-bottom: 20px;
+	border-bottom: 0px solid #e1e1e1;
+	/* padding-bottom: 20px; */
 	margin-bottom: 25px;
 }
 
@@ -2428,8 +2428,8 @@ color: #fff;
 .checkout__order h4 {
 	color: #1c1c1c;
 	font-weight: 700;
-	border-bottom: 1px solid #e1e1e1;
-	padding-bottom: 20px;
+	border-bottom: 0px solid #e1e1e1;
+	/* padding-bottom: 20px; */
 	margin-bottom: 20px;
 }
 
@@ -3882,9 +3882,9 @@ color: #fff;
 	-webkit-transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
 	transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
   }
-  input[type="radio"]{
+  /* input[type="radio"]{
 	display: none;
-  }
+  } */
   #signup:checked ~ .slider-tab{
 	left: 50%;
   }

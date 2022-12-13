@@ -256,6 +256,17 @@
                                     "outputType": "array"
                                   },
                                   {
+                                    "name": "OtherCharges",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": "{{((CartSumAmt[0].total_amt.toNumber()*6)/100)}}"
+                                    },
+                                    "meta": [],
+                                    "outputType": "text",
+                                    "output": true
+                                  },
+                                  {
                                     "name": "CalculateDistance",
                                     "module": "dbupdater",
                                     "action": "custom",

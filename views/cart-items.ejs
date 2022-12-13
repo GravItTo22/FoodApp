@@ -139,7 +139,7 @@
                 <hr dmx-show="content.scUseWallet.data.status == 200" dmx-hide="content.scUseWallet.data.status == 400" />
                 <div class="total-amt d-flex justify-content-between font-weight-bold">
                     <p>Grand Total Amount</p>
-                    <p><i class=" fa fa-rupee"></i><span id="total_cart_amt">{{(inp_product_total_amt.value.toNumber()+inp_shipping_charge.value.toNumber()+inp_other_charge.value.toNumber())-inp_instant_discount.value.toNumber()}}</span></p>
+                    <p><i class=" fa fa-rupee"></i><span id="total_cart_amt">{{((inp_product_total_amt.value.toNumber()+inp_shipping_charge.value.toNumber()+inp_other_charge.value.toNumber())-inp_instant_discount.value.toNumber()).toFixed(2)}}</span></p>
                 </div>
                 <div class="d-flex justify-content-between font-weight-bold" dmx-show="scDashboardInfo.data.varLogin&amp;&amp;(content.scCartItems.data.Apply=='Yes')" dmx-hide="content.scCartItems.data.Apply=='No'">
                     <p>Wallet Cashback</p>

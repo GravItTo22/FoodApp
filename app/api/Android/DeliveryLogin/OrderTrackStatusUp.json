@@ -1,0 +1,732 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "order_id"
+      },
+      {
+        "type": "text",
+        "name": "order_status"
+      },
+      {
+        "type": "text",
+        "name": "logintoken"
+      },
+      {
+        "type": "text",
+        "name": "latitude"
+      },
+      {
+        "type": "text",
+        "name": "longitude"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetVerify",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "t_user_log",
+                      "column": "user_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "t_user_log"
+                  },
+                  "primary": "id",
+                  "joins": [
+                    {
+                      "table": "m_customer",
+                      "column": "*",
+                      "alias": "mc",
+                      "type": "LEFT",
+                      "clauses": {
+                        "condition": "AND",
+                        "rules": [
+                          {
+                            "table": "mc",
+                            "column": "id",
+                            "operator": "equal",
+                            "value": {
+                              "table": "t_user_log",
+                              "column": "user_id"
+                            },
+                            "operation": "="
+                          }
+                        ]
+                      },
+                      "primary": "id"
+                    }
+                  ],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "t_user_log.login_token",
+                        "field": "t_user_log.login_token",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_GET.logintoken}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_token",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_token"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "t_user_log.login_from",
+                        "field": "t_user_log.login_from",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{'Android'}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_from",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_from"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "mc.user_type_id",
+                        "field": "mc.user_type_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{5}}",
+                        "data": {
+                          "table": "mc",
+                          "column": "user_type_id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "reference",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "references": "id",
+                            "inTable": "m_user_type",
+                            "referenceType": "integer",
+                            "onUpdate": "NO ACTION",
+                            "onDelete": "NO ACTION",
+                            "name": "user_type_id"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT t_user_log.user_id\nFROM t_user_log\nLEFT JOIN m_customer AS mc ON (mc.id = t_user_log.user_id)\nWHERE t_user_log.login_token = :P1 /* {{$_GET.logintoken}} */ AND t_user_log.login_from = :P2 /* {{'Android'}} */ AND mc.user_type_id = :P3 /* {{5}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_GET.logintoken}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{'Android'}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P3",
+                      "value": "{{5}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "user_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetVerify.user_id}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "CountOrders",
+                      "module": "dbconnector",
+                      "action": "single",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [
+                            {
+                              "table": "r_order",
+                              "column": "user_id",
+                              "alias": "customer_id"
+                            }
+                          ],
+                          "table": {
+                            "name": "r_order"
+                          },
+                          "primary": "id",
+                          "joins": [
+                            {
+                              "table": "r_order_details",
+                              "column": "*",
+                              "alias": "rod",
+                              "type": "LEFT",
+                              "clauses": {
+                                "condition": "AND",
+                                "rules": [
+                                  {
+                                    "table": "rod",
+                                    "column": "order_table_id",
+                                    "operator": "equal",
+                                    "value": {
+                                      "table": "r_order",
+                                      "column": "id"
+                                    },
+                                    "operation": "="
+                                  }
+                                ]
+                              },
+                              "primary": "id"
+                            },
+                            {
+                              "table": "m_product",
+                              "column": "*",
+                              "alias": "mp",
+                              "type": "INNER",
+                              "clauses": {
+                                "condition": "AND",
+                                "rules": [
+                                  {
+                                    "table": "mp",
+                                    "column": "id",
+                                    "operator": "equal",
+                                    "value": {
+                                      "table": "rod",
+                                      "column": "prod_id"
+                                    },
+                                    "operation": "="
+                                  }
+                                ]
+                              },
+                              "primary": "id"
+                            }
+                          ],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "r_order.id",
+                                "field": "r_order.id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{$_GET.order_id}}",
+                                "data": {
+                                  "table": "r_order",
+                                  "column": "id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "increments",
+                                    "default": "",
+                                    "primary": true,
+                                    "unique": true,
+                                    "nullable": false,
+                                    "name": "id"
+                                  }
+                                },
+                                "operation": "="
+                              },
+                              {
+                                "id": "r_order.status",
+                                "field": "r_order.status",
+                                "type": "double",
+                                "operator": "between",
+                                "value": [
+                                  "{{3}}",
+                                  "{{6}}"
+                                ],
+                                "data": {
+                                  "table": "r_order",
+                                  "column": "status",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "integer",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "status"
+                                  }
+                                },
+                                "operation": "BETWEEN"
+                              },
+                              {
+                                "id": "r_order.order_assigned_to",
+                                "field": "r_order.order_assigned_to",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{GetVerify.user_id}}",
+                                "data": {
+                                  "table": "r_order",
+                                  "column": "order_assigned_to",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "integer",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "order_assigned_to"
+                                  }
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "query": "SELECT r_order.user_id AS customer_id\nFROM r_order\nLEFT JOIN r_order_details AS rod ON (rod.order_table_id = r_order.id) INNER JOIN m_product AS mp ON (mp.id = rod.prod_id)\nWHERE r_order.id = :P1 /* {{$_GET.order_id}} */ AND r_order.status BETWEEN :P2 /* {{3}} */ AND :P3 /* {{6}} */ AND r_order.order_assigned_to = :P4 /* {{GetVerify.user_id}} */",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{$_GET.order_id}}"
+                            },
+                            {
+                              "operator": "between",
+                              "type": "expression",
+                              "name": ":P2",
+                              "value": "{{3}}"
+                            },
+                            {
+                              "operator": "between",
+                              "type": "expression",
+                              "name": ":P3",
+                              "value": "{{6}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P4",
+                              "value": "{{GetVerify.user_id}}"
+                            }
+                          ]
+                        }
+                      },
+                      "output": false,
+                      "meta": [
+                        {
+                          "type": "number",
+                          "name": "customer_id"
+                        }
+                      ],
+                      "outputType": "object"
+                    },
+                    {
+                      "name": "",
+                      "module": "core",
+                      "action": "condition",
+                      "options": {
+                        "if": "{{CountOrders.customer_id}}",
+                        "then": {
+                          "steps": [
+                            {
+                              "name": "status",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": 200
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "message",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "Order Status Updated"
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "OrderUpdate",
+                              "module": "dbupdater",
+                              "action": "update",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "update",
+                                  "values": [
+                                    {
+                                      "table": "r_order",
+                                      "column": "status",
+                                      "type": "number",
+                                      "value": "{{$_GET.order_status}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "updated_on",
+                                      "type": "datetime",
+                                      "value": "{{NOW}}"
+                                    }
+                                  ],
+                                  "table": "r_order",
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "id",
+                                        "field": "id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{$_GET.order_id}}",
+                                        "data": {
+                                          "column": "id"
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "returning": "id",
+                                  "query": "UPDATE r_order\nSET status = :P1 /* {{$_GET.order_status}} */, updated_on = :P2 /* {{NOW}} */\nWHERE id = :P3 /* {{$_GET.order_id}} */",
+                                  "params": [
+                                    {
+                                      "name": ":P1",
+                                      "type": "expression",
+                                      "value": "{{$_GET.order_status}}"
+                                    },
+                                    {
+                                      "name": ":P2",
+                                      "type": "expression",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P3",
+                                      "value": "{{$_GET.order_id}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "OrderProdUp",
+                              "module": "dbupdater",
+                              "action": "update",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "update",
+                                  "values": [
+                                    {
+                                      "table": "r_order_details",
+                                      "column": "order_status",
+                                      "type": "number",
+                                      "value": "{{$_GET.order_status}}"
+                                    },
+                                    {
+                                      "table": "r_order_details",
+                                      "column": "updated_on",
+                                      "type": "datetime",
+                                      "value": "{{NOW}}"
+                                    }
+                                  ],
+                                  "table": "r_order_details",
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "order_table_id",
+                                        "field": "order_table_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{$_GET.order_id}}",
+                                        "data": {
+                                          "column": "order_table_id"
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "returning": "id",
+                                  "query": "UPDATE r_order_details\nSET order_status = :P1 /* {{$_GET.order_status}} */, updated_on = :P2 /* {{NOW}} */\nWHERE order_table_id = :P3 /* {{$_GET.order_id}} */",
+                                  "params": [
+                                    {
+                                      "name": ":P1",
+                                      "type": "expression",
+                                      "value": "{{$_GET.order_status}}"
+                                    },
+                                    {
+                                      "name": ":P2",
+                                      "type": "expression",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P3",
+                                      "value": "{{$_GET.order_id}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "UpdateLocation",
+                              "module": "dbupdater",
+                              "action": "insert",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "insert",
+                                  "values": [
+                                    {
+                                      "table": "r_order_track",
+                                      "column": "order_id",
+                                      "type": "number",
+                                      "value": "{{$_GET.order_id}}"
+                                    },
+                                    {
+                                      "table": "r_order_track",
+                                      "column": "user_id",
+                                      "type": "number",
+                                      "value": "{{CountOrders.customer_id}}"
+                                    },
+                                    {
+                                      "table": "r_order_track",
+                                      "column": "delivery_id",
+                                      "type": "number",
+                                      "value": "{{GetVerify.user_id}}"
+                                    },
+                                    {
+                                      "table": "r_order_track",
+                                      "column": "longitude",
+                                      "type": "text",
+                                      "value": "{{$_GET.longitude}}"
+                                    },
+                                    {
+                                      "table": "r_order_track",
+                                      "column": "latitude",
+                                      "type": "text",
+                                      "value": "{{$_GET.latitude}}"
+                                    },
+                                    {
+                                      "table": "r_order_track",
+                                      "column": "status",
+                                      "type": "number",
+                                      "value": "{{$_GET.order_status}}"
+                                    },
+                                    {
+                                      "table": "r_order_track",
+                                      "column": "created_on",
+                                      "type": "datetime",
+                                      "value": "{{NOW}}"
+                                    }
+                                  ],
+                                  "table": "r_order_track",
+                                  "returning": "id",
+                                  "query": "INSERT INTO r_order_track\n(order_id, user_id, delivery_id, longitude, latitude, status, created_on) VALUES (:P1 /* {{$_GET.order_id}} */, :P2 /* {{CountOrders.customer_id}} */, :P3 /* {{GetVerify.user_id}} */, :P4 /* {{$_GET.longitude}} */, :P5 /* {{$_GET.latitude}} */, :P6 /* {{$_GET.order_status}} */, :P7 /* {{NOW}} */)",
+                                  "params": [
+                                    {
+                                      "name": ":P1",
+                                      "type": "expression",
+                                      "value": "{{$_GET.order_id}}"
+                                    },
+                                    {
+                                      "name": ":P2",
+                                      "type": "expression",
+                                      "value": "{{CountOrders.customer_id}}"
+                                    },
+                                    {
+                                      "name": ":P3",
+                                      "type": "expression",
+                                      "value": "{{GetVerify.user_id}}"
+                                    },
+                                    {
+                                      "name": ":P4",
+                                      "type": "expression",
+                                      "value": "{{$_GET.longitude}}"
+                                    },
+                                    {
+                                      "name": ":P5",
+                                      "type": "expression",
+                                      "value": "{{$_GET.latitude}}"
+                                    },
+                                    {
+                                      "name": ":P6",
+                                      "type": "expression",
+                                      "value": "{{$_GET.order_status}}"
+                                    },
+                                    {
+                                      "name": ":P7",
+                                      "type": "expression",
+                                      "value": "{{NOW}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "identity",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "else": {
+                          "steps": [
+                            {
+                              "name": "status",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": 400
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "message",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "No Record Found!"
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            }
+                          ]
+                        }
+                      },
+                      "outputType": "boolean"
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Unauthorized User"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

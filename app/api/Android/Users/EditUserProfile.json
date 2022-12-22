@@ -1,0 +1,464 @@
+{
+  "meta": {
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "logintoken"
+      },
+      {
+        "type": "text",
+        "name": "EmailId"
+      },
+      {
+        "type": "text",
+        "name": "FirstName"
+      },
+      {
+        "type": "text",
+        "name": "LastName"
+      },
+      {
+        "type": "text",
+        "name": "WhatsappNo"
+      },
+      {
+        "type": "text",
+        "name": "DOB"
+      },
+      {
+        "type": "text",
+        "name": "Address"
+      },
+      {
+        "type": "text",
+        "name": "PIN"
+      },
+      {
+        "type": "text",
+        "name": "PS"
+      },
+      {
+        "type": "text",
+        "name": "District"
+      },
+      {
+        "type": "text",
+        "name": "State"
+      },
+      {
+        "type": "text",
+        "name": "Longitude"
+      },
+      {
+        "type": "text",
+        "name": "Latitude"
+      },
+      {
+        "type": "text",
+        "name": "EmailId"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetVerify",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "t_user_log",
+                      "column": "user_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "t_user_log"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "t_user_log.login_token",
+                        "field": "t_user_log.login_token",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_POST.logintoken}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_token",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_token"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "t_user_log.login_from",
+                        "field": "t_user_log.login_from",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{'Android'}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_from",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_from"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_POST.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_POST.logintoken}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{'Android'}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "user_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetVerify.user_id}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "upUser",
+                      "module": "dbupdater",
+                      "action": "update",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "update",
+                          "values": [
+                            {
+                              "table": "m_customer",
+                              "column": "fname",
+                              "type": "text",
+                              "value": "{{$_POST.FirstName}}"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "lname",
+                              "type": "text",
+                              "value": "{{$_POST.LastName}}"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "is_watsapp",
+                              "type": "text",
+                              "value": "{{($_POST.WhatsappNo?'Yes':'No')}}"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "watsapp_no",
+                              "type": "text",
+                              "value": "{{$_POST.WhatsappNo}}"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "customer_email",
+                              "type": "text",
+                              "value": "{{$_POST.EmailId}}"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "user_dob",
+                              "type": "text",
+                              "value": "{{$_POST.DOB}}"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "address",
+                              "type": "text",
+                              "value": "{{$_POST.Address}}"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "pin",
+                              "type": "text",
+                              "value": "{{$_POST.PIN}}"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "ps",
+                              "type": "text",
+                              "value": "{{$_POST.PS}}"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "district",
+                              "type": "text",
+                              "value": "{{$_POST.District}}"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "state",
+                              "type": "text",
+                              "value": "{{$_POST.State}}"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "updated_on",
+                              "type": "datetime",
+                              "value": "{{NOW}}"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "gst_in",
+                              "type": "text",
+                              "value": "{{'('+$_POST.Longitude+', '+$_POST.Latitude+')'}}"
+                            }
+                          ],
+                          "table": "m_customer",
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "id",
+                                "field": "id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{GetVerify.user_id}}",
+                                "data": {
+                                  "column": "id"
+                                },
+                                "operation": "="
+                              },
+                              {
+                                "id": "status",
+                                "field": "status",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{1}}",
+                                "data": {
+                                  "column": "status"
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "returning": "id",
+                          "query": "UPDATE m_customer\nSET fname = :P1 /* {{$_POST.FirstName}} */, lname = :P2 /* {{$_POST.LastName}} */, is_watsapp = :P3 /* {{($_POST.WhatsappNo?'Yes':'No')}} */, watsapp_no = :P4 /* {{$_POST.WhatsappNo}} */, customer_email = :P5 /* {{$_POST.EmailId}} */, user_dob = :P6 /* {{$_POST.DOB}} */, address = :P7 /* {{$_POST.Address}} */, pin = :P8 /* {{$_POST.PIN}} */, ps = :P9 /* {{$_POST.PS}} */, district = :P10 /* {{$_POST.District}} */, state = :P11 /* {{$_POST.State}} */, updated_on = :P12 /* {{NOW}} */, gst_in = :P13 /* {{'('+$_POST.Longitude+', '+$_POST.Latitude+')'}} */\nWHERE id = :P14 /* {{GetVerify.user_id}} */ AND status = :P15 /* {{1}} */",
+                          "params": [
+                            {
+                              "name": ":P1",
+                              "type": "expression",
+                              "value": "{{$_POST.FirstName}}"
+                            },
+                            {
+                              "name": ":P2",
+                              "type": "expression",
+                              "value": "{{$_POST.LastName}}"
+                            },
+                            {
+                              "name": ":P3",
+                              "type": "expression",
+                              "value": "{{($_POST.WhatsappNo?'Yes':'No')}}"
+                            },
+                            {
+                              "name": ":P4",
+                              "type": "expression",
+                              "value": "{{$_POST.WhatsappNo}}"
+                            },
+                            {
+                              "name": ":P5",
+                              "type": "expression",
+                              "value": "{{$_POST.EmailId}}"
+                            },
+                            {
+                              "name": ":P6",
+                              "type": "expression",
+                              "value": "{{$_POST.DOB}}"
+                            },
+                            {
+                              "name": ":P7",
+                              "type": "expression",
+                              "value": "{{$_POST.Address}}"
+                            },
+                            {
+                              "name": ":P8",
+                              "type": "expression",
+                              "value": "{{$_POST.PIN}}"
+                            },
+                            {
+                              "name": ":P9",
+                              "type": "expression",
+                              "value": "{{$_POST.PS}}"
+                            },
+                            {
+                              "name": ":P10",
+                              "type": "expression",
+                              "value": "{{$_POST.District}}"
+                            },
+                            {
+                              "name": ":P11",
+                              "type": "expression",
+                              "value": "{{$_POST.State}}"
+                            },
+                            {
+                              "name": ":P12",
+                              "type": "expression",
+                              "value": "{{NOW}}"
+                            },
+                            {
+                              "name": ":P13",
+                              "type": "expression",
+                              "value": "{{'('+$_POST.Longitude+', '+$_POST.Latitude+')'}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P14",
+                              "value": "{{GetVerify.user_id}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P15",
+                              "value": "{{1}}"
+                            }
+                          ]
+                        }
+                      },
+                      "meta": [
+                        {
+                          "name": "affected",
+                          "type": "number"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 200
+                      },
+                      "meta": [],
+                      "outputType": "text",
+                      "output": true
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Profile updated successfully"
+                      },
+                      "meta": [],
+                      "outputType": "text",
+                      "output": true
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "outputType": "text",
+                      "output": true
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Unauthorized User"
+                      },
+                      "meta": [],
+                      "outputType": "text",
+                      "output": true
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "outputType": "text",
+              "output": true
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "outputType": "text",
+              "output": true
+            }
+          ]
+        }
+      }
+    }
+  }
+}

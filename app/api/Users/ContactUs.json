@@ -67,6 +67,14 @@
       },
       {
         "type": "text",
+        "name": "Longitude"
+      },
+      {
+        "type": "text",
+        "name": "Latitude"
+      },
+      {
+        "type": "text",
         "name": "ip"
       }
     ],
@@ -140,11 +148,17 @@
                     "column": "created_on",
                     "type": "datetime",
                     "value": "{{NOW}}"
+                  },
+                  {
+                    "table": "m_contact_us",
+                    "column": "remarks",
+                    "type": "text",
+                    "value": "{{'('+$_POST.Longitude+', '+$_POST.Latitude+')'}}"
                   }
                 ],
                 "table": "m_contact_us",
                 "returning": "id",
-                "query": "INSERT INTO m_contact_us\n(user_name, user_mobile, user_email, msg_subject, message, ip, status, created_on) VALUES (:P1 /* {{$_POST.Name}} */, :P2 /* {{$_POST.Mobile}} */, :P3 /* {{$_POST.EmailId}} */, :P4 /* {{$_POST.Subject}} */, :P5 /* {{$_POST.Message}} */, :P6 /* {{$_SERVER.REMOTE_ADDR}} */, :P7 /* {{0}} */, :P8 /* {{NOW}} */)",
+                "query": "INSERT INTO m_contact_us\n(user_name, user_mobile, user_email, msg_subject, message, ip, status, created_on, remarks) VALUES (:P1 /* {{$_POST.Name}} */, :P2 /* {{$_POST.Mobile}} */, :P3 /* {{$_POST.EmailId}} */, :P4 /* {{$_POST.Subject}} */, :P5 /* {{$_POST.Message}} */, :P6 /* {{$_SERVER.REMOTE_ADDR}} */, :P7 /* {{0}} */, :P8 /* {{NOW}} */, :P9 /* {{'('+$_POST.Longitude+', '+$_POST.Latitude+')'}} */)",
                 "params": [
                   {
                     "name": ":P1",
@@ -185,6 +199,11 @@
                     "name": ":P8",
                     "type": "expression",
                     "value": "{{NOW}}"
+                  },
+                  {
+                    "name": ":P9",
+                    "type": "expression",
+                    "value": "{{'('+$_POST.Longitude+', '+$_POST.Latitude+')'}}"
                   }
                 ]
               }

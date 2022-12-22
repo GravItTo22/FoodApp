@@ -1,6 +1,6 @@
 {
   "meta": {
-    "$_POST": [
+    "$_GET": [
       {
         "type": "text",
         "name": "order_id"
@@ -8,14 +8,6 @@
       {
         "type": "text",
         "name": "logintoken"
-      },
-      {
-        "type": "text",
-        "name": "longitude"
-      },
-      {
-        "type": "text",
-        "name": "latitude"
       }
     ]
   },
@@ -77,7 +69,7 @@
                         "field": "t_user_log.login_token",
                         "type": "string",
                         "operator": "equal",
-                        "value": "{{$_POST.logintoken}}",
+                        "value": "{{$_GET.logintoken}}",
                         "data": {
                           "table": "t_user_log",
                           "column": "login_token",
@@ -119,7 +111,7 @@
                         "field": "mc.user_type_id",
                         "type": "double",
                         "operator": "equal",
-                        "value": "{{5}}",
+                        "value": "{{6}}",
                         "data": {
                           "table": "mc",
                           "column": "user_type_id",
@@ -143,13 +135,13 @@
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT t_user_log.user_id\nFROM t_user_log\nLEFT JOIN m_customer AS mc ON (mc.id = t_user_log.user_id)\nWHERE t_user_log.login_token = :P1 /* {{$_POST.logintoken}} */ AND t_user_log.login_from = :P2 /* {{'Android'}} */ AND mc.user_type_id = :P3 /* {{5}} */",
+                  "query": "SELECT t_user_log.user_id\nFROM t_user_log\nLEFT JOIN m_customer AS mc ON (mc.id = t_user_log.user_id)\nWHERE t_user_log.login_token = :P1 /* {{$_GET.logintoken}} */ AND t_user_log.login_from = :P2 /* {{'Android'}} */ AND mc.user_type_id = :P3 /* {{6}} */",
                   "params": [
                     {
                       "operator": "equal",
                       "type": "expression",
                       "name": ":P1",
-                      "value": "{{$_POST.logintoken}}"
+                      "value": "{{$_GET.logintoken}}"
                     },
                     {
                       "operator": "equal",
@@ -161,7 +153,7 @@
                       "operator": "equal",
                       "type": "expression",
                       "name": ":P3",
-                      "value": "{{5}}"
+                      "value": "{{6}}"
                     }
                   ]
                 }
@@ -194,13 +186,9 @@
                           "columns": [
                             {
                               "table": "r_order",
-                              "column": "user_id",
-                              "alias": "customer_id"
-                            },
-                            {
-                              "table": "r_order",
-                              "column": "status",
-                              "alias": "order_status"
+                              "column": "id",
+                              "alias": "CountOrder",
+                              "aggregate": "COUNT"
                             }
                           ],
                           "table": {
@@ -261,7 +249,7 @@
                                 "field": "r_order.id",
                                 "type": "double",
                                 "operator": "equal",
-                                "value": "{{$_POST.order_id}}",
+                                "value": "{{$_GET.order_id}}",
                                 "data": {
                                   "table": "r_order",
                                   "column": "id",
@@ -283,7 +271,7 @@
                                 "type": "double",
                                 "operator": "between",
                                 "value": [
-                                  "{{4}}",
+                                  "{{3}}",
                                   "{{6}}"
                                 ],
                                 "data": {
@@ -301,21 +289,22 @@
                                 "operation": "BETWEEN"
                               },
                               {
-                                "id": "r_order.order_assigned_to",
-                                "field": "r_order.order_assigned_to",
+                                "id": "r_order.user_id",
+                                "field": "r_order.user_id",
                                 "type": "double",
                                 "operator": "equal",
                                 "value": "{{GetVerify.user_id}}",
                                 "data": {
                                   "table": "r_order",
-                                  "column": "order_assigned_to",
+                                  "column": "user_id",
                                   "type": "number",
                                   "columnObj": {
                                     "type": "integer",
                                     "primary": false,
                                     "unique": false,
                                     "nullable": true,
-                                    "name": "order_assigned_to"
+                                    "referenceType": "integer",
+                                    "name": "user_id"
                                   }
                                 },
                                 "operation": "="
@@ -324,19 +313,19 @@
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT r_order.user_id AS customer_id, r_order.status AS order_status\nFROM r_order\nLEFT JOIN r_order_details AS rod ON (rod.order_table_id = r_order.id) INNER JOIN m_product AS mp ON (mp.id = rod.prod_id)\nWHERE r_order.id = :P1 /* {{$_POST.order_id}} */ AND r_order.status BETWEEN :P2 /* {{4}} */ AND :P3 /* {{6}} */ AND r_order.order_assigned_to = :P4 /* {{GetVerify.user_id}} */",
+                          "query": "SELECT COUNT(r_order.id) AS CountOrder\nFROM r_order\nLEFT JOIN r_order_details AS rod ON (rod.order_table_id = r_order.id) INNER JOIN m_product AS mp ON (mp.id = rod.prod_id)\nWHERE r_order.id = :P1 /* {{$_GET.order_id}} */ AND r_order.status BETWEEN :P2 /* {{3}} */ AND :P3 /* {{6}} */ AND r_order.user_id = :P4 /* {{GetVerify.user_id}} */",
                           "params": [
                             {
                               "operator": "equal",
                               "type": "expression",
                               "name": ":P1",
-                              "value": "{{$_POST.order_id}}"
+                              "value": "{{$_GET.order_id}}"
                             },
                             {
                               "operator": "between",
                               "type": "expression",
                               "name": ":P2",
-                              "value": "{{4}}"
+                              "value": "{{3}}"
                             },
                             {
                               "operator": "between",
@@ -350,18 +339,15 @@
                               "name": ":P4",
                               "value": "{{GetVerify.user_id}}"
                             }
-                          ]
+                          ],
+                          "groupBy": []
                         }
                       },
                       "output": false,
                       "meta": [
                         {
                           "type": "number",
-                          "name": "customer_id"
-                        },
-                        {
-                          "type": "number",
-                          "name": "order_status"
+                          "name": "CountOrder"
                         }
                       ],
                       "outputType": "object"
@@ -375,109 +361,145 @@
                         "then": {
                           "steps": [
                             {
-                              "name": "UpdateLocation",
-                              "module": "dbupdater",
-                              "action": "insert",
+                              "name": "TrackLocation",
+                              "module": "dbconnector",
+                              "action": "select",
                               "options": {
                                 "connection": "ClientApp",
                                 "sql": {
-                                  "type": "insert",
-                                  "values": [
+                                  "type": "SELECT",
+                                  "columns": [
                                     {
                                       "table": "r_order_track",
-                                      "column": "order_id",
-                                      "type": "number",
-                                      "value": "{{$_POST.order_id}}"
+                                      "column": "order_id"
                                     },
                                     {
                                       "table": "r_order_track",
                                       "column": "user_id",
-                                      "type": "number",
-                                      "value": "{{CountOrders.customer_id}}"
+                                      "alias": "Customer_id"
                                     },
                                     {
                                       "table": "r_order_track",
-                                      "column": "delivery_id",
-                                      "type": "number",
-                                      "value": "{{GetVerify.user_id}}"
+                                      "column": "delivery_id"
                                     },
                                     {
                                       "table": "r_order_track",
-                                      "column": "longitude",
-                                      "type": "text",
-                                      "value": "{{$_POST.longitude}}"
+                                      "column": "longitude"
                                     },
                                     {
                                       "table": "r_order_track",
-                                      "column": "latitude",
-                                      "type": "text",
-                                      "value": "{{$_POST.latitude}}"
+                                      "column": "latitude"
                                     },
                                     {
                                       "table": "r_order_track",
-                                      "column": "status",
-                                      "type": "number",
-                                      "value": "{{CountOrders.order_status}}"
+                                      "column": "status"
                                     },
                                     {
                                       "table": "r_order_track",
-                                      "column": "created_on",
-                                      "type": "datetime",
-                                      "value": "{{NOW}}"
+                                      "column": "created_on"
                                     }
                                   ],
-                                  "table": "r_order_track",
-                                  "returning": "id",
-                                  "query": "INSERT INTO r_order_track\n(order_id, user_id, delivery_id, longitude, latitude, status, created_on) VALUES (:P1 /* {{$_POST.order_id}} */, :P2 /* {{CountOrders.customer_id}} */, :P3 /* {{GetVerify.user_id}} */, :P4 /* {{$_POST.longitude}} */, :P5 /* {{$_POST.latitude}} */, :P6 /* {{CountOrders.order_status}} */, :P7 /* {{NOW}} */)",
+                                  "table": {
+                                    "name": "r_order_track"
+                                  },
+                                  "primary": "id",
+                                  "joins": [],
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "r_order_track.order_id",
+                                        "field": "r_order_track.order_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{$_GET.order_id}}",
+                                        "data": {
+                                          "table": "r_order_track",
+                                          "column": "order_id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "integer",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "order_id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      },
+                                      {
+                                        "id": "r_order_track.user_id",
+                                        "field": "r_order_track.user_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{GetVerify.user_id}}",
+                                        "data": {
+                                          "table": "r_order_track",
+                                          "column": "user_id",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "integer",
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "user_id"
+                                          }
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "query": "SELECT order_id, user_id AS Customer_id, delivery_id, longitude, latitude, status, created_on\nFROM r_order_track\nWHERE order_id = :P1 /* {{$_GET.order_id}} */ AND user_id = :P2 /* {{GetVerify.user_id}} */",
                                   "params": [
                                     {
+                                      "operator": "equal",
+                                      "type": "expression",
                                       "name": ":P1",
-                                      "type": "expression",
-                                      "value": "{{$_POST.order_id}}"
+                                      "value": "{{$_GET.order_id}}"
                                     },
                                     {
+                                      "operator": "equal",
+                                      "type": "expression",
                                       "name": ":P2",
-                                      "type": "expression",
-                                      "value": "{{CountOrders.customer_id}}"
-                                    },
-                                    {
-                                      "name": ":P3",
-                                      "type": "expression",
                                       "value": "{{GetVerify.user_id}}"
-                                    },
-                                    {
-                                      "name": ":P4",
-                                      "type": "expression",
-                                      "value": "{{$_POST.longitude}}"
-                                    },
-                                    {
-                                      "name": ":P5",
-                                      "type": "expression",
-                                      "value": "{{$_POST.latitude}}"
-                                    },
-                                    {
-                                      "name": ":P6",
-                                      "type": "expression",
-                                      "value": "{{CountOrders.order_status}}"
-                                    },
-                                    {
-                                      "name": ":P7",
-                                      "type": "expression",
-                                      "value": "{{NOW}}"
                                     }
                                   ]
                                 }
                               },
+                              "output": true,
                               "meta": [
                                 {
-                                  "name": "identity",
-                                  "type": "text"
+                                  "type": "number",
+                                  "name": "order_id"
                                 },
                                 {
-                                  "name": "affected",
-                                  "type": "number"
+                                  "type": "number",
+                                  "name": "Customer_id"
+                                },
+                                {
+                                  "type": "number",
+                                  "name": "delivery_id"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "longitude"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "latitude"
+                                },
+                                {
+                                  "type": "number",
+                                  "name": "status"
+                                },
+                                {
+                                  "type": "datetime",
+                                  "name": "created_on"
                                 }
-                              ]
+                              ],
+                              "outputType": "array"
                             },
                             {
                               "name": "status",
@@ -485,17 +507,6 @@
                               "action": "setvalue",
                               "options": {
                                 "value": 200
-                              },
-                              "meta": [],
-                              "output": true,
-                              "outputType": "text"
-                            },
-                            {
-                              "name": "message",
-                              "module": "core",
-                              "action": "setvalue",
-                              "options": {
-                                "value": "Updated Location"
                               },
                               "meta": [],
                               "output": true,

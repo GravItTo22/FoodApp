@@ -3794,11 +3794,11 @@ color: #fff;
   .close {
 	color: #aaaaaa;
 	float: right;
-	margin-right: 30%;
+	/*margin-right: 30%;*/
 	font-size: 28px;
 	font-weight: bold;
 	z-index: 1;
-	position: absolute ;
+	/*position: absolute ;*/
   }
   
   .close:hover,

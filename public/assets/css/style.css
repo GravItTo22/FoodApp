@@ -2249,7 +2249,7 @@ ol {
 	  border-radius: 50%;
 	  background: white;
   }
-  /* .modal-dialog1{
+  .modal-dialog1{
     width: 350px;
     background-color: #fff;
     margin-left: 30%;
@@ -2264,7 +2264,7 @@ ol {
     border: none;
     border-bottom: 2px solid lightgray;
     font-size: small;
-} */
+}
 .form-check-label{
     font-size: 13px;
 
@@ -3766,20 +3766,20 @@ color: #fff;
 		font-size: 24px;
 	}
 }
-/* .modal {
-//	display: none; /* Hidden by default */
-/*	position: fixed; /* Stay in place */
-/*	z-index: -1; /* Sit on top */
-/*	padding-top: 50px; /* Location of the box */
-/*	left: 0;
-//	top: 0;
-//	width: 100%; /* Full width */
-/*	height: 100%; /* Full height */
-/*	overflow: hidden; /* Enable scroll if needed */
-/*	background-color: #AAD0D0;
-//	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+.modal {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: -; /* Sit on top */
+	padding-top: 50px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: hidden; /* Enable scroll if needed */
+	background-color: #AAD0D0;
+	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 	
- /* } */
+  }
   
   /* Modal Content */
   .modal-content {

@@ -62,6 +62,7 @@
                                 <h5 class="modal-title" id="exampleModalLongTitle"></h5>
                                 <div class="modal-header1">
                                     <p class="font-weight-bold">Select Delivery Address</p>
+                                    <span class="close">&times;</span>
                                     <div class="ShippingAddress">
                                         <div class="container1" dmx-repeat:repeat2="scGetShippingAddress.data.GetAddress">
                                             <label class="form-check-label"><b>{{scGetShippingAddress.data.GetAddress[$index].full_name}},</b> <i>{{scGetShippingAddress.data.GetAddress[$index].mobile}},</i> {{scGetShippingAddress.data.GetAddress[$index].pin}}
@@ -84,7 +85,8 @@
                                         <input type="text" name="address" class="form-control mb-2" placeholder="Address *" required="" dmx-bind:value="varAddress.value">
                                         <input type="text" name="district" class="form-control mb-2" placeholder="District *" required="" dmx-bind:value="varDistrict.value">
                                         <input type="submit" value="Submit" class="btn btns w-25">
-                                        <input type="button" value="Close" class="btn btn-dark w-25 pull-right text-center mt-2" data-bs-dismiss="modal" aria-label="Close" dmx-on:click="browserMain.goto('/place-order')">
+                                        <input type="button" value="Close" class="btn btn-dark w-25 pull-right text-center mt-2" data-bs-dismiss="modal" aria-label="Close">
+                                        <!-- dmx-on:click="browserMain.goto('/place-order')" -->
                                     </form>
                                 </div>
                             </div>

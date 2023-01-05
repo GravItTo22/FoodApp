@@ -50,9 +50,9 @@
     <dmx-serverconnect id="scDashboardInfo" url="/api/Dashboard/DashboardInfo"></dmx-serverconnect>
     <dmx-notifications id="notifMain" newest-on-top="true"></dmx-notifications>
     <div is="dmx-browser" id="browserMain"></div>
-    <dmx-value id="varLanguage" dmx-bind:value="scSetLang.data.varSetLang?scSetLang.data.varSetLang:'English'"></dmx-value>
     <dmx-serverconnect id="scLanguage" url="/api/Language/ActiveLanguage" dmx-param:lang="varLanguage.value"></dmx-serverconnect>
     <dmx-serverconnect id="scSetLang" url="/api/Language/SessionLang"></dmx-serverconnect>
+    <dmx-value id="varLanguage" dmx-bind:value="scSetLang.data.varSetLang?scSetLang.data.varSetLang:'English'"></dmx-value>
     <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>

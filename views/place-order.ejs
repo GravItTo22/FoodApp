@@ -66,8 +66,8 @@
                             <div class="modal-content1 p-3">
                                 <h5 class="modal-title" id="exampleModalLongTitle"></h5>
                                 <div class="modal-header1">
-                                    <p class="font-weight-bold">Select Delivery Address</p>
-                                    <span class="close">&times;</span>
+                                    <p class="font-weight-bold">Select Delivery Address <span class="close">&times;</span></p>
+
                                     <div class="ShippingAddress">
                                         <div class="container1" dmx-repeat:repeat2="scGetShippingAddress.data.GetAddress">
                                             <label class="form-check-label"><b>{{scGetShippingAddress.data.GetAddress[$index].full_name}},</b> <i>{{scGetShippingAddress.data.GetAddress[$index].mobile}},</i> {{scGetShippingAddress.data.GetAddress[$index].pin}}

@@ -284,14 +284,14 @@
 //     }
 // }
 /*shop-deatails*/
-var demoTrigger = document.querySelector('.demo-trigger');
+// var demoTrigger = document.querySelector('.demo-trigger');
 
-new Drift(demoTrigger, {
-    paneContainer: document.querySelector('.detail'),
-    inlinePane: 900,
-    inlineOffsetY: -85,
-    containInline: true,
-    sourceAttribute: 'href'
-});
+// new Drift(demoTrigger, {
+//     paneContainer: document.querySelector('.detail'),
+//     inlinePane: 900,
+//     inlineOffsetY: -85,
+//     containInline: true,
+//     sourceAttribute: 'href'
+// });
 
 /* shop-cart*/

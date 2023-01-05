@@ -328,7 +328,7 @@
                     <div class="footer__widget">
                         <h6>Join Our Newsletter Now</h6>
                         <p>Get E-mail updates about our latest shop and special offers.</p>
-                        <form action="#">
+                        <form id="scformSubscribe" method="post" is="dmx-serverconnect-form" action="#" dmx-generator="bootstrap5" dmx-form-type="horizontal" dmx-on:success="notifMain.success('Submitted Successfully');scformSubscribe.reset();" dmx-on:forbidden="notifMain.warning(lastError.response)" dmx-on:error="notifMain.warning(lastError.response)" dmx-on:unauthorized="notifMain.warning(lastError.response)" dmx-on:invalid="notifMain.warning(lastError.response)">
                             <input type="text" placeholder="Enter your mail">
                             <button type="submit" class="site-btn">Subscribe</button>
                         </form>

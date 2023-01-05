@@ -165,8 +165,8 @@
         <div class="row featured__filter" id="repeatProd" is="dmx-repeat" dmx-bind:repeat="scActiveProd.data.GetProd" key="p_id">
             <div class="col-lg-3 col-md-4 col-6 mix">
                 <div class="featured__item">
-                    <div class="featured__item__pic set-bg">
-                        <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scActiveProd.data.GetProd[$index].prod_img1" dmx-bind:alt="content.scActiveProd.data.GetProd[$index].prod_name_en">
+                    <div class="featured__item__pic">
+                        <img class="featured__item__pic" dmx-bind:src="'https://secure.gravitto.com'+content.scActiveProd.data.GetProd[$index].prod_img1" dmx-bind:alt="content.scActiveProd.data.GetProd[$index].prod_name_en">
                         <ul class="featured__item__pic__hover">
                             <li dmx-on:click="run({run:{action:`scAddtoWishlist.load({product_id: scActiveProd.data.GetProd[$index].prod_id, price: content.repeatProd.items[$index].select.value},true);scDashboardInfo.load();notifMain.info(((varLanguage.value==\'English\')?scActiveProd.data.GetProd[$index].prod_name_en:(varLanguage.value==\'Bengali\')?scActiveProd.data.GetProd[$index].prod_name_bn:(varLanguage.value==\'Hindi\')?scActiveProd.data.GetProd[$index].prod_name_hin:scActiveProd.data.GetProd[$index].prod_name_en)+\' added to wish-list\')`,name:'FlowWishlist'}})"><a href="#"><i class="fa fa-heart"></i></a></li>
                             <li><a href="#"><i class="fa fa-circle" dmx-class:text-success="content.scActiveProd.data.GetProd[$index].prod_mark_id==1" dmx-class:text-danger="content.scActiveProd.data.GetProd[$index].prod_mark_id==2"></i></a></li>

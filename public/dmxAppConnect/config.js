@@ -234,6 +234,171 @@ dmx.config({
         }
       ],
       "outputType": "array"
+    },
+    "repeatTrending": {
+      "meta": [
+        {
+          "name": "repeat_times",
+          "type": "text"
+        },
+        {
+          "name": "p_id",
+          "type": "number"
+        },
+        {
+          "name": "prod_id",
+          "type": "text"
+        },
+        {
+          "name": "rest_id",
+          "type": "number"
+        },
+        {
+          "name": "prod_mark_id",
+          "type": "number"
+        },
+        {
+          "name": "prod_name",
+          "type": "text"
+        },
+        {
+          "name": "prod_description",
+          "type": "text"
+        },
+        {
+          "name": "prod_img1",
+          "type": "text"
+        },
+        {
+          "name": "shop_name",
+          "type": "text"
+        },
+        {
+          "name": "price",
+          "type": "array",
+          "sub": [
+            {
+              "name": "price_id",
+              "type": "number"
+            },
+            {
+              "name": "quantity",
+              "type": "text"
+            },
+            {
+              "name": "q_unit",
+              "type": "text"
+            },
+            {
+              "name": "mrp",
+              "type": "text"
+            },
+            {
+              "name": "price",
+              "type": "text"
+            },
+            {
+              "name": "product_tax",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "name": "avg_review",
+          "type": "text"
+        },
+        {
+          "name": "count_wl",
+          "type": "number"
+        },
+        {
+          "name": "count_cart",
+          "type": "number"
+        }
+      ],
+      "outputType": "array"
+    },
+    "repeatBestReviewed": {
+      "outputType": "boolean"
+    },
+    "repeatNewProd": {
+      "meta": [
+        {
+          "name": "p_id",
+          "type": "number"
+        },
+        {
+          "name": "prod_id",
+          "type": "text"
+        },
+        {
+          "name": "rest_id",
+          "type": "number"
+        },
+        {
+          "name": "prod_mark_id",
+          "type": "number"
+        },
+        {
+          "name": "prod_name",
+          "type": "text"
+        },
+        {
+          "name": "prod_description",
+          "type": "text"
+        },
+        {
+          "name": "prod_img1",
+          "type": "text"
+        },
+        {
+          "name": "shop_name",
+          "type": "text"
+        },
+        {
+          "name": "price",
+          "type": "array",
+          "sub": [
+            {
+              "name": "price_id",
+              "type": "number"
+            },
+            {
+              "name": "quantity",
+              "type": "text"
+            },
+            {
+              "name": "q_unit",
+              "type": "text"
+            },
+            {
+              "name": "mrp",
+              "type": "text"
+            },
+            {
+              "name": "price",
+              "type": "text"
+            },
+            {
+              "name": "product_tax",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "name": "avg_review",
+          "type": "text"
+        },
+        {
+          "name": "count_wl",
+          "type": "number"
+        },
+        {
+          "name": "count_cart",
+          "type": "number"
+        }
+      ],
+      "outputType": "array"
     }
   },
   "main": {

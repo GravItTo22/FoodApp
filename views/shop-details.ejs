@@ -4,7 +4,8 @@
 <dmx-serverconnect id="scRestProd" url="/api/Products/RestProducts" dmx-param:rest_id="<%= $_PARAM.id %>" dmx-param:market="1"></dmx-serverconnect>
 <dmx-serverconnect id="scRestReviewList" url="/api/Review/GetARestReviews" dmx-param:rest_id="<%= $_PARAM.id %>"></dmx-serverconnect>
 <dmx-serverconnect id="scRestReviewAdd" url="/api/Review/AddReviewRest" dmx-param:rest_id="<%= $_PARAM.id %>" dmx-param:slider="content.slider.value" dmx-param:review="content.reviewtext.value" noload dmx-on:success="notifMain.success(content.scRestReviewAdd.data.message)"></dmx-serverconnect>
-
+<dmx-serverconnect id="scNewProd" url="/api/Products/NewProducts" dmx-param:limit="4" dmx-param:market="1" dmx-param:lang="(varLanguage.value=='English')?'EN':(varLanguage.value=='Bengali')?'BEN':(varLanguage.value=='Hindi')?'HIN':'EN'"></dmx-serverconnect>
+<dmx-serverconnect id="scCategory" url="/api/Category/ActiveCategory" dmx-param:market="1" dmx-param:limit="4"></dmx-serverconnect>
 <style>
     .smileySlider {
         width: 300px;
@@ -67,20 +68,9 @@
             <div class="col-lg-3 col-md-5">
                 <div class="sidebar">
                     <div class="sidebar__item">
-                        <h4>Department</h4>
-                        <ul>
-                            <li><a href="#">Meals</a></li>
-                            <li><a href="#">Chinese</a></li>
-                            <li><a href="#">Soups</a></li>
-                            <li><a href="#">Starters</a></li>
-                            <li><a href="#">Ocean Foods</a></li>
-                            <li><a href="#">Main Course</a></li>
-                            <li><a href="#">Breads</a></li>
-                            <li><a href="#">Rice Biryani</a></li>
-                            <li><a href="#">South Indian</a></li>
-                            <li><a href="#">Fried Rice Noodles</a></li>
-                            <li><a href="#">Snacks</a></li>
-                            <li><a href="#">Accompaniments</a></li>
+                        <h4>Categories</h4>
+                        <ul id="repeatCat" is="dmx-repeat" dmx-bind:repeat="content.scCategory.data.GetCat.data" key="cat_id">
+                            <li><a href="#">{{varLanguage.value=='English'?content.scCategory.data.GetCat.data[$index].en_name:varLanguage.value=='Bengali'?content.scCategory.data.GetCat.data[$index].bn_name:varLanguage.value=='Hindi'?content.scCategory.data.GetCat.data[$index].hin_name:content.scCategory.data.GetCat.data[$index].en_name}}</a></li>
                         </ul>
                     </div>
                     <div class="sidebar__item">
@@ -157,36 +147,20 @@
                         <div class="latest-product__text">
                             <h4>Latest Products</h4>
                             <div class="latest-product__slider owl-carousel">
-                                <div class="latest-prdouct__slider__item">
-                                    <a href="product-details" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="assets/img/latest-product/lp-1.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Pizza</h6>
-                                            <span><i class="fa fa-rupee"></i>30.00</span>
-                                        </div>
-                                    </a>
+                                <div class="latest-prdouct__slider__item" id="repeatNewProd" is="dmx-repeat" dmx-bind:repeat="scNewProd.data.GetProd" key="p_id">
                                     <a href="#" class="latest-product__item">
                                         <div class="latest-product__item__pic">
-                                            <img src="assets/img/latest-product/lp-2.jpg" alt="">
+                                            <img dmx-bind:src="'https://secure.gravitto.com'+scNewProd.data.GetProd[$index].prod_img1" dmx-bind:alt="scNewProd.data.GetProd[$index].prod_img1">
                                         </div>
                                         <div class="latest-product__item__text">
-                                            <h6>burger</h6>
-                                            <span><i class="fa fa-rupee"></i>30.00</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="assets/img/latest-product/lp-3.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Cream of Vegetable Soup</h6>
-                                            <span><i class="fa fa-rupee"></i>30.00</span>
+                                            <span dmx-on:click="browserMain.goto('/product-details/'+content.scNewProd.data.GetProd[$index].p_id+'/'+content.scNewProd.data.GetProd[$index].prod_name)">{{content.scNewProd.data.GetProd[$index].prod_name}}</span>
+                                            <h6>{{content.scNewProd.data.GetProd[$index].shop_name}}</h6>
+                                            <select id="selectNewProd" dmx-bind:id="'selectNewProd'+$index" class="form-select form-control d-block w-100 text-monospace font-weight-bold" style="font-size:12px" dmx-bind:options="content.scNewProd.data.GetProd[$index].price" optiontext="quantity+' '+q_unit+' :: '+price.toNumber().formatCurrency('₹', '.', ',', 2)+' MRP:'+.mrp.toNumber().formatCurrency('₹', '.', ',', 2)" optionvalue="price_id">
+                                            </select>
                                         </div>
                                     </a>
                                 </div>
-                                <div class="latest-prdouct__slider__item">
+                                <!-- <div class="latest-prdouct__slider__item">
                                     <a href="#" class="latest-product__item">
                                         <div class="latest-product__item__pic">
                                             <img src="assets/img/latest-product/lp-1.jpg" alt="">
@@ -214,14 +188,14 @@
                                             <span><i class="fa fa-rupee"></i>30.00</span>
                                         </div>
                                     </a>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-9 col-md-7">
-                <div class="product__discount">
+                <!-- <div class="product__discount">
                     <div class="section-title product__discount__title">
                         <h2>Sale Off</h2>
                     </div>
@@ -331,10 +305,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="filter__item">
                     <div class="row">
-                        <div class="col-lg-4 col-md-5">
+                        <div class="col-lg-4 col-md-5 col-4">
                             <div class="filter__sort">
                                 <span>Sort By</span>
                                 <select>
@@ -344,12 +318,12 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-4">
+                        <div class="col-lg-4 col-md-4 col-5">
                             <div class="filter__found">
                                 <h6><span>{{content.scRestProd.data.GetProd.length}}</span> Products found</h6>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-3">
+                        <div class="col-lg-4 col-md-3 col-3">
                             <div class="filter__option">
                                 <span class="icon_grid-2x2"></span>
                                 <span class="icon_ul"></span>
@@ -358,7 +332,7 @@
                     </div>
                 </div>
                 <div class="row" id="repeatRestProd" is="dmx-repeat" dmx-bind:repeat="scRestProd.data.GetProd" key="id">
-                    <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="col-lg-4 col-md-6 col-6">
                         <div class="product__item">
                             <div class="product__item__pic set-bg">
                                 <img class="featured__item__pic set-bg" dmx-bind:src="'https://secure.gravitto.com'+content.scRestProd.data.GetProd[$index].prod_img1" dmx-bind:alt="content.scRestProd.data.GetProd[$index].prod_name_en">
@@ -378,12 +352,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="product__pagination">
+                <!-- <div class="product__pagination">
                     <a href="#">1</a>
                     <a href="#">2</a>
                     <a href="#">3</a>
                     <a href="#"><i class="fa fa-long-arrow-right"></i></a>
-                </div>
+                </div> -->
 
                 <div class="col-12">
                     <h6 class="ab mb-3">Restaurant Review</h6>

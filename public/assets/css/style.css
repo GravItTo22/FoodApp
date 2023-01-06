@@ -931,7 +931,7 @@ ol {
 }
 
 .featured__item__pic {
-	height: 270px;
+	/* height: 270px; */
 	position: relative;
 	overflow: hidden;
 	background-position: center center;
@@ -1072,7 +1072,7 @@ ol {
 
 .latest-product__item__pic img {
 	height: 110px;
-	width: 110px;
+	width: 110px !important;
 }
 
 .latest-product__item__text {
@@ -1616,7 +1616,7 @@ ol {
 }
 
 .product__item__pic {
-	height: 270px;
+	/* height: 270px; */
 	position: relative;
 	overflow: hidden;
 }

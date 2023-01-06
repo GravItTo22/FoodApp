@@ -2,6 +2,9 @@
 <meta name="ac:route" content="/">
 <dmx-serverconnect id="scActiveRest" url="/api/Restaurant/ActiveRestaurants" dmx-param:limit="4"></dmx-serverconnect>
 <dmx-serverconnect id="scActiveProd" url="/api/Products/ActiveProducts" dmx-param:limit="8" dmx-param:market="1"></dmx-serverconnect>
+<dmx-serverconnect id="scTrendingProd" url="/api/Products/TrendingProducts" dmx-param:limit="4" dmx-param:market="1" dmx-param:lang="(varLanguage.value=='English')?'EN':(varLanguage.value=='Bengali')?'BEN':(varLanguage.value=='Hindi')?'HIN':'EN'"></dmx-serverconnect>
+<dmx-serverconnect id="scBestReviewProd" url="/api/Products/BestRevieredProducts" dmx-param:limit="4" dmx-param:market="1" dmx-param:lang="(varLanguage.value=='English')?'EN':(varLanguage.value=='Bengali')?'BEN':(varLanguage.value=='Hindi')?'HIN':'EN'"></dmx-serverconnect>
+<dmx-serverconnect id="scNewProd" url="/api/Products/NewProducts" dmx-param:limit="4" dmx-param:market="1" dmx-param:lang="(varLanguage.value=='English')?'EN':(varLanguage.value=='Bengali')?'BEN':(varLanguage.value=='Hindi')?'HIN':'EN'"></dmx-serverconnect>
 <dmx-serverconnect id="scCategory" url="/api/Category/ActiveCategory" dmx-param:market="1" dmx-param:limit="4"></dmx-serverconnect>
 <!-- Hero Section Begin -->
 <section class="hero">
@@ -211,104 +214,23 @@
         <div class="row">
             <div class="col-lg-4 col-md-6">
                 <div class="latest-product__text">
-                    <h4>Latest Products</h4>
+                    <h4>Trending Products</h4>
                     <div class="latest-product__slider owl-carousel">
-                        <div class="latest-prdouct__slider__item">
+                        <div class="latest-prdouct__slider__item" id="repeatTrending" is="dmx-repeat" dmx-bind:repeat="scTrendingProd.data.GetProd" key="p_id">
                             <a href="#" class="latest-product__item">
                                 <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-1.jpg" alt="">
+                                    <img dmx-bind:src="'https://secure.gravitto.com'+content.scTrendingProd.data.GetProd[$index].prod_img1" dmx-bind:alt="content.scTrendingProd.data.GetProd[$index].prod_img1">
                                 </div>
                                 <div class="latest-product__item__text">
-                                    <h6>Cream of Vegetable Soup</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
-                                </div>
-                            </a>
-                            <a href="shop-details.html" class="latest-product__item">
-                                <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-2.jpg" alt="">
-                                </div>
-                                <div class="latest-product__item__text">
-                                    <h6>Kashmiri Malai Kofta</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
-                                </div>
-                            </a>
-                            <a href="shop-details.html" class="latest-product__item">
-                                <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-3.jpg" alt="">
-                                </div>
-                                <div class="latest-product__item__text">
-                                    <h6>Missi Roti</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
+                                    <span dmx-on:click="browserMain.goto('/product-details/'+content.scTrendingProd.data.GetProd[$index].p_id+'/'+content.scTrendingProd.data.GetProd[$index].prod_name)">{{content.scTrendingProd.data.GetProd[$index].prod_name}}</span>
+                                    <h6>{{content.scTrendingProd.data.GetProd[$index].shop_name}}</h6>
+                                    <select id="selectTrending" dmx-bind:id="'selectTrending'+$index" class="form-select form-control d-block w-100 text-monospace font-weight-bold" style="font-size:12px" dmx-bind:options="content.scTrendingProd.data.GetProd[$index].price" optiontext="quantity+' '+q_unit+' :: '+price.toNumber().formatCurrency('₹', '.', ',', 2)+' MRP:'+.mrp.toNumber().formatCurrency('₹', '.', ',', 2)" optionvalue="price_id">
+                                    </select>
                                 </div>
                             </a>
                         </div>
-                        <div class="latest-prdouct__slider__item">
-                            <a href="shop-details.html" class="latest-product__item">
-                                <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-1.jpg" alt="">
-                                </div>
-                                <div class="latest-product__item__text">
-                                    <h6>Lal Mirch ka Parantha</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
-                                </div>
-                            </a>
-                            <a href="shop-details.html" class="latest-product__item">
-                                <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-2.jpg" alt="">
-                                </div>
-                                <div class="latest-product__item__text">
-                                    <h6>Veg Manchurian Gravyl</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
-                                </div>
-                            </a>
-                            <a href="shop-details.html" class="latest-product__item">
-                                <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-3.jpg" alt="">
-                                </div>
-                                <div class="latest-product__item__text">
-                                    <h6>Vada Sambar</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="latest-product__text">
-                    <h4>Top Rated Products</h4>
-                    <div class="latest-product__slider owl-carousel">
-                        <div class="latest-prdouct__slider__item">
-                            <a href="shop-details.html" class="latest-product__item">
-                                <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-1.jpg" alt="">
-                                </div>
-                                <div class="latest-product__item__text">
-                                    <h6>Masala Dosa</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
-                                </div>
-                            </a>
-                            <a href="shop-details.htmls" class="latest-product__item">
-                                <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-2.jpg" alt="">
-                                </div>
-                                <div class="latest-product__item__text">
-                                    <h6>Veg Fried Rice</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
-                                </div>
-                            </a>
-                            <a href="shop-details.html" class="latest-product__item">
-                                <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-3.jpg" alt="">
-                                </div>
-                                <div class="latest-product__item__text">
-                                    <h6>Veg Hakka Noodles</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="latest-prdouct__slider__item">
-                            <a href="shop-details.html" class="latest-product__item">
+                        <!-- <div class="latest-prdouct__slider__item">
+                            <a href="#" class="latest-product__item">
                                 <div class="latest-product__item__pic">
                                     <img src="assets/img/latest-product/lp-1.jpg" alt="">
                                 </div>
@@ -317,63 +239,29 @@
                                     <span><i class="fa fa-rupee"></i>30.00</span>
                                 </div>
                             </a>
-                            <a href="shop-details.html" class="latest-product__item">
-                                <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-2.jpg" alt="">
-                                </div>
-                                <div class="latest-product__item__text">
-                                    <h6>Green Salad</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
-                                </div>
-                            </a>
-                            <a href="shop-details.htmls" class="latest-product__item">
-                                <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-3.jpg" alt="">
-                                </div>
-                                <div class="latest-product__item__text">
-                                    <h6>Paneer Tikka Masala</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
-                                </div>
-                            </a>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6">
                 <div class="latest-product__text">
-                    <h4>Review Products</h4>
+                    <h4>Best Review Products</h4>
                     <div class="latest-product__slider owl-carousel">
-                        <div class="latest-prdouct__slider__item">
-                            <a href="shop-details.html" class="latest-product__item">
+                        <div class="latest-prdouct__slider__item" id="repeatBestReviewed" is="dmx-repeat" dmx-bind:repeat="scBestReviewProd.data.GetProd" key="p_id">
+                            <a href="#" class="latest-product__item">
                                 <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-1.jpg" alt="">
+                                    <img dmx-bind:src="'https://secure.gravitto.com'+scBestReviewProd.data.GetProd[$index].prod_img1" dmx-bind:alt="scBestReviewProd.data.GetProd[$index].prod_img1">
                                 </div>
                                 <div class="latest-product__item__text">
-                                    <h6>Butter Naan</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
-                                </div>
-                            </a>
-                            <a href="shop-details.html" class="latest-product__item">
-                                <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-2.jpg" alt="">
-                                </div>
-                                <div class="latest-product__item__text">
-                                    <h6>Paneer Manchurian Dry</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
-                                </div>
-                            </a>
-                            <a href="shop-details.html" class="latest-product__item">
-                                <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-3.jpg" alt="">
-                                </div>
-                                <div class="latest-product__item__text">
-                                    <h6>Paneer Kulcha</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
+                                    <span dmx-on:click="browserMain.goto('/product-details/'+content.scBestReviewProd.data.GetProd[$index].p_id+'/'+content.scBestReviewProd.data.GetProd[$index].prod_name)">{{content.scBestReviewProd.data.GetProd[$index].prod_name}}</span>
+                                    <h6>{{content.scBestReviewProd.data.GetProd[$index].shop_name}}</h6>
+                                    <select id="selectBestReviewed" dmx-bind:id="'selectBestReviewed'+$index" class="form-select form-control d-block w-100 text-monospace font-weight-bold" style="font-size:12px" dmx-bind:options="content.scBestReviewProd.data.GetProd[$index].price" optiontext="quantity+' '+q_unit+' :: '+price.toNumber().formatCurrency('₹', '.', ',', 2)+' MRP:'+.mrp.toNumber().formatCurrency('₹', '.', ',', 2)" optionvalue="price_id">
+                                    </select>
                                 </div>
                             </a>
                         </div>
-                        <div class="latest-prdouct__slider__item">
-                            <a href="shop-details.html" class="latest-product__item">
+                        <!-- <div class="latest-prdouct__slider__item">
+                            <a href="#" class="latest-product__item">
                                 <div class="latest-product__item__pic">
                                     <img src="assets/img/latest-product/lp-1.jpg" alt="">
                                 </div>
@@ -382,25 +270,38 @@
                                     <span><i class="fa fa-rupee"></i>30.00</span>
                                 </div>
                             </a>
-                            <a href="shop-details.html" class="latest-product__item">
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="latest-product__text">
+                    <h4>New on Gravitto</h4>
+                    <div class="latest-product__slider owl-carousel">
+                        <div class="latest-prdouct__slider__item" id="repeatNewProd" is="dmx-repeat" dmx-bind:repeat="scNewProd.data.GetProd" key="p_id">
+                            <a href="#" class="latest-product__item">
                                 <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-2.jpg" alt="">
+                                    <img dmx-bind:src="'https://secure.gravitto.com'+scNewProd.data.GetProd[$index].prod_img1" dmx-bind:alt="scNewProd.data.GetProd[$index].prod_img1">
                                 </div>
                                 <div class="latest-product__item__text">
-                                    <h6>Singapore Paneer</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
-                                </div>
-                            </a>
-                            <a href="shop-details.html" class="latest-product__item">
-                                <div class="latest-product__item__pic">
-                                    <img src="assets/img/latest-product/lp-3.jpg" alt="">
-                                </div>
-                                <div class="latest-product__item__text">
-                                    <h6>Veg Hot and Sour Soup</h6>
-                                    <span><i class="fa fa-rupee"></i>30.00</span>
+                                    <span dmx-on:click="browserMain.goto('/product-details/'+content.scNewProd.data.GetProd[$index].p_id+'/'+content.scNewProd.data.GetProd[$index].prod_name)">{{content.scNewProd.data.GetProd[$index].prod_name}}</span>
+                                    <h6>{{content.scNewProd.data.GetProd[$index].shop_name}}</h6>
+                                    <select id="selectNewProd" dmx-bind:id="'selectNewProd'+$index" class="form-select form-control d-block w-100 text-monospace font-weight-bold" style="font-size:12px" dmx-bind:options="content.scNewProd.data.GetProd[$index].price" optiontext="quantity+' '+q_unit+' :: '+price.toNumber().formatCurrency('₹', '.', ',', 2)+' MRP:'+.mrp.toNumber().formatCurrency('₹', '.', ',', 2)" optionvalue="price_id">
+                                    </select>
                                 </div>
                             </a>
                         </div>
+                        <!-- <div class="latest-prdouct__slider__item">
+                            <a href="#" class="latest-product__item">
+                                <div class="latest-product__item__pic">
+                                    <img src="assets/img/latest-product/lp-1.jpg" alt="">
+                                </div>
+                                <div class="latest-product__item__text">
+                                    <h6>Lal Mirch ka Parantha</h6>
+                                    <span><i class="fa fa-rupee"></i>30.00</span>
+                                </div>
+                            </a>
+                        </div> -->
                     </div>
                 </div>
             </div>

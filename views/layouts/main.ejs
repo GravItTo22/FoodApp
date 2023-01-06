@@ -53,6 +53,7 @@
     <dmx-serverconnect id="scLanguage" url="/api/Language/ActiveLanguage" dmx-param:lang="varLanguage.value"></dmx-serverconnect>
     <dmx-serverconnect id="scSetLang" url="/api/Language/SessionLang"></dmx-serverconnect>
     <dmx-value id="varLanguage" dmx-bind:value="scSetLang.data.varSetLang?scSetLang.data.varSetLang:'English'"></dmx-value>
+    <dmx-datetime id="varDate" interval="days"></dmx-datetime>
     <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
@@ -258,9 +259,7 @@
                     <div class="footer__copyright">
                         <div class="footer__copyright__text">
                             <p>
-                                Copyright &copy;<script>
-                                    document.write(new Date().getFullYear());
-                                </script> All rights reserved | gravitto.com
+                                Copyright &copy;{{varDate.datetime.formatDate('yyyy')}} All rights reserved | gravitto.com
                             </p>
                         </div>
                         <div class="footer__copyright__payment"><img src="assets/img/payment-item.png" alt=""></div>

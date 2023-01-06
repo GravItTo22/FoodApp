@@ -305,6 +305,21 @@
                             "options": {
                               "url": "{{'http://43.252.88.230/index.php/smsapi/httpapi/?secret=T2LWEAPBr3f5sra267Ds&sender=CLOWKP&tempid=1007827874034725193&receiver='+$_POST.Mobile+'&route=TA&msgtype=3&sms=Dear '+CheckUser.fname+', '+OTP+' is your OTP Code From CLOWKPRO'}}"
                             },
+                            "output": false
+                          },
+                          {
+                            "name": "apiWhatsapp",
+                            "module": "api",
+                            "action": "send",
+                            "options": {
+                              "url": "https://clicke.co.in/eapi/sendMessage",
+                              "params": {
+                                "auth_key": "{{'8H6jmHrEI9Gag1dVY14a'}}",
+                                "message": "{{OTP+' is your OTC (One Time Code) for forgot password requested from Gravitto mobile app. Valid for 150 seconds\\nFrom Gravitto.com'}}",
+                                "mobileNumber": "{{91+$_POST.Mobile}}",
+                                "type": "{{'msg'}}"
+                              }
+                            },
                             "output": true
                           }
                         ]

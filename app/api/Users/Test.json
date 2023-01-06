@@ -1,0 +1,15 @@
+{
+  "name": "api",
+  "module": "api",
+  "action": "send",
+  "options": {
+    "url": "https://clicke.co.in/eapi/sendMessage",
+    "params": {
+      "auth_key": "{{'8H6jmHrEI9Gag1dVY14a'}}",
+      "message": "{{'TEXT HERE'}}",
+      "mobileNumber": "{{919508862529}}",
+      "type": "{{'msg'}}"
+    }
+  },
+  "output": true
+}

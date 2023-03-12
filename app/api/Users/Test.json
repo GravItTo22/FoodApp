@@ -11,5 +11,6 @@
       "type": "{{'msg'}}"
     }
   },
-  "output": true
+  "output": true,
+  "disabled": true
 }

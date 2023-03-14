@@ -5,18 +5,15 @@
   "options": {
     "client": "postgres",
     "connection": {
-      "host": "db-postgresql-blr1-40136-do-user-10118978-0.b.db.ondigitalocean.com",
+      "host": "db-postgresql-blr1-33845-do-user-13659658-0.b.db.ondigitalocean.com",
       "port": 25060,
       "user": "doadmin",
-      "password": "9hi1N6DClf1GAWlo",
-      "database": "foodappdb",
+      "password": "AVNS_Ll4W0-NGuSIFUQsWukt",
+      "database": "defaultdb",
       "ssl": {
         "rejectUnauthorized": false
       }
-    },
-    "meta": {}
+    }
   },
-  "fileName": "ClientApp.json",
-  "actionFilePath": "file:///F:/swi/ClientFoodApp/app/modules/connections/ClientApp.json",
-  "serverType": "node"
+  "fileName": "ClientApp.json"
 }

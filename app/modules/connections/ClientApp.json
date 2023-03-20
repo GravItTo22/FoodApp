@@ -13,7 +13,10 @@
       "ssl": {
         "rejectUnauthorized": false
       }
-    }
+    },
+    "meta": {}
   },
-  "fileName": "ClientApp.json"
+  "fileName": "ClientApp.json",
+  "actionFilePath": "file:///F:/GRAVITTO/AppFood1/app/modules/connections/ClientApp.json",
+  "serverType": "node"
 }

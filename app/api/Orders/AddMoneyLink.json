@@ -1,0 +1,599 @@
+{
+  "meta": {
+    "options": {
+      "linkedFile": "/views/add-money-wallet.ejs",
+      "linkedForm": "formAddMoney"
+    },
+    "$_POST": [
+      {
+        "type": "number",
+        "fieldName": "Amount",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            },
+            "core:number": {
+              "param": "",
+              "message": "Please enter a valid amount."
+            },
+            "core:maxlength": {
+              "param": "5"
+            }
+          }
+        },
+        "name": "Amount"
+      },
+      {
+        "type": "text",
+        "fieldName": "Message",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            },
+            "core:maxlength": {
+              "param": "200"
+            }
+          }
+        },
+        "name": "Message"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "",
+        "module": "auth",
+        "action": "restrict",
+        "options": {
+          "provider": "security",
+          "permissions": [
+            "write"
+          ],
+          "loginUrl": "/login",
+          "forbiddenUrl": "/403-forbidden"
+        }
+      },
+      {
+        "name": "",
+        "module": "core",
+        "action": "trycatch",
+        "options": {
+          "try": {
+            "steps": [
+              {
+                "name": "identity",
+                "module": "auth",
+                "action": "identify",
+                "options": {
+                  "provider": "security"
+                },
+                "meta": []
+              },
+              {
+                "name": "",
+                "module": "core",
+                "action": "condition",
+                "options": {
+                  "if": "{{$_POST.Amount>=100}}",
+                  "then": {
+                    "steps": [
+                      {
+                        "name": "Amount",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "{{$_POST.Amount.formatNumber(2, '.', 5)}}"
+                        },
+                        "meta": [],
+                        "outputType": "text",
+                        "output": false
+                      },
+                      {
+                        "name": "TxnId",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "{{UUID.md5(123456).substr(1, 15)}}"
+                        },
+                        "meta": [],
+                        "outputType": "text",
+                        "output": false
+                      },
+                      {
+                        "name": "key",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "XZ945DB791"
+                        },
+                        "meta": [],
+                        "outputType": "text",
+                        "output": false
+                      },
+                      {
+                        "name": "email",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "admin@swpay.in"
+                        },
+                        "meta": [],
+                        "outputType": "text",
+                        "output": false
+                      },
+                      {
+                        "name": "mobile",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": 7060881441
+                        },
+                        "meta": [],
+                        "outputType": "text",
+                        "output": false
+                      },
+                      {
+                        "name": "salt",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "EMHZJLQ47F"
+                        },
+                        "meta": [],
+                        "outputType": "text",
+                        "output": false
+                      },
+                      {
+                        "name": "GetUserDetails",
+                        "module": "dbconnector",
+                        "action": "single",
+                        "options": {
+                          "connection": "postgres_gcpServer",
+                          "sql": {
+                            "type": "SELECT",
+                            "columns": [
+                              {
+                                "table": "m_users",
+                                "column": "user_id"
+                              }
+                            ],
+                            "table": {
+                              "name": "m_users"
+                            },
+                            "primary": "id",
+                            "joins": [],
+                            "wheres": {
+                              "condition": "AND",
+                              "rules": [
+                                {
+                                  "id": "m_users.id",
+                                  "field": "m_users.id",
+                                  "type": "double",
+                                  "operator": "equal",
+                                  "value": "{{identity}}",
+                                  "data": {
+                                    "table": "m_users",
+                                    "column": "id",
+                                    "type": "number",
+                                    "columnObj": {
+                                      "type": "increments",
+                                      "default": "",
+                                      "primary": true,
+                                      "nullable": false,
+                                      "unique": true,
+                                      "name": "id"
+                                    }
+                                  },
+                                  "operation": "="
+                                }
+                              ],
+                              "conditional": null,
+                              "valid": true
+                            },
+                            "query": "SELECT user_id\nFROM m_users\nWHERE id = :P1 /* {{identity}} */",
+                            "params": [
+                              {
+                                "operator": "equal",
+                                "type": "expression",
+                                "name": ":P1",
+                                "value": "{{identity}}"
+                              }
+                            ]
+                          }
+                        },
+                        "output": false,
+                        "meta": [
+                          {
+                            "type": "text",
+                            "name": "user_id"
+                          }
+                        ],
+                        "outputType": "object"
+                      },
+                      {
+                        "name": "Combine",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "{{key+'|'+TxnId+'|'+GetUserDetails.user_id+'|'+email+'|'+mobile+'|'+Amount+'||||||'+$_POST.Message+'|'+salt}}"
+                        },
+                        "meta": [],
+                        "outputType": "text",
+                        "output": false
+                      },
+                      {
+                        "name": "hash",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "{{Combine.sha512()}}"
+                        },
+                        "meta": [],
+                        "outputType": "text",
+                        "output": false
+                      },
+                      {
+                        "name": "apiAddMoneyLink",
+                        "module": "api",
+                        "action": "send",
+                        "options": {
+                          "method": "POST",
+                          "url": "https://dashboard.easebuzz.in/easycollect/v1/create",
+                          "data": {
+                            "key": "{{key}}",
+                            "hash": "{{hash}}",
+                            "merchant_txn": "{{TxnId}}",
+                            "name": "{{GetUserDetails.user_id}}",
+                            "email": "{{email}}",
+                            "phone": "{{mobile}}",
+                            "amount": "{{Amount}}",
+                            "message": "{{$_POST.Message}}",
+                            "udf1": "",
+                            "udf2": "",
+                            "udf3": "",
+                            "udf4": "",
+                            "udf5": ""
+                          }
+                        },
+                        "output": false
+                      },
+                      {
+                        "name": "Status",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "{{(apiAddMoneyLink.data.status==true)?1:3}}"
+                        },
+                        "meta": [],
+                        "outputType": "text"
+                      },
+                      {
+                        "name": "Response",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "{{apiAddMoneyLink.data.message}}"
+                        },
+                        "meta": [],
+                        "outputType": "text"
+                      },
+                      {
+                        "name": "expiry_date",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "{{apiAddMoneyLink.data.data.expiry_date.formatDate('yyyy-MM-dd')}}"
+                        },
+                        "meta": [],
+                        "outputType": "text"
+                      },
+                      {
+                        "name": "order_id",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "{{apiAddMoneyLink.data.data.id}}"
+                        },
+                        "meta": [],
+                        "outputType": "text"
+                      },
+                      {
+                        "name": "payment_type",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "{{apiAddMoneyLink.data.data.payment_type}}"
+                        },
+                        "meta": [],
+                        "outputType": "text"
+                      },
+                      {
+                        "name": "api_id",
+                        "module": "core",
+                        "action": "setvalue",
+                        "options": {
+                          "value": "{{apiAddMoneyLink.data.data.transaction_id}}"
+                        },
+                        "meta": [],
+                        "outputType": "text"
+                      },
+                      {
+                        "name": "",
+                        "module": "core",
+                        "action": "condition",
+                        "options": {
+                          "if": "{{apiAddMoneyLink.data.status==true}}",
+                          "then": {
+                            "steps": [
+                              {
+                                "name": "AddMoneyUrl",
+                                "module": "core",
+                                "action": "setvalue",
+                                "options": {
+                                  "value": "{{apiAddMoneyLink.data.data.payment_url}}"
+                                },
+                                "meta": [],
+                                "outputType": "text",
+                                "output": true
+                              },
+                              {
+                                "name": "AddPaymentRequest",
+                                "module": "dbupdater",
+                                "action": "insert",
+                                "options": {
+                                  "connection": "postgres_gcpServer",
+                                  "sql": {
+                                    "type": "insert",
+                                    "values": [
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "pay_user_id",
+                                        "type": "number",
+                                        "value": "{{12}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "req_user_id",
+                                        "type": "number",
+                                        "value": "{{identity}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "user_name",
+                                        "type": "text",
+                                        "value": "{{GetUserDetails.user_id}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "req_email",
+                                        "type": "text",
+                                        "value": "{{email}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "req_mobile",
+                                        "type": "text",
+                                        "value": "{{mobile}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "amount",
+                                        "type": "text",
+                                        "value": "{{Amount}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "message",
+                                        "type": "text",
+                                        "value": "{{$_POST.Message}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "payment_url",
+                                        "type": "text",
+                                        "value": "{{AddMoneyUrl}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "client_req_id",
+                                        "type": "text",
+                                        "value": "{{TxnId}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "order_id",
+                                        "type": "text",
+                                        "value": "{{order_id}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "api_id",
+                                        "type": "text",
+                                        "value": "{{api_id}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "payment_mode",
+                                        "type": "text",
+                                        "value": "{{'Credit/ Debit Card or Wallet'}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "pay_type",
+                                        "type": "text",
+                                        "value": "{{payment_type}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "response",
+                                        "type": "text",
+                                        "value": "{{Response}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "status",
+                                        "type": "number",
+                                        "value": "{{Status}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "expiry_date",
+                                        "type": "date",
+                                        "value": "{{expiry_date}}"
+                                      },
+                                      {
+                                        "table": "payment_req_self",
+                                        "column": "request_time",
+                                        "type": "datetime",
+                                        "value": "{{NOW}}"
+                                      }
+                                    ],
+                                    "table": "payment_req_self",
+                                    "returning": "id",
+                                    "query": "INSERT INTO payment_req_self\n(pay_user_id, req_user_id, user_name, req_email, req_mobile, amount, message, payment_url, client_req_id, order_id, api_id, payment_mode, pay_type, response, status, expiry_date, request_time) VALUES (:P1 /* {{12}} */, :P2 /* {{identity}} */, :P3 /* {{GetUserDetails.user_id}} */, :P4 /* {{email}} */, :P5 /* {{mobile}} */, :P6 /* {{Amount}} */, :P7 /* {{$_POST.Message}} */, :P8 /* {{AddMoneyUrl}} */, :P9 /* {{TxnId}} */, :P10 /* {{order_id}} */, :P11 /* {{api_id}} */, :P12 /* {{'Credit/ Debit Card or Wallet'}} */, :P13 /* {{payment_type}} */, :P14 /* {{Response}} */, :P15 /* {{Status}} */, :P16 /* {{expiry_date}} */, :P17 /* {{NOW}} */)",
+                                    "params": [
+                                      {
+                                        "name": ":P1",
+                                        "type": "expression",
+                                        "value": "{{12}}"
+                                      },
+                                      {
+                                        "name": ":P2",
+                                        "type": "expression",
+                                        "value": "{{identity}}"
+                                      },
+                                      {
+                                        "name": ":P3",
+                                        "type": "expression",
+                                        "value": "{{GetUserDetails.user_id}}"
+                                      },
+                                      {
+                                        "name": ":P4",
+                                        "type": "expression",
+                                        "value": "{{email}}"
+                                      },
+                                      {
+                                        "name": ":P5",
+                                        "type": "expression",
+                                        "value": "{{mobile}}"
+                                      },
+                                      {
+                                        "name": ":P6",
+                                        "type": "expression",
+                                        "value": "{{Amount}}"
+                                      },
+                                      {
+                                        "name": ":P7",
+                                        "type": "expression",
+                                        "value": "{{$_POST.Message}}"
+                                      },
+                                      {
+                                        "name": ":P8",
+                                        "type": "expression",
+                                        "value": "{{AddMoneyUrl}}"
+                                      },
+                                      {
+                                        "name": ":P9",
+                                        "type": "expression",
+                                        "value": "{{TxnId}}"
+                                      },
+                                      {
+                                        "name": ":P10",
+                                        "type": "expression",
+                                        "value": "{{order_id}}"
+                                      },
+                                      {
+                                        "name": ":P11",
+                                        "type": "expression",
+                                        "value": "{{api_id}}"
+                                      },
+                                      {
+                                        "name": ":P12",
+                                        "type": "expression",
+                                        "value": "{{'Credit/ Debit Card or Wallet'}}"
+                                      },
+                                      {
+                                        "name": ":P13",
+                                        "type": "expression",
+                                        "value": "{{payment_type}}"
+                                      },
+                                      {
+                                        "name": ":P14",
+                                        "type": "expression",
+                                        "value": "{{Response}}"
+                                      },
+                                      {
+                                        "name": ":P15",
+                                        "type": "expression",
+                                        "value": "{{Status}}"
+                                      },
+                                      {
+                                        "name": ":P16",
+                                        "type": "expression",
+                                        "value": "{{expiry_date}}"
+                                      },
+                                      {
+                                        "name": ":P17",
+                                        "type": "expression",
+                                        "value": "{{NOW}}"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "meta": [
+                                  {
+                                    "name": "identity",
+                                    "type": "text"
+                                  },
+                                  {
+                                    "name": "affected",
+                                    "type": "number"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "outputType": "boolean"
+                      }
+                    ]
+                  },
+                  "else": {
+                    "steps": {
+                      "name": "Resp",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Please enter an Amount more than 100"
+                      },
+                      "meta": [],
+                      "outputType": "text",
+                      "output": true
+                    }
+                  }
+                },
+                "outputType": "boolean"
+              }
+            ]
+          },
+          "catch": {
+            "steps": {
+              "name": "Resp",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "Suspicious Activity"
+              },
+              "meta": [],
+              "outputType": "text",
+              "output": true
+            }
+          }
+        }
+      }
+    ]
+  }
+}

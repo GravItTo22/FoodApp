@@ -1,0 +1,2101 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ],
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "txnid"
+      },
+      {
+        "type": "text",
+        "name": "firstname"
+      },
+      {
+        "type": "text",
+        "name": "email"
+      },
+      {
+        "type": "text",
+        "name": "phone"
+      },
+      {
+        "type": "text",
+        "name": "key"
+      },
+      {
+        "type": "text",
+        "name": "mode"
+      },
+      {
+        "type": "text",
+        "name": "status"
+      },
+      {
+        "type": "text",
+        "name": "unmappedstatus"
+      },
+      {
+        "type": "text",
+        "name": "cardcategory"
+      },
+      {
+        "type": "text",
+        "name": "addedon"
+      },
+      {
+        "type": "text",
+        "name": "payment_source"
+      },
+      {
+        "type": "text",
+        "name": "pg_type"
+      },
+      {
+        "type": "text",
+        "name": "bank_ref_num"
+      },
+      {
+        "type": "text",
+        "name": "bankcode"
+      },
+      {
+        "type": "text",
+        "name": "error"
+      },
+      {
+        "type": "text",
+        "name": "name_on_card"
+      },
+      {
+        "type": "text",
+        "name": "cardnum"
+      },
+      {
+        "type": "text",
+        "name": "issuing_bank"
+      },
+      {
+        "type": "text",
+        "name": "card_type"
+      },
+      {
+        "type": "text",
+        "name": "easepayid"
+      },
+      {
+        "type": "text",
+        "name": "amount"
+      },
+      {
+        "type": "text",
+        "name": "net_amount_debit"
+      },
+      {
+        "type": "text",
+        "name": "cash_back_percentage"
+      },
+      {
+        "type": "text",
+        "name": "deduction_percentage"
+      },
+      {
+        "type": "text",
+        "name": "productinfo"
+      },
+      {
+        "type": "text",
+        "name": "udf10"
+      },
+      {
+        "type": "text",
+        "name": "udf9"
+      },
+      {
+        "type": "text",
+        "name": "udf8"
+      },
+      {
+        "type": "text",
+        "name": "udf7"
+      },
+      {
+        "type": "text",
+        "name": "udf6"
+      },
+      {
+        "type": "text",
+        "name": "udf5"
+      },
+      {
+        "type": "text",
+        "name": "udf4"
+      },
+      {
+        "type": "text",
+        "name": "udf3"
+      },
+      {
+        "type": "text",
+        "name": "udf2"
+      },
+      {
+        "type": "text",
+        "name": "udf1"
+      },
+      {
+        "type": "text",
+        "name": "hash"
+      },
+      {
+        "type": "text",
+        "name": "surl"
+      },
+      {
+        "type": "text",
+        "name": "furl"
+      },
+      {
+        "type": "text",
+        "name": "error_message"
+      },
+      {
+        "type": "text",
+        "name": "merchant_logo"
+      },
+      {
+        "type": "text",
+        "name": "upi_va"
+      },
+      {
+        "type": "text",
+        "name": "ip_address"
+      },
+      {
+        "type": "text",
+        "name": "host_address"
+      },
+      {
+        "type": "array",
+        "name": "record",
+        "sub": [
+          {
+            "type": "number",
+            "name": "order_table_id"
+          },
+          {
+            "type": "number",
+            "name": "prod_id"
+          },
+          {
+            "type": "number",
+            "name": "price_id"
+          },
+          {
+            "type": "number",
+            "name": "cart_id"
+          },
+          {
+            "type": "number",
+            "name": "user_id"
+          },
+          {
+            "type": "text",
+            "name": "prod_qty"
+          },
+          {
+            "type": "text",
+            "name": "each_unit_price"
+          },
+          {
+            "type": "text",
+            "name": "charge_per"
+          },
+          {
+            "type": "text",
+            "name": "charge_value"
+          },
+          {
+            "type": "text",
+            "name": "charge_amt"
+          },
+          {
+            "type": "text",
+            "name": "comm_per"
+          },
+          {
+            "type": "text",
+            "name": "comm_value"
+          },
+          {
+            "type": "text",
+            "name": "comm_amt"
+          },
+          {
+            "type": "text",
+            "name": "each_net_amt"
+          },
+          {
+            "type": "number",
+            "name": "order_status"
+          },
+          {
+            "type": "text",
+            "name": "remarks"
+          },
+          {
+            "type": "text",
+            "name": "blank1"
+          },
+          {
+            "type": "text",
+            "name": "blank2"
+          },
+          {
+            "type": "text",
+            "name": "blank3"
+          },
+          {
+            "type": "number",
+            "name": "created_by"
+          },
+          {
+            "type": "datetime",
+            "name": "created_on"
+          },
+          {
+            "type": "datetime",
+            "name": "updated_on"
+          },
+          {
+            "type": "number",
+            "name": "deleted_by"
+          },
+          {
+            "type": "datetime",
+            "name": "deleted_on"
+          },
+          {
+            "type": "text",
+            "name": "payment_status"
+          },
+          {
+            "type": "text",
+            "name": "purchase_price"
+          },
+          {
+            "type": "number",
+            "name": "AddOrder"
+          },
+          {
+            "type": "number",
+            "name": "GetPreOrderDetails[$index]"
+          },
+          {
+            "type": "number",
+            "name": "cGetPreOrderDetails[$index]"
+          }
+        ]
+      }
+    ],
+    "$_SERVER": [
+      {
+        "type": "text",
+        "name": "REMOTE_ADDR"
+      },
+      {
+        "type": "text",
+        "name": "HOST_ADDR"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "CallBackArchives",
+              "module": "dbupdater",
+              "action": "insert",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "insert",
+                  "values": [
+                    {
+                      "table": "call_back_archives",
+                      "column": "txnid",
+                      "type": "text",
+                      "value": "{{$_POST.txnid}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "firstname",
+                      "type": "text",
+                      "value": "{{$_POST.firstname}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "email",
+                      "type": "text",
+                      "value": "{{$_POST.email}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "phone",
+                      "type": "text",
+                      "value": "{{$_POST.phone}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "api_key",
+                      "type": "text",
+                      "value": "{{$_POST.key}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "api_mode",
+                      "type": "text",
+                      "value": "{{$_POST.mode}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "status",
+                      "type": "text",
+                      "value": "{{$_POST.status}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "unmappedstatus",
+                      "type": "text",
+                      "value": "{{$_POST.unmappedstatus}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "cardcategory",
+                      "type": "text",
+                      "value": "{{$_POST.cardcategory}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "addedon",
+                      "type": "text",
+                      "value": "{{$_POST.addedon}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "payment_source",
+                      "type": "text",
+                      "value": "{{$_POST.payment_source}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "pg_type",
+                      "type": "text",
+                      "value": "{{$_POST.pg_type}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "bank_ref_num",
+                      "type": "text",
+                      "value": "{{$_POST.bank_ref_num}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "bankcode",
+                      "type": "text",
+                      "value": "{{$_POST.bankcode}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "error",
+                      "type": "text",
+                      "value": "{{$_POST.error}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "name_on_card",
+                      "type": "text",
+                      "value": "{{$_POST.name_on_card}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "cardnum",
+                      "type": "text",
+                      "value": "{{$_POST.cardnum}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "issuing_bank",
+                      "type": "text",
+                      "value": "{{$_POST.issuing_bank}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "card_type",
+                      "type": "text",
+                      "value": "{{$_POST.card_type}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "easepayid",
+                      "type": "text",
+                      "value": "{{$_POST.easepayid}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "amount",
+                      "type": "text",
+                      "value": "{{$_POST.amount}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "net_amount_debit",
+                      "type": "text",
+                      "value": "{{$_POST.net_amount_debit}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "cash_back_percentage",
+                      "type": "text",
+                      "value": "{{$_POST.cash_back_percentage}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "deduction_percentage",
+                      "type": "text",
+                      "value": "{{$_POST.deduction_percentage}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "productinfo",
+                      "type": "text",
+                      "value": "{{$_POST.productinfo}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "udf10",
+                      "type": "text",
+                      "value": "{{$_POST.udf10}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "udf9",
+                      "type": "text",
+                      "value": "{{$_POST.udf9}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "udf8",
+                      "type": "text",
+                      "value": "{{$_POST.udf8}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "udf7",
+                      "type": "text",
+                      "value": "{{$_POST.udf7}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "udf6",
+                      "type": "text",
+                      "value": "{{$_POST.udf6}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "udf5",
+                      "type": "text",
+                      "value": "{{$_POST.udf5}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "udf4",
+                      "type": "text",
+                      "value": "{{$_POST.udf4}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "udf3",
+                      "type": "text",
+                      "value": "{{$_POST.udf3}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "udf2",
+                      "type": "text",
+                      "value": "{{$_POST.udf2}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "udf1",
+                      "type": "text",
+                      "value": "{{$_POST.udf1}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "hash",
+                      "type": "text",
+                      "value": "{{$_POST.hash}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "surl",
+                      "type": "text",
+                      "value": "{{$_POST.surl}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "furl",
+                      "type": "text",
+                      "value": "{{$_POST.furl}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "error_message",
+                      "type": "text",
+                      "value": "{{$_POST.error_message}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "merchant_logo",
+                      "type": "text",
+                      "value": "{{$_POST.merchant_logo}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "upi_va",
+                      "type": "text",
+                      "value": "{{$_POST.upi_va}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "created_on",
+                      "type": "datetime",
+                      "value": "{{NOW}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "ip_address",
+                      "type": "text",
+                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                    },
+                    {
+                      "table": "call_back_archives",
+                      "column": "host_address",
+                      "type": "text",
+                      "value": "{{$_SERVER.HOST_ADDR}}"
+                    }
+                  ],
+                  "table": "call_back_archives",
+                  "returning": "id",
+                  "query": "INSERT INTO call_back_archives\n(txnid, firstname, email, phone, api_key, api_mode, status, unmappedstatus, cardcategory, addedon, payment_source, pg_type, bank_ref_num, bankcode, error, name_on_card, cardnum, issuing_bank, card_type, easepayid, amount, net_amount_debit, cash_back_percentage, deduction_percentage, productinfo, udf10, udf9, udf8, udf7, udf6, udf5, udf4, udf3, udf2, udf1, hash, surl, furl, error_message, merchant_logo, upi_va, created_on, ip_address, host_address) VALUES (:P1 /* {{$_POST.txnid}} */, :P2 /* {{$_POST.firstname}} */, :P3 /* {{$_POST.email}} */, :P4 /* {{$_POST.phone}} */, :P5 /* {{$_POST.key}} */, :P6 /* {{$_POST.mode}} */, :P7 /* {{$_POST.status}} */, :P8 /* {{$_POST.unmappedstatus}} */, :P9 /* {{$_POST.cardcategory}} */, :P10 /* {{$_POST.addedon}} */, :P11 /* {{$_POST.payment_source}} */, :P12 /* {{$_POST.pg_type}} */, :P13 /* {{$_POST.bank_ref_num}} */, :P14 /* {{$_POST.bankcode}} */, :P15 /* {{$_POST.error}} */, :P16 /* {{$_POST.name_on_card}} */, :P17 /* {{$_POST.cardnum}} */, :P18 /* {{$_POST.issuing_bank}} */, :P19 /* {{$_POST.card_type}} */, :P20 /* {{$_POST.easepayid}} */, :P21 /* {{$_POST.amount}} */, :P22 /* {{$_POST.net_amount_debit}} */, :P23 /* {{$_POST.cash_back_percentage}} */, :P24 /* {{$_POST.deduction_percentage}} */, :P25 /* {{$_POST.productinfo}} */, :P26 /* {{$_POST.udf10}} */, :P27 /* {{$_POST.udf9}} */, :P28 /* {{$_POST.udf8}} */, :P29 /* {{$_POST.udf7}} */, :P30 /* {{$_POST.udf6}} */, :P31 /* {{$_POST.udf5}} */, :P32 /* {{$_POST.udf4}} */, :P33 /* {{$_POST.udf3}} */, :P34 /* {{$_POST.udf2}} */, :P35 /* {{$_POST.udf1}} */, :P36 /* {{$_POST.hash}} */, :P37 /* {{$_POST.surl}} */, :P38 /* {{$_POST.furl}} */, :P39 /* {{$_POST.error_message}} */, :P40 /* {{$_POST.merchant_logo}} */, :P41 /* {{$_POST.upi_va}} */, :P42 /* {{NOW}} */, :P43 /* {{$_SERVER.REMOTE_ADDR}} */, :P44 /* {{$_SERVER.HOST_ADDR}} */)",
+                  "params": [
+                    {
+                      "name": ":P1",
+                      "type": "expression",
+                      "value": "{{$_POST.txnid}}"
+                    },
+                    {
+                      "name": ":P2",
+                      "type": "expression",
+                      "value": "{{$_POST.firstname}}"
+                    },
+                    {
+                      "name": ":P3",
+                      "type": "expression",
+                      "value": "{{$_POST.email}}"
+                    },
+                    {
+                      "name": ":P4",
+                      "type": "expression",
+                      "value": "{{$_POST.phone}}"
+                    },
+                    {
+                      "name": ":P5",
+                      "type": "expression",
+                      "value": "{{$_POST.key}}"
+                    },
+                    {
+                      "name": ":P6",
+                      "type": "expression",
+                      "value": "{{$_POST.mode}}"
+                    },
+                    {
+                      "name": ":P7",
+                      "type": "expression",
+                      "value": "{{$_POST.status}}"
+                    },
+                    {
+                      "name": ":P8",
+                      "type": "expression",
+                      "value": "{{$_POST.unmappedstatus}}"
+                    },
+                    {
+                      "name": ":P9",
+                      "type": "expression",
+                      "value": "{{$_POST.cardcategory}}"
+                    },
+                    {
+                      "name": ":P10",
+                      "type": "expression",
+                      "value": "{{$_POST.addedon}}"
+                    },
+                    {
+                      "name": ":P11",
+                      "type": "expression",
+                      "value": "{{$_POST.payment_source}}"
+                    },
+                    {
+                      "name": ":P12",
+                      "type": "expression",
+                      "value": "{{$_POST.pg_type}}"
+                    },
+                    {
+                      "name": ":P13",
+                      "type": "expression",
+                      "value": "{{$_POST.bank_ref_num}}"
+                    },
+                    {
+                      "name": ":P14",
+                      "type": "expression",
+                      "value": "{{$_POST.bankcode}}"
+                    },
+                    {
+                      "name": ":P15",
+                      "type": "expression",
+                      "value": "{{$_POST.error}}"
+                    },
+                    {
+                      "name": ":P16",
+                      "type": "expression",
+                      "value": "{{$_POST.name_on_card}}"
+                    },
+                    {
+                      "name": ":P17",
+                      "type": "expression",
+                      "value": "{{$_POST.cardnum}}"
+                    },
+                    {
+                      "name": ":P18",
+                      "type": "expression",
+                      "value": "{{$_POST.issuing_bank}}"
+                    },
+                    {
+                      "name": ":P19",
+                      "type": "expression",
+                      "value": "{{$_POST.card_type}}"
+                    },
+                    {
+                      "name": ":P20",
+                      "type": "expression",
+                      "value": "{{$_POST.easepayid}}"
+                    },
+                    {
+                      "name": ":P21",
+                      "type": "expression",
+                      "value": "{{$_POST.amount}}"
+                    },
+                    {
+                      "name": ":P22",
+                      "type": "expression",
+                      "value": "{{$_POST.net_amount_debit}}"
+                    },
+                    {
+                      "name": ":P23",
+                      "type": "expression",
+                      "value": "{{$_POST.cash_back_percentage}}"
+                    },
+                    {
+                      "name": ":P24",
+                      "type": "expression",
+                      "value": "{{$_POST.deduction_percentage}}"
+                    },
+                    {
+                      "name": ":P25",
+                      "type": "expression",
+                      "value": "{{$_POST.productinfo}}"
+                    },
+                    {
+                      "name": ":P26",
+                      "type": "expression",
+                      "value": "{{$_POST.udf10}}"
+                    },
+                    {
+                      "name": ":P27",
+                      "type": "expression",
+                      "value": "{{$_POST.udf9}}"
+                    },
+                    {
+                      "name": ":P28",
+                      "type": "expression",
+                      "value": "{{$_POST.udf8}}"
+                    },
+                    {
+                      "name": ":P29",
+                      "type": "expression",
+                      "value": "{{$_POST.udf7}}"
+                    },
+                    {
+                      "name": ":P30",
+                      "type": "expression",
+                      "value": "{{$_POST.udf6}}"
+                    },
+                    {
+                      "name": ":P31",
+                      "type": "expression",
+                      "value": "{{$_POST.udf5}}"
+                    },
+                    {
+                      "name": ":P32",
+                      "type": "expression",
+                      "value": "{{$_POST.udf4}}"
+                    },
+                    {
+                      "name": ":P33",
+                      "type": "expression",
+                      "value": "{{$_POST.udf3}}"
+                    },
+                    {
+                      "name": ":P34",
+                      "type": "expression",
+                      "value": "{{$_POST.udf2}}"
+                    },
+                    {
+                      "name": ":P35",
+                      "type": "expression",
+                      "value": "{{$_POST.udf1}}"
+                    },
+                    {
+                      "name": ":P36",
+                      "type": "expression",
+                      "value": "{{$_POST.hash}}"
+                    },
+                    {
+                      "name": ":P37",
+                      "type": "expression",
+                      "value": "{{$_POST.surl}}"
+                    },
+                    {
+                      "name": ":P38",
+                      "type": "expression",
+                      "value": "{{$_POST.furl}}"
+                    },
+                    {
+                      "name": ":P39",
+                      "type": "expression",
+                      "value": "{{$_POST.error_message}}"
+                    },
+                    {
+                      "name": ":P40",
+                      "type": "expression",
+                      "value": "{{$_POST.merchant_logo}}"
+                    },
+                    {
+                      "name": ":P41",
+                      "type": "expression",
+                      "value": "{{$_POST.upi_va}}"
+                    },
+                    {
+                      "name": ":P42",
+                      "type": "expression",
+                      "value": "{{NOW}}"
+                    },
+                    {
+                      "name": ":P43",
+                      "type": "expression",
+                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                    },
+                    {
+                      "name": ":P44",
+                      "type": "expression",
+                      "value": "{{$_SERVER.HOST_ADDR}}"
+                    }
+                  ]
+                }
+              },
+              "meta": [
+                {
+                  "name": "identity",
+                  "type": "text"
+                },
+                {
+                  "name": "affected",
+                  "type": "number"
+                }
+              ]
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{$_POST.txnid}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "DeductionPer",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "{{$_POST.deduction_percentage.toNumber()}}"
+                      },
+                      "meta": [],
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "DeductionAmt",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "{{($_POST.amount.toNumber()*(DeductionPer.toNumber()/100))}}"
+                      },
+                      "meta": [],
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "NetAmt",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "{{($_POST.amount.toNumber()-DeductionAmt.toNumber())}}"
+                      },
+                      "meta": [],
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "GetPayReqDetails",
+                      "module": "dbconnector",
+                      "action": "single",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [],
+                          "table": {
+                            "name": "easybuzz_pay_link"
+                          },
+                          "primary": "id",
+                          "joins": [],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "easybuzz_pay_link.req_txn_id",
+                                "field": "easybuzz_pay_link.req_txn_id",
+                                "type": "string",
+                                "operator": "equal",
+                                "value": "{{$_POST.txnid}}",
+                                "data": {
+                                  "table": "easybuzz_pay_link",
+                                  "column": "req_txn_id",
+                                  "type": "text",
+                                  "columnObj": {
+                                    "type": "string",
+                                    "maxLength": -5,
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "req_txn_id"
+                                  }
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "query": "SELECT *\nFROM easybuzz_pay_link\nWHERE req_txn_id = :P1 /* {{$_POST.txnid}} */",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{$_POST.txnid}}"
+                            }
+                          ]
+                        }
+                      },
+                      "output": false,
+                      "meta": [
+                        {
+                          "type": "number",
+                          "name": "id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "customer_mobile"
+                        },
+                        {
+                          "type": "text",
+                          "name": "api_pay_url"
+                        },
+                        {
+                          "type": "text",
+                          "name": "req_txn_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "api_expiry_date"
+                        },
+                        {
+                          "type": "text",
+                          "name": "api_order_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "api_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "api_payment_type"
+                        },
+                        {
+                          "type": "text",
+                          "name": "amount"
+                        },
+                        {
+                          "type": "text",
+                          "name": "payment_status"
+                        },
+                        {
+                          "type": "text",
+                          "name": "ip_address"
+                        },
+                        {
+                          "type": "text",
+                          "name": "host_address"
+                        },
+                        {
+                          "type": "number",
+                          "name": "status"
+                        },
+                        {
+                          "type": "datetime",
+                          "name": "created_on"
+                        },
+                        {
+                          "type": "datetime",
+                          "name": "updated_on"
+                        },
+                        {
+                          "type": "number",
+                          "name": "market_id"
+                        }
+                      ],
+                      "outputType": "object"
+                    },
+                    {
+                      "name": "GetPreOrder",
+                      "module": "dbconnector",
+                      "action": "single",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [],
+                          "table": {
+                            "name": "r_order_pre_payonline"
+                          },
+                          "primary": "id",
+                          "joins": [],
+                          "query": "SELECT *\nFROM r_order_pre_payonline\nWHERE txn_req_id = :P1 /* {{$_POST.txnid}} */",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{$_POST.txnid}}"
+                            }
+                          ],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "r_order_pre_payonline.txn_req_id",
+                                "field": "r_order_pre_payonline.txn_req_id",
+                                "type": "string",
+                                "operator": "equal",
+                                "value": "{{$_POST.txnid}}",
+                                "data": {
+                                  "table": "r_order_pre_payonline",
+                                  "column": "txn_req_id",
+                                  "type": "text",
+                                  "columnObj": {
+                                    "type": "string",
+                                    "maxLength": -5,
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "txn_req_id"
+                                  }
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          }
+                        }
+                      },
+                      "output": false,
+                      "meta": [
+                        {
+                          "type": "number",
+                          "name": "id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "txn_req_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "order_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "user_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "total_amt"
+                        },
+                        {
+                          "type": "text",
+                          "name": "discount"
+                        },
+                        {
+                          "type": "text",
+                          "name": "ex_charge_amt"
+                        },
+                        {
+                          "type": "text",
+                          "name": "ex_comm_amt"
+                        },
+                        {
+                          "type": "text",
+                          "name": "delevery_amt"
+                        },
+                        {
+                          "type": "text",
+                          "name": "user_name"
+                        },
+                        {
+                          "type": "text",
+                          "name": "address"
+                        },
+                        {
+                          "type": "text",
+                          "name": "mobile"
+                        },
+                        {
+                          "type": "text",
+                          "name": "whatsapp"
+                        },
+                        {
+                          "type": "text",
+                          "name": "pin"
+                        },
+                        {
+                          "type": "text",
+                          "name": "ps"
+                        },
+                        {
+                          "type": "text",
+                          "name": "dist"
+                        },
+                        {
+                          "type": "text",
+                          "name": "state"
+                        },
+                        {
+                          "type": "text",
+                          "name": "country"
+                        },
+                        {
+                          "type": "text",
+                          "name": "wallet_bal"
+                        },
+                        {
+                          "type": "text",
+                          "name": "blank1"
+                        },
+                        {
+                          "type": "text",
+                          "name": "blank2"
+                        },
+                        {
+                          "type": "text",
+                          "name": "blank3"
+                        },
+                        {
+                          "type": "number",
+                          "name": "created_by"
+                        },
+                        {
+                          "type": "datetime",
+                          "name": "created_on"
+                        },
+                        {
+                          "type": "datetime",
+                          "name": "updated_on"
+                        },
+                        {
+                          "type": "datetime",
+                          "name": "deleted_on"
+                        },
+                        {
+                          "type": "number",
+                          "name": "status"
+                        },
+                        {
+                          "type": "text",
+                          "name": "payment_status"
+                        },
+                        {
+                          "type": "number",
+                          "name": "order_assigned_to"
+                        },
+                        {
+                          "type": "number",
+                          "name": "applied_promo_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "wallet_cashback_amt"
+                        },
+                        {
+                          "type": "text",
+                          "name": "wallet_deduct_amt"
+                        },
+                        {
+                          "type": "text",
+                          "name": "wallet_closing_amt"
+                        }
+                      ],
+                      "outputType": "object"
+                    },
+                    {
+                      "name": "GetPreOrderDetails",
+                      "module": "dbconnector",
+                      "action": "select",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [],
+                          "table": {
+                            "name": "r_order_details_payonline"
+                          },
+                          "primary": "id",
+                          "joins": [],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "r_order_details_payonline.order_table_id",
+                                "field": "r_order_details_payonline.order_table_id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{GetPreOrder.id}}",
+                                "data": {
+                                  "table": "r_order_details_payonline",
+                                  "column": "order_table_id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "integer",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "order_table_id"
+                                  }
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "query": "SELECT *\nFROM r_order_details_payonline\nWHERE order_table_id = :P1 /* {{GetPreOrder.id}} */",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{GetPreOrder.id}}"
+                            }
+                          ]
+                        }
+                      },
+                      "output": false,
+                      "meta": [
+                        {
+                          "type": "number",
+                          "name": "id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "order_table_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "prod_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "price_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "cart_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "user_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "prod_qty"
+                        },
+                        {
+                          "type": "text",
+                          "name": "each_unit_price"
+                        },
+                        {
+                          "type": "text",
+                          "name": "charge_per"
+                        },
+                        {
+                          "type": "text",
+                          "name": "charge_value"
+                        },
+                        {
+                          "type": "text",
+                          "name": "charge_amt"
+                        },
+                        {
+                          "type": "text",
+                          "name": "comm_per"
+                        },
+                        {
+                          "type": "text",
+                          "name": "comm_value"
+                        },
+                        {
+                          "type": "text",
+                          "name": "comm_amt"
+                        },
+                        {
+                          "type": "text",
+                          "name": "each_net_amt"
+                        },
+                        {
+                          "type": "number",
+                          "name": "order_status"
+                        },
+                        {
+                          "type": "text",
+                          "name": "remarks"
+                        },
+                        {
+                          "type": "text",
+                          "name": "blank1"
+                        },
+                        {
+                          "type": "text",
+                          "name": "blank2"
+                        },
+                        {
+                          "type": "text",
+                          "name": "blank3"
+                        },
+                        {
+                          "type": "number",
+                          "name": "created_by"
+                        },
+                        {
+                          "type": "datetime",
+                          "name": "created_on"
+                        },
+                        {
+                          "type": "datetime",
+                          "name": "updated_on"
+                        },
+                        {
+                          "type": "number",
+                          "name": "deleted_by"
+                        },
+                        {
+                          "type": "datetime",
+                          "name": "deleted_on"
+                        },
+                        {
+                          "type": "text",
+                          "name": "payment_status"
+                        },
+                        {
+                          "type": "text",
+                          "name": "purchase_price"
+                        }
+                      ],
+                      "outputType": "array"
+                    },
+                    {
+                      "name": "",
+                      "module": "core",
+                      "action": "condition",
+                      "options": {
+                        "if": "{{($_POST.status=='success')}}",
+                        "then": {
+                          "steps": [
+                            {
+                              "name": "AddOrder",
+                              "module": "dbupdater",
+                              "action": "insert",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "insert",
+                                  "values": [
+                                    {
+                                      "table": "r_order",
+                                      "column": "order_id",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.order_id}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "user_id",
+                                      "type": "number",
+                                      "value": "{{GetPreOrder.user_id}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "total_amt",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.total_amt}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "discount",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.discount}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "ex_charge_amt",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.ex_charge_amt}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "ex_comm_amt",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.ex_comm_amt}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "delevery_amt",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.delevery_amt}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "user_name",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.user_name}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "address",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.address}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "mobile",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.mobile}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "whatsapp",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.whatsapp}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "pin",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.pin}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "ps",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.ps}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "dist",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.dist}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "state",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.state}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "country",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.country}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "wallet_bal",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.wallet_bal}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "created_by",
+                                      "type": "number",
+                                      "value": "{{GetPreOrder.created_by}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "created_on",
+                                      "type": "datetime",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "status",
+                                      "type": "number",
+                                      "value": "{{GetPreOrder.status}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "payment_status",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.payment_status}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "order_assigned_to",
+                                      "type": "number",
+                                      "value": "{{GetPreOrder.order_assigned_to}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "applied_promo_id",
+                                      "type": "number",
+                                      "value": "{{GetPreOrder.applied_promo_id}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "wallet_cashback_amt",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.wallet_cashback_amt}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "wallet_deduct_amt",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.wallet_deduct_amt}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "wallet_closing_amt",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.wallet_closing_amt}}"
+                                    }
+                                  ],
+                                  "table": "r_order",
+                                  "returning": "id",
+                                  "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, ex_charge_amt, ex_comm_amt, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, wallet_bal, created_by, created_on, status, payment_status, order_assigned_to, applied_promo_id, wallet_cashback_amt, wallet_deduct_amt, wallet_closing_amt) VALUES (:P1 /* {{GetPreOrder.order_id}} */, :P2 /* {{GetPreOrder.user_id}} */, :P3 /* {{GetPreOrder.total_amt}} */, :P4 /* {{GetPreOrder.discount}} */, :P5 /* {{GetPreOrder.ex_charge_amt}} */, :P6 /* {{GetPreOrder.ex_comm_amt}} */, :P7 /* {{GetPreOrder.delevery_amt}} */, :P8 /* {{GetPreOrder.user_name}} */, :P9 /* {{GetPreOrder.address}} */, :P10 /* {{GetPreOrder.mobile}} */, :P11 /* {{GetPreOrder.whatsapp}} */, :P12 /* {{GetPreOrder.pin}} */, :P13 /* {{GetPreOrder.ps}} */, :P14 /* {{GetPreOrder.dist}} */, :P15 /* {{GetPreOrder.state}} */, :P16 /* {{GetPreOrder.country}} */, :P17 /* {{GetPreOrder.wallet_bal}} */, :P18 /* {{GetPreOrder.created_by}} */, :P19 /* {{NOW}} */, :P20 /* {{GetPreOrder.status}} */, :P21 /* {{GetPreOrder.payment_status}} */, :P22 /* {{GetPreOrder.order_assigned_to}} */, :P23 /* {{GetPreOrder.applied_promo_id}} */, :P24 /* {{GetPreOrder.wallet_cashback_amt}} */, :P25 /* {{GetPreOrder.wallet_deduct_amt}} */, :P26 /* {{GetPreOrder.wallet_closing_amt}} */)",
+                                  "params": [
+                                    {
+                                      "name": ":P1",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.order_id}}"
+                                    },
+                                    {
+                                      "name": ":P2",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.user_id}}"
+                                    },
+                                    {
+                                      "name": ":P3",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.total_amt}}"
+                                    },
+                                    {
+                                      "name": ":P4",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.discount}}"
+                                    },
+                                    {
+                                      "name": ":P5",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.ex_charge_amt}}"
+                                    },
+                                    {
+                                      "name": ":P6",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.ex_comm_amt}}"
+                                    },
+                                    {
+                                      "name": ":P7",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.delevery_amt}}"
+                                    },
+                                    {
+                                      "name": ":P8",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.user_name}}"
+                                    },
+                                    {
+                                      "name": ":P9",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.address}}"
+                                    },
+                                    {
+                                      "name": ":P10",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.mobile}}"
+                                    },
+                                    {
+                                      "name": ":P11",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.whatsapp}}"
+                                    },
+                                    {
+                                      "name": ":P12",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.pin}}"
+                                    },
+                                    {
+                                      "name": ":P13",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.ps}}"
+                                    },
+                                    {
+                                      "name": ":P14",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.dist}}"
+                                    },
+                                    {
+                                      "name": ":P15",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.state}}"
+                                    },
+                                    {
+                                      "name": ":P16",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.country}}"
+                                    },
+                                    {
+                                      "name": ":P17",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.wallet_bal}}"
+                                    },
+                                    {
+                                      "name": ":P18",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.created_by}}"
+                                    },
+                                    {
+                                      "name": ":P19",
+                                      "type": "expression",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "name": ":P20",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.status}}"
+                                    },
+                                    {
+                                      "name": ":P21",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.payment_status}}"
+                                    },
+                                    {
+                                      "name": ":P22",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.order_assigned_to}}"
+                                    },
+                                    {
+                                      "name": ":P23",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.applied_promo_id}}"
+                                    },
+                                    {
+                                      "name": ":P24",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.wallet_cashback_amt}}"
+                                    },
+                                    {
+                                      "name": ":P25",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.wallet_deduct_amt}}"
+                                    },
+                                    {
+                                      "name": ":P26",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.wallet_closing_amt}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "identity",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "repeat",
+                              "module": "core",
+                              "action": "repeat",
+                              "options": {
+                                "repeat": "{{GetPreOrderDetails}}",
+                                "outputFields": [],
+                                "exec": {
+                                  "steps": {
+                                    "name": "AddOrderDetails",
+                                    "module": "dbupdater",
+                                    "action": "insert",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "type": "insert",
+                                        "values": [
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "order_table_id",
+                                            "type": "number",
+                                            "value": "{{AddOrder.identity}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "prod_id",
+                                            "type": "number",
+                                            "value": "{{GetPreOrderDetails[$index].prod_id}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "price_id",
+                                            "type": "number",
+                                            "value": "{{GetPreOrderDetails[$index].price_id}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "cart_id",
+                                            "type": "number",
+                                            "value": "{{cGetPreOrderDetails[$index].art_id}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "user_id",
+                                            "type": "number",
+                                            "value": "{{GetPreOrderDetails[$index].user_id}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "prod_qty",
+                                            "type": "text",
+                                            "value": "{{GetPreOrderDetails[$index].prod_qty}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "each_unit_price",
+                                            "type": "text",
+                                            "value": "{{GetPreOrderDetails[$index].each_unit_price}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "charge_per",
+                                            "type": "text",
+                                            "value": "{{GetPreOrderDetails[$index].charge_per}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "charge_value",
+                                            "type": "text",
+                                            "value": "{{GetPreOrderDetails[$index].charge_value}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "charge_amt",
+                                            "type": "text",
+                                            "value": "{{GetPreOrderDetails[$index].charge_amt}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "comm_per",
+                                            "type": "text",
+                                            "value": "{{GetPreOrderDetails[$index].comm_per}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "comm_value",
+                                            "type": "text",
+                                            "value": "{{GetPreOrderDetails[$index].comm_value}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "comm_amt",
+                                            "type": "text",
+                                            "value": "{{GetPreOrderDetails[$index].comm_amt}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "each_net_amt",
+                                            "type": "text",
+                                            "value": "{{GetPreOrderDetails[$index].each_net_amt}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "order_status",
+                                            "type": "number",
+                                            "value": "{{GetPreOrderDetails[$index].order_status}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "remarks",
+                                            "type": "text",
+                                            "value": "{{GetPreOrderDetails[$index].remarks}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "created_by",
+                                            "type": "number",
+                                            "value": "{{GetPreOrderDetails[$index].created_by}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "created_on",
+                                            "type": "datetime",
+                                            "value": "{{GetPreOrderDetails[$index].created_on}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "updated_on",
+                                            "type": "datetime",
+                                            "value": "{{NOW}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "payment_status",
+                                            "type": "text",
+                                            "value": "{{GetPreOrderDetails[$index].payment_status}}"
+                                          },
+                                          {
+                                            "table": "r_order_details",
+                                            "column": "purchase_price",
+                                            "type": "text",
+                                            "value": "{{GetPreOrderDetails[$index].purchase_price}}"
+                                          }
+                                        ],
+                                        "table": "r_order_details",
+                                        "returning": "id",
+                                        "query": "INSERT INTO r_order_details\n(order_table_id, prod_id, price_id, cart_id, user_id, prod_qty, each_unit_price, charge_per, charge_value, charge_amt, comm_per, comm_value, comm_amt, each_net_amt, order_status, remarks, created_by, created_on, updated_on, payment_status, purchase_price) VALUES (:P1 /* {{AddOrder.identity}} */, :P2 /* {{GetPreOrderDetails[$index].prod_id}} */, :P3 /* {{GetPreOrderDetails[$index].price_id}} */, :P4 /* {{cGetPreOrderDetails[$index].art_id}} */, :P5 /* {{GetPreOrderDetails[$index].user_id}} */, :P6 /* {{GetPreOrderDetails[$index].prod_qty}} */, :P7 /* {{GetPreOrderDetails[$index].each_unit_price}} */, :P8 /* {{GetPreOrderDetails[$index].charge_per}} */, :P9 /* {{GetPreOrderDetails[$index].charge_value}} */, :P10 /* {{GetPreOrderDetails[$index].charge_amt}} */, :P11 /* {{GetPreOrderDetails[$index].comm_per}} */, :P12 /* {{GetPreOrderDetails[$index].comm_value}} */, :P13 /* {{GetPreOrderDetails[$index].comm_amt}} */, :P14 /* {{GetPreOrderDetails[$index].each_net_amt}} */, :P15 /* {{GetPreOrderDetails[$index].order_status}} */, :P16 /* {{GetPreOrderDetails[$index].remarks}} */, :P17 /* {{GetPreOrderDetails[$index].created_by}} */, :P18 /* {{GetPreOrderDetails[$index].created_on}} */, :P19 /* {{NOW}} */, :P20 /* {{GetPreOrderDetails[$index].payment_status}} */, :P21 /* {{GetPreOrderDetails[$index].purchase_price}} */)",
+                                        "params": [
+                                          {
+                                            "name": ":P1",
+                                            "type": "expression",
+                                            "value": "{{AddOrder.identity}}"
+                                          },
+                                          {
+                                            "name": ":P2",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].prod_id}}"
+                                          },
+                                          {
+                                            "name": ":P3",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].price_id}}"
+                                          },
+                                          {
+                                            "name": ":P4",
+                                            "type": "expression",
+                                            "value": "{{cGetPreOrderDetails[$index].art_id}}"
+                                          },
+                                          {
+                                            "name": ":P5",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].user_id}}"
+                                          },
+                                          {
+                                            "name": ":P6",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].prod_qty}}"
+                                          },
+                                          {
+                                            "name": ":P7",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].each_unit_price}}"
+                                          },
+                                          {
+                                            "name": ":P8",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].charge_per}}"
+                                          },
+                                          {
+                                            "name": ":P9",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].charge_value}}"
+                                          },
+                                          {
+                                            "name": ":P10",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].charge_amt}}"
+                                          },
+                                          {
+                                            "name": ":P11",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].comm_per}}"
+                                          },
+                                          {
+                                            "name": ":P12",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].comm_value}}"
+                                          },
+                                          {
+                                            "name": ":P13",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].comm_amt}}"
+                                          },
+                                          {
+                                            "name": ":P14",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].each_net_amt}}"
+                                          },
+                                          {
+                                            "name": ":P15",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].order_status}}"
+                                          },
+                                          {
+                                            "name": ":P16",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].remarks}}"
+                                          },
+                                          {
+                                            "name": ":P17",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].created_by}}"
+                                          },
+                                          {
+                                            "name": ":P18",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].created_on}}"
+                                          },
+                                          {
+                                            "name": ":P19",
+                                            "type": "expression",
+                                            "value": "{{NOW}}"
+                                          },
+                                          {
+                                            "name": ":P20",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].payment_status}}"
+                                          },
+                                          {
+                                            "name": ":P21",
+                                            "type": "expression",
+                                            "value": "{{GetPreOrderDetails[$index].purchase_price}}"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "meta": [
+                                      {
+                                        "name": "identity",
+                                        "type": "text"
+                                      },
+                                      {
+                                        "name": "affected",
+                                        "type": "number"
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "output": true,
+                              "meta": [
+                                {
+                                  "name": "$index",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "$number",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "$name",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "$value",
+                                  "type": "object"
+                                },
+                                {
+                                  "name": "id",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "order_table_id",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "prod_id",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "price_id",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "cart_id",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "user_id",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "prod_qty",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "each_unit_price",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "charge_per",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "charge_value",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "charge_amt",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "comm_per",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "comm_value",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "comm_amt",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "each_net_amt",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "order_status",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "remarks",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "blank1",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "blank2",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "blank3",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "created_by",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "created_on",
+                                  "type": "datetime"
+                                },
+                                {
+                                  "name": "updated_on",
+                                  "type": "datetime"
+                                },
+                                {
+                                  "name": "deleted_by",
+                                  "type": "number"
+                                },
+                                {
+                                  "name": "deleted_on",
+                                  "type": "datetime"
+                                },
+                                {
+                                  "name": "payment_status",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "purchase_price",
+                                  "type": "text"
+                                }
+                              ],
+                              "outputType": "array"
+                            }
+                          ]
+                        }
+                      },
+                      "outputType": "boolean"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": {
+            "name": "Resp",
+            "module": "core",
+            "action": "response",
+            "options": {
+              "data": "Suspicious Activity",
+              "status": 403
+            }
+          }
+        }
+      }
+    }
+  }
+}

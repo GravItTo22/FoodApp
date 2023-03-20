@@ -13,14 +13,14 @@
 <dmx-value id="varDistrict" dmx-bind:value=""></dmx-value>
 <dmx-value id="varUserWallet" dmx-bind:value="0"></dmx-value>
 <dmx-value id="varPaymentMode" dmx-bind:value="'COD'"></dmx-value>
-<dmx-serverconnect id="scUseWallet" url="/api/Cart/WalletBalanceApply" dmx-param:use_wallet_amount="placeorder.use_wallet_amount.value" noload dmx-on:success="varUserWallet.setValue((content.scUseWallet.data.status == 200)?placeorder.use_wallet_amount.value:0)"></dmx-serverconnect>
+<dmx-serverconnect id="scUseWallet" url="/api/Cart/WalletBalanceApply" dmx-param:use_wallet_amount="formPlaceorder.use_wallet_amount.value" noload dmx-on:success="varUserWallet.setValue((content.scUseWallet.data.status == 200)?formPlaceorder.use_wallet_amount.value:0)"></dmx-serverconnect>
 <script is="dmx-flow" id="flowUseWalletBal" type="text/dmx-flow">{
   condition: {
-    if: "{{placeorder.use_wallet_amount.value}}",
+    if: "{{formPlaceorder.use_wallet_amount.value}}",
     then: {
       steps: {
         run: {
-          action: "{{scUseWallet.load({use_wallet_amount: placeorder.use_wallet_amount.value})}}"
+          action: "{{scUseWallet.load({use_wallet_amount: formPlaceorder.use_wallet_amount.value})}}"
         }
       }
     }
@@ -91,7 +91,7 @@
                         </div>
                     </div>
                 </div>
-                <form id="place-order" is="dmx-serverconnect-form" method="post" action="/api/Cart/PlaceOrder" dmx-on:success="notifMain.success(lastError.response);placeorder.reset()" dmx-on:unauthorized="notifMain.success(lastError.response);" dmx-on:forbidden="notifMain.success(lastError.response);">
+                <form id="formPlaceorder" is="dmx-serverconnect-form" method="post" action="/api/Cart/PlaceOrder" dmx-on:success="(content.formPlaceorder.data.Status==200)?notifMain.success(content.formPlaceorder.data.Message):(content.formPlaceorder.data.Status==201)?browserMain.goto(formPlaceorder.data.Url):''" dmx-on:unauthorized="notifMain.success(lastError.response)" dmx-on:forbidden="notifMain.success(lastError.response);">
                     <div class="row mt-5">
                         <div class="col-lg-7 col-md-6" style="background: #f5f5f5;
                             padding: 40px;">
@@ -102,9 +102,9 @@
                                     <h5 class="text-info">Cash On Delivery (COD)</h5>
                                     <div class="mt-3">
                                         <p>Rs. 10 Will be Charged Extra</p>
-                                          <input type="radio" name="payment_mode" dmx-bind:value="varPaymentMode.value" dmx-on:click="varPaymentMode.setValue('COD')">
+                                          <input type="radio" name="payment_mode" dmx-bind:value="(varPaymentMode.value=='COD')?'COD':'PayOnline'" dmx-on:click="varPaymentMode.setValue('COD')">
                                           <label for="payment_mode">COD</label><br>
-                                          <input type="radio" name="payment_mode" dmx-bind:value="varPaymentMode.value" dmx-on:click="varPaymentMode.setValue('Pay Online')">
+                                          <input type="radio" name="payment_mode" dmx-bind:value="(varPaymentMode.value=='PayOnline')?'PayOnline':'COD'" dmx-on:click="varPaymentMode.setValue('PayOnline')">
                                           <label for="payment_mode">Pay Online</label><br>
                                     </div>
                                 </div>
@@ -120,7 +120,7 @@
                                         <h5 class="text-info">Use your wallet balance (optional)</h5>
                                         <h6 dmx-class:text-danger="content.scUseWallet.data.status==400" dmx-class:text-success="content.scUseWallet.data.status==200">{{content.scUseWallet.data.message}}</h6>
                                         <div class="mt-3">
-                                            <input type="number" id="use_wallet_amount" class="form-control font-weight-bold" placeholder="Enter the Amount" required="">
+                                            <input type="number" id="use_wallet_amount" class="form-control font-weight-bold" placeholder="Enter the Amount">
                                         </div>
                                         <button class="btn1 btn-sm mt-3" dmx-on:click="flowUseWalletBal.run();">Apply</button>
                                     </div>
@@ -130,11 +130,7 @@
                         <div class="col-lg-5 col-md-6">
                             <div class="checkout__order">
                                 <h4>Your Order</h4>
-                                <!-- <div class="checkout__order__products">Products <span>Total</span></div> -->
-                                <!-- <ul id="repeat1" is="dmx-repeat" dmx-bind:repeat="content.scCartItems.data.GetCartItems" key="id">
-                                    <li>{{content.scCartItems.data.GetCartItems[$index].prod_name_en}} <span><i class="fa fa-rupee"></i>{{content.scCartItems.data.GetCartItems[$index].total_price}}</span></li>
-                                </ul> -->
-                                <div class="checkout__order__subtotal">Amount <span><i class="fa fa-rupee"></i>{{content.scCartItems.data.CartSumAmt[0].total_amt}}</span></div>
+                                <div class="checkout__order__subtotal">Amount <span><i class="fa fa-rupee"></i>{{content.scCartItems.data.CartSumAmt[0].total_amt.toFixed(2)}}</span></div>
 
                                 <input type="hidden" id="inp_product_total_amt" dmx-bind:value="content.scCartItems.data.CartSumAmt[0].total_amt">
                                 <input type="hidden" id="inp_shipping_charge" dmx-bind:value="45">
@@ -145,7 +141,7 @@
 
                                 <div class="price_indiv d-flex justify-content-between mx-0">
                                     <p>Shipping Charge</p>
-                                    <p>(+) <i class=" fa fa-rupee"></i><span id="shipping_charge">45</span></p>
+                                    <p>(+) <i class=" fa fa-rupee"></i><span id="shipping_charge">45.00</span></p>
                                 </div>
                                 <div class="price_indiv d-flex justify-content-between mx-0">
                                     <p>Other Charges <br /><span class="gio-font-11">(5% GST + Packaging)</span></p>
@@ -175,7 +171,7 @@
                                 </div>
 
                                 <p>I have read out the cancellation and return policy and I agree with the terms and condition of Gravitto.</p>
-                                <button type="submit" class="site-btn">PLACE ORDER</button>
+                                <button type="submit" class="site-btn" dmx-class:disabled="state.executing" dmx-bind:disabled="state.executing">PLACE ORDER &emsp;<span class="spinner-border spinner-border-sm" role="status" dmx-show="state.executing"></span></button>
                             </div>
                         </div>
                     </div>

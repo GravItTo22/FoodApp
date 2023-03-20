@@ -1,0 +1,2307 @@
+{
+  "meta": {
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "txnid"
+      },
+      {
+        "type": "text",
+        "name": "firstname"
+      },
+      {
+        "type": "text",
+        "name": "email"
+      },
+      {
+        "type": "text",
+        "name": "phone"
+      },
+      {
+        "type": "text",
+        "name": "key"
+      },
+      {
+        "type": "text",
+        "name": "mode"
+      },
+      {
+        "type": "text",
+        "name": "status"
+      },
+      {
+        "type": "text",
+        "name": "unmappedstatus"
+      },
+      {
+        "type": "text",
+        "name": "cardCategory"
+      },
+      {
+        "type": "text",
+        "name": "addedon"
+      },
+      {
+        "type": "text",
+        "name": "payment_source"
+      },
+      {
+        "type": "text",
+        "name": "PG_TYPE"
+      },
+      {
+        "type": "text",
+        "name": "bank_ref_num"
+      },
+      {
+        "type": "text",
+        "name": "bankcode"
+      },
+      {
+        "type": "text",
+        "name": "error"
+      },
+      {
+        "type": "text",
+        "name": "name_on_card"
+      },
+      {
+        "type": "text",
+        "name": "cardnum"
+      },
+      {
+        "type": "text",
+        "name": "issuing_bank"
+      },
+      {
+        "type": "text",
+        "name": "card_type"
+      },
+      {
+        "type": "text",
+        "name": "easepayid"
+      },
+      {
+        "type": "text",
+        "name": "amount"
+      },
+      {
+        "type": "text",
+        "name": "net_amount_debit"
+      },
+      {
+        "type": "text",
+        "name": "cash_back_percentage"
+      },
+      {
+        "type": "text",
+        "name": "deduction_percentage"
+      },
+      {
+        "type": "text",
+        "name": "productinfo"
+      },
+      {
+        "type": "text",
+        "name": "udf10"
+      },
+      {
+        "type": "text",
+        "name": "udf9"
+      },
+      {
+        "type": "text",
+        "name": "udf8"
+      },
+      {
+        "type": "text",
+        "name": "udf7"
+      },
+      {
+        "type": "text",
+        "name": "udf6"
+      },
+      {
+        "type": "text",
+        "name": "udf5"
+      },
+      {
+        "type": "text",
+        "name": "udf4"
+      },
+      {
+        "type": "text",
+        "name": "udf3"
+      },
+      {
+        "type": "text",
+        "name": "udf2"
+      },
+      {
+        "type": "text",
+        "name": "udf1"
+      },
+      {
+        "type": "text",
+        "name": "hash"
+      },
+      {
+        "type": "text",
+        "name": "surl"
+      },
+      {
+        "type": "text",
+        "name": "furl"
+      },
+      {
+        "type": "text",
+        "name": "error_Message"
+      },
+      {
+        "type": "text",
+        "name": "merchant_logo"
+      },
+      {
+        "type": "text",
+        "name": "upi_va"
+      }
+    ],
+    "$_SERVER": [
+      {
+        "type": "text",
+        "name": "REMOTE_ADDR"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "insert",
+              "module": "dbupdater",
+              "action": "insert",
+              "options": {
+                "connection": "postgres_gcpServer",
+                "sql": {
+                  "type": "insert",
+                  "values": [
+                    {
+                      "table": "api_response",
+                      "column": "user_id",
+                      "type": "text",
+                      "value": "{{$_POST.deduction_percentage}}"
+                    },
+                    {
+                      "table": "api_response",
+                      "column": "recharge_mobile",
+                      "type": "text",
+                      "value": "{{$_POST.phone}}"
+                    },
+                    {
+                      "table": "api_response",
+                      "column": "operator",
+                      "type": "text",
+                      "value": "{{$_POST.firstname}}"
+                    },
+                    {
+                      "table": "api_response",
+                      "column": "amount",
+                      "type": "text",
+                      "value": "{{$_POST.amount}}"
+                    },
+                    {
+                      "table": "api_response",
+                      "column": "status",
+                      "type": "text",
+                      "value": "{{$_POST.status}}"
+                    },
+                    {
+                      "table": "api_response",
+                      "column": "order_id",
+                      "type": "text",
+                      "value": "{{$_POST.easepayid}}"
+                    },
+                    {
+                      "table": "api_response",
+                      "column": "balance",
+                      "type": "text",
+                      "value": "{{$_POST.net_amount_debit}}"
+                    },
+                    {
+                      "table": "api_response",
+                      "column": "ec",
+                      "type": "text",
+                      "value": "{{$_POST.cash_back_percentage}}"
+                    },
+                    {
+                      "table": "api_response",
+                      "column": "apirefid",
+                      "type": "text",
+                      "value": "{{$_POST.txnid}}"
+                    },
+                    {
+                      "table": "api_response",
+                      "column": "remarks",
+                      "type": "text",
+                      "value": "{{$_POST.productinfo}}"
+                    },
+                    {
+                      "table": "api_response",
+                      "column": "blank1",
+                      "type": "text",
+                      "value": "{{$_POST.upi_va}}"
+                    },
+                    {
+                      "table": "api_response",
+                      "column": "blank2",
+                      "type": "text",
+                      "value": "{{$_POST.error_Message}}"
+                    },
+                    {
+                      "table": "api_response",
+                      "column": "field1",
+                      "type": "text",
+                      "value": "{{$_POST.email}}"
+                    },
+                    {
+                      "table": "api_response",
+                      "column": "field2",
+                      "type": "text",
+                      "value": "{{$_POST.key}}"
+                    },
+                    {
+                      "table": "api_response",
+                      "column": "time",
+                      "type": "datetime",
+                      "value": "{{NOW}}"
+                    }
+                  ],
+                  "table": "api_response",
+                  "query": "INSERT INTO api_response\n(user_id, recharge_mobile, operator, amount, status, order_id, balance, ec, apirefid, remarks, blank1, blank2, field1, field2, time) VALUES (:P1 /* {{$_POST.deduction_percentage}} */, :P2 /* {{$_POST.phone}} */, :P3 /* {{$_POST.firstname}} */, :P4 /* {{$_POST.amount}} */, :P5 /* {{$_POST.status}} */, :P6 /* {{$_POST.easepayid}} */, :P7 /* {{$_POST.net_amount_debit}} */, :P8 /* {{$_POST.cash_back_percentage}} */, :P9 /* {{$_POST.txnid}} */, :P10 /* {{$_POST.productinfo}} */, :P11 /* {{$_POST.upi_va}} */, :P12 /* {{$_POST.error_Message}} */, :P13 /* {{$_POST.email}} */, :P14 /* {{$_POST.key}} */, :P15 /* {{NOW}} */)",
+                  "params": [
+                    {
+                      "name": ":P1",
+                      "type": "expression",
+                      "value": "{{$_POST.deduction_percentage}}"
+                    },
+                    {
+                      "name": ":P2",
+                      "type": "expression",
+                      "value": "{{$_POST.phone}}"
+                    },
+                    {
+                      "name": ":P3",
+                      "type": "expression",
+                      "value": "{{$_POST.firstname}}"
+                    },
+                    {
+                      "name": ":P4",
+                      "type": "expression",
+                      "value": "{{$_POST.amount}}"
+                    },
+                    {
+                      "name": ":P5",
+                      "type": "expression",
+                      "value": "{{$_POST.status}}"
+                    },
+                    {
+                      "name": ":P6",
+                      "type": "expression",
+                      "value": "{{$_POST.easepayid}}"
+                    },
+                    {
+                      "name": ":P7",
+                      "type": "expression",
+                      "value": "{{$_POST.net_amount_debit}}"
+                    },
+                    {
+                      "name": ":P8",
+                      "type": "expression",
+                      "value": "{{$_POST.cash_back_percentage}}"
+                    },
+                    {
+                      "name": ":P9",
+                      "type": "expression",
+                      "value": "{{$_POST.txnid}}"
+                    },
+                    {
+                      "name": ":P10",
+                      "type": "expression",
+                      "value": "{{$_POST.productinfo}}"
+                    },
+                    {
+                      "name": ":P11",
+                      "type": "expression",
+                      "value": "{{$_POST.upi_va}}"
+                    },
+                    {
+                      "name": ":P12",
+                      "type": "expression",
+                      "value": "{{$_POST.error_Message}}"
+                    },
+                    {
+                      "name": ":P13",
+                      "type": "expression",
+                      "value": "{{$_POST.email}}"
+                    },
+                    {
+                      "name": ":P14",
+                      "type": "expression",
+                      "value": "{{$_POST.key}}"
+                    },
+                    {
+                      "name": ":P15",
+                      "type": "expression",
+                      "value": "{{NOW}}"
+                    }
+                  ]
+                }
+              },
+              "meta": [
+                {
+                  "name": "identity",
+                  "type": "text"
+                },
+                {
+                  "name": "affected",
+                  "type": "number"
+                }
+              ],
+              "output": true
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{$_POST.txnid}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "DeductionPer",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "{{$_POST.deduction_percentage.toNumber()+1}}"
+                      },
+                      "meta": [],
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "DeductionAmt",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "{{($_POST.amount.toNumber()*DeductionPer.toNumber()/100)}}"
+                      },
+                      "meta": [],
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "NetAmt",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "{{($_POST.amount.toNumber()-DeductionAmt.toNumber())}}"
+                      },
+                      "meta": [],
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "GetPayReqDetails",
+                      "module": "dbconnector",
+                      "action": "single",
+                      "options": {
+                        "connection": "postgres_gcpServer",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [
+                            {
+                              "table": "payment_req_self",
+                              "column": "pay_user_id"
+                            },
+                            {
+                              "table": "payment_req_self",
+                              "column": "req_user_id"
+                            },
+                            {
+                              "table": "payment_req_self",
+                              "column": "user_name"
+                            },
+                            {
+                              "table": "payment_req_self",
+                              "column": "req_email"
+                            },
+                            {
+                              "table": "payment_req_self",
+                              "column": "req_mobile"
+                            },
+                            {
+                              "table": "payment_req_self",
+                              "column": "amount"
+                            },
+                            {
+                              "table": "payment_req_self",
+                              "column": "payment_mode"
+                            },
+                            {
+                              "table": "payment_req_self",
+                              "column": "pay_type"
+                            },
+                            {
+                              "table": "payment_req_self",
+                              "column": "response"
+                            },
+                            {
+                              "table": "payment_req_self",
+                              "column": "message"
+                            },
+                            {
+                              "table": "payment_req_self",
+                              "column": "order_id"
+                            },
+                            {
+                              "table": "payment_req_self",
+                              "column": "api_id"
+                            },
+                            {
+                              "table": "payment_req_self",
+                              "column": "status"
+                            }
+                          ],
+                          "table": {
+                            "name": "payment_req_self"
+                          },
+                          "primary": "id",
+                          "joins": [],
+                          "query": "SELECT pay_user_id, req_user_id, user_name, req_email, req_mobile, amount, payment_mode, pay_type, response, message, order_id, api_id, status\nFROM payment_req_self\nWHERE client_req_id = :P1 /* {{$_POST.txnid}} */",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{$_POST.txnid}}"
+                            }
+                          ],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "payment_req_self.client_req_id",
+                                "field": "payment_req_self.client_req_id",
+                                "type": "string",
+                                "operator": "equal",
+                                "value": "{{$_POST.txnid}}",
+                                "data": {
+                                  "table": "payment_req_self",
+                                  "column": "client_req_id",
+                                  "type": "text",
+                                  "columnObj": {
+                                    "type": "string",
+                                    "maxLength": -5,
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "client_req_id"
+                                  }
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          }
+                        }
+                      },
+                      "output": false,
+                      "meta": [
+                        {
+                          "type": "number",
+                          "name": "pay_user_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "req_user_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "user_name"
+                        },
+                        {
+                          "type": "text",
+                          "name": "req_email"
+                        },
+                        {
+                          "type": "text",
+                          "name": "req_mobile"
+                        },
+                        {
+                          "type": "text",
+                          "name": "amount"
+                        },
+                        {
+                          "type": "text",
+                          "name": "payment_mode"
+                        },
+                        {
+                          "type": "text",
+                          "name": "pay_type"
+                        },
+                        {
+                          "type": "text",
+                          "name": "response"
+                        },
+                        {
+                          "type": "text",
+                          "name": "message"
+                        },
+                        {
+                          "type": "text",
+                          "name": "order_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "api_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "status"
+                        }
+                      ],
+                      "outputType": "object"
+                    },
+                    {
+                      "name": "GetDebitUser",
+                      "module": "dbconnector",
+                      "action": "single",
+                      "options": {
+                        "connection": "postgres_gcpServer",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [
+                            {
+                              "table": "m_users",
+                              "column": "user_fname"
+                            },
+                            {
+                              "table": "m_users",
+                              "column": "user_mobile"
+                            },
+                            {
+                              "table": "m_users",
+                              "column": "user_email"
+                            },
+                            {
+                              "table": "m_users",
+                              "column": "balance_amt"
+                            }
+                          ],
+                          "table": {
+                            "name": "m_users"
+                          },
+                          "joins": [],
+                          "query": "SELECT user_fname, user_mobile, user_email, balance_amt\nFROM m_users\nWHERE id = :P1 /* {{GetPayReqDetails.pay_user_id}} */ AND u_status = '1'",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{GetPayReqDetails.pay_user_id}}"
+                            }
+                          ],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "m_users.id",
+                                "field": "m_users.id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{GetPayReqDetails.pay_user_id}}",
+                                "data": {
+                                  "table": "m_users",
+                                  "column": "id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "increments",
+                                    "default": "",
+                                    "primary": true,
+                                    "nullable": false,
+                                    "unique": true,
+                                    "name": "id"
+                                  }
+                                },
+                                "operation": "="
+                              },
+                              {
+                                "id": "m_users.u_status",
+                                "field": "m_users.u_status",
+                                "type": "string",
+                                "operator": "equal",
+                                "value": "1",
+                                "data": {
+                                  "table": "m_users",
+                                  "column": "u_status",
+                                  "type": "text",
+                                  "columnObj": {
+                                    "type": "string",
+                                    "primary": false,
+                                    "nullable": true,
+                                    "maxLength": -5,
+                                    "unique": false,
+                                    "name": "u_status"
+                                  }
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "primary": "id"
+                        }
+                      },
+                      "output": false,
+                      "meta": [
+                        {
+                          "type": "text",
+                          "name": "user_fname"
+                        },
+                        {
+                          "type": "text",
+                          "name": "user_mobile"
+                        },
+                        {
+                          "type": "text",
+                          "name": "user_email"
+                        },
+                        {
+                          "type": "text",
+                          "name": "balance_amt"
+                        }
+                      ],
+                      "outputType": "object"
+                    },
+                    {
+                      "name": "GetOperatorId",
+                      "module": "dbconnector",
+                      "action": "single",
+                      "options": {
+                        "connection": "postgres_gcpServer",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [
+                            {
+                              "table": "m_operator",
+                              "column": "id",
+                              "alias": "op_id"
+                            },
+                            {
+                              "table": "m_operator",
+                              "column": "service_id"
+                            }
+                          ],
+                          "table": {
+                            "name": "m_operator"
+                          },
+                          "joins": [],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "m_operator.operator_name",
+                                "field": "m_operator.operator_name",
+                                "type": "string",
+                                "operator": "equal",
+                                "value": "Add Money",
+                                "data": {
+                                  "table": "m_operator",
+                                  "column": "operator_name",
+                                  "type": "text",
+                                  "columnObj": {
+                                    "type": "string",
+                                    "primary": false,
+                                    "nullable": false,
+                                    "name": "operator_name"
+                                  }
+                                },
+                                "operation": "="
+                              },
+                              {
+                                "id": "m_operator.status",
+                                "field": "m_operator.status",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": 1,
+                                "data": {
+                                  "table": "m_operator",
+                                  "column": "status",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "integer",
+                                    "primary": false,
+                                    "nullable": false,
+                                    "name": "status"
+                                  }
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "query": "SELECT id AS op_id, service_id\nFROM m_operator\nWHERE operator_name = 'Add Money' AND status = 1",
+                          "params": [],
+                          "primary": "id"
+                        }
+                      },
+                      "output": false,
+                      "meta": [
+                        {
+                          "type": "number",
+                          "name": "op_id"
+                        },
+                        {
+                          "type": "number",
+                          "name": "service_id"
+                        }
+                      ],
+                      "outputType": "object"
+                    },
+                    {
+                      "name": "GetSchToUser",
+                      "module": "dbconnector",
+                      "action": "single",
+                      "options": {
+                        "connection": "postgres_gcpServer",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [
+                            {
+                              "table": "m_users",
+                              "column": "user_fname"
+                            },
+                            {
+                              "table": "m_users",
+                              "column": "user_mobile"
+                            },
+                            {
+                              "table": "m_users",
+                              "column": "user_email"
+                            },
+                            {
+                              "table": "m_users",
+                              "column": "scheme_id"
+                            },
+                            {
+                              "table": "m_users",
+                              "column": "balance_amt"
+                            },
+                            {
+                              "table": "m_users",
+                              "column": "id",
+                              "alias": "to_user_id"
+                            }
+                          ],
+                          "table": {
+                            "name": "m_users"
+                          },
+                          "joins": [],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "m_users.id",
+                                "field": "m_users.id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{GetPayReqDetails.req_user_id}}",
+                                "data": {
+                                  "table": "m_users",
+                                  "column": "id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "increments",
+                                    "default": "",
+                                    "primary": true,
+                                    "nullable": false,
+                                    "unique": true,
+                                    "name": "id"
+                                  }
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "query": "SELECT user_fname, user_mobile, user_email, scheme_id, balance_amt, id AS to_user_id\nFROM m_users\nWHERE id = :P1 /* {{GetPayReqDetails.req_user_id}} */",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{GetPayReqDetails.req_user_id}}"
+                            }
+                          ],
+                          "primary": "id"
+                        }
+                      },
+                      "output": false,
+                      "meta": [
+                        {
+                          "type": "text",
+                          "name": "user_fname"
+                        },
+                        {
+                          "type": "text",
+                          "name": "user_mobile"
+                        },
+                        {
+                          "type": "text",
+                          "name": "user_email"
+                        },
+                        {
+                          "type": "number",
+                          "name": "scheme_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "balance_amt"
+                        },
+                        {
+                          "type": "number",
+                          "name": "to_user_id"
+                        }
+                      ],
+                      "outputType": "object"
+                    },
+                    {
+                      "name": "GetCommision",
+                      "module": "dbconnector",
+                      "action": "single",
+                      "options": {
+                        "connection": "postgres_gcpServer",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [
+                            {
+                              "table": "m_commission",
+                              "column": "comm_per"
+                            },
+                            {
+                              "table": "m_commission",
+                              "column": "comm_val"
+                            },
+                            {
+                              "table": "m_commission",
+                              "column": "service_charge_per"
+                            },
+                            {
+                              "table": "m_commission",
+                              "column": "service_charge_val"
+                            }
+                          ],
+                          "table": {
+                            "name": "m_commission"
+                          },
+                          "joins": [],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "m_commission.operator_id",
+                                "field": "m_commission.operator_id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{GetOperatorId.op_id}}",
+                                "data": {
+                                  "table": "m_commission",
+                                  "column": "operator_id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "integer",
+                                    "primary": false,
+                                    "nullable": false,
+                                    "name": "operator_id"
+                                  }
+                                },
+                                "operation": "="
+                              },
+                              {
+                                "id": "m_commission.scheme_id",
+                                "field": "m_commission.scheme_id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{GetSchToUser.scheme_id}}",
+                                "data": {
+                                  "table": "m_commission",
+                                  "column": "scheme_id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "integer",
+                                    "primary": false,
+                                    "nullable": true,
+                                    "name": "scheme_id"
+                                  }
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "query": "SELECT comm_per, comm_val, service_charge_per, service_charge_val\nFROM m_commission\nWHERE operator_id = :P1 /* {{GetOperatorId.op_id}} */ AND scheme_id = :P2 /* {{GetSchToUser.scheme_id}} */",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{GetOperatorId.op_id}}"
+                            },
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P2",
+                              "value": "{{GetSchToUser.scheme_id}}"
+                            }
+                          ],
+                          "primary": "id"
+                        }
+                      },
+                      "output": false,
+                      "meta": [
+                        {
+                          "type": "text",
+                          "name": "comm_per"
+                        },
+                        {
+                          "type": "text",
+                          "name": "comm_val"
+                        },
+                        {
+                          "type": "text",
+                          "name": "service_charge_per"
+                        },
+                        {
+                          "type": "text",
+                          "name": "service_charge_val"
+                        }
+                      ],
+                      "outputType": "object"
+                    },
+                    {
+                      "name": "",
+                      "module": "core",
+                      "action": "condition",
+                      "options": {
+                        "if": "{{($_POST.status=='success')||($_POST.status=='pending')}}",
+                        "then": {
+                          "steps": [
+                            {
+                              "name": "GetCommAmt",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "{{(NetAmt.toNumber() * GetCommision.comm_per.toNumber() / 100)+GetCommision.comm_val.toNumber()}}"
+                              },
+                              "output": true,
+                              "meta": [],
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "GetChargeAmt",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "{{(NetAmt.toNumber() * GetCommision.service_charge_per.toNumber() / 100)+GetCommision.service_charge_val.toNumber()}}"
+                              },
+                              "output": true,
+                              "meta": [],
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "netAmt",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "{{NetAmt.toNumber()+GetCommAmt.toNumber()-GetChargeAmt.toNumber()}}"
+                              },
+                              "output": true,
+                              "meta": [],
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "CrClosingBal",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "{{GetSchToUser.balance_amt.toNumber()+netAmt.toNumber()}}"
+                              },
+                              "meta": [],
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "DrClosingBal",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "{{GetDebitUser.balance_amt.toNumber()-netAmt.toNumber()}}"
+                              },
+                              "meta": [],
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "BalUpCreditUser",
+                              "module": "dbupdater",
+                              "action": "update",
+                              "options": {
+                                "connection": "postgres_gcpServer",
+                                "sql": {
+                                  "type": "update",
+                                  "values": [
+                                    {
+                                      "table": "m_users",
+                                      "column": "balance_amt",
+                                      "type": "number",
+                                      "value": "{{CrClosingBal}}"
+                                    }
+                                  ],
+                                  "table": "m_users",
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "id",
+                                        "field": "id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{GetSchToUser.to_user_id}}",
+                                        "data": {
+                                          "column": "id"
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "query": "UPDATE m_users\nSET balance_amt = :P1 /* {{CrClosingBal}} */\nWHERE id = :P2 /* {{GetSchToUser.to_user_id}} */",
+                                  "params": [
+                                    {
+                                      "name": ":P1",
+                                      "type": "expression",
+                                      "value": "{{CrClosingBal}}"
+                                    },
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P2",
+                                      "value": "{{GetSchToUser.to_user_id}}"
+                                    }
+                                  ],
+                                  "returning": "id"
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ],
+                              "output": false
+                            },
+                            {
+                              "name": "BalUpDebitUser",
+                              "module": "dbupdater",
+                              "action": "update",
+                              "options": {
+                                "connection": "postgres_gcpServer",
+                                "sql": {
+                                  "type": "update",
+                                  "values": [
+                                    {
+                                      "table": "m_users",
+                                      "column": "balance_amt",
+                                      "type": "number",
+                                      "value": "{{DrClosingBal}}"
+                                    }
+                                  ],
+                                  "table": "m_users",
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "id",
+                                        "field": "id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{GetPayReqDetails.pay_user_id}}",
+                                        "data": {
+                                          "column": "id"
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "query": "UPDATE m_users\nSET balance_amt = :P1 /* {{DrClosingBal}} */\nWHERE id = :P2 /* {{GetPayReqDetails.pay_user_id}} */",
+                                  "params": [
+                                    {
+                                      "name": ":P1",
+                                      "type": "expression",
+                                      "value": "{{DrClosingBal}}"
+                                    },
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P2",
+                                      "value": "{{GetPayReqDetails.pay_user_id}}"
+                                    }
+                                  ],
+                                  "returning": "id"
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ],
+                              "output": false
+                            },
+                            {
+                              "name": "UpPaymentReq",
+                              "module": "dbupdater",
+                              "action": "update",
+                              "options": {
+                                "connection": "postgres_gcpServer",
+                                "sql": {
+                                  "type": "update",
+                                  "values": [
+                                    {
+                                      "table": "payment_req_self",
+                                      "column": "status",
+                                      "type": "number",
+                                      "value": "{{2}}"
+                                    }
+                                  ],
+                                  "table": "payment_req_self",
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "client_req_id",
+                                        "field": "client_req_id",
+                                        "type": "string",
+                                        "operator": "equal",
+                                        "value": "{{$_POST.txnid}}",
+                                        "data": {
+                                          "column": "client_req_id"
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "returning": "id",
+                                  "query": "UPDATE payment_req_self\nSET status = :P1 /* {{2}} */\nWHERE client_req_id = :P2 /* {{$_POST.txnid}} */",
+                                  "params": [
+                                    {
+                                      "name": ":P1",
+                                      "type": "expression",
+                                      "value": "{{2}}"
+                                    },
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P2",
+                                      "value": "{{$_POST.txnid}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "CrBalRechTrans",
+                              "module": "dbupdater",
+                              "action": "insert",
+                              "options": {
+                                "connection": "postgres_gcpServer",
+                                "sql": {
+                                  "type": "insert",
+                                  "values": [
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "op_id",
+                                      "type": "number",
+                                      "value": "{{GetOperatorId.op_id}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "service_id",
+                                      "type": "number",
+                                      "value": "{{GetOperatorId.service_id}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "api_id",
+                                      "type": "number",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "user_id",
+                                      "type": "number",
+                                      "value": "{{GetSchToUser.to_user_id}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "user_number",
+                                      "type": "text",
+                                      "value": "{{GetSchToUser.user_mobile}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "details",
+                                      "type": "text",
+                                      "value": "{{$_POST.firstname}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "opening_balance",
+                                      "type": "text",
+                                      "value": "{{GetSchToUser.balance_amt}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "amount",
+                                      "type": "text",
+                                      "value": "{{NetAmt}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "comm_per",
+                                      "type": "text",
+                                      "value": "{{GetCommision.comm_per}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "comm_val",
+                                      "type": "text",
+                                      "value": "{{GetCommision.comm_val}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "comm_amt",
+                                      "type": "text",
+                                      "value": "{{GetCommAmt}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "other_charge",
+                                      "type": "text",
+                                      "value": "{{GetCommision.service_charge_val}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "charge_per",
+                                      "type": "text",
+                                      "value": "{{GetCommision.service_charge_per}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "charge_amt",
+                                      "type": "text",
+                                      "value": "{{GetChargeAmt}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "net_amt",
+                                      "type": "text",
+                                      "value": "{{netAmt}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "closing_balance",
+                                      "type": "text",
+                                      "value": "{{CrClosingBal}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "tr_mode",
+                                      "type": "text",
+                                      "value": "{{'Web'}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "tr_type",
+                                      "type": "text",
+                                      "value": "{{'Cash'}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "status",
+                                      "type": "text",
+                                      "value": "{{($_POST.status=='success')?'SUCCESS':($_POST.status=='pending')?'PENDING':'FAILED'}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "tr_id",
+                                      "type": "text",
+                                      "value": "{{$_POST.txnid}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "reason",
+                                      "type": "text",
+                                      "value": "{{'Wallet balance Rs.'+$_POST.amount+'  updated by '+GetDebitUser.user_fname+' to '+GetSchToUser.user_fname+' Using Add Money Live Txn'}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "api_logs",
+                                      "type": "text",
+                                      "value": "{{'AddMoney'}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "is_processed",
+                                      "type": "text",
+                                      "value": "{{$_POST.easepayid}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "operator_ref",
+                                      "type": "text",
+                                      "value": "{{$_POST.error_Message}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "api_ref",
+                                      "type": "text",
+                                      "value": "{{$_POST.easepayid}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "revert_trans",
+                                      "type": "text",
+                                      "value": "{{$_POST.key}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "ip_address",
+                                      "type": "text",
+                                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "api_response_id",
+                                      "type": "number",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "process_mode",
+                                      "type": "text",
+                                      "value": "{{'P2A'}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "live",
+                                      "type": "text",
+                                      "value": "{{'Live'}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "tr_date",
+                                      "type": "datetime",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "transaction_by",
+                                      "type": "number",
+                                      "value": "{{GetPayReqDetails.req_user_id}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "extra1",
+                                      "type": "text",
+                                      "value": "{{$_POST.key}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "dtcommper",
+                                      "type": "text",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "dtcommval",
+                                      "type": "text",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "dtcommamt",
+                                      "type": "text",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "dtchargeper",
+                                      "type": "text",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "dtchargeval",
+                                      "type": "text",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "dtchargeamt",
+                                      "type": "text",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "mdtcommper",
+                                      "type": "text",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "mdtcommval",
+                                      "type": "text",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "mdtcommamt",
+                                      "type": "text",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "mdtchargeper",
+                                      "type": "text",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "mdtchargeval",
+                                      "type": "text",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "mdtchargeamt",
+                                      "type": "text",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "blank1",
+                                      "type": "text",
+                                      "value": "{{$_POST.mode}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "blank2",
+                                      "type": "text",
+                                      "value": "{{$_POST.cardnum}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "blank3",
+                                      "type": "text",
+                                      "value": "{{$_POST.card_type}}"
+                                    },
+                                    {
+                                      "table": "tt_recharge_trans",
+                                      "column": "remitter_id",
+                                      "type": "text",
+                                      "value": "{{$_POST.upi_va}}"
+                                    }
+                                  ],
+                                  "table": "tt_recharge_trans",
+                                  "returning": "id",
+                                  "query": "INSERT INTO tt_recharge_trans\n(op_id, service_id, api_id, user_id, user_number, details, opening_balance, amount, comm_per, comm_val, comm_amt, other_charge, charge_per, charge_amt, net_amt, closing_balance, tr_mode, tr_type, status, tr_id, reason, api_logs, is_processed, operator_ref, api_ref, revert_trans, ip_address, api_response_id, process_mode, live, tr_date, transaction_by, extra1, dtcommper, dtcommval, dtcommamt, dtchargeper, dtchargeval, dtchargeamt, mdtcommper, mdtcommval, mdtcommamt, mdtchargeper, mdtchargeval, mdtchargeamt, blank1, blank2, blank3, remitter_id) VALUES (:P1 /* {{GetOperatorId.op_id}} */, :P2 /* {{GetOperatorId.service_id}} */, '0', :P3 /* {{GetSchToUser.to_user_id}} */, :P4 /* {{GetSchToUser.user_mobile}} */, :P5 /* {{$_POST.firstname}} */, :P6 /* {{GetSchToUser.balance_amt}} */, :P7 /* {{NetAmt}} */, :P8 /* {{GetCommision.comm_per}} */, :P9 /* {{GetCommision.comm_val}} */, :P10 /* {{GetCommAmt}} */, :P11 /* {{GetCommision.service_charge_val}} */, :P12 /* {{GetCommision.service_charge_per}} */, :P13 /* {{GetChargeAmt}} */, :P14 /* {{netAmt}} */, :P15 /* {{CrClosingBal}} */, :P16 /* {{'Web'}} */, :P17 /* {{'Cash'}} */, :P18 /* {{($_POST.status=='success')?'SUCCESS':($_POST.status=='pending')?'PENDING':'FAILED'}} */, :P19 /* {{$_POST.txnid}} */, :P20 /* {{'Wallet balance Rs.'+$_POST.amount+'  updated by '+GetDebitUser.user_fname+' to '+GetSchToUser.user_fname+' Using Add Money Live Txn'}} */, :P21 /* {{'AddMoney'}} */, :P22 /* {{$_POST.easepayid}} */, :P23 /* {{$_POST.error_Message}} */, :P24 /* {{$_POST.easepayid}} */, :P25 /* {{$_POST.key}} */, :P26 /* {{$_SERVER.REMOTE_ADDR}} */, '0', :P27 /* {{'P2A'}} */, :P28 /* {{'Live'}} */, :P29 /* {{NOW}} */, :P30 /* {{GetPayReqDetails.req_user_id}} */, :P31 /* {{$_POST.key}} */, '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', :P32 /* {{$_POST.mode}} */, :P33 /* {{$_POST.cardnum}} */, :P34 /* {{$_POST.card_type}} */, :P35 /* {{$_POST.upi_va}} */)",
+                                  "params": [
+                                    {
+                                      "name": ":P1",
+                                      "type": "expression",
+                                      "value": "{{GetOperatorId.op_id}}"
+                                    },
+                                    {
+                                      "name": ":P2",
+                                      "type": "expression",
+                                      "value": "{{GetOperatorId.service_id}}"
+                                    },
+                                    {
+                                      "name": ":P3",
+                                      "type": "expression",
+                                      "value": "{{GetSchToUser.to_user_id}}"
+                                    },
+                                    {
+                                      "name": ":P4",
+                                      "type": "expression",
+                                      "value": "{{GetSchToUser.user_mobile}}"
+                                    },
+                                    {
+                                      "name": ":P5",
+                                      "type": "expression",
+                                      "value": "{{$_POST.firstname}}"
+                                    },
+                                    {
+                                      "name": ":P6",
+                                      "type": "expression",
+                                      "value": "{{GetSchToUser.balance_amt}}"
+                                    },
+                                    {
+                                      "name": ":P7",
+                                      "type": "expression",
+                                      "value": "{{NetAmt}}"
+                                    },
+                                    {
+                                      "name": ":P8",
+                                      "type": "expression",
+                                      "value": "{{GetCommision.comm_per}}"
+                                    },
+                                    {
+                                      "name": ":P9",
+                                      "type": "expression",
+                                      "value": "{{GetCommision.comm_val}}"
+                                    },
+                                    {
+                                      "name": ":P10",
+                                      "type": "expression",
+                                      "value": "{{GetCommAmt}}"
+                                    },
+                                    {
+                                      "name": ":P11",
+                                      "type": "expression",
+                                      "value": "{{GetCommision.service_charge_val}}"
+                                    },
+                                    {
+                                      "name": ":P12",
+                                      "type": "expression",
+                                      "value": "{{GetCommision.service_charge_per}}"
+                                    },
+                                    {
+                                      "name": ":P13",
+                                      "type": "expression",
+                                      "value": "{{GetChargeAmt}}"
+                                    },
+                                    {
+                                      "name": ":P14",
+                                      "type": "expression",
+                                      "value": "{{netAmt}}"
+                                    },
+                                    {
+                                      "name": ":P15",
+                                      "type": "expression",
+                                      "value": "{{CrClosingBal}}"
+                                    },
+                                    {
+                                      "name": ":P16",
+                                      "type": "expression",
+                                      "value": "{{'Web'}}"
+                                    },
+                                    {
+                                      "name": ":P17",
+                                      "type": "expression",
+                                      "value": "{{'Cash'}}"
+                                    },
+                                    {
+                                      "name": ":P18",
+                                      "type": "expression",
+                                      "value": "{{($_POST.status=='success')?'SUCCESS':($_POST.status=='pending')?'PENDING':'FAILED'}}"
+                                    },
+                                    {
+                                      "name": ":P19",
+                                      "type": "expression",
+                                      "value": "{{$_POST.txnid}}"
+                                    },
+                                    {
+                                      "name": ":P20",
+                                      "type": "expression",
+                                      "value": "{{'Wallet balance Rs.'+$_POST.amount+'  updated by '+GetDebitUser.user_fname+' to '+GetSchToUser.user_fname+' Using Add Money Live Txn'}}"
+                                    },
+                                    {
+                                      "name": ":P21",
+                                      "type": "expression",
+                                      "value": "{{'AddMoney'}}"
+                                    },
+                                    {
+                                      "name": ":P22",
+                                      "type": "expression",
+                                      "value": "{{$_POST.easepayid}}"
+                                    },
+                                    {
+                                      "name": ":P23",
+                                      "type": "expression",
+                                      "value": "{{$_POST.error_Message}}"
+                                    },
+                                    {
+                                      "name": ":P24",
+                                      "type": "expression",
+                                      "value": "{{$_POST.easepayid}}"
+                                    },
+                                    {
+                                      "name": ":P25",
+                                      "type": "expression",
+                                      "value": "{{$_POST.key}}"
+                                    },
+                                    {
+                                      "name": ":P26",
+                                      "type": "expression",
+                                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                    },
+                                    {
+                                      "name": ":P27",
+                                      "type": "expression",
+                                      "value": "{{'P2A'}}"
+                                    },
+                                    {
+                                      "name": ":P28",
+                                      "type": "expression",
+                                      "value": "{{'Live'}}"
+                                    },
+                                    {
+                                      "name": ":P29",
+                                      "type": "expression",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "name": ":P30",
+                                      "type": "expression",
+                                      "value": "{{GetPayReqDetails.req_user_id}}"
+                                    },
+                                    {
+                                      "name": ":P31",
+                                      "type": "expression",
+                                      "value": "{{$_POST.key}}"
+                                    },
+                                    {
+                                      "name": ":P32",
+                                      "type": "expression",
+                                      "value": "{{$_POST.mode}}"
+                                    },
+                                    {
+                                      "name": ":P33",
+                                      "type": "expression",
+                                      "value": "{{$_POST.cardnum}}"
+                                    },
+                                    {
+                                      "name": ":P34",
+                                      "type": "expression",
+                                      "value": "{{$_POST.card_type}}"
+                                    },
+                                    {
+                                      "name": ":P35",
+                                      "type": "expression",
+                                      "value": "{{$_POST.upi_va}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "identity",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ],
+                              "output": false
+                            },
+                            {
+                              "name": "WalletCrBalance",
+                              "module": "dbupdater",
+                              "action": "insert",
+                              "options": {
+                                "connection": "postgres_gcpServer",
+                                "sql": {
+                                  "type": "insert",
+                                  "values": [
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "user_id",
+                                      "type": "number",
+                                      "value": "{{GetSchToUser.to_user_id}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "old_balance",
+                                      "type": "number",
+                                      "value": "{{GetSchToUser.balance_amt}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "amount",
+                                      "type": "number",
+                                      "value": "{{NetAmt}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "new_balance",
+                                      "type": "number",
+                                      "value": "{{CrClosingBal}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "transaction_type",
+                                      "type": "text",
+                                      "value": "{{'Wallet Credit'}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "tr_date",
+                                      "type": "text",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "ip_address",
+                                      "type": "text",
+                                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "crdr_type",
+                                      "type": "text",
+                                      "value": "{{'Credit'}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "pay_ref_id",
+                                      "type": "text",
+                                      "value": "{{CrBalRechTrans.identity}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "remarks",
+                                      "type": "text",
+                                      "value": "{{'Number:  '+GetSchToUser.user_mobile+' | Amount: \\n'+$_POST.amount+' | Wallet Credit | Ref. Id:\\n '+CrBalRechTrans.identity+' | Comm Per: '+GetCommision.comm_per+' | Comm Val: '+GetCommision.comm_val+' | Charge Per: '+GetCommision.service_charge_per+' | Charge Val: '+GetCommision.service_charge_val+' | GST: 00.00 | TDS: 00.00 | Net Amt. '+netAmt}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "created_by",
+                                      "type": "number",
+                                      "value": "{{GetPayReqDetails.req_user_id}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "created_on",
+                                      "type": "datetime",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "netamt",
+                                      "type": "text",
+                                      "value": "{{netAmt}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "status",
+                                      "type": "text",
+                                      "value": "{{($_POST.status=='success')?'SUCCESS':($_POST.status=='pending')?'PENDING':'FAILED'}}"
+                                    }
+                                  ],
+                                  "table": "tt_balance",
+                                  "returning": "id",
+                                  "query": "INSERT INTO tt_balance\n(user_id, old_balance, amount, new_balance, transaction_type, tr_date, ip_address, crdr_type, pay_ref_id, remarks, created_by, created_on, netamt, status) VALUES (:P1 /* {{GetSchToUser.to_user_id}} */, :P2 /* {{GetSchToUser.balance_amt}} */, :P3 /* {{NetAmt}} */, :P4 /* {{CrClosingBal}} */, :P5 /* {{'Wallet Credit'}} */, :P6 /* {{NOW}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{'Credit'}} */, :P9 /* {{CrBalRechTrans.identity}} */, :P10 /* {{'Number:  '+GetSchToUser.user_mobile+' | Amount: \\n'+$_POST.amount+' | Wallet Credit | Ref. Id:\\n '+CrBalRechTrans.identity+' | Comm Per: '+GetCommision.comm_per+' | Comm Val: '+GetCommision.comm_val+' | Charge Per: '+GetCommision.service_charge_per+' | Charge Val: '+GetCommision.service_charge_val+' | GST: 00.00 | TDS: 00.00 | Net Amt. '+netAmt}} */, :P11 /* {{GetPayReqDetails.req_user_id}} */, :P12 /* {{NOW}} */, :P13 /* {{netAmt}} */, :P14 /* {{($_POST.status=='success')?'SUCCESS':($_POST.status=='pending')?'PENDING':'FAILED'}} */)",
+                                  "params": [
+                                    {
+                                      "name": ":P1",
+                                      "type": "expression",
+                                      "value": "{{GetSchToUser.to_user_id}}"
+                                    },
+                                    {
+                                      "name": ":P2",
+                                      "type": "expression",
+                                      "value": "{{GetSchToUser.balance_amt}}"
+                                    },
+                                    {
+                                      "name": ":P3",
+                                      "type": "expression",
+                                      "value": "{{NetAmt}}"
+                                    },
+                                    {
+                                      "name": ":P4",
+                                      "type": "expression",
+                                      "value": "{{CrClosingBal}}"
+                                    },
+                                    {
+                                      "name": ":P5",
+                                      "type": "expression",
+                                      "value": "{{'Wallet Credit'}}"
+                                    },
+                                    {
+                                      "name": ":P6",
+                                      "type": "expression",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "name": ":P7",
+                                      "type": "expression",
+                                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                    },
+                                    {
+                                      "name": ":P8",
+                                      "type": "expression",
+                                      "value": "{{'Credit'}}"
+                                    },
+                                    {
+                                      "name": ":P9",
+                                      "type": "expression",
+                                      "value": "{{CrBalRechTrans.identity}}"
+                                    },
+                                    {
+                                      "name": ":P10",
+                                      "type": "expression",
+                                      "value": "{{'Number:  '+GetSchToUser.user_mobile+' | Amount: \\n'+$_POST.amount+' | Wallet Credit | Ref. Id:\\n '+CrBalRechTrans.identity+' | Comm Per: '+GetCommision.comm_per+' | Comm Val: '+GetCommision.comm_val+' | Charge Per: '+GetCommision.service_charge_per+' | Charge Val: '+GetCommision.service_charge_val+' | GST: 00.00 | TDS: 00.00 | Net Amt. '+netAmt}}"
+                                    },
+                                    {
+                                      "name": ":P11",
+                                      "type": "expression",
+                                      "value": "{{GetPayReqDetails.req_user_id}}"
+                                    },
+                                    {
+                                      "name": ":P12",
+                                      "type": "expression",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "name": ":P13",
+                                      "type": "expression",
+                                      "value": "{{netAmt}}"
+                                    },
+                                    {
+                                      "name": ":P14",
+                                      "type": "expression",
+                                      "value": "{{($_POST.status=='success')?'SUCCESS':($_POST.status=='pending')?'PENDING':'FAILED'}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "identity",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "WalletDebitBal",
+                              "module": "dbupdater",
+                              "action": "insert",
+                              "options": {
+                                "connection": "postgres_gcpServer",
+                                "sql": {
+                                  "type": "insert",
+                                  "values": [
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "user_id",
+                                      "type": "number",
+                                      "value": "{{GetPayReqDetails.pay_user_id}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "old_balance",
+                                      "type": "number",
+                                      "value": "{{GetDebitUser.balance_amt}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "amount",
+                                      "type": "number",
+                                      "value": "{{NetAmt}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "new_balance",
+                                      "type": "number",
+                                      "value": "{{DrClosingBal}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "transaction_type",
+                                      "type": "text",
+                                      "value": "{{'Wallet Debit'}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "tr_date",
+                                      "type": "text",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "ip_address",
+                                      "type": "text",
+                                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "crdr_type",
+                                      "type": "text",
+                                      "value": "{{'Debit'}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "pay_ref_id",
+                                      "type": "text",
+                                      "value": "{{CrBalRechTrans.identity}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "remarks",
+                                      "type": "text",
+                                      "value": "{{'Number: '+GetDebitUser.user_mobile+' | Amount:\\n '+$_POST.amount+' | Wallet Debit | Ref. Id:\\n '+CrBalRechTrans.identity+' | Comm Per: '+GetCommision.comm_per+' | Comm Val: '+GetCommision.comm_val+' | Charge Per: '+GetCommision.service_charge_per+' | Charge Val: '+GetCommision.service_charge_val+' | GST: 00.00 | TDS: 00.00 | Net Amt. '+netAmt}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "created_by",
+                                      "type": "number",
+                                      "value": "{{GetPayReqDetails.req_user_id}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "created_on",
+                                      "type": "datetime",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "netamt",
+                                      "type": "text",
+                                      "value": "{{netAmt}}"
+                                    },
+                                    {
+                                      "table": "tt_balance",
+                                      "column": "status",
+                                      "type": "text",
+                                      "value": "{{'SUCCESS'}}"
+                                    }
+                                  ],
+                                  "table": "tt_balance",
+                                  "returning": "id",
+                                  "query": "INSERT INTO tt_balance\n(user_id, old_balance, amount, new_balance, transaction_type, tr_date, ip_address, crdr_type, pay_ref_id, remarks, created_by, created_on, netamt, status) VALUES (:P1 /* {{GetPayReqDetails.pay_user_id}} */, :P2 /* {{GetDebitUser.balance_amt}} */, :P3 /* {{NetAmt}} */, :P4 /* {{DrClosingBal}} */, :P5 /* {{'Wallet Debit'}} */, :P6 /* {{NOW}} */, :P7 /* {{$_SERVER.REMOTE_ADDR}} */, :P8 /* {{'Debit'}} */, :P9 /* {{CrBalRechTrans.identity}} */, :P10 /* {{'Number: '+GetDebitUser.user_mobile+' | Amount:\\n '+$_POST.amount+' | Wallet Debit | Ref. Id:\\n '+CrBalRechTrans.identity+' | Comm Per: '+GetCommision.comm_per+' | Comm Val: '+GetCommision.comm_val+' | Charge Per: '+GetCommision.service_charge_per+' | Charge Val: '+GetCommision.service_charge_val+' | GST: 00.00 | TDS: 00.00 | Net Amt. '+netAmt}} */, :P11 /* {{GetPayReqDetails.req_user_id}} */, :P12 /* {{NOW}} */, :P13 /* {{netAmt}} */, :P14 /* {{'SUCCESS'}} */)",
+                                  "params": [
+                                    {
+                                      "name": ":P1",
+                                      "type": "expression",
+                                      "value": "{{GetPayReqDetails.pay_user_id}}"
+                                    },
+                                    {
+                                      "name": ":P2",
+                                      "type": "expression",
+                                      "value": "{{GetDebitUser.balance_amt}}"
+                                    },
+                                    {
+                                      "name": ":P3",
+                                      "type": "expression",
+                                      "value": "{{NetAmt}}"
+                                    },
+                                    {
+                                      "name": ":P4",
+                                      "type": "expression",
+                                      "value": "{{DrClosingBal}}"
+                                    },
+                                    {
+                                      "name": ":P5",
+                                      "type": "expression",
+                                      "value": "{{'Wallet Debit'}}"
+                                    },
+                                    {
+                                      "name": ":P6",
+                                      "type": "expression",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "name": ":P7",
+                                      "type": "expression",
+                                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                    },
+                                    {
+                                      "name": ":P8",
+                                      "type": "expression",
+                                      "value": "{{'Debit'}}"
+                                    },
+                                    {
+                                      "name": ":P9",
+                                      "type": "expression",
+                                      "value": "{{CrBalRechTrans.identity}}"
+                                    },
+                                    {
+                                      "name": ":P10",
+                                      "type": "expression",
+                                      "value": "{{'Number: '+GetDebitUser.user_mobile+' | Amount:\\n '+$_POST.amount+' | Wallet Debit | Ref. Id:\\n '+CrBalRechTrans.identity+' | Comm Per: '+GetCommision.comm_per+' | Comm Val: '+GetCommision.comm_val+' | Charge Per: '+GetCommision.service_charge_per+' | Charge Val: '+GetCommision.service_charge_val+' | GST: 00.00 | TDS: 00.00 | Net Amt. '+netAmt}}"
+                                    },
+                                    {
+                                      "name": ":P11",
+                                      "type": "expression",
+                                      "value": "{{GetPayReqDetails.req_user_id}}"
+                                    },
+                                    {
+                                      "name": ":P12",
+                                      "type": "expression",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "name": ":P13",
+                                      "type": "expression",
+                                      "value": "{{netAmt}}"
+                                    },
+                                    {
+                                      "name": ":P14",
+                                      "type": "expression",
+                                      "value": "{{'SUCCESS'}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "identity",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "GetWhatsappAPI",
+                              "module": "dbconnector",
+                              "action": "single",
+                              "options": {
+                                "connection": "postgres_gcpServer",
+                                "sql": {
+                                  "type": "SELECT",
+                                  "columns": [
+                                    {
+                                      "table": "m_api",
+                                      "column": "api_code"
+                                    },
+                                    {
+                                      "table": "m_api",
+                                      "column": "username"
+                                    },
+                                    {
+                                      "table": "m_api",
+                                      "column": "api_password"
+                                    },
+                                    {
+                                      "table": "m_api",
+                                      "column": "api_type"
+                                    },
+                                    {
+                                      "table": "m_api",
+                                      "column": "senderid"
+                                    },
+                                    {
+                                      "table": "m_api",
+                                      "column": "api_url"
+                                    }
+                                  ],
+                                  "table": {
+                                    "name": "m_api"
+                                  },
+                                  "primary": "id",
+                                  "joins": [],
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "m_api.api_type",
+                                        "field": "m_api.api_type",
+                                        "type": "string",
+                                        "operator": "equal",
+                                        "value": "{{'Whatsapp'}}",
+                                        "data": {
+                                          "table": "m_api",
+                                          "column": "api_type",
+                                          "type": "text",
+                                          "columnObj": {
+                                            "type": "string",
+                                            "maxLength": -5,
+                                            "primary": false,
+                                            "unique": false,
+                                            "nullable": true,
+                                            "name": "api_type"
+                                          }
+                                        },
+                                        "operation": "="
+                                      },
+                                      {
+                                        "id": "m_api.status",
+                                        "field": "m_api.status",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": 1,
+                                        "data": {
+                                          "table": "m_api",
+                                          "column": "status",
+                                          "type": "number",
+                                          "columnObj": {
+                                            "type": "integer",
+                                            "primary": false,
+                                            "nullable": false,
+                                            "unique": false,
+                                            "name": "status"
+                                          }
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "query": "SELECT api_code, username, api_password, api_type, senderid, api_url\nFROM m_api\nWHERE api_type = :P1 /* {{'Whatsapp'}} */ AND status = 1",
+                                  "params": [
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P1",
+                                      "value": "{{'Whatsapp'}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "output": false,
+                              "meta": [
+                                {
+                                  "type": "text",
+                                  "name": "api_code"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "username"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "api_password"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "api_type"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "senderid"
+                                },
+                                {
+                                  "type": "text",
+                                  "name": "api_url"
+                                }
+                              ],
+                              "outputType": "object"
+                            },
+                            {
+                              "name": "",
+                              "module": "core",
+                              "action": "condition",
+                              "options": {
+                                "if": "{{GetWhatsappAPI.api_code}}",
+                                "then": {
+                                  "steps": [
+                                    {
+                                      "name": "apiWhatsappToSender",
+                                      "module": "api",
+                                      "action": "send",
+                                      "options": {
+                                        "url": "{{GetWhatsappAPI.api_url}}",
+                                        "params": {
+                                          "api_token": "{{GetWhatsappAPI.api_password}}",
+                                          "mobile": "{{91+GetDebitUser.user_mobile}}",
+                                          "message": "{{'Dear '+GetDebitUser.user_fname+', Your S W Pay Wallet Account has been Debited with Amount ₹ '+$_POST.amount+' successfully and Credited to the user '+GetSchToUser.user_fname+' with Mobile Number'+GetSchToUser.user_mobile+' using operator Add Money\\nThanks for connected with us. 😊\\nRegards \\nS W Pay Team'}}"
+                                        },
+                                        "method": "POST"
+                                      },
+                                      "output": false
+                                    },
+                                    {
+                                      "name": "apiWhatsappToTargetUser",
+                                      "module": "api",
+                                      "action": "send",
+                                      "options": {
+                                        "url": "{{GetWhatsappAPI.api_url}}",
+                                        "params": {
+                                          "api_token": "{{GetWhatsappAPI.api_password}}",
+                                          "mobile": "{{91+GetSchToUser.user_mobile}}",
+                                          "message": "{{'Dear '+GetSchToUser.user_fname+', Your S W Pay Wallet Account has been Credited with Amount ₹ '+$_POST.amount+' successfully.\\nThanks for connected with us. 😊\\nRegards \\nS W Pay Team'}}"
+                                        },
+                                        "method": "POST"
+                                      },
+                                      "output": false
+                                    }
+                                  ]
+                                }
+                              },
+                              "outputType": "boolean"
+                            }
+                          ]
+                        },
+                        "else": {
+                          "steps": {
+                            "name": "CommChNotFound",
+                            "module": "core",
+                            "action": "response",
+                            "options": {
+                              "status": 403,
+                              "data": "Please setup comm. and charge"
+                            }
+                          }
+                        }
+                      },
+                      "outputType": "boolean"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": {
+            "name": "Resp",
+            "module": "core",
+            "action": "response",
+            "options": {
+              "status": 403,
+              "data": "Suspicious Activity"
+            }
+          }
+        }
+      }
+    }
+  }
+}

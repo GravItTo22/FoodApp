@@ -2500,6 +2500,14 @@ color: #fff;
 	margin-top: 10px;
 }
 
+.formPlaceorder .checkout__order .disabled{
+    cursor: default;
+    opacity: .45!important;
+    background-image: none!important;
+    -webkit-box-shadow: none!important;
+    box-shadow: none!important;
+    pointer-events: none!important;
+}
 /*---------------------
   Blog
 -----------------------*/

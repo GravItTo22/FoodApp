@@ -1361,6 +1361,65 @@
                         "then": {
                           "steps": [
                             {
+                              "name": "upEasybuzzPayLink",
+                              "module": "dbupdater",
+                              "action": "update",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "update",
+                                  "values": [
+                                    {
+                                      "table": "easybuzz_pay_link",
+                                      "column": "payment_status",
+                                      "type": "text",
+                                      "value": "{{'SUCCESS'}}"
+                                    }
+                                  ],
+                                  "table": "easybuzz_pay_link",
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "req_txn_id",
+                                        "field": "req_txn_id",
+                                        "type": "string",
+                                        "operator": "equal",
+                                        "value": "{{GetPayReqDetails.req_txn_id}}",
+                                        "data": {
+                                          "column": "req_txn_id"
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "returning": "id",
+                                  "query": "UPDATE easybuzz_pay_link\nSET payment_status = :P1 /* {{'SUCCESS'}} */\nWHERE req_txn_id = :P2 /* {{GetPayReqDetails.req_txn_id}} */",
+                                  "params": [
+                                    {
+                                      "name": ":P1",
+                                      "type": "expression",
+                                      "value": "{{'SUCCESS'}}"
+                                    },
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P2",
+                                      "value": "{{GetPayReqDetails.req_txn_id}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ]
+                            },
+                            {
                               "name": "AddOrder",
                               "module": "dbupdater",
                               "action": "insert",
@@ -1943,7 +2002,7 @@
                                   }
                                 }
                               },
-                              "output": true,
+                              "output": false,
                               "meta": [
                                 {
                                   "name": "$index",
@@ -2073,6 +2132,27 @@
                               "outputType": "array"
                             }
                           ]
+                        }
+                      },
+                      "outputType": "boolean"
+                    },
+                    {
+                      "name": "",
+                      "module": "core",
+                      "action": "condition",
+                      "options": {
+                        "if": "{{($_POST.status=='failure'||$_POST.status=='userCancelled')}}",
+                        "then": {
+                          "steps": {
+                            "name": "Status",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": "FAILED"
+                            },
+                            "meta": [],
+                            "outputType": "text"
+                          }
                         }
                       },
                       "outputType": "boolean"

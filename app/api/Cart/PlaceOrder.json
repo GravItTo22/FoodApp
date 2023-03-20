@@ -19,6 +19,32 @@
         "type": "text",
         "fieldName": "payment_mode",
         "name": "payment_mode"
+      },
+      {
+        "type": "array",
+        "name": "record",
+        "sub": [
+          {
+            "type": "number",
+            "name": "AddPreOrderToPayOnline"
+          },
+          {
+            "type": "number",
+            "name": "GetCartItems[$index]"
+          },
+          {
+            "type": "number",
+            "name": "identity"
+          },
+          {
+            "type": "number",
+            "name": "1"
+          },
+          {
+            "type": "datetime",
+            "name": "NOW"
+          }
+        ]
       }
     ],
     "$_SERVER": [
@@ -2196,6 +2222,17 @@
                           "then": {
                             "steps": [
                               {
+                                "name": "Url",
+                                "module": "core",
+                                "action": "setvalue",
+                                "options": {
+                                  "value": "{{apiAddMoneyLink.data.data.payment_url}}"
+                                },
+                                "meta": [],
+                                "outputType": "text",
+                                "output": true
+                              },
+                              {
                                 "name": "StorePaymentLink",
                                 "module": "dbupdater",
                                 "action": "insert",
@@ -2965,17 +3002,6 @@
                                   }
                                 ],
                                 "outputType": "array"
-                              },
-                              {
-                                "name": "Url",
-                                "module": "core",
-                                "action": "setvalue",
-                                "options": {
-                                  "value": "{{apiAddMoneyLink.data.data.payment_url}}"
-                                },
-                                "meta": [],
-                                "outputType": "text",
-                                "output": true
                               },
                               {
                                 "name": "Status",

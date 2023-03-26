@@ -21,6 +21,32 @@
       {
         "type": "text",
         "name": "payment_mode"
+      },
+      {
+        "type": "array",
+        "name": "record",
+        "sub": [
+          {
+            "type": "number",
+            "name": "AddPreOrderToPayOnline"
+          },
+          {
+            "type": "number",
+            "name": "GetCartItems[$index]"
+          },
+          {
+            "type": "number",
+            "name": "GetVerify"
+          },
+          {
+            "type": "number",
+            "name": "1"
+          },
+          {
+            "type": "datetime",
+            "name": "NOW"
+          }
+        ]
       }
     ]
   },
@@ -1395,379 +1421,84 @@
                                       "outputType": "text"
                                     },
                                     {
-                                      "name": "UpCustomer",
-                                      "module": "dbupdater",
-                                      "action": "update",
-                                      "options": {
-                                        "connection": "ClientApp",
-                                        "sql": {
-                                          "type": "update",
-                                          "values": [
-                                            {
-                                              "table": "m_customer",
-                                              "column": "wallet_bal",
-                                              "type": "text",
-                                              "value": "{{WalletNetAmt}}"
-                                            }
-                                          ],
-                                          "table": "m_customer",
-                                          "wheres": {
-                                            "condition": "AND",
-                                            "rules": [
-                                              {
-                                                "id": "id",
-                                                "field": "id",
-                                                "type": "double",
-                                                "operator": "equal",
-                                                "value": "{{GetVerify.user_id}}",
-                                                "data": {
-                                                  "column": "id"
-                                                },
-                                                "operation": "="
-                                              }
-                                            ],
-                                            "conditional": null,
-                                            "valid": true
-                                          },
-                                          "returning": "id",
-                                          "query": "UPDATE m_customer\nSET wallet_bal = :P1 /* {{WalletNetAmt}} */\nWHERE id = :P2 /* {{GetVerify.user_id}} */",
-                                          "params": [
-                                            {
-                                              "name": ":P1",
-                                              "type": "expression",
-                                              "value": "{{WalletNetAmt}}"
-                                            },
-                                            {
-                                              "operator": "equal",
-                                              "type": "expression",
-                                              "name": ":P2",
-                                              "value": "{{GetVerify.user_id}}"
-                                            }
-                                          ]
-                                        }
-                                      },
-                                      "meta": [
-                                        {
-                                          "name": "affected",
-                                          "type": "number"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "name": "AddOrder",
-                                      "module": "dbupdater",
-                                      "action": "insert",
-                                      "options": {
-                                        "connection": "ClientApp",
-                                        "sql": {
-                                          "type": "insert",
-                                          "values": [
-                                            {
-                                              "table": "r_order",
-                                              "column": "order_id",
-                                              "type": "text",
-                                              "value": "{{OrderId}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "user_id",
-                                              "type": "number",
-                                              "value": "{{GetVerify.user_id}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "total_amt",
-                                              "type": "text",
-                                              "value": "{{CartSumAmt[0].total_amt}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "discount",
-                                              "type": "text",
-                                              "value": "{{InstantDiscount}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "delevery_amt",
-                                              "type": "text",
-                                              "value": "{{ShippingCharge}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "user_name",
-                                              "type": "text",
-                                              "value": "{{GetUserDetails.fname+' '+GetUserDetails.lname}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "address",
-                                              "type": "text",
-                                              "value": "{{GetUserDetails.address}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "mobile",
-                                              "type": "text",
-                                              "value": "{{GetUserDetails.mobile}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "whatsapp",
-                                              "type": "text",
-                                              "value": "{{GetUserDetails.watsapp_no}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "pin",
-                                              "type": "text",
-                                              "value": "{{GetUserDetails.pin}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "ps",
-                                              "type": "text",
-                                              "value": "{{GetUserDetails.ps}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "dist",
-                                              "type": "text",
-                                              "value": "{{GetUserDetails.district}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "state",
-                                              "type": "text",
-                                              "value": "{{GetUserDetails.state}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "country",
-                                              "type": "text",
-                                              "value": "{{GetUserDetails.country}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "created_by",
-                                              "type": "number",
-                                              "value": "{{GetVerify.user_id}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "created_on",
-                                              "type": "datetime",
-                                              "value": "{{NOW}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "status",
-                                              "type": "number",
-                                              "value": "{{1}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "payment_status",
-                                              "type": "text",
-                                              "value": "{{$_POST.payment_mode}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "ex_charge_amt",
-                                              "type": "text",
-                                              "value": "{{OtherCharges}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "applied_promo_id",
-                                              "type": "number",
-                                              "value": "{{NewUserCode.id?NewUserCode.id:0}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "wallet_bal",
-                                              "type": "text",
-                                              "value": "{{GetUserDetails.wallet_bal}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "wallet_cashback_amt",
-                                              "type": "text",
-                                              "value": "{{WalletCashback}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "wallet_deduct_amt",
-                                              "type": "text",
-                                              "value": "{{WalletDeductAmt}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "wallet_closing_amt",
-                                              "type": "text",
-                                              "value": "{{WalletNetAmt}}"
-                                            },
-                                            {
-                                              "table": "r_order",
-                                              "column": "order_assigned_to",
-                                              "type": "number",
-                                              "value": "{{GetDelivery.id}}",
-                                              "condition": "{{GetDelivery.id}}"
-                                            }
-                                          ],
-                                          "table": "r_order",
-                                          "returning": "id",
-                                          "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, created_by, created_on, status, payment_status, ex_charge_amt, applied_promo_id, wallet_bal, wallet_cashback_amt, wallet_deduct_amt, wallet_closing_amt, order_assigned_to) VALUES (:P1 /* {{OrderId}} */, :P2 /* {{GetVerify.user_id}} */, :P3 /* {{CartSumAmt[0].total_amt}} */, :P4 /* {{InstantDiscount}} */, :P5 /* {{ShippingCharge}} */, :P6 /* {{GetUserDetails.fname+' '+GetUserDetails.lname}} */, :P7 /* {{GetUserDetails.address}} */, :P8 /* {{GetUserDetails.mobile}} */, :P9 /* {{GetUserDetails.watsapp_no}} */, :P10 /* {{GetUserDetails.pin}} */, :P11 /* {{GetUserDetails.ps}} */, :P12 /* {{GetUserDetails.district}} */, :P13 /* {{GetUserDetails.state}} */, :P14 /* {{GetUserDetails.country}} */, :P15 /* {{GetVerify.user_id}} */, :P16 /* {{NOW}} */, :P17 /* {{1}} */, :P18 /* {{$_POST.payment_mode}} */, :P19 /* {{OtherCharges}} */, :P20 /* {{NewUserCode.id?NewUserCode.id:0}} */, :P21 /* {{GetUserDetails.wallet_bal}} */, :P22 /* {{WalletCashback}} */, :P23 /* {{WalletDeductAmt}} */, :P24 /* {{WalletNetAmt}} */, :P25 /* {{GetDelivery.id}} */)",
-                                          "params": [
-                                            {
-                                              "name": ":P1",
-                                              "type": "expression",
-                                              "value": "{{OrderId}}"
-                                            },
-                                            {
-                                              "name": ":P2",
-                                              "type": "expression",
-                                              "value": "{{GetVerify.user_id}}"
-                                            },
-                                            {
-                                              "name": ":P3",
-                                              "type": "expression",
-                                              "value": "{{CartSumAmt[0].total_amt}}"
-                                            },
-                                            {
-                                              "name": ":P4",
-                                              "type": "expression",
-                                              "value": "{{InstantDiscount}}"
-                                            },
-                                            {
-                                              "name": ":P5",
-                                              "type": "expression",
-                                              "value": "{{ShippingCharge}}"
-                                            },
-                                            {
-                                              "name": ":P6",
-                                              "type": "expression",
-                                              "value": "{{GetUserDetails.fname+' '+GetUserDetails.lname}}"
-                                            },
-                                            {
-                                              "name": ":P7",
-                                              "type": "expression",
-                                              "value": "{{GetUserDetails.address}}"
-                                            },
-                                            {
-                                              "name": ":P8",
-                                              "type": "expression",
-                                              "value": "{{GetUserDetails.mobile}}"
-                                            },
-                                            {
-                                              "name": ":P9",
-                                              "type": "expression",
-                                              "value": "{{GetUserDetails.watsapp_no}}"
-                                            },
-                                            {
-                                              "name": ":P10",
-                                              "type": "expression",
-                                              "value": "{{GetUserDetails.pin}}"
-                                            },
-                                            {
-                                              "name": ":P11",
-                                              "type": "expression",
-                                              "value": "{{GetUserDetails.ps}}"
-                                            },
-                                            {
-                                              "name": ":P12",
-                                              "type": "expression",
-                                              "value": "{{GetUserDetails.district}}"
-                                            },
-                                            {
-                                              "name": ":P13",
-                                              "type": "expression",
-                                              "value": "{{GetUserDetails.state}}"
-                                            },
-                                            {
-                                              "name": ":P14",
-                                              "type": "expression",
-                                              "value": "{{GetUserDetails.country}}"
-                                            },
-                                            {
-                                              "name": ":P15",
-                                              "type": "expression",
-                                              "value": "{{GetVerify.user_id}}"
-                                            },
-                                            {
-                                              "name": ":P16",
-                                              "type": "expression",
-                                              "value": "{{NOW}}"
-                                            },
-                                            {
-                                              "name": ":P17",
-                                              "type": "expression",
-                                              "value": "{{1}}"
-                                            },
-                                            {
-                                              "name": ":P18",
-                                              "type": "expression",
-                                              "value": "{{$_POST.payment_mode}}"
-                                            },
-                                            {
-                                              "name": ":P19",
-                                              "type": "expression",
-                                              "value": "{{OtherCharges}}"
-                                            },
-                                            {
-                                              "name": ":P20",
-                                              "type": "expression",
-                                              "value": "{{NewUserCode.id?NewUserCode.id:0}}"
-                                            },
-                                            {
-                                              "name": ":P21",
-                                              "type": "expression",
-                                              "value": "{{GetUserDetails.wallet_bal}}"
-                                            },
-                                            {
-                                              "name": ":P22",
-                                              "type": "expression",
-                                              "value": "{{WalletCashback}}"
-                                            },
-                                            {
-                                              "name": ":P23",
-                                              "type": "expression",
-                                              "value": "{{WalletDeductAmt}}"
-                                            },
-                                            {
-                                              "name": ":P24",
-                                              "type": "expression",
-                                              "value": "{{WalletNetAmt}}"
-                                            },
-                                            {
-                                              "name": ":P25",
-                                              "type": "expression",
-                                              "value": "{{GetDelivery.id}}"
-                                            }
-                                          ]
-                                        }
-                                      },
-                                      "meta": [
-                                        {
-                                          "name": "identity",
-                                          "type": "text"
-                                        },
-                                        {
-                                          "name": "affected",
-                                          "type": "number"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "name": "repeat",
+                                      "name": "PayableAmount",
                                       "module": "core",
-                                      "action": "repeat",
+                                      "action": "setvalue",
                                       "options": {
-                                        "repeat": "{{GetCartItems}}",
-                                        "outputFields": [],
-                                        "exec": {
+                                        "value": "{{((CartSumAmt[0].total_amt.toNumber()+ShippingCharge.toNumber()+OtherCharges.toNumber())-(InstantDiscount.toNumber()+WalletDeductAmt.toNumber()))}}"
+                                      },
+                                      "meta": [],
+                                      "outputType": "text"
+                                    },
+                                    {
+                                      "name": "",
+                                      "module": "core",
+                                      "action": "condition",
+                                      "options": {
+                                        "if": "{{($_POST.payment_mode=='COD')}}",
+                                        "then": {
                                           "steps": [
                                             {
-                                              "name": "AddOrderDetails",
+                                              "name": "UpCustomer",
+                                              "module": "dbupdater",
+                                              "action": "update",
+                                              "options": {
+                                                "connection": "ClientApp",
+                                                "sql": {
+                                                  "type": "update",
+                                                  "values": [
+                                                    {
+                                                      "table": "m_customer",
+                                                      "column": "wallet_bal",
+                                                      "type": "text",
+                                                      "value": "{{WalletNetAmt}}"
+                                                    }
+                                                  ],
+                                                  "table": "m_customer",
+                                                  "wheres": {
+                                                    "condition": "AND",
+                                                    "rules": [
+                                                      {
+                                                        "id": "id",
+                                                        "field": "id",
+                                                        "type": "double",
+                                                        "operator": "equal",
+                                                        "value": "{{GetVerify.user_id}}",
+                                                        "data": {
+                                                          "column": "id"
+                                                        },
+                                                        "operation": "="
+                                                      }
+                                                    ],
+                                                    "conditional": null,
+                                                    "valid": true
+                                                  },
+                                                  "returning": "id",
+                                                  "query": "UPDATE m_customer\nSET wallet_bal = :P1 /* {{WalletNetAmt}} */\nWHERE id = :P2 /* {{GetVerify.user_id}} */",
+                                                  "params": [
+                                                    {
+                                                      "name": ":P1",
+                                                      "type": "expression",
+                                                      "value": "{{WalletNetAmt}}"
+                                                    },
+                                                    {
+                                                      "operator": "equal",
+                                                      "type": "expression",
+                                                      "name": ":P2",
+                                                      "value": "{{GetVerify.user_id}}"
+                                                    }
+                                                  ]
+                                                }
+                                              },
+                                              "meta": [
+                                                {
+                                                  "name": "affected",
+                                                  "type": "number"
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "name": "AddOrder",
                                               "module": "dbupdater",
                                               "action": "insert",
                                               "options": {
@@ -1776,141 +1507,285 @@
                                                   "type": "insert",
                                                   "values": [
                                                     {
-                                                      "table": "r_order_details",
-                                                      "column": "order_table_id",
-                                                      "type": "number",
-                                                      "value": "{{AddOrder.identity}}"
+                                                      "table": "r_order",
+                                                      "column": "order_id",
+                                                      "type": "text",
+                                                      "value": "{{OrderId}}"
                                                     },
                                                     {
-                                                      "table": "r_order_details",
-                                                      "column": "prod_id",
-                                                      "type": "number",
-                                                      "value": "{{GetCartItems[$index].prod_id}}"
-                                                    },
-                                                    {
-                                                      "table": "r_order_details",
-                                                      "column": "price_id",
-                                                      "type": "number",
-                                                      "value": "{{GetCartItems[$index].price_id}}"
-                                                    },
-                                                    {
-                                                      "table": "r_order_details",
-                                                      "column": "cart_id",
-                                                      "type": "number",
-                                                      "value": "{{GetCartItems[$index].id}}"
-                                                    },
-                                                    {
-                                                      "table": "r_order_details",
+                                                      "table": "r_order",
                                                       "column": "user_id",
                                                       "type": "number",
                                                       "value": "{{GetVerify.user_id}}"
                                                     },
                                                     {
-                                                      "table": "r_order_details",
-                                                      "column": "prod_qty",
+                                                      "table": "r_order",
+                                                      "column": "total_amt",
                                                       "type": "text",
-                                                      "value": "{{GetCartItems[$index].prod_qty}}"
+                                                      "value": "{{CartSumAmt[0].total_amt}}"
                                                     },
                                                     {
-                                                      "table": "r_order_details",
-                                                      "column": "each_unit_price",
+                                                      "table": "r_order",
+                                                      "column": "discount",
                                                       "type": "text",
-                                                      "value": "{{GetCartItems[$index].prod_unit_price}}"
+                                                      "value": "{{InstantDiscount}}"
                                                     },
                                                     {
-                                                      "table": "r_order_details",
-                                                      "column": "each_net_amt",
+                                                      "table": "r_order",
+                                                      "column": "delevery_amt",
                                                       "type": "text",
-                                                      "value": "{{GetCartItems[$index].total_price}}"
+                                                      "value": "{{ShippingCharge}}"
                                                     },
                                                     {
-                                                      "table": "r_order_details",
-                                                      "column": "order_status",
-                                                      "type": "number",
-                                                      "value": "{{1}}"
+                                                      "table": "r_order",
+                                                      "column": "user_name",
+                                                      "type": "text",
+                                                      "value": "{{GetUserDetails.fname+' '+GetUserDetails.lname}}"
                                                     },
                                                     {
-                                                      "table": "r_order_details",
+                                                      "table": "r_order",
+                                                      "column": "address",
+                                                      "type": "text",
+                                                      "value": "{{GetUserDetails.address}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "mobile",
+                                                      "type": "text",
+                                                      "value": "{{GetUserDetails.mobile}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "whatsapp",
+                                                      "type": "text",
+                                                      "value": "{{GetUserDetails.watsapp_no}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "pin",
+                                                      "type": "text",
+                                                      "value": "{{GetUserDetails.pin}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "ps",
+                                                      "type": "text",
+                                                      "value": "{{GetUserDetails.ps}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "dist",
+                                                      "type": "text",
+                                                      "value": "{{GetUserDetails.district}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "state",
+                                                      "type": "text",
+                                                      "value": "{{GetUserDetails.state}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "country",
+                                                      "type": "text",
+                                                      "value": "{{GetUserDetails.country}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
                                                       "column": "created_by",
                                                       "type": "number",
                                                       "value": "{{GetVerify.user_id}}"
                                                     },
                                                     {
-                                                      "table": "r_order_details",
+                                                      "table": "r_order",
                                                       "column": "created_on",
                                                       "type": "datetime",
                                                       "value": "{{NOW}}"
                                                     },
                                                     {
-                                                      "table": "r_order_details",
-                                                      "column": "purchase_price",
+                                                      "table": "r_order",
+                                                      "column": "status",
+                                                      "type": "number",
+                                                      "value": "{{1}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "payment_status",
                                                       "type": "text",
-                                                      "value": "{{GetCartItems[$index].cart_purchase}}"
+                                                      "value": "{{$_POST.payment_mode}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "ex_charge_amt",
+                                                      "type": "text",
+                                                      "value": "{{OtherCharges}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "applied_promo_id",
+                                                      "type": "number",
+                                                      "value": "{{NewUserCode.id?NewUserCode.id:0}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "wallet_bal",
+                                                      "type": "text",
+                                                      "value": "{{GetUserDetails.wallet_bal}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "wallet_cashback_amt",
+                                                      "type": "text",
+                                                      "value": "{{WalletCashback}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "wallet_deduct_amt",
+                                                      "type": "text",
+                                                      "value": "{{WalletDeductAmt}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "wallet_closing_amt",
+                                                      "type": "text",
+                                                      "value": "{{WalletNetAmt}}"
+                                                    },
+                                                    {
+                                                      "table": "r_order",
+                                                      "column": "order_assigned_to",
+                                                      "type": "number",
+                                                      "value": "{{GetDelivery.id}}",
+                                                      "condition": "{{GetDelivery.id}}"
                                                     }
                                                   ],
-                                                  "table": "r_order_details",
+                                                  "table": "r_order",
                                                   "returning": "id",
-                                                  "query": "INSERT INTO r_order_details\n(order_table_id, prod_id, price_id, cart_id, user_id, prod_qty, each_unit_price, each_net_amt, order_status, created_by, created_on, purchase_price) VALUES (:P1 /* {{AddOrder.identity}} */, :P2 /* {{GetCartItems[$index].prod_id}} */, :P3 /* {{GetCartItems[$index].price_id}} */, :P4 /* {{GetCartItems[$index].id}} */, :P5 /* {{GetVerify.user_id}} */, :P6 /* {{GetCartItems[$index].prod_qty}} */, :P7 /* {{GetCartItems[$index].prod_unit_price}} */, :P8 /* {{GetCartItems[$index].total_price}} */, :P9 /* {{1}} */, :P10 /* {{GetVerify.user_id}} */, :P11 /* {{NOW}} */, :P12 /* {{GetCartItems[$index].cart_purchase}} */)",
+                                                  "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, created_by, created_on, status, payment_status, ex_charge_amt, applied_promo_id, wallet_bal, wallet_cashback_amt, wallet_deduct_amt, wallet_closing_amt, order_assigned_to) VALUES (:P1 /* {{OrderId}} */, :P2 /* {{GetVerify.user_id}} */, :P3 /* {{CartSumAmt[0].total_amt}} */, :P4 /* {{InstantDiscount}} */, :P5 /* {{ShippingCharge}} */, :P6 /* {{GetUserDetails.fname+' '+GetUserDetails.lname}} */, :P7 /* {{GetUserDetails.address}} */, :P8 /* {{GetUserDetails.mobile}} */, :P9 /* {{GetUserDetails.watsapp_no}} */, :P10 /* {{GetUserDetails.pin}} */, :P11 /* {{GetUserDetails.ps}} */, :P12 /* {{GetUserDetails.district}} */, :P13 /* {{GetUserDetails.state}} */, :P14 /* {{GetUserDetails.country}} */, :P15 /* {{GetVerify.user_id}} */, :P16 /* {{NOW}} */, :P17 /* {{1}} */, :P18 /* {{$_POST.payment_mode}} */, :P19 /* {{OtherCharges}} */, :P20 /* {{NewUserCode.id?NewUserCode.id:0}} */, :P21 /* {{GetUserDetails.wallet_bal}} */, :P22 /* {{WalletCashback}} */, :P23 /* {{WalletDeductAmt}} */, :P24 /* {{WalletNetAmt}} */, :P25 /* {{GetDelivery.id}} */)",
                                                   "params": [
                                                     {
                                                       "name": ":P1",
                                                       "type": "expression",
-                                                      "value": "{{AddOrder.identity}}"
+                                                      "value": "{{OrderId}}"
                                                     },
                                                     {
                                                       "name": ":P2",
                                                       "type": "expression",
-                                                      "value": "{{GetCartItems[$index].prod_id}}"
+                                                      "value": "{{GetVerify.user_id}}"
                                                     },
                                                     {
                                                       "name": ":P3",
                                                       "type": "expression",
-                                                      "value": "{{GetCartItems[$index].price_id}}"
+                                                      "value": "{{CartSumAmt[0].total_amt}}"
                                                     },
                                                     {
                                                       "name": ":P4",
                                                       "type": "expression",
-                                                      "value": "{{GetCartItems[$index].id}}"
+                                                      "value": "{{InstantDiscount}}"
                                                     },
                                                     {
                                                       "name": ":P5",
                                                       "type": "expression",
-                                                      "value": "{{GetVerify.user_id}}"
+                                                      "value": "{{ShippingCharge}}"
                                                     },
                                                     {
                                                       "name": ":P6",
                                                       "type": "expression",
-                                                      "value": "{{GetCartItems[$index].prod_qty}}"
+                                                      "value": "{{GetUserDetails.fname+' '+GetUserDetails.lname}}"
                                                     },
                                                     {
                                                       "name": ":P7",
                                                       "type": "expression",
-                                                      "value": "{{GetCartItems[$index].prod_unit_price}}"
+                                                      "value": "{{GetUserDetails.address}}"
                                                     },
                                                     {
                                                       "name": ":P8",
                                                       "type": "expression",
-                                                      "value": "{{GetCartItems[$index].total_price}}"
+                                                      "value": "{{GetUserDetails.mobile}}"
                                                     },
                                                     {
                                                       "name": ":P9",
                                                       "type": "expression",
-                                                      "value": "{{1}}"
+                                                      "value": "{{GetUserDetails.watsapp_no}}"
                                                     },
                                                     {
                                                       "name": ":P10",
                                                       "type": "expression",
-                                                      "value": "{{GetVerify.user_id}}"
+                                                      "value": "{{GetUserDetails.pin}}"
                                                     },
                                                     {
                                                       "name": ":P11",
                                                       "type": "expression",
-                                                      "value": "{{NOW}}"
+                                                      "value": "{{GetUserDetails.ps}}"
                                                     },
                                                     {
                                                       "name": ":P12",
                                                       "type": "expression",
-                                                      "value": "{{GetCartItems[$index].cart_purchase}}"
+                                                      "value": "{{GetUserDetails.district}}"
+                                                    },
+                                                    {
+                                                      "name": ":P13",
+                                                      "type": "expression",
+                                                      "value": "{{GetUserDetails.state}}"
+                                                    },
+                                                    {
+                                                      "name": ":P14",
+                                                      "type": "expression",
+                                                      "value": "{{GetUserDetails.country}}"
+                                                    },
+                                                    {
+                                                      "name": ":P15",
+                                                      "type": "expression",
+                                                      "value": "{{GetVerify.user_id}}"
+                                                    },
+                                                    {
+                                                      "name": ":P16",
+                                                      "type": "expression",
+                                                      "value": "{{NOW}}"
+                                                    },
+                                                    {
+                                                      "name": ":P17",
+                                                      "type": "expression",
+                                                      "value": "{{1}}"
+                                                    },
+                                                    {
+                                                      "name": ":P18",
+                                                      "type": "expression",
+                                                      "value": "{{$_POST.payment_mode}}"
+                                                    },
+                                                    {
+                                                      "name": ":P19",
+                                                      "type": "expression",
+                                                      "value": "{{OtherCharges}}"
+                                                    },
+                                                    {
+                                                      "name": ":P20",
+                                                      "type": "expression",
+                                                      "value": "{{NewUserCode.id?NewUserCode.id:0}}"
+                                                    },
+                                                    {
+                                                      "name": ":P21",
+                                                      "type": "expression",
+                                                      "value": "{{GetUserDetails.wallet_bal}}"
+                                                    },
+                                                    {
+                                                      "name": ":P22",
+                                                      "type": "expression",
+                                                      "value": "{{WalletCashback}}"
+                                                    },
+                                                    {
+                                                      "name": ":P23",
+                                                      "type": "expression",
+                                                      "value": "{{WalletDeductAmt}}"
+                                                    },
+                                                    {
+                                                      "name": ":P24",
+                                                      "type": "expression",
+                                                      "value": "{{WalletNetAmt}}"
+                                                    },
+                                                    {
+                                                      "name": ":P25",
+                                                      "type": "expression",
+                                                      "value": "{{GetDelivery.id}}"
                                                     }
                                                   ]
                                                 }
@@ -1924,153 +1799,1322 @@
                                                   "name": "affected",
                                                   "type": "number"
                                                 }
-                                              ],
-                                              "output": false
+                                              ]
                                             },
                                             {
-                                              "name": "delete",
-                                              "module": "dbupdater",
-                                              "action": "delete",
+                                              "name": "repeat",
+                                              "module": "core",
+                                              "action": "repeat",
                                               "options": {
-                                                "connection": "ClientApp",
-                                                "sql": {
-                                                  "type": "delete",
-                                                  "table": "r_cart",
-                                                  "wheres": {
-                                                    "condition": "OR",
-                                                    "rules": [
-                                                      {
-                                                        "id": "user_id",
-                                                        "field": "user_id",
-                                                        "type": "double",
-                                                        "operator": "equal",
-                                                        "value": "{{GetVerify.user_id}}",
-                                                        "data": {
-                                                          "column": "user_id"
-                                                        },
-                                                        "operation": "="
-                                                      },
-                                                      {
-                                                        "id": "ip_address",
-                                                        "field": "ip_address",
-                                                        "type": "string",
-                                                        "operator": "equal",
-                                                        "value": "{{$_SERVER.REMOTE_ADDR}}",
-                                                        "data": {
-                                                          "column": "ip_address"
-                                                        },
-                                                        "operation": "="
-                                                      }
-                                                    ],
-                                                    "conditional": null,
-                                                    "valid": true
-                                                  },
-                                                  "returning": "id",
-                                                  "query": "DELETE\nFROM r_cart\nWHERE user_id = :P1 /* {{GetVerify.user_id}} */ OR ip_address = :P2 /* {{$_SERVER.REMOTE_ADDR}} */",
-                                                  "params": [
+                                                "repeat": "{{GetCartItems}}",
+                                                "outputFields": [],
+                                                "exec": {
+                                                  "steps": [
                                                     {
-                                                      "operator": "equal",
-                                                      "type": "expression",
-                                                      "name": ":P1",
-                                                      "value": "{{GetVerify.user_id}}"
+                                                      "name": "AddOrderDetails",
+                                                      "module": "dbupdater",
+                                                      "action": "insert",
+                                                      "options": {
+                                                        "connection": "ClientApp",
+                                                        "sql": {
+                                                          "type": "insert",
+                                                          "values": [
+                                                            {
+                                                              "table": "r_order_details",
+                                                              "column": "order_table_id",
+                                                              "type": "number",
+                                                              "value": "{{AddOrder.identity}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_details",
+                                                              "column": "prod_id",
+                                                              "type": "number",
+                                                              "value": "{{GetCartItems[$index].prod_id}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_details",
+                                                              "column": "price_id",
+                                                              "type": "number",
+                                                              "value": "{{GetCartItems[$index].price_id}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_details",
+                                                              "column": "cart_id",
+                                                              "type": "number",
+                                                              "value": "{{GetCartItems[$index].id}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_details",
+                                                              "column": "user_id",
+                                                              "type": "number",
+                                                              "value": "{{GetVerify.user_id}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_details",
+                                                              "column": "prod_qty",
+                                                              "type": "text",
+                                                              "value": "{{GetCartItems[$index].prod_qty}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_details",
+                                                              "column": "each_unit_price",
+                                                              "type": "text",
+                                                              "value": "{{GetCartItems[$index].prod_unit_price}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_details",
+                                                              "column": "each_net_amt",
+                                                              "type": "text",
+                                                              "value": "{{GetCartItems[$index].total_price}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_details",
+                                                              "column": "order_status",
+                                                              "type": "number",
+                                                              "value": "{{1}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_details",
+                                                              "column": "created_by",
+                                                              "type": "number",
+                                                              "value": "{{GetVerify.user_id}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_details",
+                                                              "column": "created_on",
+                                                              "type": "datetime",
+                                                              "value": "{{NOW}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_details",
+                                                              "column": "purchase_price",
+                                                              "type": "text",
+                                                              "value": "{{GetCartItems[$index].cart_purchase}}"
+                                                            }
+                                                          ],
+                                                          "table": "r_order_details",
+                                                          "returning": "id",
+                                                          "query": "INSERT INTO r_order_details\n(order_table_id, prod_id, price_id, cart_id, user_id, prod_qty, each_unit_price, each_net_amt, order_status, created_by, created_on, purchase_price) VALUES (:P1 /* {{AddOrder.identity}} */, :P2 /* {{GetCartItems[$index].prod_id}} */, :P3 /* {{GetCartItems[$index].price_id}} */, :P4 /* {{GetCartItems[$index].id}} */, :P5 /* {{GetVerify.user_id}} */, :P6 /* {{GetCartItems[$index].prod_qty}} */, :P7 /* {{GetCartItems[$index].prod_unit_price}} */, :P8 /* {{GetCartItems[$index].total_price}} */, :P9 /* {{1}} */, :P10 /* {{GetVerify.user_id}} */, :P11 /* {{NOW}} */, :P12 /* {{GetCartItems[$index].cart_purchase}} */)",
+                                                          "params": [
+                                                            {
+                                                              "name": ":P1",
+                                                              "type": "expression",
+                                                              "value": "{{AddOrder.identity}}"
+                                                            },
+                                                            {
+                                                              "name": ":P2",
+                                                              "type": "expression",
+                                                              "value": "{{GetCartItems[$index].prod_id}}"
+                                                            },
+                                                            {
+                                                              "name": ":P3",
+                                                              "type": "expression",
+                                                              "value": "{{GetCartItems[$index].price_id}}"
+                                                            },
+                                                            {
+                                                              "name": ":P4",
+                                                              "type": "expression",
+                                                              "value": "{{GetCartItems[$index].id}}"
+                                                            },
+                                                            {
+                                                              "name": ":P5",
+                                                              "type": "expression",
+                                                              "value": "{{GetVerify.user_id}}"
+                                                            },
+                                                            {
+                                                              "name": ":P6",
+                                                              "type": "expression",
+                                                              "value": "{{GetCartItems[$index].prod_qty}}"
+                                                            },
+                                                            {
+                                                              "name": ":P7",
+                                                              "type": "expression",
+                                                              "value": "{{GetCartItems[$index].prod_unit_price}}"
+                                                            },
+                                                            {
+                                                              "name": ":P8",
+                                                              "type": "expression",
+                                                              "value": "{{GetCartItems[$index].total_price}}"
+                                                            },
+                                                            {
+                                                              "name": ":P9",
+                                                              "type": "expression",
+                                                              "value": "{{1}}"
+                                                            },
+                                                            {
+                                                              "name": ":P10",
+                                                              "type": "expression",
+                                                              "value": "{{GetVerify.user_id}}"
+                                                            },
+                                                            {
+                                                              "name": ":P11",
+                                                              "type": "expression",
+                                                              "value": "{{NOW}}"
+                                                            },
+                                                            {
+                                                              "name": ":P12",
+                                                              "type": "expression",
+                                                              "value": "{{GetCartItems[$index].cart_purchase}}"
+                                                            }
+                                                          ]
+                                                        }
+                                                      },
+                                                      "meta": [
+                                                        {
+                                                          "name": "identity",
+                                                          "type": "text"
+                                                        },
+                                                        {
+                                                          "name": "affected",
+                                                          "type": "number"
+                                                        }
+                                                      ],
+                                                      "output": false
                                                     },
                                                     {
-                                                      "operator": "equal",
-                                                      "type": "expression",
-                                                      "name": ":P2",
-                                                      "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                                      "name": "delete",
+                                                      "module": "dbupdater",
+                                                      "action": "delete",
+                                                      "options": {
+                                                        "connection": "ClientApp",
+                                                        "sql": {
+                                                          "type": "delete",
+                                                          "table": "r_cart",
+                                                          "returning": "id",
+                                                          "query": "DELETE\nFROM r_cart\nWHERE id = :P1 /* {{GetCartItems[$index].id}} */",
+                                                          "params": [
+                                                            {
+                                                              "operator": "equal",
+                                                              "type": "expression",
+                                                              "name": ":P1",
+                                                              "value": "{{GetCartItems[$index].id}}"
+                                                            }
+                                                          ],
+                                                          "wheres": {
+                                                            "condition": "OR",
+                                                            "rules": [
+                                                              {
+                                                                "id": "id",
+                                                                "field": "id",
+                                                                "type": "double",
+                                                                "operator": "equal",
+                                                                "value": "{{GetCartItems[$index].id}}",
+                                                                "data": {
+                                                                  "column": "id"
+                                                                },
+                                                                "operation": "="
+                                                              }
+                                                            ],
+                                                            "conditional": null,
+                                                            "valid": true
+                                                          }
+                                                        }
+                                                      },
+                                                      "meta": [
+                                                        {
+                                                          "name": "affected",
+                                                          "type": "number"
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "name": "status",
+                                                      "module": "core",
+                                                      "action": "setvalue",
+                                                      "options": {
+                                                        "value": 200
+                                                      },
+                                                      "meta": [],
+                                                      "output": true,
+                                                      "outputType": "text"
+                                                    },
+                                                    {
+                                                      "name": "message",
+                                                      "module": "core",
+                                                      "action": "setvalue",
+                                                      "options": {
+                                                        "value": "Order Placed Successfully"
+                                                      },
+                                                      "meta": [],
+                                                      "output": true,
+                                                      "outputType": "text"
                                                     }
                                                   ]
                                                 }
                                               },
+                                              "output": false,
                                               "meta": [
                                                 {
-                                                  "name": "affected",
+                                                  "name": "$index",
                                                   "type": "number"
+                                                },
+                                                {
+                                                  "name": "$number",
+                                                  "type": "number"
+                                                },
+                                                {
+                                                  "name": "$name",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "$value",
+                                                  "type": "object"
+                                                },
+                                                {
+                                                  "name": "id",
+                                                  "type": "number"
+                                                },
+                                                {
+                                                  "name": "prod_id",
+                                                  "type": "number"
+                                                },
+                                                {
+                                                  "name": "price_id",
+                                                  "type": "number"
+                                                },
+                                                {
+                                                  "name": "user_id",
+                                                  "type": "number"
+                                                },
+                                                {
+                                                  "name": "prod_unit_price",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "prod_qty",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "total_price",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "cart_mrp",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "cart_purchase",
+                                                  "type": "text"
+                                                },
+                                                {
+                                                  "name": "status",
+                                                  "type": "text",
+                                                  "sub": []
+                                                },
+                                                {
+                                                  "name": "message",
+                                                  "type": "text",
+                                                  "sub": []
                                                 }
-                                              ]
+                                              ],
+                                              "outputType": "array"
+                                            }
+                                          ]
+                                        },
+                                        "else": {
+                                          "steps": [
+                                            {
+                                              "name": "Amount",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "{{PayableAmount.formatNumber(2, '.', 5)}}"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text"
+                                            },
+                                            {
+                                              "name": "TxnId",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "{{UUID.md5(123456).substr(1, 15)}}"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text"
+                                            },
+                                            {
+                                              "name": "key",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "PKH505MK4A"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text"
+                                            },
+                                            {
+                                              "name": "email",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "avik6598@gmail.com"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text"
+                                            },
+                                            {
+                                              "name": "mobile",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": 9287954127
+                                              },
+                                              "meta": [],
+                                              "outputType": "text"
+                                            },
+                                            {
+                                              "name": "salt",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "Q1WYHM1XUG"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text"
+                                            },
+                                            {
+                                              "name": "Message",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "Gravitto place order amount"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text"
+                                            },
+                                            {
+                                              "name": "Combine",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "{{key+'|'+TxnId+'|'+GetUserDetails.fname+'_'+GetUserDetails.mobile+'|'+email+'|'+mobile+'|'+Amount+'||||||'+Message+'|'+salt}}"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text"
+                                            },
+                                            {
+                                              "name": "hash",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "{{Combine.sha512()}}"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text"
+                                            },
+                                            {
+                                              "name": "apiAddMoneyLink",
+                                              "module": "api",
+                                              "action": "send",
+                                              "options": {
+                                                "method": "POST",
+                                                "url": "https://dashboard.easebuzz.in/easycollect/v1/create",
+                                                "data": {
+                                                  "key": "{{key}}",
+                                                  "hash": "{{hash}}",
+                                                  "merchant_txn": "{{TxnId}}",
+                                                  "name": "{{GetUserDetails.fname+'_'+GetUserDetails.mobile}}",
+                                                  "email": "{{email}}",
+                                                  "phone": "{{mobile}}",
+                                                  "amount": "{{Amount}}",
+                                                  "message": "{{Message}}",
+                                                  "udf1": "",
+                                                  "udf2": "",
+                                                  "udf3": "",
+                                                  "udf4": "",
+                                                  "udf5": ""
+                                                }
+                                              },
+                                              "output": false
+                                            },
+                                            {
+                                              "name": "stat",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "{{(apiAddMoneyLink.data.status==true)?1:3}}"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text",
+                                              "output": false
+                                            },
+                                            {
+                                              "name": "Response",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "{{apiAddMoneyLink.data.message}}"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text",
+                                              "output": false
+                                            },
+                                            {
+                                              "name": "expiry_date",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "{{apiAddMoneyLink.data.data.expiry_date.formatDate('yyyy-MM-dd')}}"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text",
+                                              "output": false
+                                            },
+                                            {
+                                              "name": "order_id",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "{{apiAddMoneyLink.data.data.id}}"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text",
+                                              "output": false
+                                            },
+                                            {
+                                              "name": "payment_type",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "{{apiAddMoneyLink.data.data.payment_type}}"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text",
+                                              "output": false
+                                            },
+                                            {
+                                              "name": "api_id",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "{{apiAddMoneyLink.data.data.transaction_id}}"
+                                              },
+                                              "meta": [],
+                                              "outputType": "text",
+                                              "output": false
+                                            },
+                                            {
+                                              "name": "",
+                                              "module": "core",
+                                              "action": "condition",
+                                              "options": {
+                                                "if": "{{apiAddMoneyLink.data.status==true}}",
+                                                "then": {
+                                                  "steps": [
+                                                    {
+                                                      "name": "Url",
+                                                      "module": "core",
+                                                      "action": "setvalue",
+                                                      "options": {
+                                                        "value": "{{apiAddMoneyLink.data.data.payment_url}}"
+                                                      },
+                                                      "meta": [],
+                                                      "outputType": "text",
+                                                      "output": true
+                                                    },
+                                                    {
+                                                      "name": "StorePaymentLink",
+                                                      "module": "dbupdater",
+                                                      "action": "insert",
+                                                      "options": {
+                                                        "connection": "ClientApp",
+                                                        "sql": {
+                                                          "type": "insert",
+                                                          "values": [
+                                                            {
+                                                              "table": "easybuzz_pay_link",
+                                                              "column": "customer_mobile",
+                                                              "type": "text",
+                                                              "value": "{{GetUserDetails.mobile}}"
+                                                            },
+                                                            {
+                                                              "table": "easybuzz_pay_link",
+                                                              "column": "api_pay_url",
+                                                              "type": "text",
+                                                              "value": "{{Url}}"
+                                                            },
+                                                            {
+                                                              "table": "easybuzz_pay_link",
+                                                              "column": "req_txn_id",
+                                                              "type": "text",
+                                                              "value": "{{TxnId}}"
+                                                            },
+                                                            {
+                                                              "table": "easybuzz_pay_link",
+                                                              "column": "api_expiry_date",
+                                                              "type": "text",
+                                                              "value": "{{expiry_date}}"
+                                                            },
+                                                            {
+                                                              "table": "easybuzz_pay_link",
+                                                              "column": "api_order_id",
+                                                              "type": "text",
+                                                              "value": "{{order_id}}"
+                                                            },
+                                                            {
+                                                              "table": "easybuzz_pay_link",
+                                                              "column": "api_id",
+                                                              "type": "text",
+                                                              "value": "{{api_id}}"
+                                                            },
+                                                            {
+                                                              "table": "easybuzz_pay_link",
+                                                              "column": "api_payment_type",
+                                                              "type": "text",
+                                                              "value": "{{payment_type}}"
+                                                            },
+                                                            {
+                                                              "table": "easybuzz_pay_link",
+                                                              "column": "amount",
+                                                              "type": "text",
+                                                              "value": "{{Amount}}"
+                                                            },
+                                                            {
+                                                              "table": "easybuzz_pay_link",
+                                                              "column": "payment_status",
+                                                              "type": "text",
+                                                              "value": "{{'PENDING'}}"
+                                                            },
+                                                            {
+                                                              "table": "easybuzz_pay_link",
+                                                              "column": "ip_address",
+                                                              "type": "text",
+                                                              "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                                            },
+                                                            {
+                                                              "table": "easybuzz_pay_link",
+                                                              "column": "host_address",
+                                                              "type": "text",
+                                                              "value": "{{$_SERVER.HOST_ADDR}}"
+                                                            },
+                                                            {
+                                                              "table": "easybuzz_pay_link",
+                                                              "column": "status",
+                                                              "type": "number",
+                                                              "value": "{{1}}"
+                                                            },
+                                                            {
+                                                              "table": "easybuzz_pay_link",
+                                                              "column": "created_on",
+                                                              "type": "datetime",
+                                                              "value": "{{NOW}}"
+                                                            },
+                                                            {
+                                                              "table": "easybuzz_pay_link",
+                                                              "column": "market_id",
+                                                              "type": "number",
+                                                              "value": "{{1}}"
+                                                            }
+                                                          ],
+                                                          "table": "easybuzz_pay_link",
+                                                          "returning": "id",
+                                                          "query": "INSERT INTO easybuzz_pay_link\n(customer_mobile, api_pay_url, req_txn_id, api_expiry_date, api_order_id, api_id, api_payment_type, amount, payment_status, ip_address, host_address, status, created_on, market_id) VALUES (:P1 /* {{GetUserDetails.mobile}} */, :P2 /* {{Url}} */, :P3 /* {{TxnId}} */, :P4 /* {{expiry_date}} */, :P5 /* {{order_id}} */, :P6 /* {{api_id}} */, :P7 /* {{payment_type}} */, :P8 /* {{Amount}} */, :P9 /* {{'PENDING'}} */, :P10 /* {{$_SERVER.REMOTE_ADDR}} */, :P11 /* {{$_SERVER.HOST_ADDR}} */, :P12 /* {{1}} */, :P13 /* {{NOW}} */, :P14 /* {{1}} */)",
+                                                          "params": [
+                                                            {
+                                                              "name": ":P1",
+                                                              "type": "expression",
+                                                              "value": "{{GetUserDetails.mobile}}"
+                                                            },
+                                                            {
+                                                              "name": ":P2",
+                                                              "type": "expression",
+                                                              "value": "{{Url}}"
+                                                            },
+                                                            {
+                                                              "name": ":P3",
+                                                              "type": "expression",
+                                                              "value": "{{TxnId}}"
+                                                            },
+                                                            {
+                                                              "name": ":P4",
+                                                              "type": "expression",
+                                                              "value": "{{expiry_date}}"
+                                                            },
+                                                            {
+                                                              "name": ":P5",
+                                                              "type": "expression",
+                                                              "value": "{{order_id}}"
+                                                            },
+                                                            {
+                                                              "name": ":P6",
+                                                              "type": "expression",
+                                                              "value": "{{api_id}}"
+                                                            },
+                                                            {
+                                                              "name": ":P7",
+                                                              "type": "expression",
+                                                              "value": "{{payment_type}}"
+                                                            },
+                                                            {
+                                                              "name": ":P8",
+                                                              "type": "expression",
+                                                              "value": "{{Amount}}"
+                                                            },
+                                                            {
+                                                              "name": ":P9",
+                                                              "type": "expression",
+                                                              "value": "{{'PENDING'}}"
+                                                            },
+                                                            {
+                                                              "name": ":P10",
+                                                              "type": "expression",
+                                                              "value": "{{$_SERVER.REMOTE_ADDR}}"
+                                                            },
+                                                            {
+                                                              "name": ":P11",
+                                                              "type": "expression",
+                                                              "value": "{{$_SERVER.HOST_ADDR}}"
+                                                            },
+                                                            {
+                                                              "name": ":P12",
+                                                              "type": "expression",
+                                                              "value": "{{1}}"
+                                                            },
+                                                            {
+                                                              "name": ":P13",
+                                                              "type": "expression",
+                                                              "value": "{{NOW}}"
+                                                            },
+                                                            {
+                                                              "name": ":P14",
+                                                              "type": "expression",
+                                                              "value": "{{1}}"
+                                                            }
+                                                          ]
+                                                        }
+                                                      },
+                                                      "meta": [
+                                                        {
+                                                          "name": "identity",
+                                                          "type": "text"
+                                                        },
+                                                        {
+                                                          "name": "affected",
+                                                          "type": "number"
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "name": "AddPreOrderToPayOnline",
+                                                      "module": "dbupdater",
+                                                      "action": "insert",
+                                                      "options": {
+                                                        "connection": "ClientApp",
+                                                        "sql": {
+                                                          "type": "insert",
+                                                          "values": [
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "txn_req_id",
+                                                              "type": "text",
+                                                              "value": "{{TxnId}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "order_id",
+                                                              "type": "text",
+                                                              "value": "{{OrderId}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "user_id",
+                                                              "type": "number",
+                                                              "value": "{{GetVerify.user_id}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "total_amt",
+                                                              "type": "text",
+                                                              "value": "{{CartSumAmt[0].total_amt}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "discount",
+                                                              "type": "text",
+                                                              "value": "{{InstantDiscount}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "delevery_amt",
+                                                              "type": "text",
+                                                              "value": "{{ShippingCharge}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "user_name",
+                                                              "type": "text",
+                                                              "value": "{{GetUserDetails.fname+' '+GetUserDetails.lname}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "address",
+                                                              "type": "text",
+                                                              "value": "{{GetUserDetails.address}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "mobile",
+                                                              "type": "text",
+                                                              "value": "{{GetUserDetails.mobile}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "whatsapp",
+                                                              "type": "text",
+                                                              "value": "{{GetUserDetails.watsapp_no}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "pin",
+                                                              "type": "text",
+                                                              "value": "{{GetUserDetails.pin}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "ps",
+                                                              "type": "text",
+                                                              "value": "{{GetUserDetails.ps}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "dist",
+                                                              "type": "text",
+                                                              "value": "{{GetUserDetails.district}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "state",
+                                                              "type": "text",
+                                                              "value": "{{GetUserDetails.state}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "country",
+                                                              "type": "text",
+                                                              "value": "{{GetUserDetails.country}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "created_by",
+                                                              "type": "number",
+                                                              "value": "{{GetVerify.user_id}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "created_on",
+                                                              "type": "datetime",
+                                                              "value": "{{NOW}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "status",
+                                                              "type": "number",
+                                                              "value": "{{1}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "payment_status",
+                                                              "type": "text",
+                                                              "value": "{{$_POST.payment_mode}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "ex_charge_amt",
+                                                              "type": "text",
+                                                              "value": "{{OtherCharges}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "order_assigned_to",
+                                                              "type": "number",
+                                                              "value": "{{GetDelivery.id}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "applied_promo_id",
+                                                              "type": "number",
+                                                              "value": "{{NewUserCode.id?NewUserCode.id:0}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "wallet_bal",
+                                                              "type": "text",
+                                                              "value": "{{GetUserDetails.wallet_bal}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "wallet_cashback_amt",
+                                                              "type": "text",
+                                                              "value": "{{WalletCashback}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "wallet_deduct_amt",
+                                                              "type": "text",
+                                                              "value": "{{WalletDeductAmt}}"
+                                                            },
+                                                            {
+                                                              "table": "r_order_pre_payonline",
+                                                              "column": "wallet_closing_amt",
+                                                              "type": "text",
+                                                              "value": "{{WalletNetAmt}}"
+                                                            }
+                                                          ],
+                                                          "table": "r_order_pre_payonline",
+                                                          "returning": "id",
+                                                          "query": "INSERT INTO r_order_pre_payonline\n(txn_req_id, order_id, user_id, total_amt, discount, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, created_by, created_on, status, payment_status, ex_charge_amt, order_assigned_to, applied_promo_id, wallet_bal, wallet_cashback_amt, wallet_deduct_amt, wallet_closing_amt) VALUES (:P1 /* {{TxnId}} */, :P2 /* {{OrderId}} */, :P3 /* {{GetVerify.user_id}} */, :P4 /* {{CartSumAmt[0].total_amt}} */, :P5 /* {{InstantDiscount}} */, :P6 /* {{ShippingCharge}} */, :P7 /* {{GetUserDetails.fname+' '+GetUserDetails.lname}} */, :P8 /* {{GetUserDetails.address}} */, :P9 /* {{GetUserDetails.mobile}} */, :P10 /* {{GetUserDetails.watsapp_no}} */, :P11 /* {{GetUserDetails.pin}} */, :P12 /* {{GetUserDetails.ps}} */, :P13 /* {{GetUserDetails.district}} */, :P14 /* {{GetUserDetails.state}} */, :P15 /* {{GetUserDetails.country}} */, :P16 /* {{GetVerify.user_id}} */, :P17 /* {{NOW}} */, :P18 /* {{1}} */, :P19 /* {{$_POST.payment_mode}} */, :P20 /* {{OtherCharges}} */, :P21 /* {{GetDelivery.id}} */, :P22 /* {{NewUserCode.id?NewUserCode.id:0}} */, :P23 /* {{GetUserDetails.wallet_bal}} */, :P24 /* {{WalletCashback}} */, :P25 /* {{WalletDeductAmt}} */, :P26 /* {{WalletNetAmt}} */)",
+                                                          "params": [
+                                                            {
+                                                              "name": ":P1",
+                                                              "type": "expression",
+                                                              "value": "{{TxnId}}"
+                                                            },
+                                                            {
+                                                              "name": ":P2",
+                                                              "type": "expression",
+                                                              "value": "{{OrderId}}"
+                                                            },
+                                                            {
+                                                              "name": ":P3",
+                                                              "type": "expression",
+                                                              "value": "{{GetVerify.user_id}}"
+                                                            },
+                                                            {
+                                                              "name": ":P4",
+                                                              "type": "expression",
+                                                              "value": "{{CartSumAmt[0].total_amt}}"
+                                                            },
+                                                            {
+                                                              "name": ":P5",
+                                                              "type": "expression",
+                                                              "value": "{{InstantDiscount}}"
+                                                            },
+                                                            {
+                                                              "name": ":P6",
+                                                              "type": "expression",
+                                                              "value": "{{ShippingCharge}}"
+                                                            },
+                                                            {
+                                                              "name": ":P7",
+                                                              "type": "expression",
+                                                              "value": "{{GetUserDetails.fname+' '+GetUserDetails.lname}}"
+                                                            },
+                                                            {
+                                                              "name": ":P8",
+                                                              "type": "expression",
+                                                              "value": "{{GetUserDetails.address}}"
+                                                            },
+                                                            {
+                                                              "name": ":P9",
+                                                              "type": "expression",
+                                                              "value": "{{GetUserDetails.mobile}}"
+                                                            },
+                                                            {
+                                                              "name": ":P10",
+                                                              "type": "expression",
+                                                              "value": "{{GetUserDetails.watsapp_no}}"
+                                                            },
+                                                            {
+                                                              "name": ":P11",
+                                                              "type": "expression",
+                                                              "value": "{{GetUserDetails.pin}}"
+                                                            },
+                                                            {
+                                                              "name": ":P12",
+                                                              "type": "expression",
+                                                              "value": "{{GetUserDetails.ps}}"
+                                                            },
+                                                            {
+                                                              "name": ":P13",
+                                                              "type": "expression",
+                                                              "value": "{{GetUserDetails.district}}"
+                                                            },
+                                                            {
+                                                              "name": ":P14",
+                                                              "type": "expression",
+                                                              "value": "{{GetUserDetails.state}}"
+                                                            },
+                                                            {
+                                                              "name": ":P15",
+                                                              "type": "expression",
+                                                              "value": "{{GetUserDetails.country}}"
+                                                            },
+                                                            {
+                                                              "name": ":P16",
+                                                              "type": "expression",
+                                                              "value": "{{GetVerify.user_id}}"
+                                                            },
+                                                            {
+                                                              "name": ":P17",
+                                                              "type": "expression",
+                                                              "value": "{{NOW}}"
+                                                            },
+                                                            {
+                                                              "name": ":P18",
+                                                              "type": "expression",
+                                                              "value": "{{1}}"
+                                                            },
+                                                            {
+                                                              "name": ":P19",
+                                                              "type": "expression",
+                                                              "value": "{{$_POST.payment_mode}}"
+                                                            },
+                                                            {
+                                                              "name": ":P20",
+                                                              "type": "expression",
+                                                              "value": "{{OtherCharges}}"
+                                                            },
+                                                            {
+                                                              "name": ":P21",
+                                                              "type": "expression",
+                                                              "value": "{{GetDelivery.id}}"
+                                                            },
+                                                            {
+                                                              "name": ":P22",
+                                                              "type": "expression",
+                                                              "value": "{{NewUserCode.id?NewUserCode.id:0}}"
+                                                            },
+                                                            {
+                                                              "name": ":P23",
+                                                              "type": "expression",
+                                                              "value": "{{GetUserDetails.wallet_bal}}"
+                                                            },
+                                                            {
+                                                              "name": ":P24",
+                                                              "type": "expression",
+                                                              "value": "{{WalletCashback}}"
+                                                            },
+                                                            {
+                                                              "name": ":P25",
+                                                              "type": "expression",
+                                                              "value": "{{WalletDeductAmt}}"
+                                                            },
+                                                            {
+                                                              "name": ":P26",
+                                                              "type": "expression",
+                                                              "value": "{{WalletNetAmt}}"
+                                                            }
+                                                          ]
+                                                        }
+                                                      },
+                                                      "meta": [
+                                                        {
+                                                          "name": "identity",
+                                                          "type": "text"
+                                                        },
+                                                        {
+                                                          "name": "affected",
+                                                          "type": "number"
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "name": "repeat1",
+                                                      "module": "core",
+                                                      "action": "repeat",
+                                                      "options": {
+                                                        "repeat": "{{GetCartItems}}",
+                                                        "outputFields": [],
+                                                        "exec": {
+                                                          "steps": [
+                                                            {
+                                                              "name": "AddPayOnlinePreOrderDetails",
+                                                              "module": "dbupdater",
+                                                              "action": "insert",
+                                                              "options": {
+                                                                "connection": "ClientApp",
+                                                                "sql": {
+                                                                  "type": "insert",
+                                                                  "values": [
+                                                                    {
+                                                                      "table": "r_order_details_payonline",
+                                                                      "column": "order_table_id",
+                                                                      "type": "number",
+                                                                      "value": "{{AddPreOrderToPayOnline.identity}}"
+                                                                    },
+                                                                    {
+                                                                      "table": "r_order_details_payonline",
+                                                                      "column": "prod_id",
+                                                                      "type": "number",
+                                                                      "value": "{{GetCartItems[$index].prod_id}}"
+                                                                    },
+                                                                    {
+                                                                      "table": "r_order_details_payonline",
+                                                                      "column": "price_id",
+                                                                      "type": "number",
+                                                                      "value": "{{GetCartItems[$index].price_id}}"
+                                                                    },
+                                                                    {
+                                                                      "table": "r_order_details_payonline",
+                                                                      "column": "cart_id",
+                                                                      "type": "number",
+                                                                      "value": "{{GetCartItems[$index].id}}"
+                                                                    },
+                                                                    {
+                                                                      "table": "r_order_details_payonline",
+                                                                      "column": "user_id",
+                                                                      "type": "number",
+                                                                      "value": "{{GetVerify.user_id}}"
+                                                                    },
+                                                                    {
+                                                                      "table": "r_order_details_payonline",
+                                                                      "column": "prod_qty",
+                                                                      "type": "text",
+                                                                      "value": "{{GetCartItems[$index].prod_qty}}"
+                                                                    },
+                                                                    {
+                                                                      "table": "r_order_details_payonline",
+                                                                      "column": "each_unit_price",
+                                                                      "type": "text",
+                                                                      "value": "{{GetCartItems[$index].prod_unit_price}}"
+                                                                    },
+                                                                    {
+                                                                      "table": "r_order_details_payonline",
+                                                                      "column": "each_net_amt",
+                                                                      "type": "text",
+                                                                      "value": "{{GetCartItems[$index].total_price}}"
+                                                                    },
+                                                                    {
+                                                                      "table": "r_order_details_payonline",
+                                                                      "column": "order_status",
+                                                                      "type": "number",
+                                                                      "value": "{{1}}"
+                                                                    },
+                                                                    {
+                                                                      "table": "r_order_details_payonline",
+                                                                      "column": "created_by",
+                                                                      "type": "number",
+                                                                      "value": "{{GetVerify.user_id}}"
+                                                                    },
+                                                                    {
+                                                                      "table": "r_order_details_payonline",
+                                                                      "column": "created_on",
+                                                                      "type": "datetime",
+                                                                      "value": "{{NOW}}"
+                                                                    },
+                                                                    {
+                                                                      "table": "r_order_details_payonline",
+                                                                      "column": "purchase_price",
+                                                                      "type": "text",
+                                                                      "value": "{{GetCartItems[$index].cart_purchase}}"
+                                                                    }
+                                                                  ],
+                                                                  "table": "r_order_details_payonline",
+                                                                  "returning": "id",
+                                                                  "query": "INSERT INTO r_order_details_payonline\n(order_table_id, prod_id, price_id, cart_id, user_id, prod_qty, each_unit_price, each_net_amt, order_status, created_by, created_on, purchase_price) VALUES (:P1 /* {{AddPreOrderToPayOnline.identity}} */, :P2 /* {{GetCartItems[$index].prod_id}} */, :P3 /* {{GetCartItems[$index].price_id}} */, :P4 /* {{GetCartItems[$index].id}} */, :P5 /* {{GetVerify.user_id}} */, :P6 /* {{GetCartItems[$index].prod_qty}} */, :P7 /* {{GetCartItems[$index].prod_unit_price}} */, :P8 /* {{GetCartItems[$index].total_price}} */, :P9 /* {{1}} */, :P10 /* {{GetVerify.user_id}} */, :P11 /* {{NOW}} */, :P12 /* {{GetCartItems[$index].cart_purchase}} */)",
+                                                                  "params": [
+                                                                    {
+                                                                      "name": ":P1",
+                                                                      "type": "expression",
+                                                                      "value": "{{AddPreOrderToPayOnline.identity}}"
+                                                                    },
+                                                                    {
+                                                                      "name": ":P2",
+                                                                      "type": "expression",
+                                                                      "value": "{{GetCartItems[$index].prod_id}}"
+                                                                    },
+                                                                    {
+                                                                      "name": ":P3",
+                                                                      "type": "expression",
+                                                                      "value": "{{GetCartItems[$index].price_id}}"
+                                                                    },
+                                                                    {
+                                                                      "name": ":P4",
+                                                                      "type": "expression",
+                                                                      "value": "{{GetCartItems[$index].id}}"
+                                                                    },
+                                                                    {
+                                                                      "name": ":P5",
+                                                                      "type": "expression",
+                                                                      "value": "{{GetVerify.user_id}}"
+                                                                    },
+                                                                    {
+                                                                      "name": ":P6",
+                                                                      "type": "expression",
+                                                                      "value": "{{GetCartItems[$index].prod_qty}}"
+                                                                    },
+                                                                    {
+                                                                      "name": ":P7",
+                                                                      "type": "expression",
+                                                                      "value": "{{GetCartItems[$index].prod_unit_price}}"
+                                                                    },
+                                                                    {
+                                                                      "name": ":P8",
+                                                                      "type": "expression",
+                                                                      "value": "{{GetCartItems[$index].total_price}}"
+                                                                    },
+                                                                    {
+                                                                      "name": ":P9",
+                                                                      "type": "expression",
+                                                                      "value": "{{1}}"
+                                                                    },
+                                                                    {
+                                                                      "name": ":P10",
+                                                                      "type": "expression",
+                                                                      "value": "{{GetVerify.user_id}}"
+                                                                    },
+                                                                    {
+                                                                      "name": ":P11",
+                                                                      "type": "expression",
+                                                                      "value": "{{NOW}}"
+                                                                    },
+                                                                    {
+                                                                      "name": ":P12",
+                                                                      "type": "expression",
+                                                                      "value": "{{GetCartItems[$index].cart_purchase}}"
+                                                                    }
+                                                                  ]
+                                                                }
+                                                              },
+                                                              "meta": [
+                                                                {
+                                                                  "name": "identity",
+                                                                  "type": "text"
+                                                                },
+                                                                {
+                                                                  "name": "affected",
+                                                                  "type": "number"
+                                                                }
+                                                              ]
+                                                            },
+                                                            {
+                                                              "name": "deleteFromCart",
+                                                              "module": "dbupdater",
+                                                              "action": "delete",
+                                                              "options": {
+                                                                "connection": "ClientApp",
+                                                                "sql": {
+                                                                  "type": "delete",
+                                                                  "table": "r_cart",
+                                                                  "wheres": {
+                                                                    "condition": "AND",
+                                                                    "rules": [
+                                                                      {
+                                                                        "id": "id",
+                                                                        "field": "id",
+                                                                        "type": "double",
+                                                                        "operator": "equal",
+                                                                        "value": "{{GetCartItems[$index].id}}",
+                                                                        "data": {
+                                                                          "column": "id"
+                                                                        },
+                                                                        "operation": "="
+                                                                      }
+                                                                    ],
+                                                                    "conditional": null,
+                                                                    "valid": true
+                                                                  },
+                                                                  "returning": "id",
+                                                                  "query": "DELETE\nFROM r_cart\nWHERE id = :P1 /* {{GetCartItems[$index].id}} */",
+                                                                  "params": [
+                                                                    {
+                                                                      "operator": "equal",
+                                                                      "type": "expression",
+                                                                      "name": ":P1",
+                                                                      "value": "{{GetCartItems[$index].id}}"
+                                                                    }
+                                                                  ]
+                                                                }
+                                                              },
+                                                              "meta": [
+                                                                {
+                                                                  "name": "affected",
+                                                                  "type": "number"
+                                                                }
+                                                              ]
+                                                            }
+                                                          ]
+                                                        }
+                                                      },
+                                                      "output": false,
+                                                      "meta": [
+                                                        {
+                                                          "name": "$index",
+                                                          "type": "number"
+                                                        },
+                                                        {
+                                                          "name": "$number",
+                                                          "type": "number"
+                                                        },
+                                                        {
+                                                          "name": "$name",
+                                                          "type": "text"
+                                                        },
+                                                        {
+                                                          "name": "$value",
+                                                          "type": "object"
+                                                        },
+                                                        {
+                                                          "name": "id",
+                                                          "type": "number"
+                                                        },
+                                                        {
+                                                          "name": "prod_id",
+                                                          "type": "number"
+                                                        },
+                                                        {
+                                                          "name": "price_id",
+                                                          "type": "number"
+                                                        },
+                                                        {
+                                                          "name": "user_id",
+                                                          "type": "number"
+                                                        },
+                                                        {
+                                                          "name": "prod_unit_price",
+                                                          "type": "text"
+                                                        },
+                                                        {
+                                                          "name": "prod_qty",
+                                                          "type": "text"
+                                                        },
+                                                        {
+                                                          "name": "total_price",
+                                                          "type": "text"
+                                                        },
+                                                        {
+                                                          "name": "cart_mrp",
+                                                          "type": "text"
+                                                        },
+                                                        {
+                                                          "name": "cart_purchase",
+                                                          "type": "text"
+                                                        }
+                                                      ],
+                                                      "outputType": "array"
+                                                    },
+                                                    {
+                                                      "name": "Status",
+                                                      "module": "core",
+                                                      "action": "setvalue",
+                                                      "options": {
+                                                        "value": 201
+                                                      },
+                                                      "meta": [],
+                                                      "output": true,
+                                                      "outputType": "text"
+                                                    },
+                                                    {
+                                                      "name": "Message",
+                                                      "module": "core",
+                                                      "action": "setvalue",
+                                                      "options": {
+                                                        "value": "Please wait, you are being redirected to payment page"
+                                                      },
+                                                      "meta": [],
+                                                      "output": true,
+                                                      "outputType": "text"
+                                                    }
+                                                  ]
+                                                }
+                                              },
+                                              "outputType": "boolean"
                                             }
                                           ]
                                         }
                                       },
-                                      "output": false,
-                                      "meta": [
-                                        {
-                                          "name": "$index",
-                                          "type": "number"
-                                        },
-                                        {
-                                          "name": "$number",
-                                          "type": "number"
-                                        },
-                                        {
-                                          "name": "$name",
-                                          "type": "text"
-                                        },
-                                        {
-                                          "name": "$value",
-                                          "type": "object"
-                                        },
-                                        {
-                                          "name": "id",
-                                          "type": "number"
-                                        },
-                                        {
-                                          "name": "prod_id",
-                                          "type": "number"
-                                        },
-                                        {
-                                          "name": "price_id",
-                                          "type": "number"
-                                        },
-                                        {
-                                          "name": "user_id",
-                                          "type": "number"
-                                        },
-                                        {
-                                          "name": "prod_unit_price",
-                                          "type": "text"
-                                        },
-                                        {
-                                          "name": "prod_qty",
-                                          "type": "text"
-                                        },
-                                        {
-                                          "name": "total_price",
-                                          "type": "text"
-                                        },
-                                        {
-                                          "name": "cart_mrp",
-                                          "type": "text"
-                                        },
-                                        {
-                                          "name": "cart_purchase",
-                                          "type": "text"
-                                        }
-                                      ],
-                                      "outputType": "array"
-                                    },
-                                    {
-                                      "name": "status",
-                                      "module": "core",
-                                      "action": "setvalue",
-                                      "options": {
-                                        "value": 200
-                                      },
-                                      "meta": [],
-                                      "output": true,
-                                      "outputType": "text"
-                                    },
-                                    {
-                                      "name": "message",
-                                      "module": "core",
-                                      "action": "setvalue",
-                                      "options": {
-                                        "value": "Order Placed Successfully"
-                                      },
-                                      "meta": [],
-                                      "output": true,
-                                      "outputType": "text"
+                                      "outputType": "boolean"
                                     }
                                   ]
                                 },

@@ -2016,28 +2016,6 @@
                                                           "type": "number"
                                                         }
                                                       ]
-                                                    },
-                                                    {
-                                                      "name": "status",
-                                                      "module": "core",
-                                                      "action": "setvalue",
-                                                      "options": {
-                                                        "value": 200
-                                                      },
-                                                      "meta": [],
-                                                      "output": true,
-                                                      "outputType": "text"
-                                                    },
-                                                    {
-                                                      "name": "message",
-                                                      "module": "core",
-                                                      "action": "setvalue",
-                                                      "options": {
-                                                        "value": "Order Placed Successfully"
-                                                      },
-                                                      "meta": [],
-                                                      "output": true,
-                                                      "outputType": "text"
                                                     }
                                                   ]
                                                 }
@@ -2108,6 +2086,28 @@
                                                 }
                                               ],
                                               "outputType": "array"
+                                            },
+                                            {
+                                              "name": "status",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": 200
+                                              },
+                                              "meta": [],
+                                              "output": true,
+                                              "outputType": "text"
+                                            },
+                                            {
+                                              "name": "message",
+                                              "module": "core",
+                                              "action": "setvalue",
+                                              "options": {
+                                                "value": "Order Placed Successfully"
+                                              },
+                                              "meta": [],
+                                              "output": true,
+                                              "outputType": "text"
                                             }
                                           ]
                                         },
@@ -3085,7 +3085,7 @@
                                                       "outputType": "array"
                                                     },
                                                     {
-                                                      "name": "Status",
+                                                      "name": "status",
                                                       "module": "core",
                                                       "action": "setvalue",
                                                       "options": {
@@ -3096,7 +3096,7 @@
                                                       "outputType": "text"
                                                     },
                                                     {
-                                                      "name": "Message",
+                                                      "name": "message",
                                                       "module": "core",
                                                       "action": "setvalue",
                                                       "options": {

@@ -21,32 +21,6 @@
       {
         "type": "text",
         "name": "payment_mode"
-      },
-      {
-        "type": "array",
-        "name": "record",
-        "sub": [
-          {
-            "type": "number",
-            "name": "AddPreOrderToPayOnline"
-          },
-          {
-            "type": "number",
-            "name": "GetCartItems[$index]"
-          },
-          {
-            "type": "number",
-            "name": "GetVerify"
-          },
-          {
-            "type": "number",
-            "name": "1"
-          },
-          {
-            "type": "datetime",
-            "name": "NOW"
-          }
-        ]
       }
     ]
   },
@@ -2015,7 +1989,8 @@
                                                           "name": "affected",
                                                           "type": "number"
                                                         }
-                                                      ]
+                                                      ],
+                                                      "disabled": true
                                                     }
                                                   ]
                                                 }
@@ -2073,16 +2048,6 @@
                                                 {
                                                   "name": "cart_purchase",
                                                   "type": "text"
-                                                },
-                                                {
-                                                  "name": "status",
-                                                  "type": "text",
-                                                  "sub": []
-                                                },
-                                                {
-                                                  "name": "message",
-                                                  "type": "text",
-                                                  "sub": []
                                                 }
                                               ],
                                               "outputType": "array"
@@ -3022,7 +2987,8 @@
                                                                   "name": "affected",
                                                                   "type": "number"
                                                                 }
-                                                              ]
+                                                              ],
+                                                              "disabled": true
                                                             }
                                                           ]
                                                         }

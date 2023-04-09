@@ -1477,5 +1477,19 @@ dmx.config({
       ],
       "outputType": "array"
     }
+  },
+  "usewallet": {
+    "dvWalletBal": {
+      "meta": [],
+      "outputType": "array"
+    },
+    "ddWalletBal": {
+      "meta": null,
+      "outputType": "array"
+    },
+    "repeat1": {
+      "meta": null,
+      "outputType": "array"
+    }
   }
 });

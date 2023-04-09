@@ -1,0 +1,475 @@
+{
+  "meta": {
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "logintoken"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetUser",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "t_user_log",
+                      "column": "user_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "t_user_log"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "t_user_log.login_token",
+                        "field": "t_user_log.login_token",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_POST.logintoken}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_token",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_token"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "t_user_log.login_from",
+                        "field": "t_user_log.login_from",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{'Android'}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_from",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_from"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_POST.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_POST.logintoken}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{'Android'}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "user_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetUser.user_id}}",
+                "then": {
+                  "steps": [
+                    {
+                      "name": "query",
+                      "module": "dbconnector",
+                      "action": "single",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "SELECT",
+                          "columns": [
+                            {
+                              "table": "m_customer",
+                              "column": "mobile"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "watsapp_no"
+                            },
+                            {
+                              "table": "m_customer",
+                              "column": "fname"
+                            }
+                          ],
+                          "table": {
+                            "name": "m_customer"
+                          },
+                          "primary": "id",
+                          "joins": [],
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "m_customer.id",
+                                "field": "m_customer.id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{GetUser.user_id}}",
+                                "data": {
+                                  "table": "m_customer",
+                                  "column": "id",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "increments",
+                                    "default": "",
+                                    "primary": true,
+                                    "unique": true,
+                                    "nullable": false,
+                                    "name": "id"
+                                  }
+                                },
+                                "operation": "="
+                              },
+                              {
+                                "id": "m_customer.status",
+                                "field": "m_customer.status",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": 1,
+                                "data": {
+                                  "table": "m_customer",
+                                  "column": "status",
+                                  "type": "number",
+                                  "columnObj": {
+                                    "type": "integer",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "status"
+                                  }
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "query": "SELECT mobile, watsapp_no, fname\nFROM m_customer\nWHERE id = :P1 /* {{GetUser.user_id}} */ AND status = 1",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{GetUser.user_id}}"
+                            }
+                          ]
+                        }
+                      },
+                      "output": false,
+                      "meta": [
+                        {
+                          "type": "text",
+                          "name": "mobile"
+                        },
+                        {
+                          "type": "text",
+                          "name": "watsapp_no"
+                        },
+                        {
+                          "type": "text",
+                          "name": "fname"
+                        }
+                      ],
+                      "outputType": "object"
+                    },
+                    {
+                      "name": "",
+                      "module": "core",
+                      "action": "condition",
+                      "options": {
+                        "if": "{{query.mobile}}",
+                        "then": {
+                          "steps": [
+                            {
+                              "name": "OTP",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "{{UUID.md5(123456).substr(1, 6).uppercase()}}"
+                              },
+                              "meta": [],
+                              "outputType": "text",
+                              "output": false
+                            },
+                            {
+                              "name": "ValidUpto",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": 150
+                              },
+                              "meta": [],
+                              "outputType": "text",
+                              "output": true
+                            },
+                            {
+                              "name": "AddOTP",
+                              "module": "dbupdater",
+                              "action": "insert",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "insert",
+                                  "values": [
+                                    {
+                                      "table": "temp_otp_code",
+                                      "column": "otp",
+                                      "type": "text",
+                                      "value": "{{OTP}}"
+                                    },
+                                    {
+                                      "table": "temp_otp_code",
+                                      "column": "user_id",
+                                      "type": "number",
+                                      "value": "{{GetUser.user_id}}"
+                                    },
+                                    {
+                                      "table": "temp_otp_code",
+                                      "column": "status",
+                                      "type": "number",
+                                      "value": "{{1}}"
+                                    },
+                                    {
+                                      "table": "temp_otp_code",
+                                      "column": "created_on",
+                                      "type": "datetime",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "table": "temp_otp_code",
+                                      "column": "created_by",
+                                      "type": "number",
+                                      "value": "{{GetUser.user_id}}"
+                                    }
+                                  ],
+                                  "table": "temp_otp_code",
+                                  "returning": "id",
+                                  "query": "INSERT INTO temp_otp_code\n(otp, user_id, status, created_on, created_by) VALUES (:P1 /* {{OTP}} */, :P2 /* {{GetUser.user_id}} */, :P3 /* {{1}} */, :P4 /* {{NOW}} */, :P5 /* {{GetUser.user_id}} */)",
+                                  "params": [
+                                    {
+                                      "name": ":P1",
+                                      "type": "expression",
+                                      "value": "{{OTP}}"
+                                    },
+                                    {
+                                      "name": ":P2",
+                                      "type": "expression",
+                                      "value": "{{GetUser.user_id}}"
+                                    },
+                                    {
+                                      "name": ":P3",
+                                      "type": "expression",
+                                      "value": "{{1}}"
+                                    },
+                                    {
+                                      "name": ":P4",
+                                      "type": "expression",
+                                      "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "name": ":P5",
+                                      "type": "expression",
+                                      "value": "{{GetUser.user_id}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "identity",
+                                  "type": "text"
+                                },
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "status",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": 200
+                              },
+                              "meta": [],
+                              "outputType": "text",
+                              "output": true
+                            },
+                            {
+                              "name": "message",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "OTP sent to the registered Mobile No."
+                              },
+                              "meta": [],
+                              "outputType": "text",
+                              "output": true
+                            },
+                            {
+                              "name": "apiSMS",
+                              "module": "api",
+                              "action": "send",
+                              "options": {
+                                "url": "{{'http://43.252.88.230/index.php/smsapi/httpapi/?secret=T2LWEAPBr3f5sra267Ds&sender=CLOWKP&tempid=1007827874034725193&receiver='+query.mobile+'&route=TA&msgtype=3&sms=Dear '+query.fname+', '+OTP+' is your OTP Code From CLOWKPRO'}}"
+                              },
+                              "output": false
+                            },
+                            {
+                              "name": "apiWhatsapp",
+                              "module": "api",
+                              "action": "send",
+                              "options": {
+                                "url": "https://clicke.co.in/eapi/sendMessage",
+                                "params": {
+                                  "auth_key": "{{'8H6jmHrEI9Gag1dVY14a'}}",
+                                  "message": "{{OTP+' is your OTC (One Time Code) for forgot password requested from Gravitto mobile app. Valid for 150 seconds\\nFrom Gravitto.com'}}",
+                                  "mobileNumber": "{{91+query.watsapp_no}}",
+                                  "type": "{{'msg'}}"
+                                }
+                              },
+                              "output": false
+                            }
+                          ]
+                        },
+                        "else": {
+                          "steps": [
+                            {
+                              "name": "status",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": 400
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            },
+                            {
+                              "name": "message",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "Unauthorized User"
+                              },
+                              "meta": [],
+                              "output": true,
+                              "outputType": "text"
+                            }
+                          ]
+                        }
+                      },
+                      "outputType": "boolean"
+                    }
+                  ]
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Unauthorized User"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "An error occurred! Please try again."
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

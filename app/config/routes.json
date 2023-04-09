@@ -98,6 +98,11 @@
       "path": "/cart-items",
       "page": "cart-items",
       "layout": "main"
+    },
+    {
+      "path": "/use-wallet",
+      "page": "use-wallet",
+      "layout": "main"
     }
   ]
 }

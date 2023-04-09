@@ -1,0 +1,798 @@
+{
+  "meta": {
+    "options": {
+      "linkedFile": "/views/use-wallet.ejs",
+      "linkedForm": "scformWithdrawBal"
+    },
+    "$_POST": [
+      {
+        "type": "number",
+        "fieldName": "Amount",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            },
+            "core:number": {}
+          }
+        },
+        "name": "Amount"
+      },
+      {
+        "type": "text",
+        "fieldName": "BankName",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "BankName"
+      },
+      {
+        "type": "text",
+        "fieldName": "BankAcNo",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "BankAcNo"
+      },
+      {
+        "type": "text",
+        "fieldName": "AcHolder",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "AcHolder"
+      },
+      {
+        "type": "text",
+        "fieldName": "IFSC",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "IFSC"
+      },
+      {
+        "type": "text",
+        "fieldName": "OTP",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "OTP"
+      },
+      {
+        "type": "text",
+        "fieldName": "withdraw_type",
+        "options": {
+          "rules": {
+            "core:required": {
+              "param": ""
+            }
+          }
+        },
+        "name": "withdraw_type"
+      },
+      {
+        "type": "text",
+        "name": "logintoken"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "trycatch",
+      "options": {
+        "try": {
+          "steps": [
+            {
+              "name": "GetUser",
+              "module": "dbconnector",
+              "action": "single",
+              "options": {
+                "connection": "ClientApp",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "t_user_log",
+                      "column": "user_id"
+                    }
+                  ],
+                  "table": {
+                    "name": "t_user_log"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "t_user_log.login_token",
+                        "field": "t_user_log.login_token",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{$_POST.logintoken}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_token",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_token"
+                          }
+                        },
+                        "operation": "="
+                      },
+                      {
+                        "id": "t_user_log.login_from",
+                        "field": "t_user_log.login_from",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{'Android'}}",
+                        "data": {
+                          "table": "t_user_log",
+                          "column": "login_from",
+                          "type": "text",
+                          "columnObj": {
+                            "type": "string",
+                            "maxLength": -5,
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "login_from"
+                          }
+                        },
+                        "operation": "="
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "query": "SELECT user_id\nFROM t_user_log\nWHERE login_token = :P1 /* {{$_POST.logintoken}} */ AND login_from = :P2 /* {{'Android'}} */",
+                  "params": [
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P1",
+                      "value": "{{$_POST.logintoken}}"
+                    },
+                    {
+                      "operator": "equal",
+                      "type": "expression",
+                      "name": ":P2",
+                      "value": "{{'Android'}}"
+                    }
+                  ]
+                }
+              },
+              "output": false,
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "user_id"
+                }
+              ],
+              "outputType": "object"
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "condition",
+              "options": {
+                "if": "{{GetUser.user_id}}",
+                "then": {
+                  "steps": {
+                    "name": "",
+                    "module": "core",
+                    "action": "condition",
+                    "options": {
+                      "if": "{{($_POST.Amount.toNumber()>0)}}",
+                      "then": {
+                        "steps": [
+                          {
+                            "name": "GetOTP",
+                            "module": "dbconnector",
+                            "action": "single",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "SELECT",
+                                "columns": [
+                                  {
+                                    "table": "temp_otp_code",
+                                    "column": "otp"
+                                  }
+                                ],
+                                "table": {
+                                  "name": "temp_otp_code"
+                                },
+                                "primary": "id",
+                                "joins": [],
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "temp_otp_code.user_id",
+                                      "field": "temp_otp_code.user_id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{GetUser.user_id}}",
+                                      "data": {
+                                        "table": "temp_otp_code",
+                                        "column": "user_id",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "integer",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "name": "user_id"
+                                        }
+                                      },
+                                      "operation": "="
+                                    },
+                                    {
+                                      "id": "temp_otp_code.status",
+                                      "field": "temp_otp_code.status",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": 1,
+                                      "data": {
+                                        "table": "temp_otp_code",
+                                        "column": "status",
+                                        "type": "number",
+                                        "columnObj": {
+                                          "type": "integer",
+                                          "primary": false,
+                                          "unique": false,
+                                          "nullable": true,
+                                          "name": "status"
+                                        }
+                                      },
+                                      "operation": "="
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                },
+                                "query": "SELECT otp\nFROM temp_otp_code\nWHERE user_id = :P1 /* {{GetUser.user_id}} */ AND status = 1\nORDER BY id DESC",
+                                "params": [
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P1",
+                                    "value": "{{GetUser.user_id}}"
+                                  }
+                                ],
+                                "orders": [
+                                  {
+                                    "table": "temp_otp_code",
+                                    "column": "id",
+                                    "direction": "DESC",
+                                    "recid": 1
+                                  }
+                                ]
+                              }
+                            },
+                            "output": false,
+                            "meta": [
+                              {
+                                "type": "text",
+                                "name": "otp"
+                              }
+                            ],
+                            "outputType": "object"
+                          },
+                          {
+                            "name": "",
+                            "module": "core",
+                            "action": "condition",
+                            "options": {
+                              "if": "{{($_POST.OTP==GetOTP.otp)}}",
+                              "then": {
+                                "steps": [
+                                  {
+                                    "name": "GetUserInfo",
+                                    "module": "dbconnector",
+                                    "action": "single",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "type": "SELECT",
+                                        "columns": [
+                                          {
+                                            "table": "m_customer",
+                                            "column": "wallet_bal"
+                                          }
+                                        ],
+                                        "table": {
+                                          "name": "m_customer"
+                                        },
+                                        "primary": "id",
+                                        "joins": [],
+                                        "query": "SELECT wallet_bal\nFROM m_customer\nWHERE id = :P1 /* {{GetUser.user_id}} */ AND status = 1",
+                                        "params": [
+                                          {
+                                            "operator": "equal",
+                                            "type": "expression",
+                                            "name": ":P1",
+                                            "value": "{{GetUser.user_id}}"
+                                          }
+                                        ],
+                                        "orders": [],
+                                        "wheres": {
+                                          "condition": "AND",
+                                          "rules": [
+                                            {
+                                              "id": "m_customer.id",
+                                              "field": "m_customer.id",
+                                              "type": "double",
+                                              "operator": "equal",
+                                              "value": "{{GetUser.user_id}}",
+                                              "data": {
+                                                "table": "m_customer",
+                                                "column": "id",
+                                                "type": "number",
+                                                "columnObj": {
+                                                  "type": "increments",
+                                                  "default": "",
+                                                  "primary": true,
+                                                  "unique": true,
+                                                  "nullable": false,
+                                                  "name": "id"
+                                                }
+                                              },
+                                              "operation": "="
+                                            },
+                                            {
+                                              "id": "m_customer.status",
+                                              "field": "m_customer.status",
+                                              "type": "double",
+                                              "operator": "equal",
+                                              "value": 1,
+                                              "data": {
+                                                "table": "m_customer",
+                                                "column": "status",
+                                                "type": "number",
+                                                "columnObj": {
+                                                  "type": "integer",
+                                                  "primary": false,
+                                                  "unique": false,
+                                                  "nullable": true,
+                                                  "name": "status"
+                                                }
+                                              },
+                                              "operation": "="
+                                            }
+                                          ],
+                                          "conditional": null,
+                                          "valid": true
+                                        }
+                                      }
+                                    },
+                                    "output": false,
+                                    "meta": [
+                                      {
+                                        "type": "text",
+                                        "name": "wallet_bal"
+                                      }
+                                    ],
+                                    "outputType": "object"
+                                  },
+                                  {
+                                    "name": "",
+                                    "module": "core",
+                                    "action": "condition",
+                                    "options": {
+                                      "if": "{{GetUserInfo.wallet_bal.toNumber()>$_POST.Amount.toNumber()}}",
+                                      "then": {
+                                        "steps": [
+                                          {
+                                            "name": "upOTP",
+                                            "module": "dbupdater",
+                                            "action": "update",
+                                            "options": {
+                                              "connection": "ClientApp",
+                                              "sql": {
+                                                "type": "update",
+                                                "values": [
+                                                  {
+                                                    "table": "temp_otp_code",
+                                                    "column": "status",
+                                                    "type": "number",
+                                                    "value": "{{0}}"
+                                                  },
+                                                  {
+                                                    "table": "temp_otp_code",
+                                                    "column": "updated_on",
+                                                    "type": "datetime",
+                                                    "value": "{{NOW}}"
+                                                  }
+                                                ],
+                                                "table": "temp_otp_code",
+                                                "wheres": {
+                                                  "condition": "AND",
+                                                  "rules": [
+                                                    {
+                                                      "id": "user_id",
+                                                      "field": "user_id",
+                                                      "type": "double",
+                                                      "operator": "equal",
+                                                      "value": "{{GetUser.user_id}}",
+                                                      "data": {
+                                                        "column": "user_id"
+                                                      },
+                                                      "operation": "="
+                                                    }
+                                                  ],
+                                                  "conditional": null,
+                                                  "valid": true
+                                                },
+                                                "returning": "id",
+                                                "query": "UPDATE temp_otp_code\nSET status = :P1 /* {{0}} */, updated_on = :P2 /* {{NOW}} */\nWHERE user_id = :P3 /* {{GetUser.user_id}} */",
+                                                "params": [
+                                                  {
+                                                    "name": ":P1",
+                                                    "type": "expression",
+                                                    "value": "{{0}}"
+                                                  },
+                                                  {
+                                                    "name": ":P2",
+                                                    "type": "expression",
+                                                    "value": "{{NOW}}"
+                                                  },
+                                                  {
+                                                    "operator": "equal",
+                                                    "type": "expression",
+                                                    "name": ":P3",
+                                                    "value": "{{GetUser.user_id}}"
+                                                  }
+                                                ]
+                                              }
+                                            },
+                                            "meta": [
+                                              {
+                                                "name": "affected",
+                                                "type": "number"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "name": "AddRequestBankInfo",
+                                            "module": "dbupdater",
+                                            "action": "insert",
+                                            "options": {
+                                              "connection": "ClientApp",
+                                              "sql": {
+                                                "type": "insert",
+                                                "values": [
+                                                  {
+                                                    "table": "wallet_request_bank",
+                                                    "column": "user_id",
+                                                    "type": "number",
+                                                    "value": "{{GetUser.user_id}}"
+                                                  },
+                                                  {
+                                                    "table": "wallet_request_bank",
+                                                    "column": "request_for",
+                                                    "type": "text",
+                                                    "value": "{{$_POST.withdraw_type}}"
+                                                  },
+                                                  {
+                                                    "table": "wallet_request_bank",
+                                                    "column": "Amount",
+                                                    "type": "text",
+                                                    "value": "{{$_POST.Amount}}"
+                                                  },
+                                                  {
+                                                    "table": "wallet_request_bank",
+                                                    "column": "bank_name",
+                                                    "type": "text",
+                                                    "value": "{{$_POST.BankName}}"
+                                                  },
+                                                  {
+                                                    "table": "wallet_request_bank",
+                                                    "column": "account_holder",
+                                                    "type": "text",
+                                                    "value": "{{$_POST.AcHolder}}"
+                                                  },
+                                                  {
+                                                    "table": "wallet_request_bank",
+                                                    "column": "bank_account_no",
+                                                    "type": "text",
+                                                    "value": "{{$_POST.BankAcNo}}"
+                                                  },
+                                                  {
+                                                    "table": "wallet_request_bank",
+                                                    "column": "bank_ifsc",
+                                                    "type": "text",
+                                                    "value": "{{$_POST.IFSC}}"
+                                                  },
+                                                  {
+                                                    "table": "wallet_request_bank",
+                                                    "column": "status",
+                                                    "type": "number",
+                                                    "value": "{{1}}"
+                                                  },
+                                                  {
+                                                    "table": "wallet_request_bank",
+                                                    "column": "created_on",
+                                                    "type": "datetime",
+                                                    "value": "{{NOW}}"
+                                                  },
+                                                  {
+                                                    "table": "wallet_request_bank",
+                                                    "column": "created_by",
+                                                    "type": "number",
+                                                    "value": "{{GetUser.user_id}}"
+                                                  }
+                                                ],
+                                                "table": "wallet_request_bank",
+                                                "returning": "id",
+                                                "query": "INSERT INTO wallet_request_bank\n(user_id, request_for, Amount, bank_name, account_holder, bank_account_no, bank_ifsc, status, created_on, created_by) VALUES (:P1 /* {{GetUser.user_id}} */, :P2 /* {{$_POST.withdraw_type}} */, :P3 /* {{$_POST.Amount}} */, :P4 /* {{$_POST.BankName}} */, :P5 /* {{$_POST.AcHolder}} */, :P6 /* {{$_POST.BankAcNo}} */, :P7 /* {{$_POST.IFSC}} */, :P8 /* {{1}} */, :P9 /* {{NOW}} */, :P10 /* {{GetUser.user_id}} */)",
+                                                "params": [
+                                                  {
+                                                    "name": ":P1",
+                                                    "type": "expression",
+                                                    "value": "{{GetUser.user_id}}"
+                                                  },
+                                                  {
+                                                    "name": ":P2",
+                                                    "type": "expression",
+                                                    "value": "{{$_POST.withdraw_type}}"
+                                                  },
+                                                  {
+                                                    "name": ":P3",
+                                                    "type": "expression",
+                                                    "value": "{{$_POST.Amount}}"
+                                                  },
+                                                  {
+                                                    "name": ":P4",
+                                                    "type": "expression",
+                                                    "value": "{{$_POST.BankName}}"
+                                                  },
+                                                  {
+                                                    "name": ":P5",
+                                                    "type": "expression",
+                                                    "value": "{{$_POST.AcHolder}}"
+                                                  },
+                                                  {
+                                                    "name": ":P6",
+                                                    "type": "expression",
+                                                    "value": "{{$_POST.BankAcNo}}"
+                                                  },
+                                                  {
+                                                    "name": ":P7",
+                                                    "type": "expression",
+                                                    "value": "{{$_POST.IFSC}}"
+                                                  },
+                                                  {
+                                                    "name": ":P8",
+                                                    "type": "expression",
+                                                    "value": "{{1}}"
+                                                  },
+                                                  {
+                                                    "name": ":P9",
+                                                    "type": "expression",
+                                                    "value": "{{NOW}}"
+                                                  },
+                                                  {
+                                                    "name": ":P10",
+                                                    "type": "expression",
+                                                    "value": "{{GetUser.user_id}}"
+                                                  }
+                                                ]
+                                              }
+                                            },
+                                            "meta": [
+                                              {
+                                                "name": "identity",
+                                                "type": "text"
+                                              },
+                                              {
+                                                "name": "affected",
+                                                "type": "number"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "name": "status",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": 200
+                                            },
+                                            "meta": [],
+                                            "output": true,
+                                            "outputType": "text"
+                                          },
+                                          {
+                                            "name": "message",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "We have received your request, we will process your request in next 12 hours."
+                                            },
+                                            "meta": [],
+                                            "output": true,
+                                            "outputType": "text"
+                                          }
+                                        ]
+                                      },
+                                      "else": {
+                                        "steps": [
+                                          {
+                                            "name": "status",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": 400
+                                            },
+                                            "meta": [],
+                                            "output": true,
+                                            "outputType": "text"
+                                          },
+                                          {
+                                            "name": "message",
+                                            "module": "core",
+                                            "action": "setvalue",
+                                            "options": {
+                                              "value": "Insufficient Wallet Balance"
+                                            },
+                                            "meta": [],
+                                            "output": true,
+                                            "outputType": "text"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "outputType": "boolean"
+                                  }
+                                ]
+                              },
+                              "else": {
+                                "steps": [
+                                  {
+                                    "name": "status",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": 400
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  },
+                                  {
+                                    "name": "message",
+                                    "module": "core",
+                                    "action": "setvalue",
+                                    "options": {
+                                      "value": "OTP Mismatched! Please try again"
+                                    },
+                                    "meta": [],
+                                    "output": true,
+                                    "outputType": "text"
+                                  }
+                                ]
+                              }
+                            },
+                            "outputType": "boolean"
+                          }
+                        ]
+                      },
+                      "else": {
+                        "steps": [
+                          {
+                            "name": "status",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": 400
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          },
+                          {
+                            "name": "message",
+                            "module": "core",
+                            "action": "setvalue",
+                            "options": {
+                              "value": "Wrong Amount"
+                            },
+                            "meta": [],
+                            "output": true,
+                            "outputType": "text"
+                          }
+                        ]
+                      }
+                    },
+                    "outputType": "boolean"
+                  }
+                },
+                "else": {
+                  "steps": [
+                    {
+                      "name": "status",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": 400
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    },
+                    {
+                      "name": "message",
+                      "module": "core",
+                      "action": "setvalue",
+                      "options": {
+                        "value": "Unauthorized User"
+                      },
+                      "meta": [],
+                      "output": true,
+                      "outputType": "text"
+                    }
+                  ]
+                }
+              },
+              "outputType": "boolean"
+            }
+          ]
+        },
+        "catch": {
+          "steps": [
+            {
+              "name": "status",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": 400
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            },
+            {
+              "name": "message",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "An error occurred! Please try again."
+              },
+              "meta": [],
+              "output": true,
+              "outputType": "text"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

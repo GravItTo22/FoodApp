@@ -1,0 +1,358 @@
+[
+  {
+    "name": "",
+    "module": "auth",
+    "action": "restrict",
+    "options": {
+      "provider": "security",
+      "permissions": [
+        "write"
+      ],
+      "loginUrl": "/login",
+      "forbiddenUrl": "/403-forbidden"
+    }
+  },
+  {
+    "name": "identity",
+    "module": "auth",
+    "action": "identify",
+    "options": {
+      "provider": "security"
+    },
+    "output": false,
+    "meta": []
+  },
+  {
+    "name": "",
+    "module": "core",
+    "action": "condition",
+    "options": {
+      "if": "{{identity}}",
+      "then": {
+        "steps": [
+          {
+            "name": "query",
+            "module": "dbconnector",
+            "action": "single",
+            "options": {
+              "connection": "ClientApp",
+              "sql": {
+                "type": "SELECT",
+                "columns": [
+                  {
+                    "table": "m_customer",
+                    "column": "mobile"
+                  },
+                  {
+                    "table": "m_customer",
+                    "column": "watsapp_no"
+                  },
+                  {
+                    "table": "m_customer",
+                    "column": "fname"
+                  }
+                ],
+                "table": {
+                  "name": "m_customer"
+                },
+                "primary": "id",
+                "joins": [],
+                "wheres": {
+                  "condition": "AND",
+                  "rules": [
+                    {
+                      "id": "m_customer.id",
+                      "field": "m_customer.id",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": "{{identity}}",
+                      "data": {
+                        "table": "m_customer",
+                        "column": "id",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "increments",
+                          "default": "",
+                          "primary": true,
+                          "unique": true,
+                          "nullable": false,
+                          "name": "id"
+                        }
+                      },
+                      "operation": "="
+                    },
+                    {
+                      "id": "m_customer.status",
+                      "field": "m_customer.status",
+                      "type": "double",
+                      "operator": "equal",
+                      "value": 1,
+                      "data": {
+                        "table": "m_customer",
+                        "column": "status",
+                        "type": "number",
+                        "columnObj": {
+                          "type": "integer",
+                          "primary": false,
+                          "unique": false,
+                          "nullable": true,
+                          "name": "status"
+                        }
+                      },
+                      "operation": "="
+                    }
+                  ],
+                  "conditional": null,
+                  "valid": true
+                },
+                "query": "SELECT mobile, watsapp_no, fname\nFROM m_customer\nWHERE id = :P1 /* {{identity}} */ AND status = 1",
+                "params": [
+                  {
+                    "operator": "equal",
+                    "type": "expression",
+                    "name": ":P1",
+                    "value": "{{identity}}"
+                  }
+                ]
+              }
+            },
+            "output": false,
+            "meta": [
+              {
+                "type": "text",
+                "name": "mobile"
+              },
+              {
+                "type": "text",
+                "name": "watsapp_no"
+              },
+              {
+                "type": "text",
+                "name": "fname"
+              }
+            ],
+            "outputType": "object"
+          },
+          {
+            "name": "",
+            "module": "core",
+            "action": "condition",
+            "options": {
+              "if": "{{query.mobile}}",
+              "then": {
+                "steps": [
+                  {
+                    "name": "OTP",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": "{{UUID.md5(123456).substr(1, 6).uppercase()}}"
+                    },
+                    "meta": [],
+                    "outputType": "text",
+                    "output": false
+                  },
+                  {
+                    "name": "ValidUpto",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": 150
+                    },
+                    "meta": [],
+                    "outputType": "text",
+                    "output": false,
+                    "disabled": true
+                  },
+                  {
+                    "name": "AddOTP",
+                    "module": "dbupdater",
+                    "action": "insert",
+                    "options": {
+                      "connection": "ClientApp",
+                      "sql": {
+                        "type": "insert",
+                        "values": [
+                          {
+                            "table": "temp_otp_code",
+                            "column": "otp",
+                            "type": "text",
+                            "value": "{{OTP}}"
+                          },
+                          {
+                            "table": "temp_otp_code",
+                            "column": "user_id",
+                            "type": "number",
+                            "value": "{{identity}}"
+                          },
+                          {
+                            "table": "temp_otp_code",
+                            "column": "status",
+                            "type": "number",
+                            "value": "{{1}}"
+                          },
+                          {
+                            "table": "temp_otp_code",
+                            "column": "created_on",
+                            "type": "datetime",
+                            "value": "{{NOW}}"
+                          },
+                          {
+                            "table": "temp_otp_code",
+                            "column": "created_by",
+                            "type": "number",
+                            "value": "{{identity}}"
+                          }
+                        ],
+                        "table": "temp_otp_code",
+                        "returning": "id",
+                        "query": "INSERT INTO temp_otp_code\n(otp, user_id, status, created_on, created_by) VALUES (:P1 /* {{OTP}} */, :P2 /* {{identity}} */, :P3 /* {{1}} */, :P4 /* {{NOW}} */, :P5 /* {{identity}} */)",
+                        "params": [
+                          {
+                            "name": ":P1",
+                            "type": "expression",
+                            "value": "{{OTP}}"
+                          },
+                          {
+                            "name": ":P2",
+                            "type": "expression",
+                            "value": "{{identity}}"
+                          },
+                          {
+                            "name": ":P3",
+                            "type": "expression",
+                            "value": "{{1}}"
+                          },
+                          {
+                            "name": ":P4",
+                            "type": "expression",
+                            "value": "{{NOW}}"
+                          },
+                          {
+                            "name": ":P5",
+                            "type": "expression",
+                            "value": "{{identity}}"
+                          }
+                        ]
+                      }
+                    },
+                    "meta": [
+                      {
+                        "name": "identity",
+                        "type": "text"
+                      },
+                      {
+                        "name": "affected",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "status",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": 200
+                    },
+                    "meta": [],
+                    "outputType": "text",
+                    "output": true
+                  },
+                  {
+                    "name": "message",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": "OTP sent to the registered Mobile No."
+                    },
+                    "meta": [],
+                    "outputType": "text",
+                    "output": true
+                  },
+                  {
+                    "name": "apiSMS",
+                    "module": "api",
+                    "action": "send",
+                    "options": {
+                      "url": "{{'http://43.252.88.230/index.php/smsapi/httpapi/?secret=T2LWEAPBr3f5sra267Ds&sender=CLOWKP&tempid=1007827874034725193&receiver='+query.mobile+'&route=TA&msgtype=3&sms=Dear '+query.fname+', '+OTP+' is your OTP Code From CLOWKPRO'}}"
+                    },
+                    "output": false
+                  },
+                  {
+                    "name": "apiWhatsapp",
+                    "module": "api",
+                    "action": "send",
+                    "options": {
+                      "url": "https://clicke.co.in/eapi/sendMessage",
+                      "params": {
+                        "auth_key": "{{'8H6jmHrEI9Gag1dVY14a'}}",
+                        "message": "{{OTP+' is your OTC (One Time Code) for forgot password requested from Gravitto mobile app. Valid for 150 seconds\\nFrom Gravitto.com'}}",
+                        "mobileNumber": "{{91+query.watsapp_no}}",
+                        "type": "{{'msg'}}"
+                      }
+                    },
+                    "output": false
+                  }
+                ]
+              },
+              "else": {
+                "steps": [
+                  {
+                    "name": "status",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": 400
+                    },
+                    "meta": [],
+                    "output": true,
+                    "outputType": "text"
+                  },
+                  {
+                    "name": "message",
+                    "module": "core",
+                    "action": "setvalue",
+                    "options": {
+                      "value": "Sorry! Please Contact Admin"
+                    },
+                    "meta": [],
+                    "outputType": "text",
+                    "output": true
+                  }
+                ]
+              }
+            },
+            "outputType": "boolean"
+          }
+        ]
+      },
+      "else": {
+        "steps": [
+          {
+            "name": "status",
+            "module": "core",
+            "action": "setvalue",
+            "options": {
+              "value": 400
+            },
+            "meta": [],
+            "output": true,
+            "outputType": "text"
+          },
+          {
+            "name": "message",
+            "module": "core",
+            "action": "setvalue",
+            "options": {
+              "value": "Unauthorized User"
+            },
+            "meta": [],
+            "outputType": "text",
+            "output": true
+          }
+        ]
+      }
+    },
+    "outputType": "boolean"
+  }
+]

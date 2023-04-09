@@ -1,0 +1,117 @@
+<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="usewallet" appConnect="local" components="{dmxDataTraversal:{}}" -->
+<meta name="ac:route" content="/use-wallet">
+<dmx-serverconnect id="scWalletBal" url="/api/Wallet/WalletBal"></dmx-serverconnect>
+<dmx-data-view id="dvWalletBal" dmx-bind:data="content.scWalletBal.data.FetchWallet" sortDir="desc"></dmx-data-view>
+<dmx-data-detail id="ddWalletBal" dmx-bind:data="content.dvWalletBal.data" key="id"></dmx-data-detail>
+<dmx-serverconnect id="scWalletOTP" url="/api/Wallet/WalletOTP" noload></dmx-serverconnect>
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="/assets/img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Use Wallet</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/">Home</a><span>Wallet</span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Contact Form Begin -->
+<div class="contact-form spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="contact__form__title">
+                    <h2>Use Wallet Balance</h2>
+                </div>
+            </div>
+        </div>
+        <form action="/api/Wallet/WalletForm" id="scformWithdrawBal" is="dmx-serverconnect-form" method="post" dmx-on:success="notifMain.success(content.scformWithdrawBal.data.message);scformWithdrawBal.reset(true)" dmx-on:unauthorized="notifMain.danger('Failed')" dmx-on:forbidden="notifMain.danger('Failed to send message')" dmx-on:error="notifMain.danger('Failed to send message')">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <label class="form-label">Withdraw Cashback For</label>
+                    <select id="withdraw_type" name="withdraw_type" type="text" class="form-select d-block" required="">
+                        <option value="">Select</option>
+                        <option value="Buying Petrol & Diesel">Buying Petrol [&] Diesel</option>
+                        <option value="Buying Daily House Holds">Buying Daily House Holds</option>
+                        <option value="Tution Fees">Tution Fees</option>
+                        <option value="Buying Medicines">Buying Medicines</option>
+                        <option value="Paying Restaurent Bills">Paying Restaurent Bills</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <label class="form-label">Withdraw Amount</label>
+                    <input class="form-control" type="number" placeholder="" name="Amount" required="">
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <label class="form-label">Bank Name</label>
+                    <input class="form-control" type="text" placeholder="" name="BankName" required="">
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <label class="form-label">Bank Account Number</label>
+                    <input class="form-control" type="text" placeholder="" name="BankAcNo" required="">
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <label class="form-label">Account Holder Name</label>
+                    <input class="form-control" type="text" placeholder="" name="AcHolder" required="">
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <label class="form-label">Bank IFSC</label>
+                    <input class="form-control" type="text" placeholder="" name="IFSC" required="">
+                </div>
+                <div class="col-lg-6 col-md-6" dmx-show="content.scWalletOTP.data.status==200">
+                    <label class="form-label">Enter OTP</label>
+                    <input class="form-control" type="text" placeholder="" name="OTP" required="">
+                </div>
+                <div class="col-lg-12 text-center">
+                    <button type="submit" class="site-btn" dmx-on:click="scWalletOTP.load();notifMain.info('OTP send to the registered mobile')" dmx-hide="content.scWalletOTP.data.status==200">Next</button>
+                    <button type="submit" class="site-btn w-25" dmx-show="content.scWalletOTP.data.status==200">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Contact Form End -->
+<main>
+    <div class="container">
+        <div class="row my-3">
+            <div class="col-lg-12 text-center font-weight-bold">Transaction History
+            </div>
+        </div>
+        <div class="table-responsive small table-striped">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Sl.No.</th>
+                        <th scope="col">OrderId</th>
+                        <th scope="col">Cr. Amount</th>
+                        <th scope="col">Dr. Amount</th>
+                        <th scope="col">Tr. From</th>
+                        <th scope="col">Tr. Type</th>
+                        <th scope="col">Tr. Status</th>
+                        <th scope="col">Created On</th>
+                    </tr>
+                </thead>
+                <tbody is="dmx-repeat" id="repeat1" dmx-bind:repeat="dvWalletBal.data" key="id">
+                    <tr>
+                        <th scope="row">{{$index}}</th>
+                        <td dmx-text="order_id"></td>
+                        <td dmx-text="credit_amount"></td>
+                        <td dmx-text="debit_amount"></td>
+                        <td dmx-text="tr_from"></td>
+                        <td dmx-text="tr_trpe"></td>
+                        <td dmx-text="tr_status"></td>
+                        <td dmx-text="created_on"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</main>
+<!---my order pagebend-->

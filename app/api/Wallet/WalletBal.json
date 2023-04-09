@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "offset"
+      },
+      {
+        "type": "text",
+        "name": "limit"
+      },
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "",
+        "module": "auth",
+        "action": "restrict",
+        "options": {
+          "provider": "security",
+          "permissions": [
+            "write"
+          ],
+          "loginUrl": "/login",
+          "forbiddenUrl": "/403-forbidden"
+        }
+      },
+      {
+        "name": "identity",
+        "module": "auth",
+        "action": "identify",
+        "options": {
+          "provider": "security"
+        },
+        "output": false,
+        "meta": []
+      },
+      {
+        "name": "FetchWallet",
+        "module": "dbupdater",
+        "action": "custom",
+        "options": {
+          "connection": "ClientApp",
+          "sql": {
+            "query": "select wt.id, wt.order_id, wt.opening_bal, wt.credit_amount, wt.debit_amount, wt.closing_bal, wt.tr_from, wt.tr_trpe, wt.tr_status, wt.created_on, wt.updated_on from wallet_transactions wt where wt.user_id = @user_id and wt.status = 1;",
+            "params": [
+              {
+                "name": "@user_id",
+                "value": "{{identity}}"
+              }
+            ]
+          }
+        },
+        "output": true,
+        "meta": [],
+        "outputType": "array"
+      }
+    ]
+  }
+}

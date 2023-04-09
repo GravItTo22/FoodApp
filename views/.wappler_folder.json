@@ -74,5 +74,9 @@
   "cart-items.ejs": {
     "layoutPage": "main",
     "description": ""
+  },
+  "use-wallet.ejs": {
+    "layoutPage": "main",
+    "description": ""
   }
 }

@@ -161,8 +161,7 @@
                     },
                     "meta": [],
                     "outputType": "text",
-                    "output": false,
-                    "disabled": true
+                    "output": false
                   },
                   {
                     "name": "AddOTP",
@@ -270,15 +269,6 @@
                     "output": true
                   },
                   {
-                    "name": "apiSMS",
-                    "module": "api",
-                    "action": "send",
-                    "options": {
-                      "url": "{{'http://43.252.88.230/index.php/smsapi/httpapi/?secret=T2LWEAPBr3f5sra267Ds&sender=CLOWKP&tempid=1007827874034725193&receiver='+query.mobile+'&route=TA&msgtype=3&sms=Dear '+query.fname+', '+OTP+' is your OTP Code From CLOWKPRO'}}"
-                    },
-                    "output": false
-                  },
-                  {
                     "name": "apiWhatsapp",
                     "module": "api",
                     "action": "send",
@@ -290,6 +280,15 @@
                         "mobileNumber": "{{91+query.watsapp_no}}",
                         "type": "{{'msg'}}"
                       }
+                    },
+                    "output": false
+                  },
+                  {
+                    "name": "apiSMS",
+                    "module": "api",
+                    "action": "send",
+                    "options": {
+                      "url": "{{'http://43.252.88.230/index.php/smsapi/httpapi/?secret=T2LWEAPBr3f5sra267Ds&sender=CLOWKP&tempid=1007827874034725193&receiver='+query.mobile+'&route=TA&msgtype=3&sms=Dear '+query.fname+', '+OTP+' is your OTP Code From CLOWKPRO'}}"
                     },
                     "output": false
                   }

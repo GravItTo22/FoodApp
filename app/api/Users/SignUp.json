@@ -1013,7 +1013,7 @@
                                   "type": "{{'msg'}}"
                                 }
                               },
-                              "output": false
+                              "output": true
                             },
                             {
                               "name": "SMSapi",

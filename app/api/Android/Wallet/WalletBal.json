@@ -124,17 +124,63 @@
                       "options": {
                         "connection": "ClientApp",
                         "sql": {
-                          "query": "select wt.id, wt.order_id, wt.opening_bal, wt.credit_amount, wt.debit_amount, wt.closing_bal, wt.tr_from, wt.tr_trpe, wt.tr_status, wt.created_on, wt.updated_on from wallet_transactions wt where wt.user_id = @user_id and wt.status = 1;",
+                          "query": "select wt.id, wt.order_id, wt.opening_bal, wt.credit_amount, wt.debit_amount, wt.closing_bal, wt.tr_from, wt.tr_trpe, wt.tr_status, wt.created_on::text, wt.updated_on::text from wallet_transactions wt where wt.user_id = @user_id and wt.status = 1;",
                           "params": [
                             {
                               "name": "@user_id",
-                              "value": "{{GetUser.user_id}}"
+                              "value": "{{GetUser.user_id}}",
+                              "test": "119"
                             }
                           ]
                         }
                       },
                       "output": true,
-                      "meta": [],
+                      "meta": [
+                        {
+                          "name": "id",
+                          "type": "number"
+                        },
+                        {
+                          "name": "order_id",
+                          "type": "number"
+                        },
+                        {
+                          "name": "opening_bal",
+                          "type": "text"
+                        },
+                        {
+                          "name": "credit_amount",
+                          "type": "text"
+                        },
+                        {
+                          "name": "debit_amount",
+                          "type": "text"
+                        },
+                        {
+                          "name": "closing_bal",
+                          "type": "text"
+                        },
+                        {
+                          "name": "tr_from",
+                          "type": "text"
+                        },
+                        {
+                          "name": "tr_trpe",
+                          "type": "text"
+                        },
+                        {
+                          "name": "tr_status",
+                          "type": "text"
+                        },
+                        {
+                          "name": "created_on",
+                          "type": "text"
+                        },
+                        {
+                          "name": "updated_on",
+                          "type": "text"
+                        }
+                      ],
                       "outputType": "array"
                     },
                     {

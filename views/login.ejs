@@ -38,7 +38,7 @@
     <div is="dmx-browser" id="browser1"></div>
     <dmx-value id="varLogin" dmx-bind:value="'Login'"></dmx-value>
     <dmx-value id="varInvalidLogin" dmx-bind:value="0"></dmx-value>
-    <dmx-value id="varCountUser" dmx-bind:value="0"></dmx-value>
+    <dmx-value id="varMobile" dmx-bind:value="0"></dmx-value>
     <dmx-notifications id="Notification" newest-on-top="true">
     </dmx-notifications>
     <header class="text-center">
@@ -88,14 +88,40 @@
                     <div id="crForgotPassword" is="dmx-if" dmx-bind:condition="varLogin.value == 'ForgotPass'">
                         <div class="card sd-login-card">
                             <div class="card-body p-5">
-                                <h1 class="sd-fs-45 sd-fw-500 text-black mb-4">Reset Password</h1>
-                                <p class="px-1 mb-4 sd-fs-18 sd-fw-500 text-black">Don’t worry, happens to the best of us</p>
-                                <form id="formForgotPass" is="dmx-serverconnect-form" method="post" action="/api/Users/SendRecoveryLink" dmx-on:success="varLogin.setValue('ResetEmailSent')">
+                                <h1 class="sd-fs-45 sd-fw-500 text-black mb-4">Forgot Password</h1>
+                                <p class="px-1 mb-4 sd-fs-18 sd-fw-500 text-black">Don’t worry, we are here to help you</p>
+                                <form id="formForgotPass" is="dmx-serverconnect-form" method="post" action="/api/Android/Users/ForgotPass" dmx-on:success="run({condition:{if:`crForgotPassword.formForgotPass.data.status==200`,then:{steps:{run:{action:`varLogin.setValue(\'ResetMobileSent\');notifMain.success(crForgotPassword.formForgotPass.data.message)`}}},else:{steps:{run:{action:`notifMain.warning(crForgotPassword.formForgotPass.data.message)`}}}}})">
                                     <div class="input-group mb-4">
                                         <span class="input-group-text border-1 border-end-0 bg-transparent"><i class="fa fa-user"></i></span>
-                                        <input type="email" class="border-1 border-start-0 form-control" id="txtEmailForgotPass" name="Email" placeholder="Email ID">
+                                        <input type="number" class="border-1 border-start-0 form-control" id="txtMobileForgotPass" name="Mobile" placeholder="Registered Mobile No.">
                                     </div>
-                                    <button id="submitResetPass" class="btn btn-primary text-white w-100 my-4" type="submit" dmx-bind:disabled="state.executing">Email me a recovery link<span class="spinner-border spinner-border-sm ms-2" role="status" dmx-show="state.executing"></span>
+                                    <button id="submitResetPass" class="btn btn-primary text-white w-100 my-4" type="submit" dmx-bind:disabled="state.executing" dmx-on:click="varMobile.setValue(txtMobileForgotPass.value)">Next<span class="spinner-border spinner-border-sm ms-2" role="status" dmx-show="state.executing"></span>
+                                    </button>
+                                    <a href="#" class="d-flex justify-content-center sd-fs-12 sd-fw-500 text-primary" internal data-bs-toggle="button" dmx-on:click="varLogin.setValue('Login')">Back to Login</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="crResetPassword" is="dmx-if" dmx-bind:condition="varLogin.value == 'ResetMobileSent'">
+                        <div class="card sd-login-card">
+                            <div class="card-body p-5">
+                                <h1 class="sd-fs-45 sd-fw-500 text-black mb-4">Reset Password</h1>
+                                <p class="px-1 mb-4 sd-fs-18 sd-fw-500 text-black">OTP/ OTC has sent to your registered mobile number</p>
+                                <form id="formResetPass" is="dmx-serverconnect-form" method="post" action="/api/Android/Users/ResetPassword" dmx-on:success="run({condition:{if:`crResetPassword.formResetPass.data.status==200`,then:{steps:{run:{action:`Notification.success(crResetPassword.formResetPass.data.message);varLogin.setValue(\'Login\');varMobile.setValue(0);formResetPass.reset(true)`}}},else:{steps:{run:{action:`notifMain.warning(crResetPassword.formResetPass.data.message)`}}}}})" dmx-on:forbidden="Notification.warning(crResetPassword.formResetPass.data.message)" dmx-on:error="Notification.warning(crResetPassword.formResetPass.data.message)" dmx-on:unauthorized="Notification.warning(crResetPassword.formResetPass.data.message)" dmx-on:invalid="Notification.warning(crResetPassword.formResetPass.data.message)">
+                                    <input type="hidden" id="txtMobileNo" name="Mobile" dmx-bind:value="varMobile.value">
+                                    <div class="input-group mb-4">
+                                        <span class="input-group-text border-1 border-end-0 bg-transparent"><i class="fa fa-clock-o"></i></span>
+                                        <input type="text" class="border-1 border-start-0 form-control" id="txtOTPResetPass" name="UserOTP" placeholder="Enter OTP/ OTC">
+                                    </div>
+                                    <div class="input-group mb-4">
+                                        <span class="input-group-text border-1 border-end-0 bg-transparent"><i class="fa fa-lock"></i></span>
+                                        <input type="password" class="border-1 border-start-0 form-control" id="txtPassword" name="Password" placeholder="Enter New Password">
+                                    </div>
+                                    <div class="input-group mb-4">
+                                        <span class="input-group-text border-1 border-end-0 bg-transparent"><i class="fa fa-lock"></i></span>
+                                        <input type="password" class="border-1 border-start-0 form-control" id="txtConfirmPassword" name="ConfirmPass" placeholder="Enter Confirm Password">
+                                    </div>
+                                    <button id="submitPass" class="btn btn-primary text-white w-100 my-4" type="submit" dmx-bind:disabled="state.executing">Submit<span class="spinner-border spinner-border-sm ms-2" role="status" dmx-show="state.executing"></span>
                                     </button>
                                     <a href="#" class="d-flex justify-content-center sd-fs-12 sd-fw-500 text-primary" internal data-bs-toggle="button" dmx-on:click="varLogin.setValue('Login')">Back to Login</a>
                                 </form>

@@ -41,7 +41,7 @@
             "options": {
               "connection": "ClientApp",
               "sql": {
-                "query": "SELECT mp.id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_img1, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) WHERE mp.status=1 AND mp.market_id=@market AND mp.rest_id=@rest_id ORDER by mp.id desc",
+                "query": "SELECT mp.id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_img1, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join r_price_table rpt on (rpt.prod_id=mp.id) WHERE mp.status=1 AND mp.market_id=@market AND mp.rest_id=@rest_id AND mp.deleted_on is null ORDER by mp.id DESC",
                 "params": [
                   {
                     "name": "@market",

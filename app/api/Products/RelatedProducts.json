@@ -73,12 +73,32 @@
                           }
                         },
                         "operation": "="
+                      },
+                      {
+                        "id": "m_product.deleted_on",
+                        "field": "m_product.deleted_on",
+                        "type": "datetime",
+                        "operator": "is_null",
+                        "value": null,
+                        "data": {
+                          "table": "m_product",
+                          "column": "deleted_on",
+                          "type": "datetime",
+                          "columnObj": {
+                            "type": "timestamp",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "deleted_on"
+                          }
+                        },
+                        "operation": "IS NULL"
                       }
                     ],
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT id, market_id, rest_id, category_id, prod_mark_id\nFROM m_product\nWHERE id = :P1 /* {{$_GET.p_id}} */",
+                  "query": "SELECT id, market_id, rest_id, category_id, prod_mark_id\nFROM m_product\nWHERE id = :P1 /* {{$_GET.p_id}} */ AND deleted_on IS NULL",
                   "params": [
                     {
                       "operator": "equal",
@@ -121,7 +141,7 @@
               "options": {
                 "connection": "ClientApp",
                 "sql": {
-                  "query": "SELECT mp.id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_occurance_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_img1, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price \nFROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id) \nWHERE mp.status = 1 AND mp.id != @p_id AND mp.market_id = @market_id AND mp.prod_mark_id = @prod_mark_id AND (mp.category_id = @category_id OR mp.rest_id = @rest_id)",
+                  "query": "SELECT mp.id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_occurance_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_img1, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price \nFROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id) \nWHERE mp.status = 1 AND mp.id != @p_id AND mp.market_id = @market_id AND mp.prod_mark_id = @prod_mark_id AND (mp.category_id = @category_id OR mp.rest_id = @rest_id) AND mp.deleted_on is null AND mr.deleted_on is null",
                   "params": [
                     {
                       "name": "@p_id",
@@ -160,6 +180,14 @@
                 {
                   "name": "prod_id",
                   "type": "text"
+                },
+                {
+                  "name": "rest_id",
+                  "type": "number"
+                },
+                {
+                  "name": "prod_mark_id",
+                  "type": "number"
                 },
                 {
                   "name": "prod_occurance_id",

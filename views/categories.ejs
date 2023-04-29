@@ -85,7 +85,7 @@
 
                         <div class="col-6 col-md-4 col-lg-3 mb-3" style="float:left">
                             <div class="card mb-2">
-                                <img class="card-img-top" dmx-bind:src="'https://secure.gravitto.com'+content.scCategory.data.GetCat.data[$index].image" class="card-img-top" dmx-bind:alt="content.scCategory.data.GetCat.data[$index].en_name">
+                                <a dmx-bind:href="'/category-details/'+content.scCategory.data.GetCat.data[$index].cat_id+'/'+content.scCategory.data.GetCat.data[$index].en_name"><img class="card-img-top" dmx-bind:src="'https://secure.gravitto.com'+content.scCategory.data.GetCat.data[$index].image" class="card-img-top" dmx-bind:alt="content.scCategory.data.GetCat.data[$index].en_name"></a>
                                 <div class="card-body p-0">
                                     <h4 class="card-title">{{varLanguage.value=='English'?content.scCategory.data.GetCat.data[$index].en_name:varLanguage.value=='Bengali'?content.scCategory.data.GetCat.data[$index].bn_name:varLanguage.value=='Hindi'?content.scCategory.data.GetCat.data[$index].hin_name:content.scCategory.data.GetCat.data[$index].en_name}}</h4>
                                 </div>

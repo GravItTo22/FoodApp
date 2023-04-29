@@ -98,7 +98,7 @@
                 </div>
             </div>
             <!--Carousel Wrapper-->
-            <div id="multi-item-example" class="carousel slide carousel-multi-item" data-ride="carousel">
+            <div id="multi-item-example" class="carousel slide carousel-multi-item w-100" data-ride="carousel">
 
                 <!--Controls-->
                 <!-- <div class="controls-top">
@@ -119,9 +119,9 @@
                     <!--First slide-->
                     <div class="carousel-item active" id="repeatCat" is="dmx-repeat" dmx-bind:repeat="content.scCategory.data.GetCat.data" key="cat_id">
 
-                        <div class="col-6 col-md-4 col-lg-3 mb-3" style="float:left">
+                        <div class="col-6 col-md-3 col-lg-3 mb-3" style="float:left">
                             <div class="card mb-2">
-                                <img class="card-img-top" dmx-bind:src="'https://secure.gravitto.com'+content.scCategory.data.GetCat.data[$index].image" class="card-img-top" dmx-bind:alt="content.scCategory.data.GetCat.data[$index].en_name">
+                                <a dmx-bind:href="'/category-details/'+content.scCategory.data.GetCat.data[$index].cat_id+'/'+content.scCategory.data.GetCat.data[$index].en_name"><img class="card-img-top" dmx-bind:src="'https://secure.gravitto.com'+content.scCategory.data.GetCat.data[$index].image" class="card-img-top" dmx-bind:alt="content.scCategory.data.GetCat.data[$index].en_name"></a>
                                 <div class="card-body p-0">
                                     <h4 class="card-title">{{varLanguage.value=='English'?content.scCategory.data.GetCat.data[$index].en_name:varLanguage.value=='Bengali'?content.scCategory.data.GetCat.data[$index].bn_name:varLanguage.value=='Hindi'?content.scCategory.data.GetCat.data[$index].hin_name:content.scCategory.data.GetCat.data[$index].en_name}}</h4>
                                 </div>
@@ -132,9 +132,9 @@
                     <!--Second slide-->
                     <div class="carousel-item" id="repeat1" is="dmx-repeat" dmx-bind:repeat="scCategory.data.GetCatDesc.data" key="cat_id">
 
-                        <div class="col-6 col-md-4 col-lg-3 mb-3" style="float:left">
+                        <div class="col-6 col-md-3 col-lg-3 mb-3" style="float:left">
                             <div class="card mb-2">
-                                <img class="card-img-top" dmx-bind:src="'https://secure.gravitto.com'+content.scCategory.data.GetCatDesc.data[$index].image" dmx-bind:alt="content.scCategory.data.GetCatDesc.data[$index].en_name">
+                                <a dmx-bind:href="'/category-details/'+content.scCategory.data.GetCatDesc.data[$index].cat_id+'/'+content.scCategory.data.GetCatDesc.data[$index].en_name"><img class="card-img-top" dmx-bind:src="'https://secure.gravitto.com'+content.scCategory.data.GetCatDesc.data[$index].image" dmx-bind:alt="content.scCategory.data.GetCatDesc.data[$index].en_name"></a>
                                 <div class="card-body p-0">
                                     <h4 class="card-title">{{varLanguage.value=='English'?content.scCategory.data.GetCatDesc.data[$index].en_name:varLanguage.value=='Bengali'?content.scCategory.data.GetCatDesc.data[$index].bn_name:varLanguage.value=='Hindi'?content.scCategory.data.GetCatDesc.data[$index].hin_name:content.scCategory.data.GetCatDesc.data[$index].en_name}}</h4>
                                 </div>
@@ -143,6 +143,20 @@
 
                     </div>
                     <!--/.Second slide-->
+                    <!--Third slide-->
+                    <div class="carousel-item" id="repeat2" is="dmx-repeat" dmx-bind:repeat="scCategory.data.GetCat3.data" key="cat_id">
+
+                        <div class="col-6 col-md-3 col-lg-3 mb-3" style="float:left">
+                            <div class="card mb-2">
+                                <a dmx-bind:href="'/category-details/'+content.scCategory.data.GetCat3.data[$index].cat_id+'/'+content.scCategory.data.GetCat3.data[$index].en_name"><img class="card-img-top" dmx-bind:src="'https://secure.gravitto.com'+content.scCategory.data.GetCat3.data[$index].image" dmx-bind:alt="content.scCategory.data.GetCat3.data[$index].en_name"></a>
+                                <div class="card-body p-0">
+                                    <h4 class="card-title">{{varLanguage.value=='English'?content.scCategory.data.GetCat3.data[$index].en_name:varLanguage.value=='Bengali'?content.scCategory.data.GetCat3.data[$index].bn_name:varLanguage.value=='Hindi'?content.scCategory.data.GetCat3.data[$index].hin_name:content.scCategory.data.GetCat3.data[$index].en_name}}</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--/.Third slide-->
                 </div>
                 <!--/.Slides-->
             </div>

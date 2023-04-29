@@ -78,5 +78,9 @@
   "use-wallet.ejs": {
     "layoutPage": "main",
     "description": ""
+  },
+  "category-details.ejs": {
+    "layoutPage": "main",
+    "description": ""
   }
 }

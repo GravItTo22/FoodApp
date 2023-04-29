@@ -399,6 +399,31 @@ dmx.config({
         }
       ],
       "outputType": "array"
+    },
+    "repeat2": {
+      "meta": [
+        {
+          "type": "number",
+          "name": "cat_id"
+        },
+        {
+          "type": "text",
+          "name": "en_name"
+        },
+        {
+          "type": "text",
+          "name": "bn_name"
+        },
+        {
+          "type": "text",
+          "name": "hin_name"
+        },
+        {
+          "type": "text",
+          "name": "image"
+        }
+      ],
+      "outputType": "array"
     }
   },
   "main": {
@@ -1489,6 +1514,99 @@ dmx.config({
     },
     "repeat1": {
       "meta": null,
+      "outputType": "array"
+    }
+  },
+  "categorydetails": {
+    "repeatProd": {
+      "meta": [
+        {
+          "name": "p_id",
+          "type": "number"
+        },
+        {
+          "name": "prod_id",
+          "type": "text"
+        },
+        {
+          "name": "rest_id",
+          "type": "number"
+        },
+        {
+          "name": "prod_mark_id",
+          "type": "number"
+        },
+        {
+          "name": "prod_name_en",
+          "type": "text"
+        },
+        {
+          "name": "prod_name_hin",
+          "type": "text"
+        },
+        {
+          "name": "prod_name_bn",
+          "type": "text"
+        },
+        {
+          "name": "prod_img1",
+          "type": "text"
+        },
+        {
+          "name": "shop_name_en",
+          "type": "text"
+        },
+        {
+          "name": "shop_name_hin",
+          "type": "text"
+        },
+        {
+          "name": "shop_name_bn",
+          "type": "text"
+        },
+        {
+          "name": "price",
+          "type": "array",
+          "sub": [
+            {
+              "name": "price_id",
+              "type": "number"
+            },
+            {
+              "name": "quantity",
+              "type": "text"
+            },
+            {
+              "name": "q_unit",
+              "type": "text"
+            },
+            {
+              "name": "mrp",
+              "type": "text"
+            },
+            {
+              "name": "price",
+              "type": "text"
+            },
+            {
+              "name": "product_tax",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "name": "count_wl",
+          "type": "number"
+        },
+        {
+          "name": "count_cart",
+          "type": "number"
+        },
+        {
+          "name": "avg_review",
+          "type": "text"
+        }
+      ],
       "outputType": "array"
     }
   }

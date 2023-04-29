@@ -45,7 +45,7 @@
                     "options": {
                       "connection": "ClientApp",
                       "sql": {
-                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, \nmp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_en, mr.shop_name_bn, \nmr.shop_name_hin, rpr.review_value, rpr.review_comment, (select array_to_json(array_agg(row_to_json(q))) \n\t\t\tfrom (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt \n\t\t\twhere rpt.prod_id=mp.id) q) as price \nFROM m_product mp \nleft join m_restaurant mr on (mr.id=mp.rest_id) \nleft join r_prod_review rpr on (rpr.prod_id =mp.id and rpr.user_id=@user_id) \nWHERE mp.status=1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc;",
+                        "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, \nmp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_en, mr.shop_name_bn, \nmr.shop_name_hin, rpr.review_value, rpr.review_comment, (select array_to_json(array_agg(row_to_json(q))) \n\t\t\tfrom (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt \n\t\t\twhere rpt.prod_id=mp.id) q) as price \nFROM m_product mp \nleft join m_restaurant mr on (mr.id=mp.rest_id) \nleft join r_prod_review rpr on (rpr.prod_id =mp.id and rpr.user_id=@user_id) \nWHERE mp.status=1 AND mp.market_id=@market AND mp.id=@p_id AND mp.deleted_on is null AND mr.deleted_on is null ORDER by mp.id DESC;",
                         "params": [
                           {
                             "name": "@market",
@@ -190,7 +190,7 @@
                   "options": {
                     "connection": "ClientApp",
                     "sql": {
-                      "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mp.market_id=@market AND mp.id=@p_id ORDER by mp.id desc",
+                      "query": "SELECT mp.id as p_id, mp.category_id, mp.prod_id, mp.rest_id, mp.prod_mark_id, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_img2, mp.prod_img3, mp.prod_img4, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_id, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price FROM m_product mp left join m_restaurant mr on (mr.id=mp.rest_id) WHERE mp.status=1 AND mp.market_id=@market AND mp.id=@p_id AND mp.deleted_on is null AND mr.deleted_on is null ORDER by mp.id DESC",
                       "params": [
                         {
                           "name": "@market",
@@ -200,7 +200,7 @@
                         {
                           "name": "@p_id",
                           "value": "{{$_GET.p_id}}",
-                          "test": "22"
+                          "test": "49"
                         }
                       ]
                     }

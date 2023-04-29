@@ -166,7 +166,7 @@
                                   "options": {
                                     "connection": "ClientApp",
                                     "sql": {
-                                      "query": "SELECT id AS cat_id, en_name AS cat_name, image FROM m_category WHERE status = 1 AND market_id = @market ORDER BY id ASC",
+                                      "query": "SELECT id AS cat_id, en_name AS cat_name, image FROM m_category WHERE status = 1 AND market_id = @market AND deleted_on is null ORDER BY id ASC",
                                       "params": [
                                         {
                                           "name": "@market",
@@ -211,7 +211,7 @@
                                   "options": {
                                     "connection": "ClientApp",
                                     "sql": {
-                                      "query": "SELECT id AS cat_id, hin_name AS cat_name, image FROM m_category WHERE status = 1 AND market_id = @market ORDER BY id ASC",
+                                      "query": "SELECT id AS cat_id, hin_name AS cat_name, image FROM m_category WHERE status = 1 AND market_id = @market AND deleted_on is null ORDER BY id ASC",
                                       "params": [
                                         {
                                           "name": "@market",
@@ -256,7 +256,7 @@
                                   "options": {
                                     "connection": "ClientApp",
                                     "sql": {
-                                      "query": "SELECT id AS cat_id, bn_name AS cat_name, image FROM m_category WHERE status = 1 AND market_id = @market ORDER BY id ASC",
+                                      "query": "SELECT id AS cat_id, bn_name AS cat_name, image FROM m_category WHERE status = 1 AND market_id = @market AND deleted_on is null ORDER BY id ASC",
                                       "params": [
                                         {
                                           "name": "@market",

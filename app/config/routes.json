@@ -103,6 +103,11 @@
       "path": "/use-wallet",
       "page": "use-wallet",
       "layout": "main"
+    },
+    {
+      "path": "/category-details/:id/:cat_name",
+      "page": "category-details",
+      "layout": "main"
     }
   ]
 }

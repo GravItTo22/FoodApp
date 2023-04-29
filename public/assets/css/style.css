@@ -36,7 +36,7 @@ h3 {
 }
 
 h4 {
-	font-size: 24px;
+	font-size: 22px;
 }
 
 h5 {
@@ -4608,7 +4608,7 @@ display: -ms-flexbox;
 display: flex;
 }
 .card-body {
-	margin:15px;
+	margin:10px;
 }	
 .cart-wrap {
 	padding: 40px 0;

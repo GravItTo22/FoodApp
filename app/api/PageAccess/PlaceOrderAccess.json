@@ -103,19 +103,8 @@
         "module": "core",
         "action": "condition",
         "options": {
-          "if": "{{(CountCartProd.CountProd>=1)}}",
+          "if": "{{(CountCartProd.CountProd<1)}}",
           "then": {
-            "steps": {
-              "name": "CheckOut",
-              "module": "core",
-              "action": "redirect",
-              "options": {
-                "url": "/place-order",
-                "status": 301
-              }
-            }
-          },
-          "else": {
             "steps": {
               "name": "CartItems",
               "module": "core",

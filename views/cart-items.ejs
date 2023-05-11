@@ -148,6 +148,7 @@
                 <p class="gio-font-11">(Additional Auto Apply Promo Code Cashback: <b>{{content.scCartItems.data.NewUserCode.promo_code}}</b>)</p>
                 <a href="" dmx-bind:href="scDashboardInfo.data.varLogin ? 'place-order' : 'login'" dmx-show="content.scCartItems.data.GetCartItems.length!=0"><button class="btn1 text-uppercase">Checkout</button></a>
             </div>
+
             <!-- discount code part -->
             <!-- <div class="discount_code mt-3 shadow">
                 <div class="card">
@@ -164,9 +165,6 @@
                     </div>
                 </div>
             </div> -->
-        </div>
-        <div class="col-12 col-md-12 px-0">
-            <p>Note: If the delivery address is more than 10 Kms than an extra Rs 30 will be charged per delivery</p>
         </div>
         <div class="col-12 col-md-12 px-0 my-3 text-right">
             <a href="/"><button type="button" class="site-btn w-100" dmx-class:disabled="state.executing" dmx-bind:disabled="state.executing">Shop More &emsp;<span class="spinner-border spinner-border-sm" role="status" dmx-show="state.executing"></span></button></a>

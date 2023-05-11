@@ -210,7 +210,7 @@
                               "recid": 1
                             }
                           ],
-                          "query": "SELECT id, mobile, address1, email_id, ps, district, state, country, pin, status, full_name\nFROM r_shipping_add\nWHERE c_id = :P1 /* {{GetVerify.user_id}} */\nORDER BY id DESC",
+                          "query": "SELECT id, mobile, address1, email_id, ps, district, state, country, pin, status, full_name\nFROM r_shipping_add\nWHERE c_id = :P1 /* {{GetVerify.user_id}} */ AND deleted_on IS NULL\nORDER BY id DESC",
                           "params": [
                             {
                               "operator": "equal",
@@ -246,6 +246,26 @@
                                   }
                                 },
                                 "operation": "="
+                              },
+                              {
+                                "id": "r_shipping_add.deleted_on",
+                                "field": "r_shipping_add.deleted_on",
+                                "type": "datetime",
+                                "operator": "is_null",
+                                "value": null,
+                                "data": {
+                                  "table": "r_shipping_add",
+                                  "column": "deleted_on",
+                                  "type": "datetime",
+                                  "columnObj": {
+                                    "type": "timestamp",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "deleted_on"
+                                  }
+                                },
+                                "operation": "IS NULL"
                               }
                             ],
                             "conditional": null,
@@ -396,12 +416,32 @@
                                   }
                                 },
                                 "operation": "="
+                              },
+                              {
+                                "id": "r_shipping_add.updated_on",
+                                "field": "r_shipping_add.updated_on",
+                                "type": "datetime",
+                                "operator": "is_null",
+                                "value": null,
+                                "data": {
+                                  "table": "r_shipping_add",
+                                  "column": "updated_on",
+                                  "type": "datetime",
+                                  "columnObj": {
+                                    "type": "timestamp",
+                                    "primary": false,
+                                    "unique": false,
+                                    "nullable": true,
+                                    "name": "updated_on"
+                                  }
+                                },
+                                "operation": "IS NULL"
                               }
                             ],
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT mobile, address1, email_id, district, state, country, pin, full_name\nFROM r_shipping_add\nWHERE c_id = :P1 /* {{GetVerify.user_id}} */ AND status = :P2 /* {{2}} */",
+                          "query": "SELECT mobile, address1, email_id, district, state, country, pin, full_name\nFROM r_shipping_add\nWHERE c_id = :P1 /* {{GetVerify.user_id}} */ AND status = :P2 /* {{2}} */ AND updated_on IS NULL",
                           "params": [
                             {
                               "operator": "equal",

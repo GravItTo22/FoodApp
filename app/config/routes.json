@@ -75,7 +75,7 @@
       "path": "/place-order",
       "page": "place-order",
       "layout": "main",
-      "exec": ""
+      "exec": "/api/PageAccess/PlaceOrderAccess"
     },
     {
       "path": "/my-order",

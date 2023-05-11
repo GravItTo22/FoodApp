@@ -288,7 +288,7 @@
                     "module": "api",
                     "action": "send",
                     "options": {
-                      "url": "{{'http://43.252.88.230/index.php/smsapi/httpapi/?secret=HiBS1oPl6ln4daFZyQGa&sender=CLOWKP&tempid=1007827874034725193&receiver='+query.mobile+'&route=TA&msgtype=3&sms=Dear '+query.fname+', '+OTP+' is your OTP Code From CLOWKPRO'}}"
+                      "url": "{{'http://43.252.88.250/index.php/smsapi/httpapi/?secret=HiBS1oPl6ln4daFZyQGa&sender=CLOWKP&tempid=1007827874034725193&receiver='+query.mobile+'&route=TA&msgtype=3&sms=Dear '+query.fname+', '+OTP+' is your OTP Code From CLOWKPRO'}}"
                     },
                     "output": false
                   }

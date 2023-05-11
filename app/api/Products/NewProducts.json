@@ -143,56 +143,30 @@
                         "operation": "="
                       },
                       {
-                        "condition": "OR",
-                        "rules": [
-                          {
-                            "id": "m_product.prod_occurance_id",
-                            "field": "m_product.prod_occurance_id",
-                            "type": "double",
-                            "operator": "equal",
-                            "value": "{{2}}",
-                            "data": {
-                              "table": "m_product",
-                              "column": "prod_occurance_id",
-                              "type": "number",
-                              "columnObj": {
-                                "type": "integer",
-                                "primary": false,
-                                "unique": false,
-                                "nullable": true,
-                                "name": "prod_occurance_id"
-                              }
-                            },
-                            "operation": "="
-                          },
-                          {
-                            "id": "m_product.prod_occurance_id",
-                            "field": "m_product.prod_occurance_id",
-                            "type": "double",
-                            "operator": "equal",
-                            "value": "{{4}}",
-                            "data": {
-                              "table": "m_product",
-                              "column": "prod_occurance_id",
-                              "type": "number",
-                              "columnObj": {
-                                "type": "integer",
-                                "primary": false,
-                                "unique": false,
-                                "nullable": true,
-                                "name": "prod_occurance_id"
-                              }
-                            },
-                            "operation": "="
+                        "id": "m_product.prod_occurance_id",
+                        "field": "m_product.prod_occurance_id",
+                        "type": "double",
+                        "operator": "equal",
+                        "value": "{{2}}",
+                        "data": {
+                          "table": "m_product",
+                          "column": "prod_occurance_id",
+                          "type": "number",
+                          "columnObj": {
+                            "type": "integer",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "prod_occurance_id"
                           }
-                        ],
-                        "conditional": null
+                        },
+                        "operation": "="
                       }
                     ],
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT COUNT(m_product.id) AS CountId\nFROM m_product\nLEFT JOIN m_restaurant AS mr ON (mr.id = m_product.rest_id)\nWHERE m_product.market_id = :P1 /* {{$_GET.market}} */ AND m_product.status = :P2 /* {{1}} */ AND mr.status = :P3 /* {{1}} */ AND (m_product.prod_occurance_id = :P4 /* {{2}} */ OR m_product.prod_occurance_id = :P5 /* {{4}} */)",
+                  "query": "SELECT COUNT(m_product.id) AS CountId\nFROM m_product\nLEFT JOIN m_restaurant AS mr ON (mr.id = m_product.rest_id)\nWHERE m_product.market_id = :P1 /* {{$_GET.market}} */ AND m_product.status = :P2 /* {{1}} */ AND mr.status = :P3 /* {{1}} */ AND m_product.prod_occurance_id = :P4 /* {{2}} */",
                   "params": [
                     {
                       "operator": "equal",
@@ -217,12 +191,6 @@
                       "type": "expression",
                       "name": ":P4",
                       "value": "{{2}}"
-                    },
-                    {
-                      "operator": "equal",
-                      "type": "expression",
-                      "name": ":P5",
-                      "value": "{{4}}"
                     }
                   ]
                 }

@@ -2137,6 +2137,52 @@
                       "outputType": "boolean"
                     },
                     {
+                      "name": "delCartItems",
+                      "module": "dbupdater",
+                      "action": "delete",
+                      "options": {
+                        "connection": "ClientApp",
+                        "sql": {
+                          "type": "delete",
+                          "table": "r_cart",
+                          "wheres": {
+                            "condition": "AND",
+                            "rules": [
+                              {
+                                "id": "user_id",
+                                "field": "user_id",
+                                "type": "double",
+                                "operator": "equal",
+                                "value": "{{GetPreOrder.user_id}}",
+                                "data": {
+                                  "column": "user_id"
+                                },
+                                "operation": "="
+                              }
+                            ],
+                            "conditional": null,
+                            "valid": true
+                          },
+                          "returning": "id",
+                          "query": "DELETE\nFROM r_cart\nWHERE user_id = :P1 /* {{GetPreOrder.user_id}} */",
+                          "params": [
+                            {
+                              "operator": "equal",
+                              "type": "expression",
+                              "name": ":P1",
+                              "value": "{{GetPreOrder.user_id}}"
+                            }
+                          ]
+                        }
+                      },
+                      "meta": [
+                        {
+                          "name": "affected",
+                          "type": "number"
+                        }
+                      ]
+                    },
+                    {
                       "name": "",
                       "module": "core",
                       "action": "condition",

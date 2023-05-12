@@ -276,7 +276,7 @@
                                     },
                                     {
                                       "table": "r_shipping_add",
-                                      "column": "updated_on",
+                                      "column": "deleted_on",
                                       "type": "datetime",
                                       "value": "{{NOW}}"
                                     }
@@ -286,13 +286,13 @@
                                     "condition": "AND",
                                     "rules": [
                                       {
-                                        "id": "c_id",
-                                        "field": "c_id",
+                                        "id": "id",
+                                        "field": "id",
                                         "type": "double",
                                         "operator": "equal",
-                                        "value": "{{GetVerify.user_id}}",
+                                        "value": "{{$_POST.ShippingId}}",
                                         "data": {
-                                          "column": "c_id"
+                                          "column": "id"
                                         },
                                         "operation": "="
                                       }
@@ -301,7 +301,7 @@
                                     "valid": true
                                   },
                                   "returning": "id",
-                                  "query": "UPDATE r_shipping_add\nSET status = :P1 /* {{0}} */, updated_on = :P2 /* {{NOW}} */\nWHERE c_id = :P3 /* {{GetVerify.user_id}} */",
+                                  "query": "UPDATE r_shipping_add\nSET status = :P1 /* {{0}} */, deleted_on = :P2 /* {{NOW}} */\nWHERE id = :P3 /* {{$_POST.ShippingId}} */",
                                   "params": [
                                     {
                                       "name": ":P1",
@@ -317,7 +317,7 @@
                                       "operator": "equal",
                                       "type": "expression",
                                       "name": ":P3",
-                                      "value": "{{GetVerify.user_id}}"
+                                      "value": "{{$_POST.ShippingId}}"
                                     }
                                   ]
                                 }

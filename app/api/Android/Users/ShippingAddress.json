@@ -170,7 +170,8 @@
                             },
                             {
                               "table": "r_shipping_add",
-                              "column": "ps"
+                              "column": "ps",
+                              "alias": "housenolane"
                             },
                             {
                               "table": "r_shipping_add",
@@ -210,7 +211,7 @@
                               "recid": 1
                             }
                           ],
-                          "query": "SELECT id, mobile, address1, email_id, ps, district, state, country, pin, status, full_name\nFROM r_shipping_add\nWHERE c_id = :P1 /* {{GetVerify.user_id}} */ AND deleted_on IS NULL\nORDER BY id DESC",
+                          "query": "SELECT id, mobile, address1, email_id, ps AS housenolane, district, state, country, pin, status, full_name\nFROM r_shipping_add\nWHERE c_id = :P1 /* {{GetVerify.user_id}} */ AND deleted_on IS NULL\nORDER BY id DESC",
                           "params": [
                             {
                               "operator": "equal",
@@ -293,7 +294,7 @@
                         },
                         {
                           "type": "text",
-                          "name": "ps"
+                          "name": "housenolane"
                         },
                         {
                           "type": "text",
@@ -362,6 +363,11 @@
                             {
                               "table": "r_shipping_add",
                               "column": "full_name"
+                            },
+                            {
+                              "table": "r_shipping_add",
+                              "column": "ps",
+                              "alias": "housenolane"
                             }
                           ],
                           "table": {
@@ -441,7 +447,7 @@
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT mobile, address1, email_id, district, state, country, pin, full_name\nFROM r_shipping_add\nWHERE c_id = :P1 /* {{GetVerify.user_id}} */ AND status = :P2 /* {{2}} */ AND deleted_on IS NULL",
+                          "query": "SELECT mobile, address1, email_id, district, state, country, pin, full_name, ps AS housenolane\nFROM r_shipping_add\nWHERE c_id = :P1 /* {{GetVerify.user_id}} */ AND status = :P2 /* {{2}} */ AND deleted_on IS NULL",
                           "params": [
                             {
                               "operator": "equal",
@@ -491,6 +497,10 @@
                         {
                           "type": "text",
                           "name": "full_name"
+                        },
+                        {
+                          "type": "text",
+                          "name": "housenolane"
                         }
                       ],
                       "outputType": "object"

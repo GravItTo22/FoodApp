@@ -49,6 +49,10 @@
       },
       {
         "type": "text",
+        "name": "housenolane"
+      },
+      {
+        "type": "text",
         "fieldName": "district",
         "options": {
           "rules": {}
@@ -322,6 +326,13 @@
                                     "type": "text",
                                     "value": "{{$_POST.longitude}}",
                                     "condition": "{{$_POST.longitude}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "ps",
+                                    "type": "text",
+                                    "value": "{{$_POST.housenolane}}",
+                                    "condition": "{{$_POST.housenolane}}"
                                   }
                                 ],
                                 "table": "r_shipping_add",
@@ -344,7 +355,7 @@
                                   "valid": true
                                 },
                                 "returning": "id",
-                                "query": "UPDATE r_shipping_add\nSET mobile = :P1 /* {{$_POST.mobile}} */, address1 = :P2 /* {{$_POST.address}} */, email_id = :P3 /* {{$_POST.Email}} */, district = :P4 /* {{$_POST.district}} */, pin = :P5 /* {{$_POST.pincode}} */, status = :P6 /* {{2}} */, full_name = :P7 /* {{$_POST.name}} */, updated_on = :P8 /* {{NOW}} */, blank1 = :P9 /* {{$_POST.latitude}} */, blank2 = :P10 /* {{$_POST.longitude}} */\nWHERE id = :P11 /* {{$_POST.ShippingId}} */",
+                                "query": "UPDATE r_shipping_add\nSET mobile = :P1 /* {{$_POST.mobile}} */, address1 = :P2 /* {{$_POST.address}} */, email_id = :P3 /* {{$_POST.Email}} */, district = :P4 /* {{$_POST.district}} */, pin = :P5 /* {{$_POST.pincode}} */, status = :P6 /* {{2}} */, full_name = :P7 /* {{$_POST.name}} */, updated_on = :P8 /* {{NOW}} */, blank1 = :P9 /* {{$_POST.latitude}} */, blank2 = :P10 /* {{$_POST.longitude}} */, ps = :P11 /* {{$_POST.housenolane}} */\nWHERE id = :P12 /* {{$_POST.ShippingId}} */",
                                 "params": [
                                   {
                                     "name": ":P1",
@@ -397,9 +408,14 @@
                                     "value": "{{$_POST.longitude}}"
                                   },
                                   {
+                                    "name": ":P11",
+                                    "type": "expression",
+                                    "value": "{{$_POST.housenolane}}"
+                                  },
+                                  {
                                     "operator": "equal",
                                     "type": "expression",
-                                    "name": ":P11",
+                                    "name": ":P12",
                                     "value": "{{$_POST.ShippingId}}"
                                   }
                                 ]
@@ -577,11 +593,32 @@
                                     "column": "created_on",
                                     "type": "datetime",
                                     "value": "{{NOW}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "ps",
+                                    "type": "text",
+                                    "value": "{{$_POST.housenolane}}",
+                                    "condition": "{{$_POST.housenolane}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "blank1",
+                                    "type": "text",
+                                    "value": "{{$_POST.latitude}}",
+                                    "condition": "{{$_POST.latitude}}"
+                                  },
+                                  {
+                                    "table": "r_shipping_add",
+                                    "column": "blank2",
+                                    "type": "text",
+                                    "value": "{{$_POST.longitude}}",
+                                    "condition": "{{$_POST.longitude}}"
                                   }
                                 ],
                                 "table": "r_shipping_add",
                                 "returning": "id",
-                                "query": "INSERT INTO r_shipping_add\n(c_id, mobile, address1, email_id, district, state, country, pin, status, full_name, created_by, created_on) VALUES (:P1 /* {{GetVerify.user_id}} */, :P2 /* {{$_POST.mobile}} */, :P3 /* {{$_POST.address}} */, :P4 /* {{$_POST.Email}} */, :P5 /* {{$_POST.district}} */, :P6 /* {{'Assam'}} */, :P7 /* {{'India'}} */, :P8 /* {{$_POST.pincode}} */, :P9 /* {{2}} */, :P10 /* {{$_POST.name}} */, :P11 /* {{GetVerify.user_id}} */, :P12 /* {{NOW}} */)",
+                                "query": "INSERT INTO r_shipping_add\n(c_id, mobile, address1, email_id, district, state, country, pin, status, full_name, created_by, created_on, ps, blank1, blank2) VALUES (:P1 /* {{GetVerify.user_id}} */, :P2 /* {{$_POST.mobile}} */, :P3 /* {{$_POST.address}} */, :P4 /* {{$_POST.Email}} */, :P5 /* {{$_POST.district}} */, :P6 /* {{'Assam'}} */, :P7 /* {{'India'}} */, :P8 /* {{$_POST.pincode}} */, :P9 /* {{2}} */, :P10 /* {{$_POST.name}} */, :P11 /* {{GetVerify.user_id}} */, :P12 /* {{NOW}} */, :P13 /* {{$_POST.housenolane}} */, :P14 /* {{$_POST.latitude}} */, :P15 /* {{$_POST.longitude}} */)",
                                 "params": [
                                   {
                                     "name": ":P1",
@@ -642,6 +679,21 @@
                                     "name": ":P12",
                                     "type": "expression",
                                     "value": "{{NOW}}"
+                                  },
+                                  {
+                                    "name": ":P13",
+                                    "type": "expression",
+                                    "value": "{{$_POST.housenolane}}"
+                                  },
+                                  {
+                                    "name": ":P14",
+                                    "type": "expression",
+                                    "value": "{{$_POST.latitude}}"
+                                  },
+                                  {
+                                    "name": ":P15",
+                                    "type": "expression",
+                                    "value": "{{$_POST.longitude}}"
                                   }
                                 ]
                               }

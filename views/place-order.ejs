@@ -9,6 +9,7 @@
 <dmx-value id="varPin" dmx-bind:value=""></dmx-value>
 <dmx-value id="varFullName" dmx-bind:value=""></dmx-value>
 <dmx-value id="varEmail" dmx-bind:value=""></dmx-value>
+<dmx-value id="varHouseNoLane" dmx-bind:value=""></dmx-value>
 <dmx-value id="varAddress" dmx-bind:value=""></dmx-value>
 <dmx-value id="varDistrict" dmx-bind:value=""></dmx-value>
 <dmx-value id="varUserWallet" dmx-bind:value="0"></dmx-value>
@@ -67,7 +68,7 @@
                                             <label class="form-check-label"><b>{{scGetShippingAddress.data.GetAddress[$index].full_name}},</b> <i>{{scGetShippingAddress.data.GetAddress[$index].mobile}},</i> {{scGetShippingAddress.data.GetAddress[$index].pin}}
                                                 <br> {{scGetShippingAddress.data.GetAddress[$index].address1}} <i>{{scGetShippingAddress.data.GetAddress[$index].district}}, {{scGetShippingAddress.data.GetAddress[$index].state}}</i></label>
                                             <input type="radio" dmx-bind:checked="(content.scGetShippingAddress.data.GetAddress[$index].status==2)?'checked':''" name="radio">
-                                            <span class="checkmark" dmx-on:click="scUpShippingStatus.load({shipping_id: scGetShippingAddress.data.GetAddress[$index].id});varShippingId.setValue(scGetShippingAddress.data.GetAddress[$index].id);varMobile.setValue(scGetShippingAddress.data.GetAddress[$index].mobile);varPin.setValue(scGetShippingAddress.data.GetAddress[$index].pin);varFullName.setValue(scGetShippingAddress.data.GetAddress[$index].full_name);varEmail.setValue(scGetShippingAddress.data.GetAddress[$index].email_id);varAddress.setValue(scGetShippingAddress.data.GetAddress[$index].address1);varDistrict.setValue(scGetShippingAddress.data.GetAddress[$index].district)"></span>
+                                            <span class="checkmark" dmx-on:click="scUpShippingStatus.load({shipping_id: scGetShippingAddress.data.GetAddress[$index].id});varShippingId.setValue(scGetShippingAddress.data.GetAddress[$index].id);varMobile.setValue(scGetShippingAddress.data.GetAddress[$index].mobile);varPin.setValue(scGetShippingAddress.data.GetAddress[$index].pin);varFullName.setValue(scGetShippingAddress.data.GetAddress[$index].full_name);varEmail.setValue(scGetShippingAddress.data.GetAddress[$index].email_id);varAddress.setValue(scGetShippingAddress.data.GetAddress[$index].address1);varHouseNoLane.setValue(scGetShippingAddress.data.GetAddress[$index].housenolane);varDistrict.setValue(scGetShippingAddress.data.GetAddress[$index].district)"></span>
                                         </div>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -75,12 +76,13 @@
 
                                     </div>
                                     <p>Add/ Edit Shipping Address:</p>
-                                    <form is="dmx-serverconnect-form" method="post" id="scformShippingAddress" action="/api/Users/AddShippingAddress" dmx-on:success="notifMain.success(content.scformShippingAddress.data);scformShippingAddress.reset();scGetShippingAddress.load({});varShippingId.setValue();varMobile.setValue();varPin.setValue();varFullName.setValue();varEmail.setValue();varAddress.setValue();varDistrict.setValue()" dmx-on:forbidden="notifMain.warning(lastError.response)" dmx-on:unauthorized="notifMain.warning(lastError.response)">
+                                    <form is="dmx-serverconnect-form" method="post" id="scformShippingAddress" action="/api/Users/AddShippingAddress" dmx-on:success="notifMain.success(content.scformShippingAddress.data);scformShippingAddress.reset();scGetShippingAddress.load({});varShippingId.setValue();varMobile.setValue();varPin.setValue();varFullName.setValue();varEmail.setValue();varAddress.setValue();varHouseNoLane.setValue();varDistrict.setValue()" dmx-on:forbidden="notifMain.warning(lastError.response)" dmx-on:unauthorized="notifMain.warning(lastError.response)">
                                         <input type="hidden" name="ShippingId" class="form-control mb-2" dmx-bind:value="varShippingId.value">
                                         <input type="number" name="mobile" class="form-control mb-2" placeholder="Mobile Number *" required="" dmx-bind:value="varMobile.value">
                                         <input type="number" name="pincode" class="form-control mb-2" placeholder="Enter Your Pin Code *" required="" dmx-bind:value="varPin.value">
                                         <input type="text" name="name" class="form-control mb-2" placeholder="Enter Full Name *" required="" dmx-bind:value="varFullName.value">
                                         <input type="text" name="Email" class="form-control mb-2" placeholder="Email Id" dmx-bind:value="varEmail.value">
+                                        <input type="text" name="housenolane" class="form-control mb-2" placeholder="House No, Lane/ Road" dmx-bind:value="varHouseNoLane.value">
                                         <input type="text" name="address" class="form-control mb-2" placeholder="Address *" required="" dmx-bind:value="varAddress.value">
                                         <input type="text" name="district" class="form-control mb-2" placeholder="District *" required="" dmx-bind:value="varDistrict.value">
                                         <input type="submit" value="Submit" class="btn btns w-25">

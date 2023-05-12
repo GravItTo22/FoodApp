@@ -80,6 +80,10 @@
         "name": "Address"
       },
       {
+        "type": "text",
+        "name": "housenolane"
+      },
+      {
         "type": "number",
         "name": "created_by"
       },
@@ -567,11 +571,18 @@
                                       "column": "created_on",
                                       "type": "datetime",
                                       "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "table": "r_shipping_add",
+                                      "column": "ps",
+                                      "type": "text",
+                                      "value": "{{$_POST.housenolane}}",
+                                      "condition": "{{$_POST.housenolane}}"
                                     }
                                   ],
                                   "table": "r_shipping_add",
                                   "returning": "id",
-                                  "query": "INSERT INTO r_shipping_add\n(c_id, mobile, address1, district, state, country, pin, status, created_by, created_on) VALUES (:P1 /* {{AddUsers.identity}} */, :P2 /* {{$_POST.Mobile}} */, :P3 /* {{$_POST.Address}} */, :P4 /* {{$_POST.District}} */, :P5 /* {{'Assam'}} */, :P6 /* {{'India'}} */, :P7 /* {{$_POST.PIN}} */, :P8 /* {{2}} */, :P9 /* {{AddUsers.identity}} */, :P10 /* {{NOW}} */)",
+                                  "query": "INSERT INTO r_shipping_add\n(c_id, mobile, address1, district, state, country, pin, status, created_by, created_on, ps) VALUES (:P1 /* {{AddUsers.identity}} */, :P2 /* {{$_POST.Mobile}} */, :P3 /* {{$_POST.Address}} */, :P4 /* {{$_POST.District}} */, :P5 /* {{'Assam'}} */, :P6 /* {{'India'}} */, :P7 /* {{$_POST.PIN}} */, :P8 /* {{2}} */, :P9 /* {{AddUsers.identity}} */, :P10 /* {{NOW}} */, :P11 /* {{$_POST.housenolane}} */)",
                                   "params": [
                                     {
                                       "name": ":P1",
@@ -622,6 +633,11 @@
                                       "name": ":P10",
                                       "type": "expression",
                                       "value": "{{NOW}}"
+                                    },
+                                    {
+                                      "name": ":P11",
+                                      "type": "expression",
+                                      "value": "{{$_POST.housenolane}}"
                                     }
                                   ]
                                 }

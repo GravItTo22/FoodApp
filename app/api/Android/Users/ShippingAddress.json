@@ -418,21 +418,21 @@
                                 "operation": "="
                               },
                               {
-                                "id": "r_shipping_add.updated_on",
-                                "field": "r_shipping_add.updated_on",
+                                "id": "r_shipping_add.deleted_on",
+                                "field": "r_shipping_add.deleted_on",
                                 "type": "datetime",
                                 "operator": "is_null",
                                 "value": null,
                                 "data": {
                                   "table": "r_shipping_add",
-                                  "column": "updated_on",
+                                  "column": "deleted_on",
                                   "type": "datetime",
                                   "columnObj": {
                                     "type": "timestamp",
                                     "primary": false,
                                     "unique": false,
                                     "nullable": true,
-                                    "name": "updated_on"
+                                    "name": "deleted_on"
                                   }
                                 },
                                 "operation": "IS NULL"
@@ -441,7 +441,7 @@
                             "conditional": null,
                             "valid": true
                           },
-                          "query": "SELECT mobile, address1, email_id, district, state, country, pin, full_name\nFROM r_shipping_add\nWHERE c_id = :P1 /* {{GetVerify.user_id}} */ AND status = :P2 /* {{2}} */ AND updated_on IS NULL",
+                          "query": "SELECT mobile, address1, email_id, district, state, country, pin, full_name\nFROM r_shipping_add\nWHERE c_id = :P1 /* {{GetVerify.user_id}} */ AND status = :P2 /* {{2}} */ AND deleted_on IS NULL",
                           "params": [
                             {
                               "operator": "equal",

@@ -27,6 +27,11 @@
                     {
                       "table": "t_user_log",
                       "column": "user_id"
+                    },
+                    {
+                      "table": "mc",
+                      "column": "blank2",
+                      "alias": "rest_id"
                     }
                   ],
                   "table": {
@@ -126,12 +131,32 @@
                           }
                         },
                         "operation": "="
+                      },
+                      {
+                        "id": "mc.deleted_on",
+                        "field": "mc.deleted_on",
+                        "type": "datetime",
+                        "operator": "is_null",
+                        "value": null,
+                        "data": {
+                          "table": "mc",
+                          "column": "deleted_on",
+                          "type": "datetime",
+                          "columnObj": {
+                            "type": "timestamp",
+                            "primary": false,
+                            "unique": false,
+                            "nullable": true,
+                            "name": "deleted_on"
+                          }
+                        },
+                        "operation": "IS NULL"
                       }
                     ],
                     "conditional": null,
                     "valid": true
                   },
-                  "query": "SELECT t_user_log.user_id\nFROM t_user_log\nINNER JOIN m_customer AS mc ON (mc.id = t_user_log.user_id)\nWHERE t_user_log.login_token = :P1 /* {{$_GET.logintoken}} */ AND t_user_log.login_from = :P2 /* {{'Android'}} */ AND mc.user_type_id = :P3 /* {{4}} */",
+                  "query": "SELECT t_user_log.user_id, mc.blank2 AS rest_id\nFROM t_user_log\nINNER JOIN m_customer AS mc ON (mc.id = t_user_log.user_id)\nWHERE t_user_log.login_token = :P1 /* {{$_GET.logintoken}} */ AND t_user_log.login_from = :P2 /* {{'Android'}} */ AND mc.user_type_id = :P3 /* {{4}} */ AND mc.deleted_on IS NULL",
                   "params": [
                     {
                       "operator": "equal",
@@ -159,6 +184,10 @@
                 {
                   "type": "number",
                   "name": "user_id"
+                },
+                {
+                  "type": "text",
+                  "name": "rest_id"
                 }
               ],
               "outputType": "object"
@@ -189,8 +218,14 @@
                       "options": {
                         "connection": "ClientApp",
                         "sql": {
-                          "query": "select count(ro.id) as pending_orders, \n\t(select count(ro1.id) as delivered_orders from r_order ro1 where ro1.status =5),\n\t(select count(ro2.id) as prepairing_orders from r_order ro2 where ro2.status =3),\n\t(select count(ro3.id) as returned_orders from r_order ro3 where ro3.status =6)\nfrom r_order ro where ro.status =1;",
-                          "params": []
+                          "query": "select count(ro.id) as pending_orders, \n\t(select count(ro1.id) as delivered_orders from r_order ro1 where ro1.status =5 and ro.rest_id=@rest_id),\n\t(select count(ro2.id) as prepairing_orders from r_order ro2 where ro2.status =3 and ro.rest_id=@rest_id),\n\t(select count(ro3.id) as returned_orders from r_order ro3 where ro3.status =6 and ro.rest_id=@rest_id)\nfrom r_order ro where ro.status =1 and ro.rest_id=@rest_id;",
+                          "params": [
+                            {
+                              "name": "@rest_id",
+                              "value": "{{GetVerify.rest_id}}",
+                              "test": "65"
+                            }
+                          ]
                         }
                       },
                       "output": true,

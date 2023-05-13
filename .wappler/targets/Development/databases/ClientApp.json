@@ -2249,6 +2249,14 @@
               "unique": false,
               "nullable": true
             }
+          },
+          "rest_id": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
           }
         }
       },
@@ -3971,6 +3979,11 @@
               "nullable": true
             }
           }
+        }
+      },
+      "wallet_transactions": {
+        "db": {
+          "schema": "public"
         }
       }
     },

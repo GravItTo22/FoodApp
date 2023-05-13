@@ -3031,6 +3031,14 @@
               "unique": false,
               "nullable": true
             }
+          },
+          "rest_id": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
           }
         }
       },

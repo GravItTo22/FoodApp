@@ -218,12 +218,12 @@
                       "options": {
                         "connection": "ClientApp",
                         "sql": {
-                          "query": "select count(ro.id) as pending_orders, \n\t(select count(ro1.id) as delivered_orders from r_order ro1 where ro1.status =5 and ro.rest_id=@rest_id),\n\t(select count(ro2.id) as prepairing_orders from r_order ro2 where ro2.status =3 and ro.rest_id=@rest_id),\n\t(select count(ro3.id) as returned_orders from r_order ro3 where ro3.status =6 and ro.rest_id=@rest_id)\nfrom r_order ro where ro.status =1 and ro.rest_id=@rest_id;",
+                          "query": "select count(ro.id) as pending_orders, \n\t(select count(ro1.id) as delivered_orders from r_order ro1 where ro1.status =5 and ro1.rest_id=@rest_id),\n\t(select count(ro2.id) as prepairing_orders from r_order ro2 where ro2.status =3 and ro2.rest_id=@rest_id),\n\t(select count(ro3.id) as returned_orders from r_order ro3 where ro3.status =6 and ro3.rest_id=@rest_id)\nfrom r_order ro where ro.status =1 and ro.rest_id=@rest_id;",
                           "params": [
                             {
                               "name": "@rest_id",
                               "value": "{{GetVerify.rest_id}}",
-                              "test": "65"
+                              "test": "8"
                             }
                           ]
                         }

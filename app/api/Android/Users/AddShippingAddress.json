@@ -429,6 +429,98 @@
                             ]
                           },
                           {
+                            "name": "upCustomer",
+                            "module": "dbupdater",
+                            "action": "update",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "update",
+                                "values": [
+                                  {
+                                    "table": "m_customer",
+                                    "column": "address",
+                                    "type": "text",
+                                    "value": "{{$_POST.address}}"
+                                  },
+                                  {
+                                    "table": "m_customer",
+                                    "column": "pin",
+                                    "type": "text",
+                                    "value": "{{$_POST.pincode}}"
+                                  },
+                                  {
+                                    "table": "m_customer",
+                                    "column": "ps",
+                                    "type": "text",
+                                    "value": "{{$_POST.housenolane}}"
+                                  },
+                                  {
+                                    "table": "m_customer",
+                                    "column": "district",
+                                    "type": "text",
+                                    "value": "{{$_POST.district}}"
+                                  }
+                                ],
+                                "table": "m_customer",
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "id",
+                                      "field": "id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{GetVerify.user_id}}",
+                                      "data": {
+                                        "column": "id"
+                                      },
+                                      "operation": "="
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                },
+                                "returning": "id",
+                                "query": "UPDATE m_customer\nSET address = :P1 /* {{$_POST.address}} */, pin = :P2 /* {{$_POST.pincode}} */, ps = :P3 /* {{$_POST.housenolane}} */, district = :P4 /* {{$_POST.district}} */\nWHERE id = :P5 /* {{GetVerify.user_id}} */",
+                                "params": [
+                                  {
+                                    "name": ":P1",
+                                    "type": "expression",
+                                    "value": "{{$_POST.address}}"
+                                  },
+                                  {
+                                    "name": ":P2",
+                                    "type": "expression",
+                                    "value": "{{$_POST.pincode}}"
+                                  },
+                                  {
+                                    "name": ":P3",
+                                    "type": "expression",
+                                    "value": "{{$_POST.housenolane}}"
+                                  },
+                                  {
+                                    "name": ":P4",
+                                    "type": "expression",
+                                    "value": "{{$_POST.district}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P5",
+                                    "value": "{{GetVerify.user_id}}"
+                                  }
+                                ]
+                              }
+                            },
+                            "meta": [
+                              {
+                                "name": "affected",
+                                "type": "number"
+                              }
+                            ]
+                          },
+                          {
                             "name": "status",
                             "module": "core",
                             "action": "setvalue",
@@ -703,6 +795,98 @@
                                 "name": "identity",
                                 "type": "text"
                               },
+                              {
+                                "name": "affected",
+                                "type": "number"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "upCustomer",
+                            "module": "dbupdater",
+                            "action": "update",
+                            "options": {
+                              "connection": "ClientApp",
+                              "sql": {
+                                "type": "update",
+                                "values": [
+                                  {
+                                    "table": "m_customer",
+                                    "column": "address",
+                                    "type": "text",
+                                    "value": "{{$_POST.address}}"
+                                  },
+                                  {
+                                    "table": "m_customer",
+                                    "column": "pin",
+                                    "type": "text",
+                                    "value": "{{$_POST.pincode}}"
+                                  },
+                                  {
+                                    "table": "m_customer",
+                                    "column": "ps",
+                                    "type": "text",
+                                    "value": "{{$_POST.housenolane}}"
+                                  },
+                                  {
+                                    "table": "m_customer",
+                                    "column": "district",
+                                    "type": "text",
+                                    "value": "{{$_POST.district}}"
+                                  }
+                                ],
+                                "table": "m_customer",
+                                "wheres": {
+                                  "condition": "AND",
+                                  "rules": [
+                                    {
+                                      "id": "id",
+                                      "field": "id",
+                                      "type": "double",
+                                      "operator": "equal",
+                                      "value": "{{GetVerify.user_id}}",
+                                      "data": {
+                                        "column": "id"
+                                      },
+                                      "operation": "="
+                                    }
+                                  ],
+                                  "conditional": null,
+                                  "valid": true
+                                },
+                                "returning": "id",
+                                "query": "UPDATE m_customer\nSET address = :P1 /* {{$_POST.address}} */, pin = :P2 /* {{$_POST.pincode}} */, ps = :P3 /* {{$_POST.housenolane}} */, district = :P4 /* {{$_POST.district}} */\nWHERE id = :P5 /* {{GetVerify.user_id}} */",
+                                "params": [
+                                  {
+                                    "name": ":P1",
+                                    "type": "expression",
+                                    "value": "{{$_POST.address}}"
+                                  },
+                                  {
+                                    "name": ":P2",
+                                    "type": "expression",
+                                    "value": "{{$_POST.pincode}}"
+                                  },
+                                  {
+                                    "name": ":P3",
+                                    "type": "expression",
+                                    "value": "{{$_POST.housenolane}}"
+                                  },
+                                  {
+                                    "name": ":P4",
+                                    "type": "expression",
+                                    "value": "{{$_POST.district}}"
+                                  },
+                                  {
+                                    "operator": "equal",
+                                    "type": "expression",
+                                    "name": ":P5",
+                                    "value": "{{GetVerify.user_id}}"
+                                  }
+                                ]
+                              }
+                            },
+                            "meta": [
                               {
                                 "name": "affected",
                                 "type": "number"

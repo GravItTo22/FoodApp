@@ -323,3 +323,14 @@
     </div>
 </section>
 <!-- Latest Product Section End -->
+<div class="row mx-0">
+    <div class="col-12 col-xs-12 col-sm-12 col-md-4 py-1">
+        <button type="submit" class="site-btn w-100" dmx-class:disabled="state.executing" dmx-bind:disabled="state.executing" dmx-on:click="browserMain.goto('/login')">Complete Purchase &emsp;<span class="spinner-border spinner-border-sm" role="status" dmx-show="state.executing"></span></button>
+    </div>
+    <div class="col-12 col-xs-12 col-sm-12 col-md-4 py-1">
+        <button type="submit" class="site-btn w-100" dmx-class:disabled="state.executing" dmx-bind:disabled="state.executing" dmx-on:click="browserMain.goto('/cart-items')">My Cart &emsp;<span class="spinner-border spinner-border-sm" role="status" dmx-show="state.executing"></span></button>
+    </div>
+    <div class="col-12 col-xs-12 col-sm-12 col-md-4 py-1">
+        <button type="submit" class="site-btn w-100" dmx-class:disabled="state.executing" dmx-bind:disabled="state.executing" dmx-on:click="browserMain.goto('/wish-list')">Wishlist &emsp;<span class="spinner-border spinner-border-sm" role="status" dmx-show="state.executing"></span></button>
+    </div>
+</div>

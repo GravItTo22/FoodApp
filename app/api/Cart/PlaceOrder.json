@@ -661,7 +661,7 @@
                 "module": "core",
                 "action": "setvalue",
                 "options": {
-                  "value": 45
+                  "value": 30
                 },
                 "meta": [],
                 "outputType": "text"

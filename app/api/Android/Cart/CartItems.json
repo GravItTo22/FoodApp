@@ -271,7 +271,7 @@
                                     "module": "core",
                                     "action": "setvalue",
                                     "options": {
-                                      "value": 50
+                                      "value": 30
                                     },
                                     "meta": [],
                                     "outputType": "text",
@@ -424,7 +424,7 @@
                                             "module": "core",
                                             "action": "setvalue",
                                             "options": {
-                                              "value": 50
+                                              "value": 30
                                             },
                                             "meta": [],
                                             "outputType": "text",

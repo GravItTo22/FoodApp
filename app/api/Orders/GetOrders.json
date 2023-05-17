@@ -68,7 +68,19 @@
               "type": "text"
             },
             {
+              "name": "ex_charge_amt",
+              "type": "text"
+            },
+            {
+              "name": "ex_comm_amt",
+              "type": "text"
+            },
+            {
               "name": "user_name",
+              "type": "text"
+            },
+            {
+              "name": "houseno",
               "type": "text"
             },
             {
@@ -104,6 +116,10 @@
               "type": "text"
             },
             {
+              "name": "payment_status",
+              "type": "text"
+            },
+            {
               "name": "status",
               "type": "number"
             },
@@ -125,6 +141,10 @@
                 },
                 {
                   "name": "shop_name",
+                  "type": "text"
+                },
+                {
+                  "name": "shop_logo",
                   "type": "text"
                 },
                 {

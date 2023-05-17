@@ -1183,6 +1183,10 @@
                         {
                           "type": "text",
                           "name": "wallet_closing_amt"
+                        },
+                        {
+                          "type": "number",
+                          "name": "rest_id"
                         }
                       ],
                       "outputType": "object"
@@ -1583,11 +1587,17 @@
                                       "column": "wallet_closing_amt",
                                       "type": "text",
                                       "value": "{{GetPreOrder.wallet_closing_amt}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "rest_id",
+                                      "type": "number",
+                                      "value": "{{GetPreOrder.rest_id}}"
                                     }
                                   ],
                                   "table": "r_order",
                                   "returning": "id",
-                                  "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, ex_charge_amt, ex_comm_amt, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, wallet_bal, created_by, created_on, status, payment_status, order_assigned_to, applied_promo_id, wallet_cashback_amt, wallet_deduct_amt, wallet_closing_amt) VALUES (:P1 /* {{GetPreOrder.order_id}} */, :P2 /* {{GetPreOrder.user_id}} */, :P3 /* {{GetPreOrder.total_amt}} */, :P4 /* {{GetPreOrder.discount}} */, :P5 /* {{GetPreOrder.ex_charge_amt}} */, :P6 /* {{GetPreOrder.ex_comm_amt}} */, :P7 /* {{GetPreOrder.delevery_amt}} */, :P8 /* {{GetPreOrder.user_name}} */, :P9 /* {{GetPreOrder.address}} */, :P10 /* {{GetPreOrder.mobile}} */, :P11 /* {{GetPreOrder.whatsapp}} */, :P12 /* {{GetPreOrder.pin}} */, :P13 /* {{GetPreOrder.ps}} */, :P14 /* {{GetPreOrder.dist}} */, :P15 /* {{GetPreOrder.state}} */, :P16 /* {{GetPreOrder.country}} */, :P17 /* {{GetPreOrder.wallet_bal}} */, :P18 /* {{GetPreOrder.created_by}} */, :P19 /* {{NOW}} */, :P20 /* {{GetPreOrder.status}} */, :P21 /* {{GetPreOrder.payment_status}} */, :P22 /* {{GetPreOrder.order_assigned_to}} */, :P23 /* {{GetPreOrder.applied_promo_id}} */, :P24 /* {{GetPreOrder.wallet_cashback_amt}} */, :P25 /* {{GetPreOrder.wallet_deduct_amt}} */, :P26 /* {{GetPreOrder.wallet_closing_amt}} */)",
+                                  "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, ex_charge_amt, ex_comm_amt, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, wallet_bal, created_by, created_on, status, payment_status, order_assigned_to, applied_promo_id, wallet_cashback_amt, wallet_deduct_amt, wallet_closing_amt, rest_id) VALUES (:P1 /* {{GetPreOrder.order_id}} */, :P2 /* {{GetPreOrder.user_id}} */, :P3 /* {{GetPreOrder.total_amt}} */, :P4 /* {{GetPreOrder.discount}} */, :P5 /* {{GetPreOrder.ex_charge_amt}} */, :P6 /* {{GetPreOrder.ex_comm_amt}} */, :P7 /* {{GetPreOrder.delevery_amt}} */, :P8 /* {{GetPreOrder.user_name}} */, :P9 /* {{GetPreOrder.address}} */, :P10 /* {{GetPreOrder.mobile}} */, :P11 /* {{GetPreOrder.whatsapp}} */, :P12 /* {{GetPreOrder.pin}} */, :P13 /* {{GetPreOrder.ps}} */, :P14 /* {{GetPreOrder.dist}} */, :P15 /* {{GetPreOrder.state}} */, :P16 /* {{GetPreOrder.country}} */, :P17 /* {{GetPreOrder.wallet_bal}} */, :P18 /* {{GetPreOrder.created_by}} */, :P19 /* {{NOW}} */, :P20 /* {{GetPreOrder.status}} */, :P21 /* {{GetPreOrder.payment_status}} */, :P22 /* {{GetPreOrder.order_assigned_to}} */, :P23 /* {{GetPreOrder.applied_promo_id}} */, :P24 /* {{GetPreOrder.wallet_cashback_amt}} */, :P25 /* {{GetPreOrder.wallet_deduct_amt}} */, :P26 /* {{GetPreOrder.wallet_closing_amt}} */, :P27 /* {{GetPreOrder.rest_id}} */)",
                                   "params": [
                                     {
                                       "name": ":P1",
@@ -1718,6 +1728,11 @@
                                       "name": ":P26",
                                       "type": "expression",
                                       "value": "{{GetPreOrder.wallet_closing_amt}}"
+                                    },
+                                    {
+                                      "name": ":P27",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.rest_id}}"
                                     }
                                   ]
                                 }
@@ -2130,57 +2145,57 @@
                                 }
                               ],
                               "outputType": "array"
+                            },
+                            {
+                              "name": "delCartItems",
+                              "module": "dbupdater",
+                              "action": "delete",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "delete",
+                                  "table": "r_cart",
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "user_id",
+                                        "field": "user_id",
+                                        "type": "double",
+                                        "operator": "equal",
+                                        "value": "{{GetPreOrder.user_id}}",
+                                        "data": {
+                                          "column": "user_id"
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "returning": "id",
+                                  "query": "DELETE\nFROM r_cart\nWHERE user_id = :P1 /* {{GetPreOrder.user_id}} */",
+                                  "params": [
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P1",
+                                      "value": "{{GetPreOrder.user_id}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ]
                             }
                           ]
                         }
                       },
                       "outputType": "boolean"
-                    },
-                    {
-                      "name": "delCartItems",
-                      "module": "dbupdater",
-                      "action": "delete",
-                      "options": {
-                        "connection": "ClientApp",
-                        "sql": {
-                          "type": "delete",
-                          "table": "r_cart",
-                          "wheres": {
-                            "condition": "AND",
-                            "rules": [
-                              {
-                                "id": "user_id",
-                                "field": "user_id",
-                                "type": "double",
-                                "operator": "equal",
-                                "value": "{{GetPreOrder.user_id}}",
-                                "data": {
-                                  "column": "user_id"
-                                },
-                                "operation": "="
-                              }
-                            ],
-                            "conditional": null,
-                            "valid": true
-                          },
-                          "returning": "id",
-                          "query": "DELETE\nFROM r_cart\nWHERE user_id = :P1 /* {{GetPreOrder.user_id}} */",
-                          "params": [
-                            {
-                              "operator": "equal",
-                              "type": "expression",
-                              "name": ":P1",
-                              "value": "{{GetPreOrder.user_id}}"
-                            }
-                          ]
-                        }
-                      },
-                      "meta": [
-                        {
-                          "name": "affected",
-                          "type": "number"
-                        }
-                      ]
                     },
                     {
                       "name": "",
@@ -2197,7 +2212,8 @@
                               "value": "FAILED"
                             },
                             "meta": [],
-                            "outputType": "text"
+                            "outputType": "text",
+                            "output": true
                           }
                         }
                       },

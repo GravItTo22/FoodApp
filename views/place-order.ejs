@@ -138,7 +138,7 @@
                                 <div class="checkout__order__subtotal">Amount <span><i class="fa fa-rupee"></i>{{content.scCartItems.data.CartSumAmt[0].total_amt.toFixed(2)}}</span></div>
 
                                 <input type="hidden" id="inp_product_total_amt" dmx-bind:value="content.scCartItems.data.CartSumAmt[0].total_amt">
-                                <input type="hidden" id="inp_shipping_charge" dmx-bind:value="45">
+                                <input type="hidden" id="inp_shipping_charge" dmx-bind:value="content.scCartItems.data.ShippingCharge">
                                 <input type="hidden" id="inp_other_charge" dmx-bind:value="content.scCartItems.data.OtherCharges">
                                 <input type="hidden" id="inp_wallet_amt" name="inp_wallet_amt" dmx-bind:value="varUserWallet.value">
                                 <input type="hidden" id="inp_instant_discount" dmx-bind:value="content.scCartItems.data.InstantDiscount">
@@ -146,7 +146,7 @@
 
                                 <div class="price_indiv d-flex justify-content-between mx-0">
                                     <p>Shipping Charge</p>
-                                    <p>(+) <i class=" fa fa-rupee"></i><span id="shipping_charge">45.00</span></p>
+                                    <p>(+) <i class=" fa fa-rupee"></i><span id="shipping_charge">{{content.scCartItems.data.ShippingCharge.toFixed(2)}}</span></p>
                                 </div>
                                 <div class="price_indiv d-flex justify-content-between mx-0">
                                     <p>Other Charges <br /><span class="gio-font-11">(5% GST + Packaging)</span></p>

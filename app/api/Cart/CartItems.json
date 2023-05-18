@@ -229,7 +229,7 @@
                 "module": "core",
                 "action": "setvalue",
                 "options": {
-                  "value": "{{((CartSumAmt[0].total_amt.toNumber()*6)/100)}}"
+                  "value": "{{((CartSumAmt[0].total_amt.toNumber()*7)/100)}}"
                 },
                 "meta": [],
                 "output": true,
@@ -495,8 +495,8 @@
                               "primary": false,
                               "unique": false,
                               "nullable": true,
-                              "referenceType": "integer",
                               "name": "user_id",
+                              "referenceType": "integer",
                               "references": "id",
                               "inTable": "m_customer",
                               "onUpdate": "NO ACTION",
@@ -533,7 +533,7 @@
                               "field": "r_order.status",
                               "type": "double",
                               "operator": "not_equal",
-                              "value": "{{5}}",
+                              "value": "{{6}}",
                               "data": {
                                 "table": "r_order",
                                 "column": "status",
@@ -575,7 +575,7 @@
                       "conditional": null,
                       "valid": true
                     },
-                    "query": "SELECT COUNT(id) AS CountNewCust\nFROM r_order\nWHERE user_id = :P1 /* {{identity}} */ AND applied_promo_id = :P2 /* {{CountCode.id}} */ AND (status <> :P3 /* {{5}} */ OR status <> :P4 /* {{2}} */)",
+                    "query": "SELECT COUNT(id) AS CountNewCust\nFROM r_order\nWHERE user_id = :P1 /* {{identity}} */ AND applied_promo_id = :P2 /* {{CountCode.id}} */ AND (status <> :P3 /* {{6}} */ OR status <> :P4 /* {{2}} */)",
                     "params": [
                       {
                         "operator": "equal",
@@ -593,7 +593,7 @@
                         "operator": "not_equal",
                         "type": "expression",
                         "name": ":P3",
-                        "value": "{{5}}"
+                        "value": "{{6}}"
                       },
                       {
                         "operator": "not_equal",
@@ -1138,7 +1138,7 @@
                 "module": "core",
                 "action": "setvalue",
                 "options": {
-                  "value": "{{((CartSumAmt[0].total_amt.toNumber()*6)/100)}}"
+                  "value": "{{((CartSumAmt[0].total_amt.toNumber()*7)/100)}}"
                 },
                 "meta": [],
                 "output": true,

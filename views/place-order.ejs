@@ -149,12 +149,12 @@
                                     <p>(+) <i class=" fa fa-rupee"></i><span id="shipping_charge">{{content.scCartItems.data.ShippingCharge.toFixed(2)}}</span></p>
                                 </div>
                                 <div class="price_indiv d-flex justify-content-between mx-0">
-                                    <p>Other Charges <br /><span class="gio-font-11">(5% GST + Packaging)</span></p>
+                                    <p>Other Charges <br /><span class="gio-font-11">7% (GST + Packaging)</span></p>
                                     <p>(+) <i class=" fa fa-rupee"></i><span id="other_charge">{{content.scCartItems.data.OtherCharges.toFixed(2)}}</span></p>
                                 </div>
-                                <div class="price_indiv d-flex justify-content-between mx-0" dmx-show="content.scCartItems.data.Apply=='Yes'" dmx-hide="content.scCartItems.data.Apply=='No'">
+                                <div class="price_indiv d-flex justify-content-between mx-0">
                                     <p>Instant Discount <br /><span class="gio-font-11">(Auto Apply Promo Code: <b>{{content.scCartItems.data.NewUserCode.promo_code}}</b>)</span></p>
-                                    <p>(-) <i class=" fa fa-rupee"></i><span id="instant_discount">{{content.scCartItems.data.InstantDiscount.toFixed(2)}}</span></p>
+                                    <p>(-) <i class=" fa fa-rupee"></i><span id="instant_discount">{{(content.scCartItems.data.Apply=='Yes')?content.scCartItems.data.InstantDiscount.toFixed(2):'0.00'}}</span></p>
                                 </div>
                                 <hr />
                                 <div class="price_indiv d-flex justify-content-between mx-0" dmx-show="(content.scUseWallet.data.status == 200)" dmx-hide="(content.scUseWallet.data.status==400)">
@@ -165,9 +165,9 @@
 
                                 <div class="checkout__order__total">Total <span><i class="fa fa-rupee"></i>{{((inp_product_total_amt.value.toNumber()+inp_shipping_charge.value.toNumber()+inp_other_charge.value.toNumber())-inp_instant_discount.value.toNumber()-inp_wallet_amt.value.toNumber()).toFixed(2)}}</span></div>
 
-                                <div class="d-flex justify-content-between font-weight-bold" dmx-show="scDashboardInfo.data.varLogin&amp;&amp;(content.scCartItems.data.Apply=='Yes')" dmx-hide="content.scCartItems.data.Apply=='No'">
+                                <div class="d-flex justify-content-between font-weight-bold" dmx-show="scDashboardInfo.data.varLogin">
                                     <p class="text-info font-weight-bold">Wallet Cashback</p>
-                                    <p class="text-info font-weight-bold"><i class=" fa fa-rupee"></i><span id="total_cashback_amt">{{content.scCartItems.data.WalletCashback.toFixed(2)}}</span></p>
+                                    <p class="text-info font-weight-bold"><i class=" fa fa-rupee"></i><span id="total_cashback_amt">{{(content.scCartItems.data.Apply=='Yes')?content.scCartItems.data.WalletCashback.toFixed(2):'0.00'}}</span></p>
                                 </div>
                                 <p class="gio-font-11">(Additional Auto Apply Promo Code Cashback: <b>{{content.scCartItems.data.NewUserCode.promo_code}}</b>)</p>
 

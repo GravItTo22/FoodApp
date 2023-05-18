@@ -650,11 +650,11 @@
                 "module": "core",
                 "action": "setvalue",
                 "options": {
-                  "value": "{{((CartSumAmt[0].total_amt.toNumber()*6)/100)}}"
+                  "value": "{{((CartSumAmt[0].total_amt.toNumber()*7)/100)}}"
                 },
                 "meta": [],
                 "outputType": "text",
-                "output": false
+                "output": true
               },
               {
                 "name": "ShippingCharge",
@@ -664,7 +664,8 @@
                   "value": 30
                 },
                 "meta": [],
-                "outputType": "text"
+                "outputType": "text",
+                "output": true
               },
               {
                 "name": "CountCode",
@@ -1336,7 +1337,8 @@
                           "value": "{{((NewUserCode.amt_or_percent=='PER')?((CartSumAmt[0].total_amt.toNumber()*NewUserCode.promo_per.toNumber())/100):(NewUserCode.amt_or_percent=='AMT')?NewUserCode.promo_amt.toNumber():0)}}"
                         },
                         "meta": [],
-                        "outputType": "text"
+                        "outputType": "text",
+                        "output": false
                       },
                       {
                         "name": "WalletCashback",
@@ -1346,7 +1348,8 @@
                           "value": "{{((NewUserCode.cashback_amt_or_per=='PER')?((CartSumAmt[0].total_amt.toNumber()*NewUserCode.cashback_per.toNumber())/100):(NewUserCode.cashback_amt_or_per=='AMT')?NewUserCode.cashback_amt.toNumber():0)}}"
                         },
                         "meta": [],
-                        "outputType": "text"
+                        "outputType": "text",
+                        "output": false
                       }
                     ]
                   },
@@ -1398,7 +1401,8 @@
                   "value": "{{((GetUserDetails.wallet_bal.toNumber()+WalletCashback.toNumber())-WalletDeductAmt.toNumber())}}"
                 },
                 "meta": [],
-                "outputType": "text"
+                "outputType": "text",
+                "output": false
               },
               {
                 "name": "PayableAmount",

@@ -701,7 +701,7 @@
                                       "module": "core",
                                       "action": "setvalue",
                                       "options": {
-                                        "value": "{{((CartSumAmt[0].total_amt.toNumber()*6)/100)}}"
+                                        "value": "{{((CartSumAmt[0].total_amt.toNumber()*7)/100)}}"
                                       },
                                       "meta": [],
                                       "outputType": "text"

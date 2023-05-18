@@ -866,6 +866,234 @@
                                     "outputType": "boolean"
                                   },
                                   {
+                                    "name": "CountCode",
+                                    "module": "dbconnector",
+                                    "action": "single",
+                                    "options": {
+                                      "connection": "ClientApp",
+                                      "sql": {
+                                        "type": "SELECT",
+                                        "columns": [
+                                          {
+                                            "table": "promo_code",
+                                            "column": "id"
+                                          },
+                                          {
+                                            "table": "promo_code",
+                                            "column": "promo_name"
+                                          },
+                                          {
+                                            "table": "promo_code",
+                                            "column": "promo_code"
+                                          }
+                                        ],
+                                        "table": {
+                                          "name": "promo_code"
+                                        },
+                                        "primary": "id",
+                                        "joins": [],
+                                        "wheres": {
+                                          "condition": "AND",
+                                          "rules": [
+                                            {
+                                              "id": "promo_code.auto_apply",
+                                              "field": "promo_code.auto_apply",
+                                              "type": "string",
+                                              "operator": "equal",
+                                              "value": "{{'Yes'}}",
+                                              "data": {
+                                                "table": "promo_code",
+                                                "column": "auto_apply",
+                                                "type": "text",
+                                                "columnObj": {
+                                                  "type": "string",
+                                                  "maxLength": -5,
+                                                  "primary": false,
+                                                  "unique": false,
+                                                  "nullable": true,
+                                                  "name": "auto_apply"
+                                                }
+                                              },
+                                              "operation": "="
+                                            },
+                                            {
+                                              "id": "promo_code.status",
+                                              "field": "promo_code.status",
+                                              "type": "double",
+                                              "operator": "equal",
+                                              "value": "{{1}}",
+                                              "data": {
+                                                "table": "promo_code",
+                                                "column": "status",
+                                                "type": "number",
+                                                "columnObj": {
+                                                  "type": "integer",
+                                                  "primary": false,
+                                                  "unique": false,
+                                                  "nullable": true,
+                                                  "name": "status"
+                                                }
+                                              },
+                                              "operation": "="
+                                            },
+                                            {
+                                              "id": "promo_code.start_date",
+                                              "field": "promo_code.start_date",
+                                              "type": "datetime",
+                                              "operator": "less",
+                                              "value": "{{NOW}}",
+                                              "data": {
+                                                "table": "promo_code",
+                                                "column": "start_date",
+                                                "type": "datetime",
+                                                "columnObj": {
+                                                  "type": "timestamp",
+                                                  "primary": false,
+                                                  "unique": false,
+                                                  "nullable": true,
+                                                  "name": "start_date"
+                                                }
+                                              },
+                                              "operation": "<"
+                                            },
+                                            {
+                                              "id": "promo_code.end_date",
+                                              "field": "promo_code.end_date",
+                                              "type": "datetime",
+                                              "operator": "greater_or_equal",
+                                              "value": "{{NOW}}",
+                                              "data": {
+                                                "table": "promo_code",
+                                                "column": "end_date",
+                                                "type": "datetime",
+                                                "columnObj": {
+                                                  "type": "timestamp",
+                                                  "primary": false,
+                                                  "unique": false,
+                                                  "nullable": true,
+                                                  "name": "end_date"
+                                                }
+                                              },
+                                              "operation": ">="
+                                            },
+                                            {
+                                              "condition": "OR",
+                                              "rules": [
+                                                {
+                                                  "id": "promo_code.user_id",
+                                                  "field": "promo_code.user_id",
+                                                  "type": "double",
+                                                  "operator": "equal",
+                                                  "value": "{{GetUser.user_id}}",
+                                                  "data": {
+                                                    "table": "promo_code",
+                                                    "column": "user_id",
+                                                    "type": "number",
+                                                    "columnObj": {
+                                                      "type": "integer",
+                                                      "primary": false,
+                                                      "unique": false,
+                                                      "nullable": true,
+                                                      "name": "user_id"
+                                                    }
+                                                  },
+                                                  "operation": "="
+                                                },
+                                                {
+                                                  "id": "promo_code.allotted_for",
+                                                  "field": "promo_code.allotted_for",
+                                                  "type": "string",
+                                                  "operator": "equal",
+                                                  "value": "{{'All'}}",
+                                                  "data": {
+                                                    "table": "promo_code",
+                                                    "column": "allotted_for",
+                                                    "type": "text",
+                                                    "columnObj": {
+                                                      "type": "string",
+                                                      "maxLength": -5,
+                                                      "primary": false,
+                                                      "unique": false,
+                                                      "nullable": true,
+                                                      "name": "allotted_for"
+                                                    }
+                                                  },
+                                                  "operation": "="
+                                                }
+                                              ],
+                                              "conditional": null
+                                            }
+                                          ],
+                                          "conditional": null,
+                                          "valid": true
+                                        },
+                                        "query": "SELECT id, promo_name, promo_code\nFROM promo_code\nWHERE auto_apply = :P1 /* {{'Yes'}} */ AND status = :P2 /* {{1}} */ AND start_date < :P3 /* {{NOW}} */ AND end_date >= :P4 /* {{NOW}} */ AND (user_id = :P5 /* {{GetUser.user_id}} */ OR allotted_for = :P6 /* {{'All'}} */)\nORDER BY id ASC",
+                                        "params": [
+                                          {
+                                            "operator": "equal",
+                                            "type": "expression",
+                                            "name": ":P1",
+                                            "value": "{{'Yes'}}"
+                                          },
+                                          {
+                                            "operator": "equal",
+                                            "type": "expression",
+                                            "name": ":P2",
+                                            "value": "{{1}}"
+                                          },
+                                          {
+                                            "operator": "less",
+                                            "type": "expression",
+                                            "name": ":P3",
+                                            "value": "{{NOW}}"
+                                          },
+                                          {
+                                            "operator": "greater_or_equal",
+                                            "type": "expression",
+                                            "name": ":P4",
+                                            "value": "{{NOW}}"
+                                          },
+                                          {
+                                            "operator": "equal",
+                                            "type": "expression",
+                                            "name": ":P5",
+                                            "value": "{{GetUser.user_id}}"
+                                          },
+                                          {
+                                            "operator": "equal",
+                                            "type": "expression",
+                                            "name": ":P6",
+                                            "value": "{{'All'}}"
+                                          }
+                                        ],
+                                        "orders": [
+                                          {
+                                            "table": "promo_code",
+                                            "column": "id",
+                                            "direction": "ASC",
+                                            "recid": 1
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "output": false,
+                                    "meta": [
+                                      {
+                                        "type": "number",
+                                        "name": "id"
+                                      },
+                                      {
+                                        "type": "text",
+                                        "name": "promo_name"
+                                      },
+                                      {
+                                        "type": "text",
+                                        "name": "promo_code"
+                                      }
+                                    ],
+                                    "outputType": "object"
+                                  },
+                                  {
                                     "name": "GetNewUser",
                                     "module": "dbconnector",
                                     "action": "single",
@@ -895,7 +1123,7 @@
                                               "field": "r_order.user_id",
                                               "type": "double",
                                               "operator": "equal",
-                                              "value": "{{identity}}",
+                                              "value": "{{GetUser.user_id}}",
                                               "data": {
                                                 "table": "r_order",
                                                 "column": "user_id",
@@ -905,27 +1133,106 @@
                                                   "primary": false,
                                                   "unique": false,
                                                   "nullable": true,
+                                                  "name": "user_id",
                                                   "references": "id",
                                                   "inTable": "m_customer",
                                                   "referenceType": "integer",
                                                   "onUpdate": "NO ACTION",
-                                                  "onDelete": "NO ACTION",
-                                                  "name": "user_id"
+                                                  "onDelete": "NO ACTION"
                                                 }
                                               },
                                               "operation": "="
+                                            },
+                                            {
+                                              "id": "r_order.applied_promo_id",
+                                              "field": "r_order.applied_promo_id",
+                                              "type": "double",
+                                              "operator": "equal",
+                                              "value": "{{CountCode.id}}",
+                                              "data": {
+                                                "table": "r_order",
+                                                "column": "applied_promo_id",
+                                                "type": "number",
+                                                "columnObj": {
+                                                  "type": "integer",
+                                                  "primary": false,
+                                                  "unique": false,
+                                                  "nullable": true,
+                                                  "name": "applied_promo_id"
+                                                }
+                                              },
+                                              "operation": "="
+                                            },
+                                            {
+                                              "id": "r_order.status",
+                                              "field": "r_order.status",
+                                              "type": "double",
+                                              "operator": "not_equal",
+                                              "value": "{{6}}",
+                                              "data": {
+                                                "table": "r_order",
+                                                "column": "status",
+                                                "type": "number",
+                                                "columnObj": {
+                                                  "type": "integer",
+                                                  "primary": false,
+                                                  "unique": false,
+                                                  "nullable": true,
+                                                  "name": "status"
+                                                }
+                                              },
+                                              "operation": "<>"
+                                            },
+                                            {
+                                              "id": "r_order.state",
+                                              "field": "r_order.state",
+                                              "type": "string",
+                                              "operator": "not_equal",
+                                              "value": "{{2}}",
+                                              "data": {
+                                                "table": "r_order",
+                                                "column": "state",
+                                                "type": "text",
+                                                "columnObj": {
+                                                  "type": "string",
+                                                  "maxLength": -5,
+                                                  "primary": false,
+                                                  "unique": false,
+                                                  "nullable": true,
+                                                  "name": "state"
+                                                }
+                                              },
+                                              "operation": "<>"
                                             }
                                           ],
                                           "conditional": null,
                                           "valid": true
                                         },
-                                        "query": "SELECT COUNT(id) AS CountNewCust\nFROM r_order\nWHERE user_id = :P1 /* {{identity}} */",
+                                        "query": "SELECT COUNT(id) AS CountNewCust\nFROM r_order\nWHERE user_id = :P1 /* {{GetUser.user_id}} */ AND applied_promo_id = :P2 /* {{CountCode.id}} */ AND status <> :P3 /* {{6}} */ AND state <> :P4 /* {{2}} */",
                                         "params": [
                                           {
                                             "operator": "equal",
                                             "type": "expression",
                                             "name": ":P1",
-                                            "value": "{{identity}}"
+                                            "value": "{{GetUser.user_id}}"
+                                          },
+                                          {
+                                            "operator": "equal",
+                                            "type": "expression",
+                                            "name": ":P2",
+                                            "value": "{{CountCode.id}}"
+                                          },
+                                          {
+                                            "operator": "not_equal",
+                                            "type": "expression",
+                                            "name": ":P3",
+                                            "value": "{{6}}"
+                                          },
+                                          {
+                                            "operator": "not_equal",
+                                            "type": "expression",
+                                            "name": ":P4",
+                                            "value": "{{2}}"
                                           }
                                         ]
                                       }

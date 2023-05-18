@@ -1382,7 +1382,8 @@
                                                 "value": "{{((NewUserCode.amt_or_percent=='PER')?((CartSumAmt[0].total_amt.toNumber()*NewUserCode.promo_per.toNumber())/100):(NewUserCode.amt_or_percent=='AMT')?NewUserCode.promo_amt.toNumber():0)}}"
                                               },
                                               "meta": [],
-                                              "outputType": "text"
+                                              "outputType": "text",
+                                              "output": true
                                             },
                                             {
                                               "name": "WalletCashback",
@@ -1392,7 +1393,8 @@
                                                 "value": "{{((NewUserCode.cashback_amt_or_per=='PER')?((CartSumAmt[0].total_amt.toNumber()*NewUserCode.cashback_per.toNumber())/100):(NewUserCode.cashback_amt_or_per=='AMT')?NewUserCode.cashback_amt.toNumber():0)}}"
                                               },
                                               "meta": [],
-                                              "outputType": "text"
+                                              "outputType": "text",
+                                              "output": true
                                             }
                                           ]
                                         },
@@ -1406,7 +1408,7 @@
                                                 "value": "0\n"
                                               },
                                               "meta": [],
-                                              "output": false,
+                                              "output": true,
                                               "outputType": "text"
                                             },
                                             {
@@ -1417,7 +1419,7 @@
                                                 "value": "0\n"
                                               },
                                               "meta": [],
-                                              "output": false,
+                                              "output": true,
                                               "outputType": "text"
                                             }
                                           ]

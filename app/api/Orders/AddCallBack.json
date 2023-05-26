@@ -1187,6 +1187,10 @@
                         {
                           "type": "number",
                           "name": "rest_id"
+                        },
+                        {
+                          "type": "text",
+                          "name": "net_order_amt"
                         }
                       ],
                       "outputType": "object"
@@ -1593,11 +1597,17 @@
                                       "column": "rest_id",
                                       "type": "number",
                                       "value": "{{GetPreOrder.rest_id}}"
+                                    },
+                                    {
+                                      "table": "r_order",
+                                      "column": "net_order_amt",
+                                      "type": "text",
+                                      "value": "{{GetPreOrder.net_order_amt}}"
                                     }
                                   ],
                                   "table": "r_order",
                                   "returning": "id",
-                                  "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, ex_charge_amt, ex_comm_amt, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, wallet_bal, created_by, created_on, status, payment_status, order_assigned_to, applied_promo_id, wallet_cashback_amt, wallet_deduct_amt, wallet_closing_amt, rest_id) VALUES (:P1 /* {{GetPreOrder.order_id}} */, :P2 /* {{GetPreOrder.user_id}} */, :P3 /* {{GetPreOrder.total_amt}} */, :P4 /* {{GetPreOrder.discount}} */, :P5 /* {{GetPreOrder.ex_charge_amt}} */, :P6 /* {{GetPreOrder.ex_comm_amt}} */, :P7 /* {{GetPreOrder.delevery_amt}} */, :P8 /* {{GetPreOrder.user_name}} */, :P9 /* {{GetPreOrder.address}} */, :P10 /* {{GetPreOrder.mobile}} */, :P11 /* {{GetPreOrder.whatsapp}} */, :P12 /* {{GetPreOrder.pin}} */, :P13 /* {{GetPreOrder.ps}} */, :P14 /* {{GetPreOrder.dist}} */, :P15 /* {{GetPreOrder.state}} */, :P16 /* {{GetPreOrder.country}} */, :P17 /* {{GetPreOrder.wallet_bal}} */, :P18 /* {{GetPreOrder.created_by}} */, :P19 /* {{NOW}} */, :P20 /* {{GetPreOrder.status}} */, :P21 /* {{GetPreOrder.payment_status}} */, :P22 /* {{GetPreOrder.order_assigned_to}} */, :P23 /* {{GetPreOrder.applied_promo_id}} */, :P24 /* {{GetPreOrder.wallet_cashback_amt}} */, :P25 /* {{GetPreOrder.wallet_deduct_amt}} */, :P26 /* {{GetPreOrder.wallet_closing_amt}} */, :P27 /* {{GetPreOrder.rest_id}} */)",
+                                  "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, ex_charge_amt, ex_comm_amt, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, wallet_bal, created_by, created_on, status, payment_status, order_assigned_to, applied_promo_id, wallet_cashback_amt, wallet_deduct_amt, wallet_closing_amt, rest_id, net_order_amt) VALUES (:P1 /* {{GetPreOrder.order_id}} */, :P2 /* {{GetPreOrder.user_id}} */, :P3 /* {{GetPreOrder.total_amt}} */, :P4 /* {{GetPreOrder.discount}} */, :P5 /* {{GetPreOrder.ex_charge_amt}} */, :P6 /* {{GetPreOrder.ex_comm_amt}} */, :P7 /* {{GetPreOrder.delevery_amt}} */, :P8 /* {{GetPreOrder.user_name}} */, :P9 /* {{GetPreOrder.address}} */, :P10 /* {{GetPreOrder.mobile}} */, :P11 /* {{GetPreOrder.whatsapp}} */, :P12 /* {{GetPreOrder.pin}} */, :P13 /* {{GetPreOrder.ps}} */, :P14 /* {{GetPreOrder.dist}} */, :P15 /* {{GetPreOrder.state}} */, :P16 /* {{GetPreOrder.country}} */, :P17 /* {{GetPreOrder.wallet_bal}} */, :P18 /* {{GetPreOrder.created_by}} */, :P19 /* {{NOW}} */, :P20 /* {{GetPreOrder.status}} */, :P21 /* {{GetPreOrder.payment_status}} */, :P22 /* {{GetPreOrder.order_assigned_to}} */, :P23 /* {{GetPreOrder.applied_promo_id}} */, :P24 /* {{GetPreOrder.wallet_cashback_amt}} */, :P25 /* {{GetPreOrder.wallet_deduct_amt}} */, :P26 /* {{GetPreOrder.wallet_closing_amt}} */, :P27 /* {{GetPreOrder.rest_id}} */, :P28 /* {{GetPreOrder.net_order_amt}} */)",
                                   "params": [
                                     {
                                       "name": ":P1",
@@ -1733,6 +1743,11 @@
                                       "name": ":P27",
                                       "type": "expression",
                                       "value": "{{GetPreOrder.rest_id}}"
+                                    },
+                                    {
+                                      "name": ":P28",
+                                      "type": "expression",
+                                      "value": "{{GetPreOrder.net_order_amt}}"
                                     }
                                   ]
                                 }
@@ -2204,17 +2219,78 @@
                       "options": {
                         "if": "{{($_POST.status=='failure'||$_POST.status=='userCancelled')}}",
                         "then": {
-                          "steps": {
-                            "name": "Status",
-                            "module": "core",
-                            "action": "setvalue",
-                            "options": {
-                              "value": "FAILED"
+                          "steps": [
+                            {
+                              "name": "upEasybuzzPayLink",
+                              "module": "dbupdater",
+                              "action": "update",
+                              "options": {
+                                "connection": "ClientApp",
+                                "sql": {
+                                  "type": "update",
+                                  "values": [
+                                    {
+                                      "table": "easybuzz_pay_link",
+                                      "column": "payment_status",
+                                      "type": "text",
+                                      "value": "{{'FAILED'}}"
+                                    }
+                                  ],
+                                  "table": "easybuzz_pay_link",
+                                  "wheres": {
+                                    "condition": "AND",
+                                    "rules": [
+                                      {
+                                        "id": "req_txn_id",
+                                        "field": "req_txn_id",
+                                        "type": "string",
+                                        "operator": "equal",
+                                        "value": "{{GetPayReqDetails.req_txn_id}}",
+                                        "data": {
+                                          "column": "req_txn_id"
+                                        },
+                                        "operation": "="
+                                      }
+                                    ],
+                                    "conditional": null,
+                                    "valid": true
+                                  },
+                                  "returning": "id",
+                                  "query": "UPDATE easybuzz_pay_link\nSET payment_status = :P1 /* {{'FAILED'}} */\nWHERE req_txn_id = :P2 /* {{GetPayReqDetails.req_txn_id}} */",
+                                  "params": [
+                                    {
+                                      "name": ":P1",
+                                      "type": "expression",
+                                      "value": "{{'FAILED'}}"
+                                    },
+                                    {
+                                      "operator": "equal",
+                                      "type": "expression",
+                                      "name": ":P2",
+                                      "value": "{{GetPayReqDetails.req_txn_id}}"
+                                    }
+                                  ]
+                                }
+                              },
+                              "meta": [
+                                {
+                                  "name": "affected",
+                                  "type": "number"
+                                }
+                              ]
                             },
-                            "meta": [],
-                            "outputType": "text",
-                            "output": true
-                          }
+                            {
+                              "name": "Status",
+                              "module": "core",
+                              "action": "setvalue",
+                              "options": {
+                                "value": "FAILED"
+                              },
+                              "meta": [],
+                              "outputType": "text",
+                              "output": true
+                            }
+                          ]
                         }
                       },
                       "outputType": "boolean"

@@ -2257,6 +2257,15 @@
               "unique": false,
               "nullable": true
             }
+          },
+          "net_order_amt": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
           }
         }
       },
@@ -3035,6 +3044,15 @@
           "rest_id": {
             "db": {
               "type": "integer",
+              "primary": false,
+              "unique": false,
+              "nullable": true
+            }
+          },
+          "net_order_amt": {
+            "db": {
+              "type": "string",
+              "maxLength": -5,
               "primary": false,
               "unique": false,
               "nullable": true

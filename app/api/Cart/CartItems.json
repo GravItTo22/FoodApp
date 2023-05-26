@@ -63,7 +63,7 @@
                 "options": {
                   "connection": "ClientApp",
                   "sql": {
-                    "query": "SELECT rc.id, rc.prod_id, rc.price_id, rc.user_id, rc.prod_unit_price, rc.cart_mrp, rc.prod_qty, rc.total_price, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_mark_id, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, mp.rest_id, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_cart rc\nLEFT JOIN m_product AS mp ON (mp.id = rc.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rc.user_id = @user OR rc.ip_address = @ip",
+                    "query": "SELECT rc.id, rc.prod_id, rc.price_id, rc.user_id, rc.prod_unit_price, rc.cart_mrp, rc.prod_qty, rc.total_price, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_mark_id, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, mp.rest_id, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_cart rc\nLEFT JOIN m_product AS mp ON (mp.id = rc.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rc.user_id = @user OR rc.ip_address = @ip ORDER by rc.id DESC",
                     "params": [
                       {
                         "name": "@user",
@@ -982,7 +982,7 @@
                 "options": {
                   "connection": "ClientApp",
                   "sql": {
-                    "query": "SELECT rc.id, rc.prod_id, rc.price_id, rc.user_id, rc.prod_unit_price, rc.cart_mrp, rc.prod_qty, rc.total_price, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_mark_id, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, mp.rest_id, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_cart rc\nLEFT JOIN m_product AS mp ON (mp.id = rc.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rc.ip_address = @ip",
+                    "query": "SELECT rc.id, rc.prod_id, rc.price_id, rc.user_id, rc.prod_unit_price, rc.cart_mrp, rc.prod_qty, rc.total_price, mp.prod_name_en, mp.prod_name_bn, mp.prod_name_hin, mp.prod_desc_en, mp.prod_desc_bn, mp.prod_desc_hin, mp.prod_img1, mp.prod_mark_id, mr.shop_name_en, mr.shop_name_bn, mr.shop_name_hin, mp.rest_id, (select array_to_json(array_agg(row_to_json(q))) from (select rpt.id as price_ids, rpt.quantity, rpt.q_unit, rpt.mrp, rpt.selling_price as price, rpt.product_tax from r_price_table rpt where rpt.prod_id=mp.id) q) as price\nFROM r_cart rc\nLEFT JOIN m_product AS mp ON (mp.id = rc.prod_id) \nLEFT JOIN m_restaurant AS mr ON (mr.id = mp.rest_id)\nWHERE rc.ip_address = @ip order by rc.id desc",
                     "params": [
                       {
                         "name": "@ip",

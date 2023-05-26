@@ -45,7 +45,7 @@
 <div class="container-fluid">
     <div class="row mt-5 mx-0">
         <!-- left side div -->
-        <div class="col-md-8 col-12 shadow">
+        <div class="col-md-8 col-12 shadow pb-5">
             <h2 class="py-4 font-weight-bold">Cart ({{scDashboardInfo.data.GetCartItems.Cart_Items}} items)</h2>
             <div class="card p-2 mb-3" dmx-repeat:repeatcart="content.scCartItems.data.GetCartItems">
                 <div class="row">
@@ -87,14 +87,14 @@
                         </select>
                         <!-- quantity inc dec -->
                         <ul class="pagination set_quantity mt-3 px-2">
-                            <li class="page-item" dmx-on:click="run({run:{action:`scDecreaseQty.load({p_id: scCartItems.data.GetCartItems[$index].prod_id, price_id: repeatcart[$index].selectProdPrice.value, qty: content.scCartItems.data.GetCartItems[$index].prod_qty});browserMain.goto(\'/cart\')`,name:'DecreaseItem'}})" id="DecreaseQty">
+                            <li class="page-item" dmx-on:click="run({run:{action:`scDecreaseQty.load({p_id: scCartItems.data.GetCartItems[$index].prod_id, price_id: repeatcart[$index].selectProdPrice.value, qty: content.scCartItems.data.GetCartItems[$index].prod_qty});browserMain.goto(\'/cart-items\')`,name:'DecreaseItem'}})" id="DecreaseQty">
                                 <button class="page-link ">
                                     <i class="fa fa-minus"></i> </button>
                             </li>
                             <li class="page-item">
                                 <input type="text" id="AddToCart" dmx-bind:id="'AddToCart'+$index" name="" class="page-link" dmx-bind:value="content.scCartItems.data.GetCartItems[$index].prod_qty" id="textbox">
                             </li>
-                            <li class="page-item" dmx-on:click="run({run:{action:`scIncreaseQty.load({p_id: scCartItems.data.GetCartItems[$index].prod_id, price_id: repeatcart[$index].selectProdPrice.value, qty: content.scCartItems.data.GetCartItems[$index].prod_qty});browserMain.goto(\'/cart\')`,name:'IncreaseItem'}})" id="IncreaseQty">
+                            <li class="page-item" dmx-on:click="run({run:{action:`scIncreaseQty.load({p_id: scCartItems.data.GetCartItems[$index].prod_id, price_id: repeatcart[$index].selectProdPrice.value, qty: content.scCartItems.data.GetCartItems[$index].prod_qty});browserMain.goto(\'/cart-items\')`,name:'IncreaseItem'}})" id="IncreaseQty">
                                 <button class="page-link">
                                     <i class="fa fa-plus"></i></button>
                             </li>
@@ -108,7 +108,7 @@
             </div>
         </div>
         <!-- right side div -->
-        <div class="col-md-4 col-12 mx-auto mt-lg-0">
+        <div class="col-md-4 col-12 mx-auto mt-lg-0" dmx-hide="content.scCartItems.data.GetCartItems.length==0">
             <div class="right_side p-3 shadow bg-white mb-5">
                 <h2 class="product_name mb-5">The Total Amount Of</h2>
                 <div class="price_indiv d-flex justify-content-between">

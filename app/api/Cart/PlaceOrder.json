@@ -1648,11 +1648,17 @@
                                 "type": "number",
                                 "value": "{{GetCartItems[0].rest_id}}",
                                 "condition": "{{GetCartItems[0].rest_id}}"
+                              },
+                              {
+                                "table": "r_order",
+                                "column": "net_order_amt",
+                                "type": "text",
+                                "value": "{{PayableAmount}}"
                               }
                             ],
                             "table": "r_order",
                             "returning": "id",
-                            "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, created_by, created_on, status, payment_status, ex_charge_amt, applied_promo_id, wallet_bal, wallet_cashback_amt, wallet_deduct_amt, wallet_closing_amt, order_assigned_to, rest_id) VALUES (:P1 /* {{OrderId}} */, :P2 /* {{identity}} */, :P3 /* {{CartSumAmt[0].total_amt}} */, :P4 /* {{InstantDiscount}} */, :P5 /* {{ShippingCharge}} */, :P6 /* {{GetUserDetails.fname+' '+GetUserDetails.lname}} */, :P7 /* {{GetUserDetails.address}} */, :P8 /* {{GetUserDetails.mobile}} */, :P9 /* {{GetUserDetails.watsapp_no}} */, :P10 /* {{GetUserDetails.pin}} */, :P11 /* {{GetUserDetails.ps}} */, :P12 /* {{GetUserDetails.district}} */, :P13 /* {{GetUserDetails.state}} */, :P14 /* {{GetUserDetails.country}} */, :P15 /* {{identity}} */, :P16 /* {{NOW}} */, :P17 /* {{1}} */, :P18 /* {{$_POST.payment_mode}} */, :P19 /* {{OtherCharges}} */, :P20 /* {{NewUserCode.id?NewUserCode.id:0}} */, :P21 /* {{GetUserDetails.wallet_bal}} */, :P22 /* {{WalletCashback}} */, :P23 /* {{WalletDeductAmt}} */, :P24 /* {{WalletNetAmt}} */, :P25 /* {{GetDelivery.id}} */, :P26 /* {{GetCartItems[0].rest_id}} */)",
+                            "query": "INSERT INTO r_order\n(order_id, user_id, total_amt, discount, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, created_by, created_on, status, payment_status, ex_charge_amt, applied_promo_id, wallet_bal, wallet_cashback_amt, wallet_deduct_amt, wallet_closing_amt, order_assigned_to, rest_id, net_order_amt) VALUES (:P1 /* {{OrderId}} */, :P2 /* {{identity}} */, :P3 /* {{CartSumAmt[0].total_amt}} */, :P4 /* {{InstantDiscount}} */, :P5 /* {{ShippingCharge}} */, :P6 /* {{GetUserDetails.fname+' '+GetUserDetails.lname}} */, :P7 /* {{GetUserDetails.address}} */, :P8 /* {{GetUserDetails.mobile}} */, :P9 /* {{GetUserDetails.watsapp_no}} */, :P10 /* {{GetUserDetails.pin}} */, :P11 /* {{GetUserDetails.ps}} */, :P12 /* {{GetUserDetails.district}} */, :P13 /* {{GetUserDetails.state}} */, :P14 /* {{GetUserDetails.country}} */, :P15 /* {{identity}} */, :P16 /* {{NOW}} */, :P17 /* {{1}} */, :P18 /* {{$_POST.payment_mode}} */, :P19 /* {{OtherCharges}} */, :P20 /* {{NewUserCode.id?NewUserCode.id:0}} */, :P21 /* {{GetUserDetails.wallet_bal}} */, :P22 /* {{WalletCashback}} */, :P23 /* {{WalletDeductAmt}} */, :P24 /* {{WalletNetAmt}} */, :P25 /* {{GetDelivery.id}} */, :P26 /* {{GetCartItems[0].rest_id}} */, :P27 /* {{PayableAmount}} */)",
                             "params": [
                               {
                                 "name": ":P1",
@@ -1783,6 +1789,11 @@
                                 "name": ":P26",
                                 "type": "expression",
                                 "value": "{{GetCartItems[0].rest_id}}"
+                              },
+                              {
+                                "name": ":P27",
+                                "type": "expression",
+                                "value": "{{PayableAmount}}"
                               }
                             ]
                           }
@@ -2676,11 +2687,17 @@
                                         "type": "number",
                                         "value": "{{GetCartItems[0].rest_id}}",
                                         "condition": "{{GetCartItems[0].rest_id}}"
+                                      },
+                                      {
+                                        "table": "r_order_pre_payonline",
+                                        "column": "net_order_amt",
+                                        "type": "text",
+                                        "value": "{{PayableAmount}}"
                                       }
                                     ],
                                     "table": "r_order_pre_payonline",
                                     "returning": "id",
-                                    "query": "INSERT INTO r_order_pre_payonline\n(txn_req_id, order_id, user_id, total_amt, discount, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, created_by, created_on, status, payment_status, ex_charge_amt, order_assigned_to, applied_promo_id, wallet_bal, wallet_cashback_amt, wallet_deduct_amt, wallet_closing_amt, rest_id) VALUES (:P1 /* {{TxnId}} */, :P2 /* {{OrderId}} */, :P3 /* {{identity}} */, :P4 /* {{CartSumAmt[0].total_amt}} */, :P5 /* {{InstantDiscount}} */, :P6 /* {{ShippingCharge}} */, :P7 /* {{GetUserDetails.fname+' '+GetUserDetails.lname}} */, :P8 /* {{GetUserDetails.address}} */, :P9 /* {{GetUserDetails.mobile}} */, :P10 /* {{GetUserDetails.watsapp_no}} */, :P11 /* {{GetUserDetails.pin}} */, :P12 /* {{GetUserDetails.ps}} */, :P13 /* {{GetUserDetails.district}} */, :P14 /* {{GetUserDetails.state}} */, :P15 /* {{GetUserDetails.country}} */, :P16 /* {{identity}} */, :P17 /* {{NOW}} */, :P18 /* {{1}} */, :P19 /* {{$_POST.payment_mode}} */, :P20 /* {{OtherCharges}} */, :P21 /* {{GetDelivery.id}} */, :P22 /* {{NewUserCode.id?NewUserCode.id:0}} */, :P23 /* {{GetUserDetails.wallet_bal}} */, :P24 /* {{WalletCashback}} */, :P25 /* {{WalletDeductAmt}} */, :P26 /* {{WalletNetAmt}} */, :P27 /* {{GetCartItems[0].rest_id}} */)",
+                                    "query": "INSERT INTO r_order_pre_payonline\n(txn_req_id, order_id, user_id, total_amt, discount, delevery_amt, user_name, address, mobile, whatsapp, pin, ps, dist, state, country, created_by, created_on, status, payment_status, ex_charge_amt, order_assigned_to, applied_promo_id, wallet_bal, wallet_cashback_amt, wallet_deduct_amt, wallet_closing_amt, rest_id, net_order_amt) VALUES (:P1 /* {{TxnId}} */, :P2 /* {{OrderId}} */, :P3 /* {{identity}} */, :P4 /* {{CartSumAmt[0].total_amt}} */, :P5 /* {{InstantDiscount}} */, :P6 /* {{ShippingCharge}} */, :P7 /* {{GetUserDetails.fname+' '+GetUserDetails.lname}} */, :P8 /* {{GetUserDetails.address}} */, :P9 /* {{GetUserDetails.mobile}} */, :P10 /* {{GetUserDetails.watsapp_no}} */, :P11 /* {{GetUserDetails.pin}} */, :P12 /* {{GetUserDetails.ps}} */, :P13 /* {{GetUserDetails.district}} */, :P14 /* {{GetUserDetails.state}} */, :P15 /* {{GetUserDetails.country}} */, :P16 /* {{identity}} */, :P17 /* {{NOW}} */, :P18 /* {{1}} */, :P19 /* {{$_POST.payment_mode}} */, :P20 /* {{OtherCharges}} */, :P21 /* {{GetDelivery.id}} */, :P22 /* {{NewUserCode.id?NewUserCode.id:0}} */, :P23 /* {{GetUserDetails.wallet_bal}} */, :P24 /* {{WalletCashback}} */, :P25 /* {{WalletDeductAmt}} */, :P26 /* {{WalletNetAmt}} */, :P27 /* {{GetCartItems[0].rest_id}} */, :P28 /* {{PayableAmount}} */)",
                                     "params": [
                                       {
                                         "name": ":P1",
@@ -2816,6 +2833,11 @@
                                         "name": ":P27",
                                         "type": "expression",
                                         "value": "{{GetCartItems[0].rest_id}}"
+                                      },
+                                      {
+                                        "name": ":P28",
+                                        "type": "expression",
+                                        "value": "{{PayableAmount}}"
                                       }
                                     ]
                                   }

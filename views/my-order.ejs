@@ -62,7 +62,7 @@
                             <a dmx-bind:href="'/order-details/'+content.dvOrderList.data[$index].id" class="text-primary"><small>
                                     View Order
                                 </small></a><br /><small class="text-black-50">Items: {{content.dvOrderList.data[$index].product.length}}</small><br />
-                            <small class="text-black-50">Total: <i class="fa fa-rupee"></i>{{content.dvOrderList.data[$index].net_order_amt}}</small>
+                            <small class="text-black-50">Total: <i class="fa fa-rupee"></i>{{content.dvOrderList.data[$index].net_order_amt.toFixed(2)}}</small>
                         </div>
                         <div class="col-md-3 col-7">
                             <h6 class="mb-0 font-weight-bold" dmx-class:text-warning="content.dvOrderList.data[$index].status==1" dmx-class:text-danger="content.dvOrderList.data[$index].status==2" dmx-class:text-primary="content.dvOrderList.data[$index].status==3" dmx-class:text-info="content.dvOrderList.data[$index].status==4" dmx-class:text-success="content.dvOrderList.data[$index].status==5" dmx-class:text-danger="content.dvOrderList.data[$index].status==6">{{(content.dvOrderList.data[$index].status==1)?'Confirmed':(content.dvOrderList.data[$index].status==2)?'Cancelled':(content.dvOrderList.data[$index].status==3)?'Prepairing/ Processing':(content.dvOrderList.data[$index].status==4)?'Out for Delivery':(content.dvOrderList.data[$index].status==5)?'Delivered':(content.dvOrderList.data[$index].status==6)?'Returned':''}}</h6>

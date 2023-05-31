@@ -93,103 +93,36 @@
             "steps": [
               {
                 "name": "CountCartRest",
-                "module": "dbconnector",
-                "action": "single",
+                "module": "dbupdater",
+                "action": "custom",
                 "options": {
                   "connection": "ClientApp",
                   "sql": {
-                    "type": "SELECT",
-                    "columns": [
-                      {
-                        "table": "mp",
-                        "column": "rest_id",
-                        "aggregate": "COUNT",
-                        "alias": "CountRest"
-                      }
-                    ],
-                    "table": {
-                      "name": "r_cart"
-                    },
-                    "primary": "id",
-                    "joins": [
-                      {
-                        "table": "m_product",
-                        "column": "*",
-                        "alias": "mp",
-                        "type": "LEFT",
-                        "clauses": {
-                          "condition": "AND",
-                          "rules": [
-                            {
-                              "table": "mp",
-                              "column": "id",
-                              "operator": "equal",
-                              "value": {
-                                "table": "r_cart",
-                                "column": "prod_id"
-                              },
-                              "operation": "="
-                            }
-                          ]
-                        },
-                        "primary": "id"
-                      }
-                    ],
-                    "wheres": {
-                      "condition": "AND",
-                      "rules": [
-                        {
-                          "id": "r_cart.user_id",
-                          "field": "r_cart.user_id",
-                          "type": "double",
-                          "operator": "equal",
-                          "value": "{{identity}}",
-                          "data": {
-                            "table": "r_cart",
-                            "column": "user_id",
-                            "type": "number",
-                            "columnObj": {
-                              "type": "integer",
-                              "primary": false,
-                              "unique": false,
-                              "nullable": true,
-                              "name": "user_id"
-                            }
-                          },
-                          "operation": "="
-                        }
-                      ],
-                      "conditional": null,
-                      "valid": true
-                    },
-                    "distinct": true,
-                    "query": "SELECT DISTINCT COUNT(mp.rest_id) AS CountRest\nFROM r_cart\nLEFT JOIN m_product AS mp ON (mp.id = r_cart.prod_id)\nWHERE r_cart.user_id = :P1 /* {{identity}} */",
+                    "query": "select count(distinct mp.rest_id) as countrest from r_cart rc \nleft join m_product mp on (mp.id=rc.prod_id)\nwhere rc.user_id =@user_id;",
                     "params": [
                       {
-                        "operator": "equal",
-                        "type": "expression",
-                        "name": ":P1",
-                        "value": "{{identity}}"
+                        "name": "@user_id",
+                        "value": "{{identity}}",
+                        "test": "52"
                       }
-                    ],
-                    "groupBy": []
+                    ]
                   }
                 },
                 "output": false,
                 "meta": [
                   {
-                    "type": "number",
-                    "name": "CountRest"
+                    "name": "countrest",
+                    "type": "text"
                   }
                 ],
-                "outputType": "object"
+                "outputType": "array"
               },
               {
                 "name": "",
                 "module": "core",
                 "action": "condition",
                 "options": {
-                  "if": "{{(CountCartRest.CountRest==1)}}",
+                  "if": "{{(CountCartRest[0].countrest==1)}}",
                   "then": {
                     "steps": [
                       {
@@ -639,32 +572,12 @@
                                     }
                                   },
                                   "operation": "="
-                                },
-                                {
-                                  "id": "mp.deleted_on",
-                                  "field": "mp.deleted_on",
-                                  "type": "datetime",
-                                  "operator": "is_null",
-                                  "value": null,
-                                  "data": {
-                                    "table": "mp",
-                                    "column": "deleted_on",
-                                    "type": "datetime",
-                                    "columnObj": {
-                                      "type": "timestamp",
-                                      "primary": false,
-                                      "unique": false,
-                                      "nullable": true,
-                                      "name": "deleted_on"
-                                    }
-                                  },
-                                  "operation": "IS NULL"
                                 }
                               ],
                               "conditional": null,
                               "valid": true
                             },
-                            "query": "SELECT r_cart.id, r_cart.prod_id, r_cart.price_id, r_cart.user_id, r_cart.prod_unit_price, r_cart.prod_qty, r_cart.total_price, r_cart.cart_mrp, r_cart.cart_purchase, mp.rest_id\nFROM r_cart\nINNER JOIN m_product AS mp ON (mp.id = r_cart.prod_id)\nWHERE r_cart.user_id = :P1 /* {{identity}} */ OR mp.deleted_on IS NULL",
+                            "query": "SELECT r_cart.id, r_cart.prod_id, r_cart.price_id, r_cart.user_id, r_cart.prod_unit_price, r_cart.prod_qty, r_cart.total_price, r_cart.cart_mrp, r_cart.cart_purchase, mp.rest_id\nFROM r_cart\nINNER JOIN m_product AS mp ON (mp.id = r_cart.prod_id)\nWHERE r_cart.user_id = :P1 /* {{identity}} */",
                             "params": [
                               {
                                 "operator": "equal",
